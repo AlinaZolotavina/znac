@@ -1,0 +1,7 @@
+.nav_fixed {
+    position: sticky;
+    top: 0;
+    right: 0;
+    background-color: #0F1111;
+    z-index: 2;
+}

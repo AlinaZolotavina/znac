@@ -1,0 +1,8 @@
+.views__icon {
+    width: 23px;
+    height: 23px;
+    background-image: url(../../../images/views-icon.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}

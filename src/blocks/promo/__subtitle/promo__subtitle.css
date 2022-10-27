@@ -1,0 +1,9 @@
+.promo__subtitle {
+    max-width: 600px;
+    font-size: 32px;
+    font-weight: 200;
+    line-height: 37px;
+    color: #E8E8E8;
+    text-align: center;
+    margin: 0;
+}

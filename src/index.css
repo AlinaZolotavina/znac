@@ -1,13 +1,67 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+/* normalize */
+@import url(./vendor/normalize.css);
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+/* font connection */
+
+/* page */
+@import url(./blocks/page/page.css);
+
+/* home */
+@import url(./blocks/home/home.css);
+@import url(./blocks/header/header.css);
+@import url(./blocks/promo/promo.css);
+@import url(./blocks/promo/__title/promo__title.css);
+@import url(./blocks/promo/__subtitle/promo__subtitle.css);
+
+/* main */
+@import url(./blocks/main/main.css);
+
+/* nav */
+@import url(./blocks/nav/nav.css);
+@import url(./blocks/nav/_fixed/nav_fixed.css);
+@import url(./blocks/nav/__link/nav__link.css);
+@import url(./blocks/nav/__link/_active/nav__link_active.css);
+
+/* search */
+@import url(./blocks/search/search.css);
+@import url(./blocks/search/__form/search__form.css);
+@import url(./blocks/search/__field/search__field.css);
+@import url(./blocks/search/__input/search__input.css);
+@import url(./blocks/search/__submit-btn/search__submit-btn.css);
+
+/* hashtags */
+@import url(./blocks/hashtags/hashtags.css);
+@import url(./blocks/hashtags/_to-photo/hashtags_to-photo.css);
+@import url(./blocks/hashtag/hashtag.css);
+
+/* gallery */
+@import url(./blocks/gallery/gallery.css);
+@import url(./blocks/photo-card/photo-card.css);
+@import url(./blocks/photo-card/__image/photo-card__image.css);
+@import url(./blocks/photo-card/__delete-btn/photo-card__delete-btn.css);
+
+/* more */
+@import url(./blocks/more/more.css);
+@import url(./blocks/more/__btn/more__btn.css);
+
+/* footer */
+@import url(./blocks/footer/footer.css);
+@import url(./blocks/footer/__column/footer__column.css);
+@import url(./blocks/footer/__social-media/footer__social-media.css);
+@import url(./blocks/footer/__icon/footer__icon.css);
+@import url(./blocks/footer/__icon/_email/footer__icon_email.css);
+@import url(./blocks/footer/__icon/_instagram/footer__icon_instagram.css);
+@import url(./blocks/footer/__link/footer__link.css);
+
+/* popup */
+@import url(./blocks/popup/popup.css);
+@import url(./blocks/popup/_is-opened/popup_is-opened.css);
+@import url(./blocks/popup/__wrapper/popup__wrapper.css);
+@import url(./blocks/popup/__close-btn/popup__close-btn.css);
+@import url(./blocks/popup/__image/popup__image.css);
+@import url(./blocks/popup/__caption/popup__caption.css);
+@import url(./blocks/popup/__hashtags/popup__hashtags.css);
+@import url(./blocks/add-hashtag-btn/add-hashtag-btn.css);
+@import url(./blocks/views/views.css);
+@import url(./blocks/views/__icon/views__icon.css);
+@import url(./blocks/views/__number/views__number.css);

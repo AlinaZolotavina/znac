@@ -1,0 +1,10 @@
+.photo-card {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+}
+
+.photo-card:not(:hover) {
+    filter: brightness(60%);
+}

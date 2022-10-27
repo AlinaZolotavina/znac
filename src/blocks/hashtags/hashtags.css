@@ -1,0 +1,9 @@
+.hashtags {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-size: 16px;
+    font-weight: 200;
+    line-height: 19px;
+    color: #ABABAB;
+}

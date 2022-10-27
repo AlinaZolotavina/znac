@@ -1,0 +1,16 @@
+.gallery {
+    width: 1200px;
+    max-height: 1200px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 398.6px);
+    column-gap: 2px;
+    row-gap: 2px;
+    list-style: none;
+    padding: 0;
+    margin: 50px auto 100px;
+}
+
+.gallery:not(:hover) {
+    filter: brightness(160%);
+}

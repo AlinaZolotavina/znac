@@ -1,0 +1,19 @@
+.add-hashtag-btn {
+    width: 23px;
+    height: 23px;
+    align-self: baseline;
+    border: none;
+    background-image: url(../../images/edit-btn.svg);
+    background-color: transparent;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    transition: opacity .2s ease;
+}
+
+.add-hashtag-btn:hover {
+    opacity: .7;
+}

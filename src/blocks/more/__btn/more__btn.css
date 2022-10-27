@@ -1,0 +1,18 @@
+.more__btn {
+    min-width: 100%;
+    height: 60px;
+    background-color: #242728;
+    border-style: none;
+    border-radius: 5px;
+    font-size: 20px;
+    font-weight: 200;
+    line-height: 24px;
+    color: #E8E8E8;
+    padding: 0;
+    transition: opacity .2s ease;
+    cursor: pointer;
+}
+
+.more__btn:hover {
+    opacity: .7;
+}
