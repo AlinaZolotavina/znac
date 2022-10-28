@@ -1,0 +1,13 @@
+.dropdown-btn {
+    position: absolute;
+    top: 37px;
+    right: 12px;
+    width: 23px;
+    height: 23px;
+    border-style: none;
+    background-color: transparent;
+    background-image: url(../../images/dropdown-btn.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}

@@ -1,10 +1,10 @@
-function Navigation({ className }) {
+function Navigation({ className, firstLink, secondLink, thirdLink }) {
 
     return (
         <div className={className}>
-            <button className="nav__link">HOME</button>
-            <button className="nav__link">GALLERY</button>
-            <button className="nav__link">CONTACT</button>
+            <button className="nav__link">{firstLink}</button>
+            <button className="nav__link">{secondLink}</button>
+            <button className="nav__link">{thirdLink}</button>
         </div>
     );
 }

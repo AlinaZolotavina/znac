@@ -1,0 +1,5 @@
+.form__additional-info {
+    display: flex;
+    justify-content: center;
+    width: 450px;
+}

@@ -6,7 +6,12 @@ function Home() {
     return (
         <section className="home">
             <Header className="header">
-                <Navigation className="nav" />
+                <Navigation
+                    className="nav"
+                    firstLink='HOME'
+                    secondLink='GALLERY'
+                    thirdLink='CONTACT'
+                />
             </Header>
             <Promo />
         </section>

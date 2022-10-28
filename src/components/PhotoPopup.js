@@ -1,14 +1,14 @@
+import EditButton from './EditButton';
 import Hashtags from './Hashtags';
 
 function PhotoPopup({ isOpen, photo, onClose, }) {
-    console.log(photo.hashtags);
     return (
         <div className={`popup popup_type_photo ${isOpen && 'popup_is-opened'}`}>
             <div className="popup__wrapper">
                 <img className="popup__image" src={photo.src} alt={photo.alt} />
                 <div className="popup__caption">
                     <div className="popup__hashtags">
-                        <button className="add-hashtag-btn"></button>
+                        <EditButton classname="edit-btn edit-hashtags-btn"/>
                         <Hashtags classname="hashtags hashtags_to-photo" photoHashtags={photo.hashtags} />
                     </div>
                     <div className="views">
