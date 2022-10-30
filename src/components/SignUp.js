@@ -8,7 +8,10 @@ function SignUp() {
         <section className='sign-up'>
             <div className='sign-up__container'>
                 <Form
+                    formClassname='form'
+                    titleClassname='form__title'
                     title='Create account'
+                    buttonClassname='form__submit-btn'
                     buttonText='Sign up'
                 >
                     <Input 

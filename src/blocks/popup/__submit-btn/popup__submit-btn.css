@@ -1,0 +1,8 @@
+.popup__submit-btn {
+    width: inherit;
+    height: 40px;
+    background-color: #2C2E2F;
+    border-style: none;
+    border-radius: 5px;
+    color: #E8E8E8;
+}

@@ -1,0 +1,11 @@
+.dropdown__btn {
+    cursor: pointer;
+    color: #9D9A9A;
+    text-align: start;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.dropdown__btn:hover {
+    background-color: #464C4E;
+}

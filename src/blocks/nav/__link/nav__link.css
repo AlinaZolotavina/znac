@@ -3,12 +3,11 @@
     font-weight: 300;
     line-height: 32px;
     color: #E8E8E8;
-    background-color: transparent;
-    border-style: none;
     padding: 0;
     margin-right: 40px;
     cursor: pointer;
     transition: opacity .2s ease;
+    text-decoration: none;
 }
 
 .nav__link:last-child {

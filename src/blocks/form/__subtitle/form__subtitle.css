@@ -1,0 +1,10 @@
+.form__subtitle {
+    color: #D9D9D9;
+    font-size: 16px;
+    font-weight: 200;
+    line-height: 19px;
+    margin: 0 0 40px;
+    width: 250px;
+    text-align: center;
+    align-self: center;
+}

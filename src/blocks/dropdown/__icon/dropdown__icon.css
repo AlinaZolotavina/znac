@@ -1,0 +1,11 @@
+.dropdown__icon {
+    position: absolute;
+    top: 40px;
+    right: 15px;
+    width: 15px;
+    height: 15px;
+    background-image: url(../../../images/dropdown-btn.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}

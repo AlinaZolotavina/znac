@@ -15,5 +15,9 @@
 }
 
 .input__field:focus {
-    background-color: #373B3D;
+    background-color: #464C4E;
+}
+
+.input__field::placeholder {
+    color: #E8E8E8;
 }

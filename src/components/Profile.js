@@ -1,10 +1,10 @@
 import Input from "./Input";
-import AddButton from "./EditButton";
+import EditButton from "./EditButton";
 import Header from "./Header";
 import Navigation from "./Navigation";
 import LogoutButton from "./LogoutButton";
 
-function Profile() {
+function Profile({ onEditEmailBtnClick, onEditPasswordBtnClick }) {
     return (
         <section className='profile'>
             <Header className='header admin-header'>
@@ -23,7 +23,7 @@ function Profile() {
                         placeholder=''
                         classname='input__field profile__input'
                     />
-                    <AddButton classname='edit-btn edit-profile-btn'/>
+                    <EditButton classname='edit-btn edit-profile-btn' onClick={onEditEmailBtnClick} />
                 </div>
                 <div className='profile__password'>
                     <Input
@@ -31,7 +31,7 @@ function Profile() {
                         placeholder=''
                         classname='input__field profile__input'
                     />
-                    <AddButton classname='edit-btn edit-profile-btn'/>
+                    <EditButton classname='edit-btn edit-profile-btn' onClick={onEditPasswordBtnClick} />
                 </div> 
             </div>
                        

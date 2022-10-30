@@ -1,11 +1,11 @@
-function Form({ title, buttonText, children }) {
+function Form({ formClassname, titleClassname, title, buttonClassname, buttonText, children }) {
     return (
-        <section className='form'>
-            <h2 className='form__title'>{title}</h2>
+        <section className={formClassname}>
+            <h2 className={titleClassname}>{title}</h2>
             <form className='form__container'>
                 {children}
                 <button
-                    className='form__submit-btn'
+                    className={buttonClassname}
                 >{buttonText}</button>
             </form>
         </section>

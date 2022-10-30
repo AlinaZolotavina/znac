@@ -1,6 +1,6 @@
-function EditButton({ classname}) {
+function EditButton({ classname, onClick }) {
     return (
-        <button className={classname}></button>
+        <button className={classname} onClick={onClick} />
     )
 }
 

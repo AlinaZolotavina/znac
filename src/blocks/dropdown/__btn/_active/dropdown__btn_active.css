@@ -1,0 +1,9 @@
+.dropdown__btn_active {
+    background-color: #0E2D37;
+    border-radius: 5px 5px 0 0;
+}
+
+.dropdown__btn_active:hover {
+    background-color: #99AAAF;
+    color: #0F1111;
+}

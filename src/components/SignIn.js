@@ -8,7 +8,10 @@ function SignIn() {
         <section className='sign-in'>
             <div className='sign-in__container'>
                 <Form
+                    formClassname='form'
+                    titleClassname='form__title'
                     title='Glad to see you again!'
+                    buttonClassname='form__submit-btn'
                     buttonText='Sign in'
                 >
                     <Input 
@@ -24,7 +27,7 @@ function SignIn() {
                 </Form>
                 <div className='form__additional-info'>
                     <p className='form__link-note'>Forgot your password?</p>
-                    <Link className='form__link' to='/'>Reset</Link>
+                    <Link className='form__link' to='/signin/recovery'>Reset</Link>
                 </div>
                 
             </div>

@@ -7,7 +7,7 @@ import photosList from '../utils/photosList';
 import photoHashtags from '../utils/photoHashtags';
 import Navigation from './Navigation';
 
-function Main({ onPhotoClick }) {
+function Main({ loggedIn, onPhotoClick }) {
     return (
         <main className="main" id="main">
             <Navigation
@@ -18,7 +18,7 @@ function Main({ onPhotoClick }) {
             />
             <Search />
             <Hashtags classname="hashtags" photoHashtags={photoHashtags} />
-            <Gallery photos={photosList} onPhotoClick={onPhotoClick} />
+            <Gallery loggedIn={loggedIn} photos={photosList} onPhotoClick={onPhotoClick} />
             <More />
         </main>
     );

@@ -4,10 +4,6 @@
     cursor: pointer;
 }
 
-.hashtag:first-child {
-    padding-left: 30px;
-}
-
 .hashtag:last-child {
     margin: 0;
 }

@@ -60,7 +60,12 @@
 /* popup */
 @import url(./blocks/popup/popup.css);
 @import url(./blocks/popup/_is-opened/popup_is-opened.css);
+@import url(./blocks/popup/__container/popup__container.css);
 @import url(./blocks/popup/__wrapper/popup__wrapper.css);
+@import url(./blocks/popup/__title/popup__title.css);
+@import url(./blocks/popup/__form/popup__form.css);
+@import url(./blocks/popup/__input-field/popup__input-field.css);
+@import url(./blocks/popup/__submit-btn/popup__submit-btn.css);
 @import url(./blocks/popup/__close-btn/popup__close-btn.css);
 @import url(./blocks/popup/__image/popup__image.css);
 @import url(./blocks/popup/__caption/popup__caption.css);
@@ -85,6 +90,7 @@
 /* form */
 @import url(./blocks/form/form.css);
 @import url(./blocks/form/__title/form__title.css);
+@import url(./blocks/form/__subtitle/form__subtitle.css);
 @import url(./blocks/form/__container/form__container.css);
 @import url(./blocks/form/__submit-btn/form__submit-btn.css);
 @import url(./blocks/form/__additional-info/form__additional-info.css);
@@ -107,8 +113,23 @@
 @import url(./blocks/logout-btn/logout-btn.css);
 
 /* dropdown */
-@import url(./blocks/dropdown-input/dropdown-input.css);
-@import url(./blocks/dropdown-btn/dropdown-btn.css);
+@import url(./blocks/dropdown/dropdown.css);
+@import url(./blocks/dropdown/__btn/dropdown__btn.css);
+@import url(./blocks/dropdown/__btn/_active/dropdown__btn_active.css);
+@import url(./blocks/dropdown/__icon/dropdown__icon.css);
+@import url(./blocks/dropdown/__icon/__clicked/dropdown__icon_clicked.css);
+@import url(./blocks/dropdown/__options/dropdown__options.css);
+@import url(./blocks/dropdown/__options/_visible/dropdown__options_visible.css);
+@import url(./blocks/dropdown/__option/dropdown__option.css);
+@import url(./blocks/dropdown/__option/_selected/dropdown__option_selected.css);
+@import url(./blocks/dropdown/__check-icon/dropdown__check-icon.css);
+@import url(./blocks/dropdown/__check-icon/_active/dropdown__check-icon_active.css);
 
 /* add photo */
 @import url(./blocks/add-photo/add-photo.css);
+
+/* reset-password */
+@import url(./blocks/reset-password/reset-password.css);
+@import url(./blocks/reset-password/__container/reset-password__container.css);
+@import url(./blocks/reset-password/__title/reset-password__title.css);
+@import url(./blocks/reset-password/__image/reset-password__image.css);
