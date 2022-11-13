@@ -1,6 +1,26 @@
 .search {
     display: flex;
     flex-direction: column;
-    max-width: 1200px;
-    margin: 35px auto 20px;
+    width: 100%;
+    padding: 30px 40px 20px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+@media screen and (max-width: 768px) {
+    .search {
+        padding: 20px 30px 10px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .search {
+        padding: 20px 20px 10px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .search {
+        padding: 16px 10px 15px;
+    }
 }

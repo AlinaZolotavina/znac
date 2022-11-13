@@ -1,5 +1,6 @@
 import EditButton from './EditButton';
 import Hashtags from './Hashtags';
+import CloseButton from "./CloseButton";
 
 function PhotoPopup({ loggedIn, isOpen, photo, onClose, }) {
     return (
@@ -16,7 +17,7 @@ function PhotoPopup({ loggedIn, isOpen, photo, onClose, }) {
                         <div className="views__icon" />
                     </div>
                 </div>
-                <button className="popup__close-btn" onClick={onClose}></button>
+                <CloseButton classname="close-btn popup__close-btn" onClick={onClose}/>
             </div>
         </div>
     );

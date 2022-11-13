@@ -1,0 +1,11 @@
+@media screen and (max-width: 700px) {
+    .add-photo__form  {
+        width: 350px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .add-photo__form  {
+        width: 300px;
+    }
+}

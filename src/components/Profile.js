@@ -3,19 +3,21 @@ import EditButton from "./EditButton";
 import Header from "./Header";
 import Navigation from "./Navigation";
 import LogoutButton from "./LogoutButton";
+import BurgerMenuBtn from "./BurgerMenuBtn";
 
-function Profile({ onEditEmailBtnClick, onEditPasswordBtnClick }) {
+function Profile({ loggedIn, onGalleryClick, onContactClick, onEditEmailBtnClick, onEditPasswordBtnClick, onMenuClick }) {
     return (
         <section className='profile'>
             <Header className='header admin-header'>
                 <Navigation
-                    className="nav"
-                    firstLink='HOME'
-                    secondLink='PROFILE'
-                    thirdLink='ADD PHOTO'
+                    loggedIn={loggedIn}
+                    onHomeClick={() => {}}
+                    onGalleryClick={onGalleryClick}
+                    onContactClick={onContactClick}
                 />
-                <LogoutButton />
+                <LogoutButton className='logout-btn'/>
             </Header>
+            <BurgerMenuBtn onMenuClick={onMenuClick} />
             <div className='profile__container'>
                 <div className='profile__email'>
                     <Input

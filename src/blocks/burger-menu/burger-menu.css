@@ -1,0 +1,37 @@
+.burger-menu {
+    position: absolute;
+    top: 0;
+    right: 4vw;
+    width: 24px;
+    height: 16px;
+    background-image: url(../../images/burger-menu.svg);
+    background-color: transparent;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-style: none;
+    padding: 0;
+    margin-top: 4vw;
+    cursor: pointer;
+    transition: opacity .2s ease;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.burger-menu:hover {
+    opacity: .7;
+}
+
+@media screen and (max-width: 700px) {
+    .burger-menu {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .burger-menu {
+        top: 3vw;
+    }
+}
+

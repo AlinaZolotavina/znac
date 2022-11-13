@@ -1,27 +1,54 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
-function Navigation({ className, firstLink, secondLink, thirdLink }) {
+function Navigation({ loggedIn, onHomeClick, onGalleryClick, onContactClick }) {
+    const location = useLocation();
 
     return (
-        <div className={className}>
-            <Link
-                className="nav__link"
-                to='/'
-            >
-                {firstLink}
-            </Link>
-            <Link
-                className="nav__link"
-                to={`/${secondLink.toLowerCase()}`}
-            >
-                {secondLink}
-            </Link>
-            <Link
-                className="nav__link"
-                to={`/${thirdLink.toLowerCase().replace(/ /g,'')}`}
-            >   
-                {thirdLink}
-            </Link>
+        <div className='nav'>
+            {
+                location.pathname === '/' ?
+                <button
+                    className={`nav__link home-link`}
+                    onClick={onHomeClick}    
+                >
+                    HOME    
+                </button>
+                : <Link className="nav__link" to='/'>HOME </Link>
+            }
+            {
+                location.pathname === '/' && <button 
+                    className={`nav__link main-link`}
+                    onClick={onGalleryClick}
+                >
+                    GALLERY
+                </button>
+            }
+            {
+                location.pathname === '/' && <button
+                    className={`nav__link footer-link`}
+                    onClick={onContactClick}
+                >
+                    CONTACT
+                </button>
+            }            
+            {
+                loggedIn &&
+                    <Link
+                        className={`nav__link ${location.pathname === '/profile' && 'nav__link_active'}`}
+                        to='/profile'
+                    >
+                        PROFILE
+                    </Link>
+            }
+            {  
+                loggedIn && 
+                    <Link
+                        className={`nav__link ${location.pathname === '/addphoto' && 'nav__link_active'}`}
+                        to='addphoto'
+                    >   
+                        ADD PHOTO
+                    </Link>
+            }
         </div>
     );
 }

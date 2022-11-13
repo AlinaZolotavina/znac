@@ -1,6 +1,10 @@
 .header {
-    width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    height: 100px;
     position: absolute;
     top: 0;
     right: 0;
+    padding-right: 4vw;
 }

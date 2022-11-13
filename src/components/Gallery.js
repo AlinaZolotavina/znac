@@ -1,6 +1,6 @@
 import PhotoCard from './PhotoCard';
 
-function Gallery({ loggedIn, photos, onPhotoClick }) {
+function Gallery({ loggedIn, photos, onPhotoClick, onDeleteBtnClick }) {
     return (
         <ul className="gallery">
             {photos.map(photo => (
@@ -9,6 +9,7 @@ function Gallery({ loggedIn, photos, onPhotoClick }) {
                     photo={photo}
                     loggedIn={loggedIn}
                     onPhotoClick={onPhotoClick}
+                    onDeleteBtnClick={onDeleteBtnClick}
                 />
             ))}
         </ul>

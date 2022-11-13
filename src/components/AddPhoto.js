@@ -4,8 +4,18 @@ import LogoutButton from "./LogoutButton";
 import Form from "./Form";
 import Input from "./Input";
 import { useState } from "react";
+import BurgerMenuBtn from "./BurgerMenuBtn";
 
-function AddPhoto({ pcDownloadCheck, linkDownloadCheck, onPcDownloadClick, onLinkDownloadClick}) {
+function AddPhoto({ 
+    loggedIn,
+    onGalleryClick,
+    onContactClick,
+    pcDownloadCheck,
+    linkDownloadCheck,
+    onPcDownloadClick,
+    onLinkDownloadClick,
+    onMenuClick 
+    }) {
     const [isClicked, setIsClicked] = useState(false);
 
     function handleDropdownClick() {
@@ -16,15 +26,16 @@ function AddPhoto({ pcDownloadCheck, linkDownloadCheck, onPcDownloadClick, onLin
         <section className='add-photo'>
             <Header className='header admin-header'>
                 <Navigation
-                    className="nav"
-                    firstLink='HOME'
-                    secondLink='PROFILE'
-                    thirdLink='ADD PHOTO'
+                    loggedIn={loggedIn}
+                    onHomeClick={() => {}}
+                    onGalleryClick={onGalleryClick}
+                    onContactClick={onContactClick}
                 />
-                <LogoutButton />
+                <LogoutButton className='logout-btn' />
             </Header>
+            <BurgerMenuBtn onMenuClick={onMenuClick} />
             <Form
-                formClassname='form'
+                formClassname='form add-photo__form'
                 titleClassname='form__title'
                 title='Add new photo'
                 buttonClassname='form__submit-btn'

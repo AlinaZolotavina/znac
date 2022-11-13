@@ -9,20 +9,22 @@
 
 /* header */
 @import url(./blocks/header/header.css);
-@import url(./blocks/admin-header/admin-header.css);
+@import url(./blocks/burger-menu/burger-menu.css);
 
 /* home */
 @import url(./blocks/home/home.css);
 @import url(./blocks/promo/promo.css);
+@import url(./blocks/promo/__text/promo__text.css);
 @import url(./blocks/promo/__title/promo__title.css);
 @import url(./blocks/promo/__subtitle/promo__subtitle.css);
 
 /* main */
 @import url(./blocks/main/main.css);
+@import url(./blocks/main/__navigation/main__navigation.css);
+@import url(./blocks/main/__navigation/_fixed/main__navigation_fixed.css);
 
 /* nav */
 @import url(./blocks/nav/nav.css);
-@import url(./blocks/nav/_fixed/nav_fixed.css);
 @import url(./blocks/nav/__link/nav__link.css);
 @import url(./blocks/nav/__link/_active/nav__link_active.css);
 
@@ -51,6 +53,7 @@
 /* footer */
 @import url(./blocks/footer/footer.css);
 @import url(./blocks/footer/__column/footer__column.css);
+@import url(./blocks/footer/__column/_right/footer__column__rigth.css);
 @import url(./blocks/footer/__social-media/footer__social-media.css);
 @import url(./blocks/footer/__icon/footer__icon.css);
 @import url(./blocks/footer/__icon/_email/footer__icon_email.css);
@@ -66,18 +69,21 @@
 @import url(./blocks/popup/__form/popup__form.css);
 @import url(./blocks/popup/__input-field/popup__input-field.css);
 @import url(./blocks/popup/__submit-btn/popup__submit-btn.css);
-@import url(./blocks/popup/__close-btn/popup__close-btn.css);
 @import url(./blocks/popup/__image/popup__image.css);
 @import url(./blocks/popup/__caption/popup__caption.css);
 @import url(./blocks/popup/__hashtags/popup__hashtags.css);
 @import url(./blocks/views/views.css);
 @import url(./blocks/views/__icon/views__icon.css);
 @import url(./blocks/views/__number/views__number.css);
+@import url(./blocks/popup/__close-btn/popup__close-btn.css);
 
 /* edit button */
 @import url(./blocks/edit-btn/edit-btn.css);
 @import url(./blocks/edit-hashtags-btn/edit-hashtags-btn.css);
 @import url(./blocks/edit-profile-btn/edit-profile-btn.css);
+
+/* close button */
+@import url(./blocks/close-btn/close-btn.css);
 
 /* sign-up */
 @import url(./blocks/sign-up/sign-up.css);
@@ -127,6 +133,14 @@
 
 /* add photo */
 @import url(./blocks/add-photo/add-photo.css);
+@import url(./blocks/add-photo/__form/add-photo__form.css);
+
+/* menu */
+@import url(./blocks/menu/menu.css);
+@import url(./blocks/menu/_visible/menu_visible.css);
+@import url(./blocks/menu/__link/menu__link.css);
+@import url(./blocks/menu/__logout-btn/menu__logout-btn.css);
+@import url(./blocks/menu/__close-btn/menu__close-btn.css);
 
 /* reset-password */
 @import url(./blocks/reset-password/reset-password.css);

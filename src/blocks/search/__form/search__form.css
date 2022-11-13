@@ -7,3 +7,15 @@
     border-radius: 50px;
     box-sizing: border-box;
 }
+
+@media screen and (max-width: 1000px) {
+    .search__form {
+        height: 50px;        
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .search__form {
+        height: 40px;        
+    }
+}

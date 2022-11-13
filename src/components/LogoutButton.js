@@ -1,6 +1,6 @@
-function LogoutButton() {
+function LogoutButton({ className }) {
     return (
-        <button className='logout-btn'>LOG OUT</button>
+        <button className={className}>LOG OUT</button>
     );
 }
 

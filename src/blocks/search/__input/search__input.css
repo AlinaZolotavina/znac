@@ -1,13 +1,28 @@
 .search__input {
     background-color: transparent;
     border-style: none;
-    min-width: 100%;
+    min-width: calc(100% - 90px);
     height: 20px;
-    margin: 0 20px 0 30px;
+    margin: 0 0 0 30px;
     box-sizing: border-box;
     font-size: 16px;
     font-weight: 200;
     line-height: 19px;
     outline: none;
     color: #E8E8E8;
+}
+
+@media screen and (max-width: 500px) {
+    .search__input {
+        min-width: calc(100% - 55px);
+        margin: 0 0 0 20px;   
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .search__input {
+        font-size: 14px;
+        line-height: 17px;    
+        margin: 0 0 0 20px;   
+    }
 }

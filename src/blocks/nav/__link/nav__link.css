@@ -1,13 +1,15 @@
 .nav__link {
-    font-size: 24px;
+    font-size: 16px;
     font-weight: 300;
-    line-height: 32px;
+    line-height: 19px;
     color: #E8E8E8;
-    padding: 0;
+    padding: 7px 0;
     margin-right: 40px;
     cursor: pointer;
     transition: opacity .2s ease;
     text-decoration: none;
+    background-color: transparent;
+    border-style: none;
 }
 
 .nav__link:last-child {
@@ -16,4 +18,19 @@
 
 .nav__link:hover {
     opacity: .7;
+}
+
+@media screen and (max-width: 900px) {
+    .nav__link {
+        font-size: 14px;
+        line-height: 17px;
+        margin-right: 30px;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .nav__link {
+        opacity: 0;
+        visibility: hidden;
+    }
 }

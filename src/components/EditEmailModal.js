@@ -1,5 +1,6 @@
 import Form from "./Form";
 import Input from "./Input";
+import CloseButton from "./CloseButton";
 
 function EditEmailModal({ isOpen, onClose }) {
     return (
@@ -18,7 +19,7 @@ function EditEmailModal({ isOpen, onClose }) {
                         classname='popup__input-field'
                     />
                 </Form>
-                <button className="popup__close-btn" onClick={onClose}></button>
+                <CloseButton classname="close-btn popup__close-btn" onClick={onClose}/>
             </div>
         </div>
     );

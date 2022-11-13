@@ -1,5 +1,25 @@
 .more {
     display: flex;
-    max-width: 1200px;
+    width: 100%;
+    padding: 0 40px;
     margin: 0 auto;
+    box-sizing: border-box;
+}
+
+@media screen and (max-width: 768px) {
+    .more {
+        padding: 0 30px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .more {
+        padding: 0 20px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .more {
+        padding: 0 10px;
+    }
 }

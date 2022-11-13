@@ -5,4 +5,10 @@
     border-style: none;
     border-radius: 5px;
     color: #E8E8E8;
+    transition: opacity .2s ease;
+    cursor: pointer;
+}
+
+.popup__submit-btn:hover {
+    opacity: .8;
 }

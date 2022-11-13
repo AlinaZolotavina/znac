@@ -1,33 +1,22 @@
 import Header from './Header';
+import BurgerMenuBtn from './BurgerMenuBtn';
 import Navigation from './Navigation';
 import LogoutButton from './LogoutButton';
 import Promo from './Promo';
 
-function Home({ loggedIn }) {
+function Home({ loggedIn, onHomeClick, onGalleryClick, onContactClick, onMenuClick }) {
     return (
-        <section className="home">
-            <Header className={`header ${loggedIn ? 'admin-header' : ''}`}>
-                {
-                loggedIn ? (
-                    <>
-                        <Navigation
-                            className="nav"
-                            firstLink='HOME'
-                            secondLink='PROFILE'
-                            thirdLink='ADD PHOTO'
-                        />
-                        <LogoutButton />
-                    </>
-                ) : (
-                    <Navigation
-                        className="nav"
-                        firstLink='HOME'
-                        secondLink='GALLERY'
-                        thirdLink='CONTACT'
-                    />
-                    )
-                }                
+        <section className="home section" id='home'>
+            <Header className='header'>
+                <Navigation
+                    loggedIn={loggedIn}
+                    onHomeClick={onHomeClick}
+                    onGalleryClick={onGalleryClick}
+                    onContactClick={onContactClick}
+                />
+                {loggedIn && <LogoutButton className='logout-btn' />}  
             </Header>
+            <BurgerMenuBtn onMenuClick={onMenuClick} /> 
             <Promo />
         </section>
     );

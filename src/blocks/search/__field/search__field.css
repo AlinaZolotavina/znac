@@ -1,3 +1,15 @@
 .search__field {
-    width: 90%;
+    width: calc(100% - 90px);
+}
+
+@media screen and (max-width: 1000px) {
+    .search__field {
+        width: calc(100% - 65px);     
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .search__field {
+        width: calc(100% - 55px);     
+    }
 }

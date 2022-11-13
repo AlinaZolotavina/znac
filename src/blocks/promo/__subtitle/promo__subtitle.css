@@ -7,3 +7,19 @@
     text-align: center;
     margin: 0;
 }
+
+@media screen and (max-width: 900px) {
+    .promo__subtitle {
+        max-width: 320px;
+        font-size: 20px;
+        line-height: 24px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .promo__subtitle {
+        max-width: 210px;
+        font-size: 16px;
+        line-height: 19px;
+    }
+}
