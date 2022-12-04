@@ -1,8 +1,7 @@
 .input__error {
-    font-size: 14px;
+    height: 15px;
+    font-size: 12px;
     font-weight: 300;
-    line-height: 17px;
+    line-height: 15px;
     color: #FF3055;
-    opacity: 0;
-    visibility: hidden;
 }

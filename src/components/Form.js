@@ -1,11 +1,17 @@
-function Form({ formClassname, titleClassname, title, buttonClassname, buttonText, children }) {
+function Form({ formName, formClassname, titleClassname, title, buttonClassname, buttonText, isFormValid, isSendingReq, onSubmit, children }) {
     return (
         <section className={formClassname}>
             <h2 className={titleClassname}>{title}</h2>
-            <form className='form__container'>
+            <form
+                name={formName}
+                className='form__container'
+                onSubmit={onSubmit}
+            >
                 {children}
                 <button
-                    className={buttonClassname}
+                    className={`${buttonClassname} ${!isFormValid ? `${buttonClassname}_disabled` : ''}`}
+                    type='submit'
+                    disabled={!isFormValid || isSendingReq}
                 >{buttonText}</button>
             </form>
         </section>

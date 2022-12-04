@@ -8,7 +8,7 @@ function checkResponse(res) {
     }
 }
 
-export const signup = (name, email, password) => {
+export const signup = (email, password) => {
     return fetch(`${BASE_URL}/signup`, {
         method: 'POST',
         credentials: 'include',
@@ -16,7 +16,7 @@ export const signup = (name, email, password) => {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({name, email, password})
+        body: JSON.stringify({email, password})
     })
     .then((res) => checkResponse(res));
 }

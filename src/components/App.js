@@ -12,6 +12,8 @@ import AddPhoto from './AddPhoto';
 import EditEmailModal from './EditEmailModal';
 import EditPasswordModal from './EditPasswordModal';
 import Menu from './Menu';
+import api from '../utils/api';
+import * as auth from '../utils/auth.js';
 
 import { useState } from 'react';
 import { Switch, Route, useLocation, useHistory } from 'react-router-dom';
@@ -19,8 +21,13 @@ import { useEffect } from 'react';
 
 
 function App() {
+    const [currentUser, setCurrentUser] = useState({});
+    const [loggedIn, setLoggedIn] = useState(false);
+
     const history = useHistory();
     const location = useLocation();
+
+    const [isSendingReq, setIsSendingReq] = useState(false);
 
     const [isPhotoPopupOpen, setIsPhotoPopupOpen] = useState(false);
     const [isEditEmailModalOpen, setIsEditEmailModalOpen] = useState(false);
@@ -31,6 +38,89 @@ function App() {
 
     const [pcDownloadCheck, setPcDownloadCheck] = useState(false);
     const [linkDownloadCheck, setLinkDownloadCheck] = useState(false);
+
+    // if logged in, get and set current user; if not logged in, check token
+    useEffect(() => {
+        if (loggedIn) {
+            api.getUserData()
+                .then(data => {
+                const userData = data;
+                setCurrentUser(userData);
+            })
+                .catch(err => console.log(err));
+        } else {
+            checkToken();
+        }
+    }, [loggedIn]);
+
+    function checkToken() {
+        api.getUserData()
+            .then((res) => {
+            console.log(res);
+            const userData = res;
+            setLoggedIn(true);
+            setCurrentUser(userData);
+        })
+            .catch(err => console.log(err));
+    }
+
+    function handleSignup(name, email, password) {
+        setIsSendingReq(true);
+        auth.signup(name, email, password)
+            .then((res) => {
+                if (res) {
+                    handleSignin(email, password);
+                }
+            })
+            .catch((err) => {
+                if (err.status === 400) {
+                    console.log('error 400');
+                } else if (err.status === 409) {
+                    console.log('error 409');
+                } else {
+                    console.log('error');
+                };
+            })
+            .finally(() => setIsSendingReq(false));
+    };
+
+    function handleSignin(email, password) {
+        setIsSendingReq(true);
+        auth.signin(email, password)
+            .then((data) => {
+                setLoggedIn(true);
+                setCurrentUser(data.user);
+                history.push('/');
+            })
+            .catch((err) => {
+                if (err.status === 404) {
+                    console.log('error 404');
+                } else if (err.status === 401) {
+                    console.log('error 401');
+                } else {
+                    console.log('error');
+                };
+            })
+            .finally(() => setIsSendingReq(false));
+    };
+
+    function handleSignout(email) {
+        auth.signout(email)
+            .then(() => {
+                setLoggedIn(false);
+                history.push('/');
+                setCurrentUser({});
+            })
+            .catch((err) => {
+                if (err.status === 404) {
+                    console.log('error 404');
+                } else if (err.status === 401) {
+                    console.log('error 401');
+                } else {
+                    console.log('error');
+                };
+            });
+    };
 
     function handlePhotoClick(photo) {
         setIsPhotoPopupOpen(!isPhotoPopupOpen);
@@ -160,14 +250,16 @@ function App() {
             <Switch>
                 <Route exact path='/'>
                     <Home
-                        loggedIn={true}
+                        loggedIn={loggedIn}
                         onHomeClick={handleHomeClick}
                         onGalleryClick={handleGalleryClick}
                         onContactClick={handleContactClick}
                         onMenuClick={handleMenuClick}
+                        onSignout={handleSignout}
+                        isSendingReq={isSendingReq}
                     />
                     <Main
-                        loggedIn={true}
+                        loggedIn={loggedIn}
                         onPhotoClick={handlePhotoClick}
                         onDeleteBtnClick={handlePhotoDelete}
                         onHomeClick={handleHomeClick}
@@ -178,11 +270,17 @@ function App() {
                 </Route>
 
                 <Route exact path='/signin'>
-                    <SignIn />
+                    <SignIn 
+                        onSignin={handleSignin}
+                        isSendingReq={isSendingReq}
+                    />
                 </Route>
 
                 <Route path='/signup'>
-                    <SignUp />
+                    <SignUp 
+                        onSignup={handleSignup}
+                        isSendingReq={isSendingReq}
+                    />
                 </Route>
 
                 <Route exact path='/signin/recovery'>
@@ -192,18 +290,20 @@ function App() {
                 <ProtectedRoute
                     component={Profile}
                     path='/profile'
-                    loggedIn={true}
+                    loggedIn={loggedIn}
                     onGalleryClick={handleGalleryClick}
                     onContactClick={handleContactClick}
                     onEditEmailBtnClick={handleEditEmailBtnClick}
                     onEditPasswordBtnClick={handleEditPasswordBtnClick}
                     onMenuClick={handleMenuClick}
+                    onSignout={handleSignout}
+                    isSendingReq={isSendingReq}
                 />
 
                 <ProtectedRoute
                     component={AddPhoto}
                     path='/addphoto'
-                    loggedIn={true}
+                    loggedIn={loggedIn}
                     onGalleryClick={handleGalleryClick}
                     onContactClick={handleContactClick}
                     pcDownloadCheck={pcDownloadCheck}
@@ -211,6 +311,8 @@ function App() {
                     onPcDownloadClick={handlePcDownloadClick}
                     onLinkDownloadClick={handleLinkDownloadClick}
                     onMenuClick={handleMenuClick}
+                    onSignout={handleSignout}
+                    isSendingReq={isSendingReq}
                 />
 
 
@@ -218,7 +320,7 @@ function App() {
             </Switch>
 
             <PhotoPopup
-                loggedIn={true}
+                loggedIn={loggedIn}
                 isOpen={isPhotoPopupOpen}
                 photo={selectedPhoto}
                 onClose={closeAllPopups}

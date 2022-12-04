@@ -1,0 +1,8 @@
+.form__submit-btn_disabled {
+    opacity: .6;
+}
+
+.form__submit-btn_disabled:hover {
+    cursor: not-allowed;
+    opacity: .6;
+}

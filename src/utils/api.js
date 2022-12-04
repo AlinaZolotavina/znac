@@ -1,5 +1,3 @@
-const { deletePhoto } = require("../../../znac-api/controllers/photos");
-
 class Api {
     constructor(data) {
         this._serverUrl = data._serverUrl;

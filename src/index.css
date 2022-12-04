@@ -99,6 +99,7 @@
 @import url(./blocks/form/__subtitle/form__subtitle.css);
 @import url(./blocks/form/__container/form__container.css);
 @import url(./blocks/form/__submit-btn/form__submit-btn.css);
+@import url(./blocks/form/__submit-btn/_disabled/form__submit-btn_disabled.css);
 @import url(./blocks/form/__additional-info/form__additional-info.css);
 @import url(./blocks/form/__link-note/form__link-note.css);
 @import url(./blocks/form/__link/form__link.css);
