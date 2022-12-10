@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://znac.org';
+export const BASE_URL = 'http://api.znac.org';
 
 function checkResponse(res) {
     if (res.ok) {
@@ -61,7 +61,7 @@ export const getContent = () => {
 }
 
 export const forgotPassword = (email) => {
-    return fetch(`${BASE_URL}/forgott-password`, {
+    return fetch(`${BASE_URL}/forgot-password`, {
         method: 'PUT', 
         credentials: 'include',
         headers: {

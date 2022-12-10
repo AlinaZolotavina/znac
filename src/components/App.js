@@ -7,17 +7,41 @@ import ProtectedRoute from './ProtectedRoute';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Profile from './Profile';
-import PasswordRecovery from './PasswordRecovery';
+import ForgotPassword from './ForgotPassword';
 import AddPhoto from './AddPhoto';
 import EditEmailModal from './EditEmailModal';
 import EditPasswordModal from './EditPasswordModal';
 import Menu from './Menu';
+import Modal from './Modal';
 import api from '../utils/api';
 import * as auth from '../utils/auth.js';
 
 import { useState } from 'react';
 import { Switch, Route, useLocation, useHistory } from 'react-router-dom';
 import { useEffect } from 'react';
+
+import {
+    // INTERNAL_SERVER_ERROR_MSG,
+    DEFAULT_ERROR_MSG,
+    // NOT_FOUND_ERROR_MSG,
+    USER_NOT_FOUND_ERROR_MSG,
+    // PHOTO_NOT_FOUND_ERROR_MSG,
+    AUTHORIZATION_FAILED_ERROR_MSG,
+    UNAUTHORIZED_ERROR_MSG,
+    BAD_REQUEST_ERROR_MSG,
+    CONFLICT_SIGNUP_EMAIL_ERROR_MSG,
+    SUCCESSFUL_SIGNUP_MSG,
+    // CONFLICT_UPDATE_EMAIL_ERROR_MSG,
+    // PHOTO_FORBIDDEN_ERROR_MSG,
+    // ADD_PHOTO_ERROR_MSG,
+    // DELETE_PHOTO_ERROR_MSG,
+    // SUCCESSFUL_SIGNUP_MSG,
+    // SUCCESSFUL_PROFILE_UPDATE_MSG,
+} from '../utils/constants';
+import ResetPassword from './ResetPassword';
+import EmailSentModal from './EmailSentModal';
+import PasswordChanged from './PasswordChanged';
+import NotFound from './NotFound';
 
 
 function App() {
@@ -28,6 +52,10 @@ function App() {
     const location = useLocation();
 
     const [isSendingReq, setIsSendingReq] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEmailSentModalOpen, setIsEmailSentModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
 
     const [isPhotoPopupOpen, setIsPhotoPopupOpen] = useState(false);
     const [isEditEmailModalOpen, setIsEditEmailModalOpen] = useState(false);
@@ -56,11 +84,10 @@ function App() {
     function checkToken() {
         api.getUserData()
             .then((res) => {
-            console.log(res);
-            const userData = res;
-            setLoggedIn(true);
-            setCurrentUser(userData);
-        })
+                const userData = res;
+                setLoggedIn(true);
+                setCurrentUser(userData);
+            })
             .catch(err => console.log(err));
     }
 
@@ -70,15 +97,18 @@ function App() {
             .then((res) => {
                 if (res) {
                     handleSignin(email, password);
+                    setIsModalOpen(true);
+                    setIsSuccess(true);
+                    setModalMessage(SUCCESSFUL_SIGNUP_MSG);
                 }
             })
             .catch((err) => {
-                if (err.status === 400) {
-                    console.log('error 400');
-                } else if (err.status === 409) {
-                    console.log('error 409');
+                if (err.status === 'Ошибка: 400') {
+                    handleError(BAD_REQUEST_ERROR_MSG);
+                } else if (err.status === 'Ошибка: 409') {
+                    handleError(CONFLICT_SIGNUP_EMAIL_ERROR_MSG);
                 } else {
-                    console.log('error');
+                    handleError(DEFAULT_ERROR_MSG);
                 };
             })
             .finally(() => setIsSendingReq(false));
@@ -93,12 +123,12 @@ function App() {
                 history.push('/');
             })
             .catch((err) => {
-                if (err.status === 404) {
-                    console.log('error 404');
-                } else if (err.status === 401) {
-                    console.log('error 401');
+                if (err.status === 'Ошибка: 404') {
+                    handleError(USER_NOT_FOUND_ERROR_MSG);
+                } else if (err.status === 'Ошибка: 401') {
+                    handleError(AUTHORIZATION_FAILED_ERROR_MSG);
                 } else {
-                    console.log('error');
+                    handleError(DEFAULT_ERROR_MSG);
                 };
             })
             .finally(() => setIsSendingReq(false));
@@ -112,15 +142,55 @@ function App() {
                 setCurrentUser({});
             })
             .catch((err) => {
-                if (err.status === 404) {
-                    console.log('error 404');
-                } else if (err.status === 401) {
-                    console.log('error 401');
+                console.log(err);
+                if (err.status === 'Ошибка: 404') {
+                    handleError(USER_NOT_FOUND_ERROR_MSG);
+                } else if (err.status === 'Ошибка: 401') {
+                    handleError(UNAUTHORIZED_ERROR_MSG);
                 } else {
-                    console.log('error');
+                    handleError(DEFAULT_ERROR_MSG);
                 };
             });
     };
+
+    function handleReceiveResetPasswordLink(email) {
+        setIsSendingReq(true);
+        auth.forgotPassword(email)
+            .then(() => {
+                setIsEmailSentModalOpen(true);
+                setIsSuccess(true);
+                setModalMessage('E-mail has been sent, please follow the instructions.');
+            })
+            .then(() => history.push('/'))
+            .catch((err) => {
+                if (err === 'Ошибка: 404') {
+                    handleError(USER_NOT_FOUND_ERROR_MSG);
+                } else {
+                    handleError(DEFAULT_ERROR_MSG)
+                }
+            })            
+            .finally(() => setIsSendingReq(false));
+    };
+
+    function handleResetPassword(password, confirmPassword) {
+        setIsSendingReq(true);
+        auth.resetPassword(password, confirmPassword)
+            .then(() => {
+                history.push('/password-changed');
+            })
+            .catch((err) => {
+                if (err === 'Ошибка: 401') {
+                    handleError('Wrong reset link or it was expired');
+                } else if (err === 'Ошибка: 400') {
+                    handleError('The entered passwords do not match');
+                } else if (err === 'Ошибка: 409') {
+                    handleError('Your new password must not be the same as the previous one');
+                } else if (err === 'Ошибка: 404') {
+                    handleError('Nothing found');
+                }
+                handleError(DEFAULT_ERROR_MSG);
+            })
+    }
 
     function handlePhotoClick(photo) {
         setIsPhotoPopupOpen(!isPhotoPopupOpen);
@@ -245,6 +315,17 @@ function App() {
         setIsMenuOpen(false);
     };
 
+    function closeModals() {
+        setIsModalOpen(false);
+        setIsEmailSentModalOpen(false);
+    };
+
+    function handleError(errorText) {
+        setIsSuccess(false);
+        setIsModalOpen(true);
+        setModalMessage(errorText); 
+    }
+
     return (
         <>
             <Switch>
@@ -276,15 +357,33 @@ function App() {
                     />
                 </Route>
 
-                <Route path='/signup'>
+                <Route exact path='/signup'>
                     <SignUp 
                         onSignup={handleSignup}
                         isSendingReq={isSendingReq}
                     />
                 </Route>
 
-                <Route exact path='/signin/recovery'>
-                    <PasswordRecovery />
+                <Route exact path='/forgot-password'>
+                    <ForgotPassword
+                        onReceiveEmail={handleReceiveResetPasswordLink}
+                        isSendingReq={isSendingReq}
+                    />
+                </Route>
+
+                <Route path='/reset-password/:resetPasswordLink'>
+                    <ResetPassword 
+                        onResetPassword={handleResetPassword}
+                        isSendingReq={isSendingReq}
+                    />
+                </Route>
+
+                <Route exact path='/password-changed'>
+                    <PasswordChanged />
+                </Route>
+
+                <Route path='/*'>
+                    <NotFound />
                 </Route>
 
                 <ProtectedRoute
@@ -314,9 +413,6 @@ function App() {
                     onSignout={handleSignout}
                     isSendingReq={isSendingReq}
                 />
-
-
-
             </Switch>
 
             <PhotoPopup
@@ -347,6 +443,20 @@ function App() {
                 onProfileClick={handleProfileClick}
                 onAddPhotoClick={handleAddPhotoClick}
                 onClose={closeMenu}
+            />
+
+            <Modal 
+                isOpen={isModalOpen}
+                isSuccess={isSuccess}
+                onClose={closeModals}
+                message={modalMessage}
+            />
+
+            <EmailSentModal 
+                isOpen={isEmailSentModalOpen}
+                isSuccess={isSuccess}
+                onClose={closeModals}
+                message={modalMessage}
             />
         </>
     );

@@ -77,6 +77,11 @@
 @import url(./blocks/views/__number/views__number.css);
 @import url(./blocks/popup/__close-btn/popup__close-btn.css);
 
+/* modal */
+@import url(./blocks/modal/modal.css);
+@import url(./blocks/modal/__icon/modal__icon.css);
+@import url(./blocks/modal/__message/modal__message.css);
+
 /* edit button */
 @import url(./blocks/edit-btn/edit-btn.css);
 @import url(./blocks/edit-hashtags-btn/edit-hashtags-btn.css);
@@ -144,7 +149,21 @@
 @import url(./blocks/menu/__close-btn/menu__close-btn.css);
 
 /* reset-password */
-@import url(./blocks/reset-password/reset-password.css);
-@import url(./blocks/reset-password/__container/reset-password__container.css);
-@import url(./blocks/reset-password/__title/reset-password__title.css);
-@import url(./blocks/reset-password/__image/reset-password__image.css);
+@import url(./blocks/forgot-password/forgot-password.css);
+@import url(./blocks/forgot-password/__container/forgot-password__container.css);
+@import url(./blocks/forgot-password/__title/forgot-password__title.css);
+@import url(./blocks/forgot-password/__image/forgot-password__image.css);
+
+/* password-changed */
+@import url(./blocks/password-changed/password-changed.css);
+@import url(./blocks/password-changed/__container/password-changed__container.css);
+@import url(./blocks/password-changed/__image/password-changed__image.css);
+@import url(./blocks/password-changed/__link/password-changed__link.css);
+@import url(./blocks/password-changed/__text/password-changed__text.css);
+
+/* not found */
+@import url(./blocks/not-found/not-found.css);
+@import url(./blocks/not-found/__container/not-found__container.css);
+@import url(./blocks/not-found/__image/not-found__image.css);
+@import url(./blocks/not-found/__link/not-found__link.css);
+@import url(./blocks/not-found/__text/not-found__text.css);

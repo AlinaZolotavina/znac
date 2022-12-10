@@ -81,7 +81,7 @@ function SignUp({ onSignup, isSendingReq }) {
                 </Form>
                 <div className='form__additional-info'>
                     <p className='form__link-note'>Already registered?</p>
-                    <Link className='form__link' to='/'>Sign in</Link>
+                    <Link className='form__link' to='/signin'>Sign in</Link>
                 </div> 
             </div>
             
