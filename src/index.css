@@ -179,3 +179,8 @@
 @import url(./blocks/photo-upload/__span/photo-upload__span.css);
 @import url(./blocks/photo-input/photo-input.css);
 @import url(./blocks/photo-input/_visible/photo-input_visible.css);
+
+/* photos not found */
+@import url(./blocks/photos-not-found/photos-not-found.css);
+@import url(./blocks/photos-not-found/__icon/photos-not-found__icon.css);
+@import url(./blocks/photos-not-found/__text/photos-not-found__text.css);

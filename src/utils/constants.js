@@ -19,3 +19,16 @@ export const DELETE_PHOTO_ERROR_MSG = 'Failed to delete photo. There may be a co
 // modal messages
 export const SUCCESSFUL_SIGNUP_MSG = 'You have successfully signed up';
 export const SUCCESSFUL_PROFILE_UPDATE_MSG = 'Data has been updated';
+
+// screen width
+export const LARGE_SCREEN_WIDTH = 1240;
+export const MIDDLE_SCREEN_WIDTH = 1141;
+export const SMALL_SCREEN_WIDTH = 601;
+
+// photos constants
+export const LARGE_SCREEN_PHOTOS_NUMBER = 12;
+export const MIDDLE_SCREEN_PHOTOS_NUMBER = 8;
+export const SMALL_SCREEN_PHOTOS_NUMBER = 5;
+export const LARGE_SCREEN_PHOTOS_TO_ADD_NUMBER = 4;
+export const MIDDLE_SCREEN_PHOTOS_TO_ADD_NUMBER = 2;
+export const SMALL_SCREEN_PHOTOS_TO_ADD_NUMBER = 2;

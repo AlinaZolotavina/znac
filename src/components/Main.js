@@ -19,7 +19,9 @@ function Main({
     onHashtagClick,
     hashtag,
     hashtagSetter,
-    onSearch 
+    onSearch,
+    photosQuantity,
+    onShowMore,
     }) {
     return (
         <main className="main section" id="main">
@@ -43,8 +45,11 @@ function Main({
                 photos={photos}
                 onDeleteBtnClick={onDeleteBtnClick}
                 onPhotoClick={onPhotoClick}
+                photosQuantity={photosQuantity}
             />
-            <More />
+            {photos.length > photosQuantity ? (
+                <More onShowMore={onShowMore}/>
+            ) : ('')}
         </main>
     );
 }

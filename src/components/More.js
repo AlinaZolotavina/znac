@@ -1,7 +1,12 @@
-function More() {
+function More({ onShowMore }) {
     return (
         <section className="more">
-            <button className="more__btn">Show more</button>
+            <button
+                className="more__btn"
+                onClick={onShowMore}
+            >
+                Show more
+            </button>
         </section>
     );
 }

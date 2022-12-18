@@ -2,7 +2,7 @@ import EditButton from './EditButton';
 import Hashtags from './Hashtags';
 import CloseButton from "./CloseButton";
 
-function PhotoPopup({ loggedIn, isOpen, photo, onClose, }) {
+function PhotoPopup({ loggedIn, isOpen, photo, onClose, onHashtagClick}) {
     return (
         <div className={`popup popup_type_photo ${isOpen && 'popup_is-opened'}`}>
             <div className="popup__wrapper">
@@ -10,7 +10,11 @@ function PhotoPopup({ loggedIn, isOpen, photo, onClose, }) {
                 <div className="popup__caption">
                     <div className="popup__hashtags">
                         {loggedIn && <EditButton classname="edit-btn edit-hashtags-btn"/>}
-                        <Hashtags classname="hashtags hashtags_to-photo" photoHashtags={photo.hashtags || []} />
+                        <Hashtags
+                            classname="hashtags hashtags_to-photo"
+                            photoHashtags={photo.hashtags || []}
+                            onClick={onHashtagClick}
+                        />
                     </div>
                     <div className="views">
                         <p className="views__number">{photo.views}</p>

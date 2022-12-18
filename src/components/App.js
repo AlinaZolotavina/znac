@@ -38,6 +38,20 @@ import {
     // SUCCESSFUL_SIGNUP_MSG,
     // SUCCESSFUL_PROFILE_UPDATE_MSG,
 } from '../utils/constants';
+import {
+    LARGE_SCREEN_WIDTH,
+    MIDDLE_SCREEN_WIDTH, 
+    SMALL_SCREEN_WIDTH,
+} from '../utils/constants';
+import {
+    LARGE_SCREEN_PHOTOS_NUMBER,
+    MIDDLE_SCREEN_PHOTOS_NUMBER,
+    SMALL_SCREEN_PHOTOS_NUMBER,
+    LARGE_SCREEN_PHOTOS_TO_ADD_NUMBER,
+    MIDDLE_SCREEN_PHOTOS_TO_ADD_NUMBER,
+    SMALL_SCREEN_PHOTOS_TO_ADD_NUMBER,
+} from '../utils/constants';
+
 import ResetPassword from './ResetPassword';
 import EmailSentModal from './EmailSentModal';
 import PasswordChanged from './PasswordChanged';
@@ -69,18 +83,33 @@ function App() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [selectedPhoto, setSelectedPhoto] = useState({});
 
-    const [pcDownloadCheck, setPcDownloadCheck] = useState(false);
-    const [linkDownloadCheck, setLinkDownloadCheck] = useState(false);
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+    const [currentPhotosNumber, setCurrentPhotosNumber] = useState(0);
+    const [photosToAdd, setPhotosToAdd] = useState(0);
 
-    // if logged in, get and set current user; if not logged in, check token
+    // get photos to render
+    useEffect(() => {
+        api.getInitialPhotos()
+            .then(data => {
+                const photosData = data;
+                localStorage.setItem('photos', JSON.stringify(photosData));
+                setPhotosToRender(photosData);
+            })
+            .then(() => {
+                photos = localStorage.getItem('photos');
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }, []);
+    
+    // if logged in, get and set current user
     useEffect(() => {
         if (loggedIn) {
-            api.getInitialData()
+            api.getUserData(currentUser._id)
                 .then(data => {
-                    console.log(data);
-                    const [userData, photosData] = data;
+                    const userData = data;
                     setCurrentUser(userData);
-                    setPhotosToRender(photosData);
             })
                 .catch(err => console.log(err));
         }
@@ -91,22 +120,68 @@ function App() {
             checkToken();
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [loggedIn]);
 
     function checkToken() {
         auth.getContent()
             .then((res) => {
-                console.log(res);
                 const userData = res;
                 setLoggedIn(true);
+                if (location.pathname === 'signin' || location.pathname === 'signup') {
+                    history.push('/');
+                } else {
+                    history.push(location.pathname);
+                }
                 setCurrentUser(userData);
             })
             .catch(err => console.log(err));
     }
 
-    function handleSignup(name, email, password) {
+    useEffect(() => {
+        window.addEventListener('resize', updateDemensions);
+        return () => window.removeEventListener('resize', updateDemensions);
+    }, []);
+
+    useEffect(() => {
+        calculatePhotosCount();
+    }, [currentPhotosNumber, screenWidth]);
+
+    const updateDemensions = () => {
+        let resizeTimeout;
+        if(!resizeTimeout) {
+            resizeTimeout = setTimeout(function() {
+                resizeTimeout = null;
+                setScreenWidth(window.innerWidth);
+            }, 150);
+        };
+    }
+
+    const calculatePhotosCount = () => {
+        let initialPhotosNumber;
+        if(screenWidth >= LARGE_SCREEN_WIDTH) {
+            initialPhotosNumber = LARGE_SCREEN_PHOTOS_NUMBER;
+            setPhotosToAdd(LARGE_SCREEN_PHOTOS_TO_ADD_NUMBER);
+        } 
+        if(screenWidth < MIDDLE_SCREEN_WIDTH) {
+            initialPhotosNumber = MIDDLE_SCREEN_PHOTOS_NUMBER;
+            setPhotosToAdd(MIDDLE_SCREEN_PHOTOS_TO_ADD_NUMBER);
+        }
+        if(screenWidth < SMALL_SCREEN_WIDTH) {
+            initialPhotosNumber = SMALL_SCREEN_PHOTOS_NUMBER;
+            setPhotosToAdd(SMALL_SCREEN_PHOTOS_TO_ADD_NUMBER);
+        }
+        if (currentPhotosNumber < initialPhotosNumber) {
+            setCurrentPhotosNumber(initialPhotosNumber);
+        }
+    }
+
+    function showMorePhotos() {
+        setCurrentPhotosNumber((prev) => prev + photosToAdd);
+    };
+
+    function handleSignup(email, password) {
         setIsSendingReq(true);
-        auth.signup(name, email, password)
+        auth.signup(email, password)
             .then((res) => {
                 if (res) {
                     handleSignin(email, password);
@@ -215,6 +290,15 @@ function App() {
     }
 
     function handlePhotoDelete(photo) {
+        api.deletePhoto(photo._id)
+            .then(() => {
+                setPhotosToRender((state) => state.filter((p) => p._id !== photo._id && p))
+            })
+            .catch(err => console.log(err));
+        closeAllPopups();
+    }
+
+    function handleDeletePhotoModalOpen(photo) {
         setIsDeletePhotoModalOpen(!isDeletePhotoModalOpen);
         setSelectedPhoto(photo);
     }
@@ -231,21 +315,14 @@ function App() {
         setIsMenuOpen(!isMenuOpen);
     };
 
-    function handlePcDownloadClick() {
-        setLinkDownloadCheck(false);
-        setPcDownloadCheck(!pcDownloadCheck);
-    }
-
-    function handleLinkDownloadClick() {
-        setPcDownloadCheck(false);
-        setLinkDownloadCheck(!linkDownloadCheck);
-    }
-
     function handleAddPhoto(newPhoto) {
         setIsSendingReq(true);
         api.addPhoto(newPhoto)
             .then(newPhoto => {
-                setPhotosToRender([newPhoto, ...photos]);
+                setIsModalOpen(true);
+                setIsSuccess(true);
+                setModalMessage('Photo was added successfully');
+                setPhotosToRender([newPhoto, ...photosToRender]);
             })
             .catch(err => console.log(err))
             .finally(() => setIsSendingReq(false));
@@ -287,6 +364,7 @@ function App() {
         return () => window.removeEventListener('scroll', markLinkActiveDependingOnScroll);
     }, [])
 
+    // ERROR!!! отследить прокрутку, не всегда корректно отображает активную часть страницы
     function handleHomeClick() {
         closeMenu();
         history.push('/');
@@ -321,9 +399,7 @@ function App() {
     }
 
     function handleHashtagClick(hashtag) {
-        if (location.pathname !== '/') {
-            history.push('/');
-        }
+        closeAllPopups();
         setHashtag(hashtag);
         handleSearch(hashtag);
     }
@@ -375,6 +451,11 @@ function App() {
             });
     };
 
+    // ERROR!!! не находит по хештегу только что добавленное фото, остальные находит
+    // ERROR!!! зато находит по хештегу только что удаленное фото
+    // ERROR!!! проблема в обновлении массива фото, потому что он из локал сторидж????
+
+    // ERROR!!! не очищается инпут после ухода на другую страницу и возвращения на главную
     function handleSearch(hashtag) {
         const keyWord = new RegExp(hashtag, "gi");
 
@@ -394,15 +475,10 @@ function App() {
 
         const foundPhotos = JSON.parse(photos).filter((photo) => {
             return (keyWord.test(photo.hashtags));
-        })
+        });
 
-        if (foundPhotos.length === 0) {
-            console.log('nothing found');
-            // вывести сообщение, что ничего не найдено
-        } else {
-            setPhotosToRender(foundPhotos);
-        }
-    }
+        setPhotosToRender(foundPhotos);
+    };
 
     return (
         <CurrentUserContext.Provider value={currentUser}>
@@ -421,7 +497,7 @@ function App() {
                         photos={photosToRender}
                         loggedIn={loggedIn}
                         onPhotoClick={handlePhotoClick}
-                        onDeleteBtnClick={handlePhotoDelete}
+                        onDeleteBtnClick={handleDeletePhotoModalOpen}
                         onHomeClick={handleHomeClick}
                         onGalleryClick={handleGalleryClick}
                         onContactClick={handleContactClick}
@@ -429,6 +505,8 @@ function App() {
                         hashtag={hashtag}
                         hashtagSetter={setHashtag}
                         onSearch={handleSearch}
+                        photosQuantity={currentPhotosNumber}
+                        onShowMore={showMorePhotos}
                     />
                     <Footer />
                 </Route>
@@ -484,10 +562,6 @@ function App() {
                     loggedIn={loggedIn}
                     onGalleryClick={handleGalleryClick}
                     onContactClick={handleContactClick}
-                    pcDownloadCheck={pcDownloadCheck}
-                    linkDownloadCheck={linkDownloadCheck}
-                    onPcDownloadClick={handlePcDownloadClick}
-                    onLinkDownloadClick={handleLinkDownloadClick}
                     onMenuClick={handleMenuClick}
                     onSignout={handleSignout}
                     isSendingReq={isSendingReq}
@@ -504,6 +578,7 @@ function App() {
                 isOpen={isPhotoPopupOpen}
                 photo={selectedPhoto}
                 onClose={closeAllPopups}
+                onHashtagClick={handleHashtagClick}
             />
 
             <EditEmailModal
@@ -519,8 +594,10 @@ function App() {
             />
 
             <DeletePhotoModal
+                photo={selectedPhoto}
                 isOpen={isDeletePhotoModalOpen}
                 onClose={closeAllPopups}
+                onDeletePhoto={handlePhotoDelete}
             />
 
             <Menu

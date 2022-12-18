@@ -56,7 +56,12 @@ class Api {
 
     getUserData() {
         return fetch(`${this._serverUrl}/profile`, {
+            method: 'GET',
             credentials: 'include',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
         })
         .then((res) => this._checkResponse(res));
     }
@@ -111,7 +116,8 @@ class Api {
 }
 
 const api = new Api({
-    serverUrl: 'https://api.znac.org',
+    // serverUrl: 'https://api.znac.org',
+    serverUrl: 'http://localhost:4000',
 });
 
 export default api;

@@ -6,15 +6,12 @@ import Input from "./Input";
 import { useState } from "react";
 import BurgerMenuBtn from "./BurgerMenuBtn";
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 function AddPhoto({ 
     loggedIn,
     onGalleryClick,
     onContactClick,
-    pcDownloadCheck,
-    linkDownloadCheck,
-    onPcDownloadClick,
-    onLinkDownloadClick,
     onMenuClick,
     isSendingReq,
     onAddPhoto,
@@ -29,6 +26,20 @@ function AddPhoto({
     const [hashtagsError, setHashtagsError] = useState('');
     const [isFormValid, setIsFormValid] = useState(false);
     const [photoInputClassname, setPhotoInputClassname] = useState('photo-input');
+    const [pcDownloadCheck, setPcDownloadCheck] = useState(false);
+    const [linkDownloadCheck, setLinkDownloadCheck] = useState(false);
+    const location = useLocation();
+
+    useEffect(() => {
+        setPhotoLink('');
+        setPhotoLinkError('');
+        setDropdownText('Select download type');
+        setIsClicked(false);
+        setHashtags('');
+        setHashtagsError('');
+        setPcDownloadCheck(false);
+        setLinkDownloadCheck(false);
+    }, [location.pathname]);
 
     function handlePhotoLinkChange(e) {
         // eslint-disable-next-line no-useless-escape
@@ -75,14 +86,16 @@ function AddPhoto({
     function handlePcDownloadClick() {
         setDropdownText('PC download');
         setPhotoInputClassname('photo-input_visible');
-        onPcDownloadClick();
+        setPcDownloadCheck(true);
+        setLinkDownloadCheck(false);
         setIsClicked(false);
     }
 
     function handleLinkDownloadClick() {
         setDropdownText('Link download');
         setPhotoInputClassname('photo-input_visible');
-        onLinkDownloadClick();
+        setPcDownloadCheck(false);
+        setLinkDownloadCheck(true);
         setIsClicked(false);
         setPhotoFile({});
         setSpanText('Attach file');
@@ -95,6 +108,15 @@ function AddPhoto({
             hashtags: hashtags,
             views: "123",
         });
+        clearInputs();
+    }
+
+    // ERROR!!! не работает очистка инпутов после добавления фото
+    function clearInputs() {
+        setHashtags('');
+        setHashtagsError('');
+        setPhotoLink('');
+        setPhotoLinkError('');
     }
 
     return (
