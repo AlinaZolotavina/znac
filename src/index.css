@@ -33,7 +33,9 @@
 @import url(./blocks/search/__form/search__form.css);
 @import url(./blocks/search/__field/search__field.css);
 @import url(./blocks/search/__input/search__input.css);
+@import url(./blocks/search/__error/search__error.css);
 @import url(./blocks/search/__submit-btn/search__submit-btn.css);
+@import url(./blocks/search/__submit-btn/_disabled/search__submit-btn_disabled.css);
 
 /* hashtags */
 @import url(./blocks/hashtags/hashtags.css);
@@ -69,6 +71,7 @@
 @import url(./blocks/popup/__form/popup__form.css);
 @import url(./blocks/popup/__input-field/popup__input-field.css);
 @import url(./blocks/popup/__submit-btn/popup__submit-btn.css);
+@import url(./blocks/popup/__submit-btn/_disabled/popup__submit-btn_diabled.css);
 @import url(./blocks/popup/__image/popup__image.css);
 @import url(./blocks/popup/__caption/popup__caption.css);
 @import url(./blocks/popup/__hashtags/popup__hashtags.css);
@@ -167,3 +170,12 @@
 @import url(./blocks/not-found/__image/not-found__image.css);
 @import url(./blocks/not-found/__link/not-found__link.css);
 @import url(./blocks/not-found/__text/not-found__text.css);
+
+/* photo-upload */
+@import url(./blocks/photo-upload/photo-upload.css);
+@import url(./blocks/photo-upload/__input/photo-upload__input.css);
+@import url(./blocks/photo-upload/__label/photo-upload__label.css);
+@import url(./blocks/photo-upload/__icon/photo-upload__icon.css);
+@import url(./blocks/photo-upload/__span/photo-upload__span.css);
+@import url(./blocks/photo-input/photo-input.css);
+@import url(./blocks/photo-input/_visible/photo-input_visible.css);

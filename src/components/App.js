@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from 'react';
+import { CurrentUserContext  } from '../contexts/CurrentUserContext';
 import Home from './Home';
 import Main from './Main';
 import Footer from './Footer';
@@ -16,9 +18,7 @@ import Modal from './Modal';
 import api from '../utils/api';
 import * as auth from '../utils/auth.js';
 
-import { useState } from 'react';
 import { Switch, Route, useLocation, useHistory } from 'react-router-dom';
-import { useEffect } from 'react';
 
 import {
     // INTERNAL_SERVER_ERROR_MSG,
@@ -51,6 +51,11 @@ function App() {
     const history = useHistory();
     const location = useLocation();
 
+   let photos = localStorage.getItem('photos');
+    const [photosToRender, setPhotosToRender] = useState([]);
+
+    const [hashtag, setHashtag] = useState('');
+
     const [isSendingReq, setIsSendingReq] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -70,20 +75,28 @@ function App() {
     // if logged in, get and set current user; if not logged in, check token
     useEffect(() => {
         if (loggedIn) {
-            api.getUserData()
+            api.getInitialData()
                 .then(data => {
-                const userData = data;
-                setCurrentUser(userData);
+                    console.log(data);
+                    const [userData, photosData] = data;
+                    setCurrentUser(userData);
+                    setPhotosToRender(photosData);
             })
                 .catch(err => console.log(err));
-        } else {
-            checkToken();
         }
     }, [loggedIn]);
 
+    useEffect(() => {
+        if (!loggedIn) {
+            checkToken();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     function checkToken() {
-        api.getUserData()
+        auth.getContent()
             .then((res) => {
+                console.log(res);
                 const userData = res;
                 setLoggedIn(true);
                 setCurrentUser(userData);
@@ -172,23 +185,27 @@ function App() {
             .finally(() => setIsSendingReq(false));
     };
 
-    function handleResetPassword(password, confirmPassword) {
+    function handleResetPassword(newPassword, confirmPassword, resetPasswordLink) {
         setIsSendingReq(true);
-        auth.resetPassword(password, confirmPassword)
+        auth.resetPassword(newPassword, confirmPassword, resetPasswordLink)
             .then(() => {
                 history.push('/password-changed');
             })
             .catch((err) => {
+                console.log(err);
                 if (err === 'Ошибка: 401') {
                     handleError('Wrong reset link or it was expired');
-                } else if (err === 'Ошибка: 400') {
+                } 
+                if (err === 'Ошибка: 400') {
                     handleError('The entered passwords do not match');
-                } else if (err === 'Ошибка: 409') {
+                } 
+                if (err === 'Ошибка: 409') {
                     handleError('Your new password must not be the same as the previous one');
-                } else if (err === 'Ошибка: 404') {
+                } 
+                if (err === 'Ошибка: 404') {
                     handleError('Nothing found');
                 }
-                handleError(DEFAULT_ERROR_MSG);
+                // handleError(DEFAULT_ERROR_MSG);
             })
     }
 
@@ -222,6 +239,16 @@ function App() {
     function handleLinkDownloadClick() {
         setPcDownloadCheck(false);
         setLinkDownloadCheck(!linkDownloadCheck);
+    }
+
+    function handleAddPhoto(newPhoto) {
+        setIsSendingReq(true);
+        api.addPhoto(newPhoto)
+            .then(newPhoto => {
+                setPhotosToRender([newPhoto, ...photos]);
+            })
+            .catch(err => console.log(err))
+            .finally(() => setIsSendingReq(false));
     }
 
     const [home, setHome] = useState(document.querySelector('home'));
@@ -293,6 +320,14 @@ function App() {
         history.push('/addphoto');
     }
 
+    function handleHashtagClick(hashtag) {
+        if (location.pathname !== '/') {
+            history.push('/');
+        }
+        setHashtag(hashtag);
+        handleSearch(hashtag);
+    }
+
     useEffect((e) => {
         const handleEscClose = (e) => {
             if (e.keyCode === 27) {
@@ -324,10 +359,53 @@ function App() {
         setIsSuccess(false);
         setIsModalOpen(true);
         setModalMessage(errorText); 
+    };
+
+    function handleEmailChangeRequest(newEmail) {
+        setIsSendingReq(true);
+        api.requestEmailUpdate(newEmail)
+            .then(() => {
+                console.log('request email change');
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+            .finally(() => {
+                setIsSendingReq(false);
+            });
+    };
+
+    function handleSearch(hashtag) {
+        const keyWord = new RegExp(hashtag, "gi");
+
+        if(!photos) {
+            api.getInitialPhotos()
+                .then(data => {
+                    const photosData = data;
+                    localStorage.setItem('photos', JSON.stringify(photosData));
+                })
+                .then(() => {
+                    photos = localStorage.getItem('photos');
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+
+        const foundPhotos = JSON.parse(photos).filter((photo) => {
+            return (keyWord.test(photo.hashtags));
+        })
+
+        if (foundPhotos.length === 0) {
+            console.log('nothing found');
+            // вывести сообщение, что ничего не найдено
+        } else {
+            setPhotosToRender(foundPhotos);
+        }
     }
 
     return (
-        <>
+        <CurrentUserContext.Provider value={currentUser}>
             <Switch>
                 <Route exact path='/'>
                     <Home
@@ -340,31 +418,36 @@ function App() {
                         isSendingReq={isSendingReq}
                     />
                     <Main
+                        photos={photosToRender}
                         loggedIn={loggedIn}
                         onPhotoClick={handlePhotoClick}
                         onDeleteBtnClick={handlePhotoDelete}
                         onHomeClick={handleHomeClick}
                         onGalleryClick={handleGalleryClick}
                         onContactClick={handleContactClick}
+                        onHashtagClick={handleHashtagClick}
+                        hashtag={hashtag}
+                        hashtagSetter={setHashtag}
+                        onSearch={handleSearch}
                     />
                     <Footer />
                 </Route>
 
-                <Route exact path='/signin'>
+                <Route path='/signin'>
                     <SignIn 
                         onSignin={handleSignin}
                         isSendingReq={isSendingReq}
                     />
                 </Route>
 
-                <Route exact path='/signup'>
+                <Route path='/signup'>
                     <SignUp 
                         onSignup={handleSignup}
                         isSendingReq={isSendingReq}
                     />
                 </Route>
 
-                <Route exact path='/forgot-password'>
+                <Route path='/forgot-password'>
                     <ForgotPassword
                         onReceiveEmail={handleReceiveResetPasswordLink}
                         isSendingReq={isSendingReq}
@@ -378,12 +461,8 @@ function App() {
                     />
                 </Route>
 
-                <Route exact path='/password-changed'>
+                <Route path='/password-changed'>
                     <PasswordChanged />
-                </Route>
-
-                <Route path='/*'>
-                    <NotFound />
                 </Route>
 
                 <ProtectedRoute
@@ -412,7 +491,12 @@ function App() {
                     onMenuClick={handleMenuClick}
                     onSignout={handleSignout}
                     isSendingReq={isSendingReq}
+                    onAddPhoto={handleAddPhoto}
                 />
+
+                <Route path='/*'>
+                    <NotFound />
+                </Route>
             </Switch>
 
             <PhotoPopup
@@ -425,6 +509,8 @@ function App() {
             <EditEmailModal
                 isOpen={isEditEmailModalOpen}
                 onClose={closeAllPopups}
+                isSendingReq={isSendingReq}
+                onRequestEmailChange={handleEmailChangeRequest}
             />
 
             <EditPasswordModal
@@ -439,6 +525,7 @@ function App() {
 
             <Menu
                 isOpen={isMenuOpen}
+                loggedIn={loggedIn}
                 onHomeClick={handleHomeClick}
                 onProfileClick={handleProfileClick}
                 onAddPhotoClick={handleAddPhotoClick}
@@ -458,7 +545,7 @@ function App() {
                 onClose={closeModals}
                 message={modalMessage}
             />
-        </>
+        </CurrentUserContext.Provider>
     );
 }
 

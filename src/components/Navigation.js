@@ -44,7 +44,7 @@ function Navigation({ loggedIn, onHomeClick, onGalleryClick, onContactClick }) {
                 loggedIn && 
                     <Link
                         className={`nav__link ${location.pathname === '/addphoto' && 'nav__link_active'}`}
-                        to='addphoto'
+                        to='/addphoto'
                     >   
                         ADD PHOTO
                     </Link>

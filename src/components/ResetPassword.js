@@ -1,19 +1,21 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Form from './Form';
 import Input from './Input';
 import newPasswordIcon from '../images/new-password-icon.svg';
 
 function ResetPassword({ onResetPassword, isSendingReq }) {
-    const [password, setPassword] = useState('');
-    const [passwordError, setPasswordError] = useState('');
+    let { resetPasswordLink } = useParams();
+    const [newPassword, setNewPassword] = useState('');
+    const [newPasswordError, setNewPasswordError] = useState('');
     function handlePasswordChange(e) {
         if (e.target.value.length < 8) {
-            setPasswordError('Password must be at least 8 characters long');
+            setNewPasswordError('Password must be at least 8 characters long');
         } else {
-            setPasswordError('');
+            setNewPasswordError('');
         }
-        setPassword(e.target.value);
+        setNewPassword(e.target.value);
     }
 
     const [confirmPassword, setconfirmPassword] = useState('');
@@ -29,16 +31,16 @@ function ResetPassword({ onResetPassword, isSendingReq }) {
 
     const [isFormValid, setIsFormValid] = useState(false);
     useEffect(() => {
-        if(password && !passwordError && confirmPassword && !confirmPasswordError) {
+        if(newPassword && !newPasswordError && confirmPassword && !confirmPasswordError) {
             setIsFormValid(true);
         } else {
             setIsFormValid(false);
         };
-    }, [password, passwordError, confirmPassword, confirmPasswordError]);
+    }, [newPassword, newPasswordError, confirmPassword, confirmPasswordError]);
 
     function handleReceiveEmail(e) {
         e.preventDefault();
-        onResetPassword(password);
+        onResetPassword(newPassword, confirmPassword, resetPasswordLink);
     }
 
     return (
@@ -66,10 +68,10 @@ function ResetPassword({ onResetPassword, isSendingReq }) {
                         placeholder='Enter new password'
                         classname='input__field'
                         inputType='password'
-                        inputValue={password}
+                        inputValue={newPassword}
                         onChange={handlePasswordChange}
                         isSendingReq={isSendingReq}
-                        error={passwordError}
+                        error={newPasswordError}
                     />
                     <Input
                         inputLabel='Confirm password'

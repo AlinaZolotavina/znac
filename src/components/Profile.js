@@ -1,11 +1,22 @@
+import { useContext, useEffect, useState } from 'react';
 import Input from "./Input";
 import EditButton from "./EditButton";
 import Header from "./Header";
 import Navigation from "./Navigation";
 import LogoutButton from "./LogoutButton";
 import BurgerMenuBtn from "./BurgerMenuBtn";
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function Profile({ loggedIn, onGalleryClick, onContactClick, onEditEmailBtnClick, onEditPasswordBtnClick, onMenuClick }) {
+    const currentUser = useContext(CurrentUserContext);
+    useEffect(() => {
+        setEmail(currentUser.email);
+        setPassword(currentUser.password);
+    }, [currentUser]);
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    
     return (
         <section className='profile'>
             <Header className='header admin-header'>
@@ -24,6 +35,9 @@ function Profile({ loggedIn, onGalleryClick, onContactClick, onEditEmailBtnClick
                         inputLabel='E-mail'
                         placeholder=''
                         classname='input__field profile__input'
+                        inputValue={email}
+                        inputType='text'
+                        isSendingReq={true}
                     />
                     <EditButton classname='edit-btn edit-profile-btn' onClick={onEditEmailBtnClick} />
                 </div>
@@ -32,6 +46,9 @@ function Profile({ loggedIn, onGalleryClick, onContactClick, onEditEmailBtnClick
                         inputLabel='Password'
                         placeholder=''
                         classname='input__field profile__input'
+                        inputValue={password}
+                        inputType='password'
+                        isSendingReq={true}
                     />
                     <EditButton classname='edit-btn edit-profile-btn' onClick={onEditPasswordBtnClick} />
                 </div> 

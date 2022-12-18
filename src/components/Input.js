@@ -1,6 +1,6 @@
-function Input({ inputLabel, placeholder, classname, inputType, inputValue, onChange, isSendingReq, error }) {
+function Input({ labelClassname, inputLabel, placeholder, classname, inputType, inputValue, onChange, isSendingReq, error }) {
     return (
-        <label className='input'>
+        <label className={`${labelClassname} input`}>
             {inputLabel}
             <input
                 className={classname}

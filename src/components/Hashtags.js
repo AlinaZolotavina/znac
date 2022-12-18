@@ -1,10 +1,11 @@
 import Hashtag from "./Hashtag";
 
-function Hashtags({ classname, photoHashtags }) {
+function Hashtags({ classname, photoHashtags, onClick }) {
+    const hashtags = photoHashtags.toString().split(' ');
     return (
         <section className={classname}>
-            {photoHashtags.map(photoHashtag => (
-                <Hashtag key={photoHashtag} hashtag={photoHashtag} />
+            {hashtags.map(photoHashtag => (
+                <Hashtag key={photoHashtag} hashtag={photoHashtag} onClick={onClick} />
             ))}
         </section>
     );

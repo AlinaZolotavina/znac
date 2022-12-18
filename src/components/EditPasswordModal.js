@@ -11,7 +11,7 @@ function EditPasswordModal({ isOpen, onClose }) {
                     titleClassname='popup__title'
                     title='Edit password'
                     buttonClassname='popup__submit-btn'
-                    buttonText='Save'
+                    buttonText='Request an password change'
                 >
                     <Input 
                         inputLabel=''

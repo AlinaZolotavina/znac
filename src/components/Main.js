@@ -5,10 +5,22 @@ import Hashtags from './Hashtags';
 import Gallery from './Gallery';
 import More from './More';
 
-import photosList from '../utils/photosList';
-import photoHashtags from '../utils/photoHashtags';
+// import photosList from '../utils/photosList';
+// import photoHashtags from '../utils/photoHashtags';
 
-function Main({ loggedIn, onHomeClick, onGalleryClick, onContactClick, onPhotoClick, onDeleteBtnClick }) {
+function Main({
+    photos,
+    loggedIn,
+    onHomeClick,
+    onGalleryClick,
+    onContactClick,
+    onPhotoClick,
+    onDeleteBtnClick,
+    onHashtagClick,
+    hashtag,
+    hashtagSetter,
+    onSearch 
+    }) {
     return (
         <main className="main section" id="main">
             <div className='main__navigation main__navigation_fixed'>
@@ -20,11 +32,15 @@ function Main({ loggedIn, onHomeClick, onGalleryClick, onContactClick, onPhotoCl
                 />
                 {loggedIn && <LogoutButton className='logout-btn'/>}
             </div>
-            <Search />
-            <Hashtags classname="hashtags" photoHashtags={photoHashtags} />
+            <Search onSubmit={onSearch} hashtag={hashtag} hashtagSetter={hashtagSetter}/>
+            <Hashtags
+                classname="hashtags"
+                photoHashtags='nature mountains sea Paris Switzerland Alps architecture'
+                onClick={onHashtagClick}
+            />
             <Gallery
                 loggedIn={loggedIn}
-                photos={photosList}
+                photos={photos}
                 onDeleteBtnClick={onDeleteBtnClick}
                 onPhotoClick={onPhotoClick}
             />

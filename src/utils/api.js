@@ -1,6 +1,6 @@
 class Api {
     constructor(data) {
-        this._serverUrl = data._serverUrl;
+        this._serverUrl = data.serverUrl;
     }
 
     _checkResponse(res) {
@@ -12,7 +12,7 @@ class Api {
     }
 
     getInitialPhotos() {
-        return fetch(`${this._serverUrl}`, {
+        return fetch(`${this._serverUrl}/photos`, {
             method: 'GET',
             credentials: 'include',
         })
@@ -20,7 +20,7 @@ class Api {
     }
 
     addPhoto(data) {
-        return fetch(`${this._serverUrl}`, {
+        return fetch(`${this._serverUrl}/photos`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -35,8 +35,19 @@ class Api {
         .then((res) => this._checkResponse(res));
     }
 
+    increaseViews(photo) {
+        return fetch(`${this._serverUrl}/photos/${photo}/views`, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(res => this._checkResponse(res));
+    }
+
     deletePhoto(data) {
-        return fetch(`${this._serverUrl}${data}`, {
+        return fetch(`${this._serverUrl}/photos/${data}`, {
             method: 'DELETE',
             credentials: 'include',
         })
@@ -44,15 +55,14 @@ class Api {
     }
 
     getUserData() {
-        return fetch(`${this._serverUrl}profile`, {
-            method: 'GET',
+        return fetch(`${this._serverUrl}/profile`, {
             credentials: 'include',
         })
         .then((res) => this._checkResponse(res));
     }
 
     requestEmailUpdate(data) {
-        return fetch(`${this._serverUrl}profile/update-email`, {
+        return fetch(`${this._serverUrl}/profile/update-email`, {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -66,7 +76,7 @@ class Api {
     }
 
     updateEmail(data) {
-        return fetch(`${this._serverUrl}profile/update-email/${data.updateEmailLink}`, {
+        return fetch(`${this._serverUrl}/profile/update-email/${data.updateEmailLink}`, {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -80,7 +90,7 @@ class Api {
     }
 
     updatePassword(data) {
-        return fetch(`${this._serverUrl}profile/update-password`, {
+        return fetch(`${this._serverUrl}/profile/update-password`, {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -94,10 +104,14 @@ class Api {
         })
         .then((res) => this._checkResponse(res));
     }
+
+    getInitialData() {
+        return Promise.all([this.getUserData(), this.getInitialPhotos()]);
+    }
 }
 
 const api = new Api({
-    serverUrl: 'http://znac.org/',
+    serverUrl: 'https://api.znac.org',
 });
 
 export default api;

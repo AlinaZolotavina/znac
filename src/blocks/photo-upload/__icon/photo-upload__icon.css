@@ -1,0 +1,17 @@
+.photo-upload__icon {
+    width: 55px;
+    height: 45px;
+    background: #242728 url(../../../images/upload-icon.svg) no-repeat center / 50%;
+    margin: 0 5px 0 0;
+    padding: 0;
+    background-color: #242728;
+    border-radius: 5px 0 0 5px;
+    box-sizing: border-box;
+    opacity: 1;
+    transition: opacity .2s ease;
+}
+
+.photo-upload__icon:hover {
+    opacity: .7;
+    cursor: pointer;
+}

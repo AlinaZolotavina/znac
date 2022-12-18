@@ -1,6 +1,15 @@
-function Hashtag({ hashtag }) {
+function Hashtag({ hashtag, onClick }) {
+    function handleClick() {
+        onClick(hashtag);
+    }
+
     return (
-        <p className="hashtag"># {hashtag}</p>
+        <p
+            className="hashtag"
+            onClick={handleClick}
+        >
+            # {hashtag}
+        </p>
     );
 }
 

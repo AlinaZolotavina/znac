@@ -1,0 +1,20 @@
+.photo-upload__span {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 200;
+    line-height: 19px;
+    color: #fff;
+    width: 385px;
+    height: 45px;
+    background-color: #242728;
+    border-radius: 0 5px 5px 0;
+    padding: 0 0 0 10px;
+    transition: opacity .2s ease;
+}
+
+.photo-upload__span:hover {
+    opacity: .7;
+    cursor: pointer;
+}

@@ -6,7 +6,7 @@ function PhotoPopup({ loggedIn, isOpen, photo, onClose, }) {
     return (
         <div className={`popup popup_type_photo ${isOpen && 'popup_is-opened'}`}>
             <div className="popup__wrapper">
-                <img className="popup__image" src={photo.src} alt={photo.alt} />
+                <img className="popup__image" src={photo.link} alt={photo.hashtags} />
                 <div className="popup__caption">
                     <div className="popup__hashtags">
                         {loggedIn && <EditButton classname="edit-btn edit-hashtags-btn"/>}
