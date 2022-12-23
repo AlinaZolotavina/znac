@@ -4,7 +4,7 @@ import Navigation from './Navigation';
 import LogoutButton from './LogoutButton';
 import Promo from './Promo';
 
-function Home({ loggedIn, onHomeClick, onGalleryClick, onContactClick, onMenuClick }) {
+function Home({ loggedIn, onHomeClick, onGalleryClick, onContactClick, onMenuClick, onLogout }) {
     return (
         <section className="home section" id='home'>
             <Header className='header'>
@@ -14,7 +14,7 @@ function Home({ loggedIn, onHomeClick, onGalleryClick, onContactClick, onMenuCli
                     onGalleryClick={onGalleryClick}
                     onContactClick={onContactClick}
                 />
-                {loggedIn && <LogoutButton className='logout-btn' />}  
+                {loggedIn && <LogoutButton className='logout-btn' onLogout={onLogout} />}  
             </Header>
             <BurgerMenuBtn onMenuClick={onMenuClick} /> 
             <Promo />

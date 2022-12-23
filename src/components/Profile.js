@@ -7,7 +7,15 @@ import LogoutButton from "./LogoutButton";
 import BurgerMenuBtn from "./BurgerMenuBtn";
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
-function Profile({ loggedIn, onGalleryClick, onContactClick, onEditEmailBtnClick, onEditPasswordBtnClick, onMenuClick }) {
+function Profile({
+    loggedIn,
+    onGalleryClick,
+    onContactClick,
+    onEditEmailBtnClick,
+    onEditPasswordBtnClick,
+    onMenuClick,
+    onLogout
+    }) {
     const currentUser = useContext(CurrentUserContext);
     useEffect(() => {
         setEmail(currentUser.email);
@@ -26,7 +34,7 @@ function Profile({ loggedIn, onGalleryClick, onContactClick, onEditEmailBtnClick
                     onGalleryClick={onGalleryClick}
                     onContactClick={onContactClick}
                 />
-                <LogoutButton className='logout-btn'/>
+                <LogoutButton className='logout-btn' onLogout={onLogout}/>
             </Header>
             <BurgerMenuBtn onMenuClick={onMenuClick} />
             <div className='profile__container'>

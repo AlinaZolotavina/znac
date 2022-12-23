@@ -15,6 +15,7 @@ function AddPhoto({
     onMenuClick,
     isSendingReq,
     onAddPhoto,
+    onLogout,
     }) {
     const [isClicked, setIsClicked] = useState(false);
     const [dropdownText, setDropdownText] = useState('Select download type');
@@ -128,7 +129,7 @@ function AddPhoto({
                     onGalleryClick={onGalleryClick}
                     onContactClick={onContactClick}
                 />
-                <LogoutButton className='logout-btn' />
+                <LogoutButton className='logout-btn' onLogout={onLogout}/>
             </Header>
             <BurgerMenuBtn onMenuClick={onMenuClick} />
             <Form

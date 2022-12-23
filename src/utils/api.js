@@ -116,8 +116,8 @@ class Api {
 }
 
 const api = new Api({
-    // serverUrl: 'https://api.znac.org',
-    serverUrl: 'http://localhost:4000',
+    serverUrl: 'https://api.znac.org',
+    // serverUrl: 'http://localhost:4000',
 });
 
 export default api;

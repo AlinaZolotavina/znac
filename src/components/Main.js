@@ -22,6 +22,7 @@ function Main({
     onSearch,
     photosQuantity,
     onShowMore,
+    onLogout,
     }) {
     return (
         <main className="main section" id="main">
@@ -32,7 +33,7 @@ function Main({
                     onGalleryClick={onGalleryClick}
                     onContactClick={onContactClick}
                 />
-                {loggedIn && <LogoutButton className='logout-btn'/>}
+                {loggedIn && <LogoutButton className='logout-btn' onLogout={onLogout}/>}
             </div>
             <Search onSubmit={onSearch} hashtag={hashtag} hashtagSetter={hashtagSetter}/>
             <Hashtags

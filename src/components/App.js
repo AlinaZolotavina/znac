@@ -404,15 +404,24 @@ function App() {
         handleSearch(hashtag);
     }
 
+    // close popups and modals by ESC and overlay click
     useEffect((e) => {
         const handleEscClose = (e) => {
             if (e.keyCode === 27) {
                 closeAllPopups();
             }
         }
-
+        const handleOverlayClickClose = (e) => {
+            if (e.target.classList.contains('popup_is-opened') || e.target.classList.contains('popup__close-btn')) {
+                closeAllPopups();
+            }
+        }
         window.addEventListener('keydown', handleEscClose);
-        return () => window.removeEventListener('keydown', handleEscClose);
+        window.addEventListener('mousedown', handleOverlayClickClose);
+        return () => {
+            window.removeEventListener('keydown', handleEscClose);
+            window.removeEventListener('mousedown', handleOverlayClickClose);
+        };
     }, []);
 
     function closeAllPopups() {
@@ -420,15 +429,12 @@ function App() {
         setIsDeletePhotoModalOpen(false);
         setIsEditEmailModalOpen(false);
         setIsEditPasswordModalOpen(false);
+        setIsModalOpen(false);
+        setIsEmailSentModalOpen(false);
     };
 
     function closeMenu() {
         setIsMenuOpen(false);
-    };
-
-    function closeModals() {
-        setIsModalOpen(false);
-        setIsEmailSentModalOpen(false);
     };
 
     function handleError(errorText) {
@@ -492,6 +498,7 @@ function App() {
                         onMenuClick={handleMenuClick}
                         onSignout={handleSignout}
                         isSendingReq={isSendingReq}
+                        onLogout={handleSignout}
                     />
                     <Main
                         photos={photosToRender}
@@ -507,6 +514,7 @@ function App() {
                         onSearch={handleSearch}
                         photosQuantity={currentPhotosNumber}
                         onShowMore={showMorePhotos}
+                        onLogout={handleSignout}
                     />
                     <Footer />
                 </Route>
@@ -554,6 +562,7 @@ function App() {
                     onMenuClick={handleMenuClick}
                     onSignout={handleSignout}
                     isSendingReq={isSendingReq}
+                    onLogout={handleSignout}
                 />
 
                 <ProtectedRoute
@@ -566,6 +575,7 @@ function App() {
                     onSignout={handleSignout}
                     isSendingReq={isSendingReq}
                     onAddPhoto={handleAddPhoto}
+                    onLogout={handleSignout}
                 />
 
                 <Route path='/*'>
@@ -607,19 +617,20 @@ function App() {
                 onProfileClick={handleProfileClick}
                 onAddPhotoClick={handleAddPhotoClick}
                 onClose={closeMenu}
+                onLogout={handleSignout}
             />
 
             <Modal 
                 isOpen={isModalOpen}
                 isSuccess={isSuccess}
-                onClose={closeModals}
+                onClose={closeAllPopups}
                 message={modalMessage}
             />
 
             <EmailSentModal 
                 isOpen={isEmailSentModalOpen}
                 isSuccess={isSuccess}
-                onClose={closeModals}
+                onClose={closeAllPopups}
                 message={modalMessage}
             />
         </CurrentUserContext.Provider>
