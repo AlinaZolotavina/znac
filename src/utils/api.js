@@ -16,7 +16,7 @@ class Api {
             method: 'GET',
             credentials: 'include',
         })
-        .then(this._checkResponse);
+        .then((res) => this._checkResponse(res));
     }
 
     addPhoto(data) {
@@ -35,13 +35,28 @@ class Api {
         .then((res) => this._checkResponse(res));
     }
 
-    increaseViews(photo) {
-        return fetch(`${this._serverUrl}/photos/${photo}/views`, {
+    increaseViews(photoId) {
+        return fetch(`${this._serverUrl}/photos/${photoId}/views`, {
             method: 'PUT',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
+
+        })
+        .then(res => this._checkResponse(res));
+    }
+
+    editHashtags(photoId, hashtags) {
+        return fetch(`${this._serverUrl}/photos/${photoId}/hashtags`, {
+            method: 'PATCH',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                newHashtags: hashtags,
+            })
         })
         .then(res => this._checkResponse(res));
     }
