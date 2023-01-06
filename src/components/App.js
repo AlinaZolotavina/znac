@@ -57,7 +57,6 @@ import EmailSentModal from './EmailSentModal';
 import PasswordChanged from './PasswordChanged';
 import NotFound from './NotFound';
 
-
 function App() {
     const [currentUser, setCurrentUser] = useState({});
     const [loggedIn, setLoggedIn] = useState(false);
@@ -66,7 +65,11 @@ function App() {
     const location = useLocation();
 
    let photos = localStorage.getItem('photos');
+   const [allPhotos, setAllPhotos] = useState([]);
     const [photosToRender, setPhotosToRender] = useState([]);
+    const [photosToAdd, setPhotosToAdd] = useState(0);
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+    const [currentPhotosNumber, setCurrentPhotosNumber] = useState(0);
 
     const [hashtag, setHashtag] = useState('');
 
@@ -82,22 +85,27 @@ function App() {
     const [isDeletePhotoModalOpen, setIsDeletePhotoModalOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [selectedPhoto, setSelectedPhoto] = useState({});
+    const [isLeftFlipDisabled, setIsLeftFlipDisabled] = useState(false);
+    const [isRightFlipDisabled, setIsRightFlipDisabled] = useState(false);
+    const [photoIndex, setPhotoIndex] = useState(0);
+    const [hashtagsOfSelectedPhoto, setHashtagsOfSelectedPhoto] = useState('');
+    const [viewsOfSelectedPhoto, setViewsOfSelectedPhoto] = useState(0);
 
-    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-    const [currentPhotosNumber, setCurrentPhotosNumber] = useState(0);
-    const [photosToAdd, setPhotosToAdd] = useState(0);
+    const [areHashtagsEditing, setAreHashtagsEditing] = useState(false);
 
     // get photos to render
     useEffect(() => {
+        setHomeActive('nav__link_active');
         api.getInitialPhotos()
             .then(data => {
-                const photosData = data;
-                localStorage.setItem('photos', JSON.stringify(photosData));
+                const photosData = data.reverse();
+                setAllPhotos(photosData);
+                // localStorage.setItem('photos', JSON.stringify(photosData));
                 setPhotosToRender(photosData);
             })
-            .then(() => {
-                photos = localStorage.getItem('photos');
-            })
+            // .then(() => {
+            //     photos = localStorage.getItem('photos');
+            // })
             .catch(err => {
                 console.log(err);
             })
@@ -285,14 +293,19 @@ function App() {
     }
 
     function handlePhotoClick(photo) {
-        setIsPhotoPopupOpen(!isPhotoPopupOpen);
+        setIsPhotoPopupOpen(true);
         setSelectedPhoto(photo);
+        setHashtagsOfSelectedPhoto(photo.hashtags);
+        setViewsOfSelectedPhoto(photo.views);
+        // increaseViewsNumber(photo._id);
+        setPhotoIndex(findPhotoIndex(photo));
     }
 
     function handlePhotoDelete(photo) {
         api.deletePhoto(photo._id)
             .then(() => {
-                setPhotosToRender((state) => state.filter((p) => p._id !== photo._id && p))
+                setPhotosToRender((state) => state.filter((p) => p._id !== photo._id && p));
+                setAllPhotos((state) => state.filter((p) => p._id !== photo._id && p));
             })
             .catch(err => console.log(err));
         closeAllPopups();
@@ -311,26 +324,63 @@ function App() {
         setIsEditPasswordModalOpen(!isEditPasswordModalOpen);
     }
 
+    function handleEditHashtagsBtnClick() {
+        setAreHashtagsEditing(!areHashtagsEditing);
+    }
+
     function handleMenuClick() {
         setIsMenuOpen(!isMenuOpen);
     };
 
-    function handleAddPhoto(newPhoto) {
+    function handleAddPhotoViaLink(newPhoto) {
         setIsSendingReq(true);
         api.addPhoto(newPhoto)
             .then(newPhoto => {
                 setIsModalOpen(true);
                 setIsSuccess(true);
                 setModalMessage('Photo was added successfully');
+                setAllPhotos([newPhoto, ...allPhotos]);
                 setPhotosToRender([newPhoto, ...photosToRender]);
             })
             .catch(err => console.log(err))
             .finally(() => setIsSendingReq(false));
     }
 
+    useEffect(() => {
+        if (photoIndex === photosToRender.length - 1) {
+            setIsRightFlipDisabled(true);
+        } else {
+            setIsRightFlipDisabled(false);
+        }
+        if (photoIndex === 0) {
+            setIsLeftFlipDisabled(true);
+        } else {
+            setIsLeftFlipDisabled(false);
+        }
+    }, [photoIndex, photosToRender]);
+
+    function handlePhotoFlip(direction) {   
+        if (direction === 1) {
+            setSelectedPhoto(photosToRender[photoIndex + 1]);
+            setPhotoIndex(photoIndex + 1);
+        } else if (direction === -1) {
+            setSelectedPhoto(photosToRender[photoIndex - 1]);
+            setPhotoIndex(photoIndex - 1);
+        } 
+    };
+
+    function findPhotoIndex(photo) {
+        for (let i = 0; i < photosToRender.length; i++) {
+            if (photosToRender[i]._id === photo._id) {
+                return i;
+            };
+        };
+    };
+
     const [home, setHome] = useState(document.querySelector('home'));
     const [main, setMain] = useState(document.querySelector('main'));
     const [footer, setFooter] = useState(document.querySelector('footer'));
+    const [homeActive, setHomeActive] = useState('');
 
     useEffect(() => {
         setHome(document.querySelector('.home'));
@@ -345,6 +395,9 @@ function App() {
             let current = '';
             sections.forEach((section) => {
                 const sectionTop = section.offsetTop;
+                if (sectionTop === 0) {
+                    current = 'home';
+                }
                 if (window.scrollY >= sectionTop - 60) {
                     current = section.getAttribute('id');
                 }
@@ -364,7 +417,6 @@ function App() {
         return () => window.removeEventListener('scroll', markLinkActiveDependingOnScroll);
     }, [])
 
-    // ERROR!!! отследить прокрутку, не всегда корректно отображает активную часть страницы
     function handleHomeClick() {
         closeMenu();
         history.push('/');
@@ -383,7 +435,7 @@ function App() {
 
     function handleContactClick() {
         footer.scrollIntoView({
-            block: 'nearest',
+            block: 'start',
             behavior: 'smooth',
         });
     };
@@ -457,34 +509,36 @@ function App() {
             });
     };
 
-    // ERROR!!! не находит по хештегу только что добавленное фото, остальные находит
-    // ERROR!!! зато находит по хештегу только что удаленное фото
-    // ERROR!!! проблема в обновлении массива фото, потому что он из локал сторидж????
-
-    // ERROR!!! не очищается инпут после ухода на другую страницу и возвращения на главную
     function handleSearch(hashtag) {
         const keyWord = new RegExp(hashtag, "gi");
 
         if(!photos) {
             api.getInitialPhotos()
                 .then(data => {
-                    const photosData = data;
-                    localStorage.setItem('photos', JSON.stringify(photosData));
-                })
-                .then(() => {
-                    photos = localStorage.getItem('photos');
+                    const photosData = data.reverse();
+                    setAllPhotos(photosData);
                 })
                 .catch(err => {
                     console.log(err);
                 })
         }
 
-        const foundPhotos = JSON.parse(photos).filter((photo) => {
+        const foundPhotos = allPhotos.filter((photo) => {
             return (keyWord.test(photo.hashtags));
         });
 
         setPhotosToRender(foundPhotos);
     };
+
+    useEffect(() => {
+        setHashtag('');
+    }, [location.pathname])
+
+    useEffect(() => {
+        if (hashtag === '') {
+            setPhotosToRender(allPhotos);
+        }
+    }, [hashtag]);
 
     return (
         <CurrentUserContext.Provider value={currentUser}>
@@ -492,17 +546,20 @@ function App() {
                 <Route exact path='/'>
                     <Home
                         loggedIn={loggedIn}
+                        homeActive={homeActive}
                         onHomeClick={handleHomeClick}
                         onGalleryClick={handleGalleryClick}
                         onContactClick={handleContactClick}
                         onMenuClick={handleMenuClick}
                         onSignout={handleSignout}
                         isSendingReq={isSendingReq}
+                        email={currentUser.email}
                         onLogout={handleSignout}
                     />
                     <Main
                         photos={photosToRender}
                         loggedIn={loggedIn}
+                        homeActive={homeActive}
                         onPhotoClick={handlePhotoClick}
                         onDeleteBtnClick={handleDeletePhotoModalOpen}
                         onHomeClick={handleHomeClick}
@@ -514,12 +571,16 @@ function App() {
                         onSearch={handleSearch}
                         photosQuantity={currentPhotosNumber}
                         onShowMore={showMorePhotos}
+                        email={currentUser.email}
                         onLogout={handleSignout}
+                        areHashtagsEditing={false}
+                        // onEditHashtags={handleEditHashtags}
+                        isSendingReq={isSendingReq}
                     />
                     <Footer />
                 </Route>
 
-                <Route path='/signin'>
+                <Route exact path='/signin'>
                     <SignIn 
                         onSignin={handleSignin}
                         isSendingReq={isSendingReq}
@@ -533,7 +594,7 @@ function App() {
                     />
                 </Route>
 
-                <Route path='/forgot-password'>
+                <Route path='/signin/recovery'>
                     <ForgotPassword
                         onReceiveEmail={handleReceiveResetPasswordLink}
                         isSendingReq={isSendingReq}
@@ -562,6 +623,7 @@ function App() {
                     onMenuClick={handleMenuClick}
                     onSignout={handleSignout}
                     isSendingReq={isSendingReq}
+                    email={currentUser.email}
                     onLogout={handleSignout}
                 />
 
@@ -574,7 +636,8 @@ function App() {
                     onMenuClick={handleMenuClick}
                     onSignout={handleSignout}
                     isSendingReq={isSendingReq}
-                    onAddPhoto={handleAddPhoto}
+                    onAddPhotoViaLink={handleAddPhotoViaLink}
+                    email={currentUser.email}
                     onLogout={handleSignout}
                 />
 
@@ -587,8 +650,17 @@ function App() {
                 loggedIn={loggedIn}
                 isOpen={isPhotoPopupOpen}
                 photo={selectedPhoto}
+                photoHashtags={hashtagsOfSelectedPhoto}
+                views={viewsOfSelectedPhoto}
                 onClose={closeAllPopups}
                 onHashtagClick={handleHashtagClick}
+                areHashtagsEditing={areHashtagsEditing}
+                // onEditHashtags={handleEditHashtags}
+                isSendingReq={isSendingReq}
+                onEditHashtagsBtnClick={handleEditHashtagsBtnClick}
+                onPhotoFlip={handlePhotoFlip}
+                isLeftFlipDisabled={isLeftFlipDisabled}
+                isRightFlipDisabled={isRightFlipDisabled}
             />
 
             <EditEmailModal

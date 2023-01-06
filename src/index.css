@@ -41,6 +41,10 @@
 @import url(./blocks/hashtags/hashtags.css);
 @import url(./blocks/hashtags/_to-photo/hashtags_to-photo.css);
 @import url(./blocks/hashtag/hashtag.css);
+@import url(./blocks/edit-hashtags/edit-hashtags.css);
+@import url(./blocks/edit-hashtags/__field/edit-hashtags__field.css);
+@import url(./blocks/edit-hashtags/__input/edit-hashtags__input.css);
+@import url(./blocks/edit-hashtags/__submit-btn/edit-hashtags__submit-btn.css);
 
 /* gallery */
 @import url(./blocks/gallery/gallery.css);
@@ -72,7 +76,10 @@
 @import url(./blocks/popup/__input-field/popup__input-field.css);
 @import url(./blocks/popup/__submit-btn/popup__submit-btn.css);
 @import url(./blocks/popup/__submit-btn/_disabled/popup__submit-btn_diabled.css);
+@import url(./blocks/popup/__photo-container/popup__photo-container.css);
 @import url(./blocks/popup/__image/popup__image.css);
+@import url(./blocks/popup/__right-flip/popup__right-flip.css);
+@import url(./blocks/popup/__left-flip/popup__left-flip.css);
 @import url(./blocks/popup/__caption/popup__caption.css);
 @import url(./blocks/popup/__hashtags/popup__hashtags.css);
 @import url(./blocks/views/views.css);

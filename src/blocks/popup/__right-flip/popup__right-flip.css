@@ -1,0 +1,21 @@
+.popup__right-flip {
+    position: absolute;
+    right: -70px;
+    top: 0;
+    background-image: url(../../../images/right-flip.svg);
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-size: 30px auto;
+    border-style: none;
+    width: 70px;
+    height: 100%;
+    opacity: .5;
+    transition: opacity .3s ease;
+    cursor: pointer;
+    background-position: center;
+    padding: 0;
+}
+
+.popup__right-flip:hover {
+    opacity: 1;
+}
