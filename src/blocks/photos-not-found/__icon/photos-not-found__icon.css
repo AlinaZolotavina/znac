@@ -1,5 +1,6 @@
 .photos-not-found__icon {
-    width: 250px;
-    height: 250px;
+    width: 150px;
+    height: 150px;
     margin-bottom: 20px;
+    opacity: .8;
 }
