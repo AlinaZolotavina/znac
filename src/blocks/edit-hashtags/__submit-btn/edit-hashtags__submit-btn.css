@@ -1,0 +1,17 @@
+.edit-hashtags__submit-btn {
+    width: 23px;
+    height: 23px;
+    margin: 0 0 0 10px;
+    background-image: url(../../../images/check-icon.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #E8E8E8;
+    border-style: none;
+    border-radius: 3.5px;
+    cursor: pointer;
+    transition: opacity .2s ease;
+}
+
+.edit-hashtags__submit-btn:hover {
+    opacity: .7;
+}

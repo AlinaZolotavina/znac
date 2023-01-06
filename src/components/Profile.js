@@ -14,15 +14,16 @@ function Profile({
     onEditEmailBtnClick,
     onEditPasswordBtnClick,
     onMenuClick,
+    email,
     onLogout
     }) {
     const currentUser = useContext(CurrentUserContext);
     useEffect(() => {
-        setEmail(currentUser.email);
+        setUserEmail(currentUser.email);
         setPassword(currentUser.password);
     }, [currentUser]);
 
-    const [email, setEmail] = useState('');
+    const [userEmail, setUserEmail] = useState('');
     const [password, setPassword] = useState('');
     
     return (
@@ -34,7 +35,11 @@ function Profile({
                     onGalleryClick={onGalleryClick}
                     onContactClick={onContactClick}
                 />
-                <LogoutButton className='logout-btn' onLogout={onLogout}/>
+                <LogoutButton
+                    className='logout-btn'
+                    email={email}
+                    onLogout={onLogout}
+                />
             </Header>
             <BurgerMenuBtn onMenuClick={onMenuClick} />
             <div className='profile__container'>
@@ -43,7 +48,7 @@ function Profile({
                         inputLabel='E-mail'
                         placeholder=''
                         classname='input__field profile__input'
-                        inputValue={email}
+                        inputValue={userEmail}
                         inputType='text'
                         isSendingReq={true}
                     />

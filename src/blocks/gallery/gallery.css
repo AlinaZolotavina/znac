@@ -1,9 +1,9 @@
 .gallery {
     max-height: fit-content;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, calc(98.4vw / 4));
     grid-auto-columns: 25vw;
-    grid-template-rows: repeat(3, calc(100vw / 4));
+    grid-template-rows: repeat(3, calc(98.4vw / 4));
     grid-auto-rows: 25vw;
     /* grid-auto-flow: row dense; */
     column-gap: 2px;

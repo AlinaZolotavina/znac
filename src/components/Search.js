@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function Search({ onSubmit, isSendingReq, hashtag, hashtagSetter }) {
+function Search({ onSubmit, isLoading, hashtag, hashtagSetter }) {
     const [hashtagError, setHashtagError] = useState('');
     const [isFormValid, setIsFormValid] = useState(false);
     function handleHashtagChange(e) {
@@ -23,6 +23,12 @@ function Search({ onSubmit, isSendingReq, hashtag, hashtagSetter }) {
         }
     }, [hashtag, hashtagError]);
 
+    useEffect(() => {
+        if (!hashtag) {
+        setHashtagError('')
+        }
+    }, [hashtag])
+
     function handleSearch(e) {
         e.preventDefault();
         onSubmit(hashtag);
@@ -43,7 +49,7 @@ function Search({ onSubmit, isSendingReq, hashtag, hashtagSetter }) {
                 <button
                     className={`search__submit-btn ${isFormValid ? '' : 'search__submit-btn_disabled'}`}
                     type='submit'
-                    disabled={!isFormValid || isSendingReq}
+                    disabled={!isFormValid || isLoading}
                 />
             </form>
             <span className='search__error'>{hashtagError}</span>

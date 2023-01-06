@@ -14,33 +14,27 @@ function AddPhoto({
     onContactClick,
     onMenuClick,
     isSendingReq,
-    onAddPhoto,
+    onAddPhotoViaLink,
+    email,
     onLogout,
     }) {
-    const [isClicked, setIsClicked] = useState(false);
-    const [dropdownText, setDropdownText] = useState('Select download type');
     const [photoLink, setPhotoLink] = useState('');
     const [photoLinkError, setPhotoLinkError] = useState('');
-    const [photoFile, setPhotoFile] = useState({});
-    const [spanText, setSpanText] = useState('Attach photo');
     const [hashtags, setHashtags] = useState('');
     const [hashtagsError, setHashtagsError] = useState('');
     const [isFormValid, setIsFormValid] = useState(false);
-    const [photoInputClassname, setPhotoInputClassname] = useState('photo-input');
-    const [pcDownloadCheck, setPcDownloadCheck] = useState(false);
-    const [linkDownloadCheck, setLinkDownloadCheck] = useState(false);
     const location = useLocation();
 
     useEffect(() => {
+        clearInputs();
+    }, [location.pathname]);
+
+    function clearInputs() {
         setPhotoLink('');
         setPhotoLinkError('');
-        setDropdownText('Select download type');
-        setIsClicked(false);
         setHashtags('');
         setHashtagsError('');
-        setPcDownloadCheck(false);
-        setLinkDownloadCheck(false);
-    }, [location.pathname]);
+    }
 
     function handlePhotoLinkChange(e) {
         // eslint-disable-next-line no-useless-escape
@@ -53,11 +47,6 @@ function AddPhoto({
             setPhotoLinkError('');
         }
         setPhotoLink(e.target.value);
-    }
-    
-    function handlePhotoAttach(e) {
-        setPhotoFile(e.target.files[0]);
-        setSpanText('File was choosen');
     }
 
     function handleHashtagsChange(e) {
@@ -73,52 +62,23 @@ function AddPhoto({
     }
 
     useEffect(() => {
-        if ((photoLink || photoFile) && (dropdownText === 'PC download' || dropdownText === 'Link download') && hashtags && !photoLinkError && !hashtagsError) {
+        if (photoLink && hashtags && !photoLinkError && !hashtagsError) {
             setIsFormValid(true);
         } else {
             setIsFormValid(false);
         }
-    }, [photoLink, photoFile, photoLinkError, hashtags, hashtagsError, dropdownText]);
-
-    function handleDropdownClick() {
-        setIsClicked(!isClicked);
-    }
-
-    function handlePcDownloadClick() {
-        setDropdownText('PC download');
-        setPhotoInputClassname('photo-input_visible');
-        setPcDownloadCheck(true);
-        setLinkDownloadCheck(false);
-        setIsClicked(false);
-    }
-
-    function handleLinkDownloadClick() {
-        setDropdownText('Link download');
-        setPhotoInputClassname('photo-input_visible');
-        setPcDownloadCheck(false);
-        setLinkDownloadCheck(true);
-        setIsClicked(false);
-        setPhotoFile({});
-        setSpanText('Attach file');
-    }
+    }, [photoLink, photoLinkError, hashtags, hashtagsError]);
 
     function handleSubmit(e) {
         e.preventDefault();
-        onAddPhoto({
+        onAddPhotoViaLink({
             link: photoLink,
             hashtags: hashtags,
-            views: "123",
+            views: 0,
         });
         clearInputs();
     }
 
-    // ERROR!!! не работает очистка инпутов после добавления фото
-    function clearInputs() {
-        setHashtags('');
-        setHashtagsError('');
-        setPhotoLink('');
-        setPhotoLinkError('');
-    }
 
     return (
         <section className='add-photo'>
@@ -129,7 +89,11 @@ function AddPhoto({
                     onGalleryClick={onGalleryClick}
                     onContactClick={onContactClick}
                 />
-                <LogoutButton className='logout-btn' onLogout={onLogout}/>
+                <LogoutButton
+                    className='logout-btn'
+                    email={email}
+                    onLogout={onLogout}
+                />
             </Header>
             <BurgerMenuBtn onMenuClick={onMenuClick} />
             <Form
@@ -142,67 +106,24 @@ function AddPhoto({
                 isFormValid={isFormValid}
                 isSendingReq={isSendingReq}
                 onSubmit={handleSubmit}
-            >
-                <label className='input dropdown'>
-                    Download type
-                    <div
-                        className={`input__field dropdown__btn ${isClicked && 'dropdown__btn_active'}`}
-                        onClick={handleDropdownClick}
-                    >
-                        {dropdownText}
-                    </div>
-                    <div className={`dropdown__icon ${isClicked && 'dropdown__icon_clicked'}`}/>
-                    <div className={`dropdown__options ${isClicked && 'dropdown__options_visible'}`}>
-                        <div
-                            className={`dropdown__option ${pcDownloadCheck && 'dropdown__option_selected'}`}
-                            onClick={handlePcDownloadClick}
-                        >
-                            Download from PC
-                            <div className={`dropdown__check-icon ${pcDownloadCheck && 'dropdown__check-icon_active'}`}/>
-                        </div>
-                        <div
-                            className={`dropdown__option ${linkDownloadCheck && 'dropdown__option_selected'}`}
-                            onClick={handleLinkDownloadClick}
-                        >
-                            Insert photo link
-                            <div className={`dropdown__check-icon ${linkDownloadCheck && 'dropdown__check-icon_active'} `}/>
-                        </div>
-                    </div> 
-                </label>
-                {dropdownText === 'PC download' ?
-                    <div className='photo-upload'>
-                        <input
-                            className='photo-upload__input'
-                            type='file'
-                            name='photo'
-                            id='photo'
-                            accept='.jpg, .jpeg, .png'
-                            onChange={handlePhotoAttach}
-                        />
-                        <label className='photo-upload__label'>
-                            <div className='photo-upload__icon' />
-                            <span className='photo-upload__span'>{spanText}</span>
-                        </label>
-                    </div>
-                    :
-                    <Input
-                        labelClassname={photoInputClassname}
-                        inputLabel='Photo'
-                        classname='input__field'
-                        placeholder='Paste image link'
-                        inputType='url'
-                        value={photoLink}
-                        onChange={handlePhotoLinkChange}
-                        isSendingReq={isSendingReq}
-                        error={photoLinkError}
-                    />
-                }            
+            >            
+                <Input
+                    labelClassname=''
+                    inputLabel='Photo'
+                    classname='input__field'
+                    placeholder='Paste image link'
+                    inputType='url'
+                    inputValue={photoLink}
+                    onChange={handlePhotoLinkChange}
+                    isSendingReq={isSendingReq}
+                    error={photoLinkError}
+                />         
                 <Input 
-                    inputLabel='Hastags'
-                    placeholder='Enter hastags separated by spaces'
+                    inputLabel='Hashtags'
+                    placeholder='Enter hashtags separated by spaces'
                     classname='input__field'
                     inputType='text'
-                    value={hashtags}
+                    inputValue={hashtags}
                     onChange={handleHashtagsChange}
                     isSendingReq={isSendingReq}
                     error={hashtagsError}

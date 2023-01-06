@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 
-function Navigation({ loggedIn, onHomeClick, onGalleryClick, onContactClick }) {
+function Navigation({ loggedIn, homeActive, onHomeClick, onGalleryClick, onContactClick }) {
     const location = useLocation();
 
     return (
@@ -8,7 +8,7 @@ function Navigation({ loggedIn, onHomeClick, onGalleryClick, onContactClick }) {
             {
                 location.pathname === '/' ?
                 <button
-                    className={`nav__link home-link`}
+                    className={`nav__link home-link ${homeActive}`}
                     onClick={onHomeClick}    
                 >
                     HOME    

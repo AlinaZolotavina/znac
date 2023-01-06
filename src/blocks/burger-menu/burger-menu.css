@@ -1,19 +1,20 @@
 .burger-menu {
-    position: absolute;
-    top: 0;
-    right: 4vw;
-    width: 24px;
-    height: 16px;
+    position: fixed;
+    top: 3vw;
+    right: 3vw;
+    width: 29px;
+    height: 25px;
     background-image: url(../../images/burger-menu.svg);
-    background-color: transparent;
+    background-color: #000;
     background-position: center;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: auto;
     border-style: none;
+    border-radius: 3px;
     padding: 0;
-    margin-top: 4vw;
     cursor: pointer;
     transition: opacity .2s ease;
+    z-index: 1;
     opacity: 0;
     visibility: hidden;
 }

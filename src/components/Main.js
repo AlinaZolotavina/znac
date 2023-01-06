@@ -11,6 +11,7 @@ import More from './More';
 function Main({
     photos,
     loggedIn,
+    homeActive,
     onHomeClick,
     onGalleryClick,
     onContactClick,
@@ -22,24 +23,36 @@ function Main({
     onSearch,
     photosQuantity,
     onShowMore,
+    email,
     onLogout,
+    areHashtagsEditing,
+    onEditHashtags,
+    isSendingReq,
     }) {
     return (
         <main className="main section" id="main">
             <div className='main__navigation main__navigation_fixed'>
                 <Navigation
                     loggedIn={loggedIn}
+                    homeActive={homeActive}
                     onHomeClick={onHomeClick}
                     onGalleryClick={onGalleryClick}
                     onContactClick={onContactClick}
                 />
-                {loggedIn && <LogoutButton className='logout-btn' onLogout={onLogout}/>}
+                {loggedIn &&<LogoutButton
+                    className='logout-btn'
+                    email={email}
+                    onLogout={onLogout}
+                />}
             </div>
-            <Search onSubmit={onSearch} hashtag={hashtag} hashtagSetter={hashtagSetter}/>
+            <Search onSubmit={onSearch} isLoading={isSendingReq} hashtag={hashtag} hashtagSetter={hashtagSetter}/>
             <Hashtags
                 classname="hashtags"
                 photoHashtags='nature mountains sea Paris Switzerland Alps architecture'
                 onClick={onHashtagClick}
+                areHashtagsEditing={areHashtagsEditing}
+                onEditHashtags={onEditHashtags}
+                isSendingReq={isSendingReq}
             />
             <Gallery
                 loggedIn={loggedIn}

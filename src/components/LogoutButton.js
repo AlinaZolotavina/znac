@@ -1,8 +1,11 @@
-function LogoutButton({ className, onLogout }) {
+function LogoutButton({ className, email, onLogout }) {
+    function handleLogout() {
+        onLogout(email);
+    }
     return (
         <button
             className={className}
-            onClicl={onLogout}
+            onClick={handleLogout}
         >
             LOG OUT
         </button>

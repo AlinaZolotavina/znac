@@ -297,7 +297,7 @@ function App() {
         setSelectedPhoto(photo);
         setHashtagsOfSelectedPhoto(photo.hashtags);
         setViewsOfSelectedPhoto(photo.views);
-        // increaseViewsNumber(photo._id);
+        increaseViewsNumber(photo._id);
         setPhotoIndex(findPhotoIndex(photo));
     }
 
@@ -344,6 +344,34 @@ function App() {
             })
             .catch(err => console.log(err))
             .finally(() => setIsSendingReq(false));
+    }
+
+    useEffect(() => {
+        setHashtagsOfSelectedPhoto(selectedPhoto.hashtags);
+        setViewsOfSelectedPhoto(selectedPhoto.views);
+    }, [selectedPhoto]);
+
+    function increaseViewsNumber(photoId) {
+        api.increaseViews(photoId)
+            .then(newPhoto => {
+                setAllPhotos(state => state.map(p => p._id === photoId ? newPhoto : p));
+                setPhotosToRender(state => state.map(p => p._id === photoId ? newPhoto : p));
+                setSelectedPhoto(newPhoto);
+            })
+            .catch(err => console.log(err));
+    }
+
+    function handleEditHashtags(photoId, hashtags) {
+        api.editHashtags(photoId, hashtags)
+            .then(newPhoto => {
+                setAllPhotos(state => state.map(p => p._id === photoId ? newPhoto : p));
+                setPhotosToRender(state => state.map(p => p._id === photoId ? newPhoto : p));
+                setSelectedPhoto(newPhoto);
+            })
+            .then(() => {
+                setAreHashtagsEditing(false);
+            })            
+            .catch(err => console.log(err));
     }
 
     useEffect(() => {
@@ -574,7 +602,7 @@ function App() {
                         email={currentUser.email}
                         onLogout={handleSignout}
                         areHashtagsEditing={false}
-                        // onEditHashtags={handleEditHashtags}
+                        onEditHashtags={handleEditHashtags}
                         isSendingReq={isSendingReq}
                     />
                     <Footer />
@@ -655,7 +683,7 @@ function App() {
                 onClose={closeAllPopups}
                 onHashtagClick={handleHashtagClick}
                 areHashtagsEditing={areHashtagsEditing}
-                // onEditHashtags={handleEditHashtags}
+                onEditHashtags={handleEditHashtags}
                 isSendingReq={isSendingReq}
                 onEditHashtagsBtnClick={handleEditHashtagsBtnClick}
                 onPhotoFlip={handlePhotoFlip}

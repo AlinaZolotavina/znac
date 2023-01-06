@@ -1,5 +1,6 @@
 .popup__hashtags {
     display: flex;
     align-items: center;
-    margin: 15px 0 0;
+    margin: 0;
+    width: 100%;
 }
