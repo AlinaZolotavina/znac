@@ -20,7 +20,7 @@ function Profile({
     const currentUser = useContext(CurrentUserContext);
     useEffect(() => {
         setUserEmail(currentUser.email);
-        setPassword(currentUser.password);
+        setPassword('********');
     }, [currentUser]);
 
     const [userEmail, setUserEmail] = useState('');

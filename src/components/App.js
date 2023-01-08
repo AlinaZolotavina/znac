@@ -15,6 +15,7 @@ import EditEmailModal from './EditEmailModal';
 import EditPasswordModal from './EditPasswordModal';
 import Menu from './Menu';
 import Modal from './Modal';
+import ConfirmEmailUpdate from './ConfirmEmailUpdate';
 import api from '../utils/api';
 import * as auth from '../utils/auth.js';
 
@@ -60,6 +61,7 @@ import NotFound from './NotFound';
 function App() {
     const [currentUser, setCurrentUser] = useState({});
     const [loggedIn, setLoggedIn] = useState(false);
+    const [theWantedNewEmail, setTheWantedNewEmail] = useState('');
 
     const history = useHistory();
     const location = useLocation();
@@ -527,13 +529,34 @@ function App() {
         setIsSendingReq(true);
         api.requestEmailUpdate(newEmail)
             .then(() => {
-                console.log('request email change');
+                setTheWantedNewEmail(newEmail);
+                setIsEmailSentModalOpen(true);
+                setIsSuccess(true);
+                setModalMessage('E-mail has been sent, please follow the instructions.');
             })
             .catch((err) => {
-                console.log(err);
+                setIsSuccess(false);
+                setIsModalOpen(true);
+                setModalMessage('Error! E-mail change request failed')
             })
             .finally(() => {
                 setIsSendingReq(false);
+            });
+    };
+
+    function handleUpdateEmail(newEmail) {
+        api.updateEmail(newEmail)
+            .then((data) => {
+                setCurrentUser(data.user);
+                history.push('/profile');
+                setIsSuccess(true);
+                setIsModalOpen(true);
+                setModalMessage('E-mail has been successfully updated');
+            })
+            .catch(() => {
+                setIsSuccess(false);
+                setIsModalOpen(true);
+                setModalMessage('Error! E-mail has not been updated');
             });
     };
 
@@ -642,7 +665,7 @@ function App() {
 
                 <ProtectedRoute
                     component={Profile}
-                    path='/profile'
+                    exact path='/profile'
                     loggedIn={loggedIn}
                     onGalleryClick={handleGalleryClick}
                     onContactClick={handleContactClick}
@@ -653,6 +676,14 @@ function App() {
                     isSendingReq={isSendingReq}
                     email={currentUser.email}
                     onLogout={handleSignout}
+                />
+
+                <ProtectedRoute
+                    component={ConfirmEmailUpdate}
+                    exact path='/profile/confirm-email-update'
+                    loggedIn={loggedIn}
+                    onUpdateEmail={handleUpdateEmail}
+                    newEmail={theWantedNewEmail}
                 />
 
                 <ProtectedRoute
