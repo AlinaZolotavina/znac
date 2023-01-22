@@ -1,7 +1,7 @@
 import Navigation from './Navigation';
 import LogoutButton from './LogoutButton';
 import Search from './Search';
-import Hashtags from './Hashtags';
+import MainPageHashtags from './MainPageHashtags';
 import Gallery from './Gallery';
 import More from './More';
 
@@ -19,15 +19,15 @@ function Main({
     onDeleteBtnClick,
     onHashtagClick,
     hashtag,
+    photoHashtags,
     hashtagSetter,
     onSearch,
     photosQuantity,
     onShowMore,
     email,
     onLogout,
-    areHashtagsEditing,
-    onEditHashtags,
     isSendingReq,
+    isSearching,
     }) {
     return (
         <main className="main section" id="main">
@@ -46,13 +46,9 @@ function Main({
                 />}
             </div>
             <Search onSubmit={onSearch} isLoading={isSendingReq} hashtag={hashtag} hashtagSetter={hashtagSetter}/>
-            <Hashtags
-                classname="hashtags"
-                photoHashtags='nature mountains sea Paris Switzerland Alps architecture'
+            <MainPageHashtags
+                photoHashtags={photoHashtags}
                 onClick={onHashtagClick}
-                areHashtagsEditing={areHashtagsEditing}
-                onEditHashtags={onEditHashtags}
-                isSendingReq={isSendingReq}
             />
             <Gallery
                 loggedIn={loggedIn}
@@ -60,6 +56,7 @@ function Main({
                 onDeleteBtnClick={onDeleteBtnClick}
                 onPhotoClick={onPhotoClick}
                 photosQuantity={photosQuantity}
+                isSearching={isSearching}
             />
             {photos.length > photosQuantity ? (
                 <More onShowMore={onShowMore}/>

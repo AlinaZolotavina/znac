@@ -14,11 +14,21 @@ class Api {
     getInitialPhotos() {
         return fetch(`${this._serverUrl}/photos`, {
             method: 'GET',
-            credentials: 'include',
         })
         .then((res) => this._checkResponse(res));
     }
 
+    findPhoto(data) {
+        return fetch(`${this._serverUrl}/photos/found`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ keyWord: data })
+        })
+        .then((res) => this._checkResponse(res));
+    }
+ 
     addPhoto(data) {
         return fetch(`${this._serverUrl}/photos`, {
             method: 'POST',
@@ -69,6 +79,39 @@ class Api {
         .then((res) => this._checkResponse(res));
     }
 
+    getHashtags = () => {
+        return fetch(`${this._serverUrl}/hashtags`, {
+            method: 'GET',
+        })
+        .then((res) => this._checkResponse(res));
+    }
+
+    addHashtag = (hashtag) => {
+        return fetch(`${this._serverUrl}/hashtags`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                newHashtag: hashtag,
+            })
+        })
+        .then((res) => this._checkResponse(res));
+    }
+
+    deleteHashtag = (hashtag) => {
+        return fetch(`${this._serverUrl}/hashtags`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                hashtagName: hashtag,
+            })
+        })
+        .then((res) => this._checkResponse(res));
+    }
+
     getUserData() {
         return fetch(`${this._serverUrl}/profile`, {
             method: 'GET',
@@ -81,7 +124,7 @@ class Api {
         .then((res) => this._checkResponse(res));
     }
 
-    requestEmailUpdate(data) {
+    requestEmailUpdate(newEmail, oldEmail) {
         return fetch(`${this._serverUrl}/profile/update-email`, {
             method: 'PUT',
             credentials: 'include',
@@ -89,22 +132,22 @@ class Api {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                email: data.email,
+                newEmail: newEmail,
+                oldEmail: oldEmail,
             })
         })
         .then((res) => this._checkResponse(res));
     }
 
-    updateEmail(data) {
-        return fetch(`${this._serverUrl}/profile/update-email/${data.updateEmailLink}`, {
+    updateEmail(updateEmailLink, newEmail) {
+        return fetch(`${this._serverUrl}/profile/update-email/${updateEmailLink}`, {
             method: 'PATCH',
             credentials: 'include',
             headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                newEmail: data.newEmail,
-            })
+            body: JSON.stringify({ newEmail })
         })
         .then((res) => this._checkResponse(res));
     }
@@ -126,7 +169,7 @@ class Api {
     }
 
     getInitialData() {
-        return Promise.all([this.getUserData(), this.getInitialPhotos()]);
+        return Promise.all([this.getInitialPhotos(), this.getHashtags()]);
     }
 }
 

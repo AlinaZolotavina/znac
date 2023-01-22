@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Form from "./Form";
 import Input from "./Input";
 import CloseButton from "./CloseButton";
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function EditEmailModal({ isOpen, onClose, isSendingReq, onRequestEmailChange }) {
+    const currentUser = useContext(CurrentUserContext);
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
     function handleEmailChange(e) {
@@ -11,6 +13,8 @@ function EditEmailModal({ isOpen, onClose, isSendingReq, onRequestEmailChange })
         const isEmailValid = emailRegex.test(e.target.value);
         if (!isEmailValid) {
             setEmailError('Please enter a valid e-mail');
+        } else if (e.target.value === currentUser.email) {
+            setEmailError('This email is currently in use');
         } else {
             setEmailError('');
         }
@@ -29,6 +33,12 @@ function EditEmailModal({ isOpen, onClose, isSendingReq, onRequestEmailChange })
             setIsFormValid(false);
         }
     }, [email, emailError]);
+
+    function handleClose() {
+        setEmail('');
+        setEmailError('');
+        onClose();
+    }
 
     return (
         <div className={`popup popup_type_photo ${isOpen && 'popup_is-opened'}`}>
@@ -55,7 +65,7 @@ function EditEmailModal({ isOpen, onClose, isSendingReq, onRequestEmailChange })
                         error={emailError}
                     />
                 </Form>
-                <CloseButton classname="close-btn popup__close-btn" onClick={onClose}/>
+                <CloseButton classname="close-btn popup__close-btn" onClick={handleClose}/>
             </div>
         </div>
     );

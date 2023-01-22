@@ -1,21 +1,5 @@
 .popup__left-flip {
-    position: absolute;
-    left: -70px;
-    top: 0;
+    grid-area: left-flip;
     background-image: url(../../../images/left-flip.svg);
-    background-position: center;
-    background-color: transparent;
-    background-repeat: no-repeat;
-    background-size: 30px auto;
-    border-style: none;
-    width: 70px;
-    height: 100%;
-    opacity: .5;
-    transition: opacity .3s ease;
-    cursor: pointer;
-    padding: 0;
-}
-
-.popup__left-flip:hover {
-    opacity: 1;
+    background-position: 70%;
 }

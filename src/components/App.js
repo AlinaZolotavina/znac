@@ -59,55 +59,71 @@ import PasswordChanged from './PasswordChanged';
 import NotFound from './NotFound';
 
 function App() {
+    // user info
     const [currentUser, setCurrentUser] = useState({});
     const [loggedIn, setLoggedIn] = useState(false);
-    const [theWantedNewEmail, setTheWantedNewEmail] = useState('');
+    // const [theWantedNewEmail, setTheWantedNewEmail] = useState('');
 
+    // history & location
     const history = useHistory();
     const location = useLocation();
 
-   let photos = localStorage.getItem('photos');
-   const [allPhotos, setAllPhotos] = useState([]);
+    // everything related to photos (including screen width, on which depends the photos to render count)
+    const [allPhotos, setAllPhotos] = useState([]);
     const [photosToRender, setPhotosToRender] = useState([]);
     const [photosToAdd, setPhotosToAdd] = useState(0);
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const [currentPhotosNumber, setCurrentPhotosNumber] = useState(0);
+    const [selectedPhoto, setSelectedPhoto] = useState({});
+    const [photoIndex, setPhotoIndex] = useState(0);
+    const [hashtagsOfSelectedPhoto, setHashtagsOfSelectedPhoto] = useState('');
+    const [areHashtagsEditing, setAreHashtagsEditing] = useState(false);
+    const [viewsOfSelectedPhoto, setViewsOfSelectedPhoto] = useState(0);
+    const [isLeftFlipDisabled, setIsLeftFlipDisabled] = useState(false);
+    const [isRightFlipDisabled, setIsRightFlipDisabled] = useState(false);
 
-    const [hashtag, setHashtag] = useState('');
-
-    const [isSendingReq, setIsSendingReq] = useState(false);
-    const [isSuccess, setIsSuccess] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isEmailSentModalOpen, setIsEmailSentModalOpen] = useState(false);
-    const [modalMessage, setModalMessage] = useState('');
-
+    // popups & modals  
     const [isPhotoPopupOpen, setIsPhotoPopupOpen] = useState(false);
     const [isEditEmailModalOpen, setIsEditEmailModalOpen] = useState(false);
     const [isEditPasswordModalOpen, setIsEditPasswordModalOpen] = useState(false);
     const [isDeletePhotoModalOpen, setIsDeletePhotoModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [selectedPhoto, setSelectedPhoto] = useState({});
-    const [isLeftFlipDisabled, setIsLeftFlipDisabled] = useState(false);
-    const [isRightFlipDisabled, setIsRightFlipDisabled] = useState(false);
-    const [photoIndex, setPhotoIndex] = useState(0);
-    const [hashtagsOfSelectedPhoto, setHashtagsOfSelectedPhoto] = useState('');
-    const [viewsOfSelectedPhoto, setViewsOfSelectedPhoto] = useState(0);
+    const [isEmailSentModalOpen, setIsEmailSentModalOpen] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
 
-    const [areHashtagsEditing, setAreHashtagsEditing] = useState(false);
+    const [hashtag, setHashtag] = useState(''); // search input
+    const [lastHashtags, setLastHashtags] = useState([]);
+
+    const [isSendingReq, setIsSendingReq] = useState(false); 
+
+    // const updateHomepageHashtags = (hashtags, resentHashtags) => {
+    //     hashtags.split('').forEach(h => {
+    //         for (let i = 0; i < resentHashtags.length; i++) {
+    //             if (resentHashtags[i] === h) {
+    //                  setLastHashtags(state => state.push(h));
+    //             };
+    //         }});
+    // }
 
     // get photos to render
     useEffect(() => {
         setHomeActive('nav__link_active');
-        api.getInitialPhotos()
+        api.getInitialData()
             .then(data => {
-                const photosData = data.reverse();
+                const [photosData, hashtagsData] = data;
                 setAllPhotos(photosData);
-                // localStorage.setItem('photos', JSON.stringify(photosData));
-                setPhotosToRender(photosData);
+                setPhotosToRender(photosData.reverse());
+                // const hashtags = hashtagsData.map(h => h.name);
+                setLastHashtags(hashtagsData.reverse());
             })
-            // .then(() => {
-            //     photos = localStorage.getItem('photos');
-            // })
+        // api.getInitialPhotos()
+        //     .then(data => {
+        //         const photosData = data.reverse();
+        //         setAllPhotos(photosData);
+        //         setPhotosToRender(photosData);
+        //     })
             .catch(err => {
                 console.log(err);
             })
@@ -147,6 +163,8 @@ function App() {
             .catch(err => console.log(err));
     }
 
+    // calculate photos count depending on screen demensions
+    // (including when changing the screen resolution)
     useEffect(() => {
         window.addEventListener('resize', updateDemensions);
         return () => window.removeEventListener('resize', updateDemensions);
@@ -250,7 +268,8 @@ function App() {
                 };
             });
     };
-
+    
+    // password reset
     function handleReceiveResetPasswordLink(email) {
         setIsSendingReq(true);
         auth.forgotPassword(email)
@@ -294,87 +313,57 @@ function App() {
             })
     }
 
-    function handlePhotoClick(photo) {
-        setIsPhotoPopupOpen(true);
-        setSelectedPhoto(photo);
-        setHashtagsOfSelectedPhoto(photo.hashtags);
-        setViewsOfSelectedPhoto(photo.views);
-        increaseViewsNumber(photo._id);
-        setPhotoIndex(findPhotoIndex(photo));
-    }
-
-    function handlePhotoDelete(photo) {
-        api.deletePhoto(photo._id)
-            .then(() => {
-                setPhotosToRender((state) => state.filter((p) => p._id !== photo._id && p));
-                setAllPhotos((state) => state.filter((p) => p._id !== photo._id && p));
-            })
-            .catch(err => console.log(err));
-        closeAllPopups();
-    }
-
-    function handleDeletePhotoModalOpen(photo) {
-        setIsDeletePhotoModalOpen(!isDeletePhotoModalOpen);
-        setSelectedPhoto(photo);
-    }
-
+    // e-mail change
     function handleEditEmailBtnClick() {
         setIsEditEmailModalOpen(!isEditEmailModalOpen);
     }
 
-    function handleEditPasswordBtnClick() {
-        setIsEditPasswordModalOpen(!isEditPasswordModalOpen);
-    }
-
-    function handleEditHashtagsBtnClick() {
-        setAreHashtagsEditing(!areHashtagsEditing);
-    }
-
-    function handleMenuClick() {
-        setIsMenuOpen(!isMenuOpen);
+    function handleEmailChangeRequest(newEmail) {
+        console.log(currentUser.email);
+        setIsSendingReq(true);
+        localStorage.setItem('email', JSON.stringify(newEmail));
+        api.requestEmailUpdate(newEmail.email, currentUser.email)
+            .then(() => {
+                setIsEmailSentModalOpen(true);
+                setIsSuccess(true);
+                setModalMessage('E-mail has been sent, please follow the instructions.');
+            })
+            .catch((err) => {
+                setIsSuccess(false);
+                setIsModalOpen(true);
+                setModalMessage('Error! E-mail change request failed')
+            })
+            .finally(() => {
+                setIsSendingReq(false);
+            });
     };
 
-    function handleAddPhotoViaLink(newPhoto) {
-        setIsSendingReq(true);
-        api.addPhoto(newPhoto)
-            .then(newPhoto => {
-                setIsModalOpen(true);
+    function handleUpdateEmail(updateEmailLink, newEmail) {
+        api.updateEmail(updateEmailLink, newEmail)
+            .then((data) => {
+                setCurrentUser(data.user);
+                history.push('/profile');
                 setIsSuccess(true);
-                setModalMessage('Photo was added successfully');
-                setAllPhotos([newPhoto, ...allPhotos]);
-                setPhotosToRender([newPhoto, ...photosToRender]);
+                setIsModalOpen(true);
+                setModalMessage('E-mail has been successfully updated');
             })
-            .catch(err => console.log(err))
-            .finally(() => setIsSendingReq(false));
-    }
+            .catch(() => {
+                setIsSuccess(false);
+                setIsModalOpen(true);
+                setModalMessage('Error! E-mail has not been updated');
+            });
+    };
+
+    // open photo popup, handle photo flip
+    useEffect(() => {
+        const selectedPhotoIndex = findPhotoIndex(selectedPhoto);
+        setPhotoIndex(selectedPhotoIndex);
+    }, [selectedPhoto]);
 
     useEffect(() => {
         setHashtagsOfSelectedPhoto(selectedPhoto.hashtags);
         setViewsOfSelectedPhoto(selectedPhoto.views);
     }, [selectedPhoto]);
-
-    function increaseViewsNumber(photoId) {
-        api.increaseViews(photoId)
-            .then(newPhoto => {
-                setAllPhotos(state => state.map(p => p._id === photoId ? newPhoto : p));
-                setPhotosToRender(state => state.map(p => p._id === photoId ? newPhoto : p));
-                setSelectedPhoto(newPhoto);
-            })
-            .catch(err => console.log(err));
-    }
-
-    function handleEditHashtags(photoId, hashtags) {
-        api.editHashtags(photoId, hashtags)
-            .then(newPhoto => {
-                setAllPhotos(state => state.map(p => p._id === photoId ? newPhoto : p));
-                setPhotosToRender(state => state.map(p => p._id === photoId ? newPhoto : p));
-                setSelectedPhoto(newPhoto);
-            })
-            .then(() => {
-                setAreHashtagsEditing(false);
-            })            
-            .catch(err => console.log(err));
-    }
 
     useEffect(() => {
         if (photoIndex === photosToRender.length - 1) {
@@ -389,15 +378,15 @@ function App() {
         }
     }, [photoIndex, photosToRender]);
 
-    function handlePhotoFlip(direction) {   
-        if (direction === 1) {
-            setSelectedPhoto(photosToRender[photoIndex + 1]);
-            setPhotoIndex(photoIndex + 1);
-        } else if (direction === -1) {
-            setSelectedPhoto(photosToRender[photoIndex - 1]);
-            setPhotoIndex(photoIndex - 1);
-        } 
-    };
+    function handlePhotoClick(photo) {
+        setIsPhotoPopupOpen(true);
+        setSelectedPhoto(photo);
+        setHashtagsOfSelectedPhoto(photo.hashtags);
+        setViewsOfSelectedPhoto(photo.views);
+        increaseViewsNumber(photo._id);
+        const selectedPhotoIndex = findPhotoIndex(photo);
+        setPhotoIndex(selectedPhotoIndex);
+    }
 
     function findPhotoIndex(photo) {
         for (let i = 0; i < photosToRender.length; i++) {
@@ -407,6 +396,83 @@ function App() {
         };
     };
 
+    function handlePhotoFlip(direction) {   
+        if (direction === 'right') {
+            const rightPhoto = photosToRender[photoIndex + 1];
+            setSelectedPhoto(rightPhoto);
+            increaseViewsNumber(rightPhoto._id);
+            setPhotoIndex(state => state + 1);
+            setAreHashtagsEditing(false);
+        } else if (direction === 'left') {
+            const leftPhoto = photosToRender[photoIndex - 1];
+            setSelectedPhoto(leftPhoto);
+            increaseViewsNumber(leftPhoto._id);
+            setPhotoIndex(state => state - 1);
+            setAreHashtagsEditing(false);
+        } 
+    };
+
+    // add photo
+    function handleAddPhotoViaLink(newPhoto) {
+        setIsSendingReq(true);
+        api.addPhoto(newPhoto)
+            .then(newPhoto => {
+                setIsModalOpen(true);
+                setIsSuccess(true);
+                setModalMessage('Photo was added successfully');
+                setAllPhotos([newPhoto, ...allPhotos]);
+                setPhotosToRender([newPhoto, ...photosToRender]);
+            })
+            .catch(err => console.log(err))
+            .finally(() => setIsSendingReq(false));
+    }
+
+    // delete photo
+    function handleDeletePhotoModalOpen(photo) {
+        setIsDeletePhotoModalOpen(!isDeletePhotoModalOpen);
+        setSelectedPhoto(photo);
+    }
+
+    function handlePhotoDelete(photo) {
+        api.deletePhoto(photo._id)
+            .then(() => {
+                setPhotosToRender((state) => state.filter((p) => p._id !== photo._id && p));
+                setAllPhotos((state) => state.filter((p) => p._id !== photo._id && p));
+            })
+            .catch(err => console.log(err));
+        closeAllPopups();
+    }    
+
+    // increase views (when open photo popup, when flip photo by buttons' click)
+    function increaseViewsNumber(photoId) {
+        api.increaseViews(photoId)
+            .then(newPhoto => {
+                setAllPhotos(state => state.map(p => p._id === photoId ? newPhoto : p));
+                setPhotosToRender(state => state.map(p => p._id === photoId ? newPhoto : p));
+                setSelectedPhoto(newPhoto);
+            })
+            .catch(err => console.log(err));
+    }
+
+    // edit photo hashtags
+    function handleEditHashtagsBtnClick() {
+            setAreHashtagsEditing(!areHashtagsEditing);
+        }
+
+    function handleEditHashtags(photoId, hashtags) {
+        api.editHashtags(photoId, hashtags)
+            .then(newPhoto => {
+                setAllPhotos(state => state.map(p => p._id === photoId ? newPhoto : p));
+                setPhotosToRender(state => state.map(p => p._id === photoId ? newPhoto : p));
+                setSelectedPhoto(newPhoto);
+            })
+            .then(() => {
+                setAreHashtagsEditing(false);
+            })            
+            .catch(err => console.log(err));
+    }
+
+    // handle app navigation & mark active navigation block / page
     const [home, setHome] = useState(document.querySelector('home'));
     const [main, setMain] = useState(document.querySelector('main'));
     const [footer, setFooter] = useState(document.querySelector('footer'));
@@ -480,19 +546,30 @@ function App() {
         history.push('/addphoto');
     }
 
-    function handleHashtagClick(hashtag) {
-        closeAllPopups();
-        setHashtag(hashtag);
-        handleSearch(hashtag);
-    }
+    function handleEditPasswordBtnClick() {
+        setIsEditPasswordModalOpen(!isEditPasswordModalOpen);
+    } 
 
-    // close popups and modals by ESC and overlay click
+    function handleMenuClick() {
+        setIsMenuOpen(!isMenuOpen);
+    };
+
+    // close popups and modals by close btn, ESC and overlay click;
+    // flip photos by keyboard arrows;
+    // close menu;
     useEffect((e) => {
         const handleEscClose = (e) => {
             if (e.keyCode === 27) {
                 closeAllPopups();
             }
+            if (e.keyCode === 37 && !isLeftFlipDisabled) {
+                handlePhotoFlip('left');
+            } 
+            if (e.keyCode === 39 && !isRightFlipDisabled) {
+                handlePhotoFlip('right');
+            }
         }
+        
         const handleOverlayClickClose = (e) => {
             if (e.target.classList.contains('popup_is-opened') || e.target.classList.contains('popup__close-btn')) {
                 closeAllPopups();
@@ -504,7 +581,7 @@ function App() {
             window.removeEventListener('keydown', handleEscClose);
             window.removeEventListener('mousedown', handleOverlayClickClose);
         };
-    }, []);
+    }, [photoIndex, photosToRender, selectedPhoto]);
 
     function closeAllPopups() {
         setIsPhotoPopupOpen(false);
@@ -519,77 +596,76 @@ function App() {
         setIsMenuOpen(false);
     };
 
+    // handle errors
     function handleError(errorText) {
         setIsSuccess(false);
         setIsModalOpen(true);
         setModalMessage(errorText); 
     };
 
-    function handleEmailChangeRequest(newEmail) {
-        setIsSendingReq(true);
-        api.requestEmailUpdate(newEmail)
-            .then(() => {
-                setTheWantedNewEmail(newEmail);
-                setIsEmailSentModalOpen(true);
-                setIsSuccess(true);
-                setModalMessage('E-mail has been sent, please follow the instructions.');
-            })
-            .catch((err) => {
-                setIsSuccess(false);
-                setIsModalOpen(true);
-                setModalMessage('Error! E-mail change request failed')
-            })
-            .finally(() => {
-                setIsSendingReq(false);
-            });
-    };
-
-    function handleUpdateEmail(newEmail) {
-        api.updateEmail(newEmail)
-            .then((data) => {
-                setCurrentUser(data.user);
-                history.push('/profile');
-                setIsSuccess(true);
-                setIsModalOpen(true);
-                setModalMessage('E-mail has been successfully updated');
-            })
-            .catch(() => {
-                setIsSuccess(false);
-                setIsModalOpen(true);
-                setModalMessage('Error! E-mail has not been updated');
-            });
-    };
-
-    function handleSearch(hashtag) {
-        const keyWord = new RegExp(hashtag, "gi");
-
-        if(!photos) {
-            api.getInitialPhotos()
-                .then(data => {
-                    const photosData = data.reverse();
-                    setAllPhotos(photosData);
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-        }
-
-        const foundPhotos = allPhotos.filter((photo) => {
-            return (keyWord.test(photo.hashtags));
-        });
-
-        setPhotosToRender(foundPhotos);
-    };
-
+    // handle search (also by hashtag's click)
     useEffect(() => {
         setHashtag('');
-    }, [location.pathname])
+    }, [location.pathname]);
 
     useEffect(() => {
-        if (hashtag === '') {
+        if (hashtag === '' || !hashtag) {
             setPhotosToRender(allPhotos);
         }
     }, [hashtag]);
+
+    function checkUniqueness (obj, arr) {
+        if (arr.length === 0) {
+            return true;
+        } else {
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i].name === obj) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    function handleSearch(hashtag) {
+        api.findPhoto(hashtag)
+            .then(data => {
+                const photosData = data.reverse();
+                setPhotosToRender(photosData);
+                if (photosData.length !== 0) {
+                    if (checkUniqueness(hashtag, lastHashtags)) {
+                        api.addHashtag(hashtag)
+                            .then(data => {
+                                setLastHashtags([
+                                    { name: data.name, _id: data._id, __v: data.__v, createdAt: data.createdAt },
+                                    ...lastHashtags
+                                ]);
+                            })
+                            .catch(err => console.log(err));
+                    } else {
+                        setLastHashtags(lastHashtags.filter(h => h.name !== hashtag));
+                        api.deleteHashtag(hashtag)
+                            .then(() => {
+                                api.addHashtag(hashtag)
+                                    .then((data) => {
+                                        setLastHashtags([
+                                            { name: data.name, _id: data._id, __v: data.__v, createdAt: data.createdAt },
+                                            ...lastHashtags
+                                        ]);
+                                    })                                
+                            }) 
+                            .catch(err => console.log(err));
+                    }
+                }
+            })
+            .catch(err => console.log(err));
+    };
+
+    function handleHashtagClick(hashtag) {
+        closeAllPopups();
+        setHashtag(hashtag);
+        handleSearch(hashtag);
+    }
 
     return (
         <CurrentUserContext.Provider value={currentUser}>
@@ -618,6 +694,7 @@ function App() {
                         onContactClick={handleContactClick}
                         onHashtagClick={handleHashtagClick}
                         hashtag={hashtag}
+                        photoHashtags={lastHashtags || []}
                         hashtagSetter={setHashtag}
                         onSearch={handleSearch}
                         photosQuantity={currentPhotosNumber}
@@ -627,6 +704,7 @@ function App() {
                         areHashtagsEditing={false}
                         onEditHashtags={handleEditHashtags}
                         isSendingReq={isSendingReq}
+                        hashtagsNumber={10}
                     />
                     <Footer />
                 </Route>
@@ -680,17 +758,16 @@ function App() {
 
                 <ProtectedRoute
                     component={ConfirmEmailUpdate}
-                    exact path='/profile/confirm-email-update'
+                    path='/profile/update-email/:updateEmailLink'
                     loggedIn={loggedIn}
                     onUpdateEmail={handleUpdateEmail}
-                    newEmail={theWantedNewEmail}
                 />
 
                 <ProtectedRoute
                     component={AddPhoto}
                     path='/addphoto'
                     loggedIn={loggedIn}
-                    onGalleryClick={handleGalleryClick}
+                    nGalleryClick={handleGalleryClick}
                     onContactClick={handleContactClick}
                     onMenuClick={handleMenuClick}
                     onSignout={handleSignout}
@@ -709,7 +786,7 @@ function App() {
                 loggedIn={loggedIn}
                 isOpen={isPhotoPopupOpen}
                 photo={selectedPhoto}
-                photoHashtags={hashtagsOfSelectedPhoto}
+                photoHashtags={hashtagsOfSelectedPhoto || []}
                 views={viewsOfSelectedPhoto}
                 onClose={closeAllPopups}
                 onHashtagClick={handleHashtagClick}

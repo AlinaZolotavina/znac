@@ -3,9 +3,8 @@
     display: grid;
     grid-template-columns: repeat(4, calc(98.4vw / 4));
     grid-auto-columns: 25vw;
-    grid-template-rows: repeat(3, calc(98.4vw / 4));
+    grid-template-rows: repeat(1, calc(98.4vw / 4));
     grid-auto-rows: 25vw;
-    /* grid-auto-flow: row dense; */
     column-gap: 2px;
     row-gap: 2px;
     list-style: none;
@@ -19,7 +18,7 @@
 
 @media screen and (max-width: 1280px) {
     .gallery {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, calc(100vw / 3));
       grid-auto-columns: 33.3vw;
       grid-template-rows: repeat(3, calc(100vw / 3));
       grid-auto-rows: 33.3vw;
@@ -29,7 +28,7 @@
 @media screen and (max-width: 768px) {
     .gallery {
         width: 100vw;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, calc(100vw / 2));
         grid-auto-columns: 50vw;
         grid-template-rows: repeat(3, calc(100vw / 2));
         grid-auto-rows: 50vw;

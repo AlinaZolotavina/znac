@@ -1,29 +1,18 @@
 import Hashtag from './Hashtag';
-import EditingHashtags from './EditingHashtags';
 
 function Hashtags({
-    classname,
     photoHashtags,
     onClick,
-    areHashtagsEditing,
-    onEditHashtags,
-    isSendingReq,
-    photoId,
+    hashtagsNumber,
     }) {
-    const hashtags = photoHashtags.toString().split(' ');
     return (
-        <section className={classname}>
-            {areHashtagsEditing ?
-                <EditingHashtags
-                    editingHashtags={photoHashtags}
-                    onSubmit={onEditHashtags}
-                    isSendingReq={isSendingReq}
-                    photoId={photoId}    
-                />
-                : hashtags.map(photoHashtag => (
-                    <Hashtag key={photoHashtag} hashtag={photoHashtag} onClick={onClick} />
+        <>
+            {photoHashtags
+                    .slice(0, hashtagsNumber)
+                    .map(photoHashtag => (
+                    <Hashtag key={photoHashtag._id || photoHashtag} hashtag={photoHashtag.name || photoHashtag} onClick={onClick} />
                 ))}
-        </section>
+        </>
     );
 }
 

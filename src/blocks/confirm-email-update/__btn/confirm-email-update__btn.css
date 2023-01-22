@@ -1,0 +1,25 @@
+.confirm-email-update__btn {
+    height: 50px;
+    background-color: #D9D9D9;
+    border-style: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19px;
+    color: #0F1111;
+    margin: 0 0 20px;
+    transition: opacity .2s ease;
+    width: 100%;
+    cursor: pointer;
+}
+
+.confirm-email-update__btn:hover {
+    opacity: .8;
+}
+
+@media screen and (max-width: 700px) {
+    .confirm-email-update__btn {
+        font-size: 14px;
+        line-height: 17px;
+    }
+}

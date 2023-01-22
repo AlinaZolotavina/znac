@@ -1,6 +1,7 @@
 .popup__caption {
+    grid-area: caption;
     display: flex;
     justify-content: space-between;
-    margin: 15px 0 0;
+    margin: 0;
     align-items: flex-start;
 }

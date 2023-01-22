@@ -1,13 +1,18 @@
 .hashtag {
-    margin: 0 20px 10px 0;
+    margin: 0 20px 0 0;
     transition: opacity .2s ease;
     cursor: pointer;
+    opacity: .9;
+    height: 23px;
+    display: flex;
+    align-items: center;
 }
 
 .hashtag:last-child {
-    margin: 0 0 10px 0;
+    margin: 0;
 }
 
 .hashtag:hover {
-    opacity: .7;
+    opacity: 1;
+    color: #fff;
 }

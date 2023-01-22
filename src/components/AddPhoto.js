@@ -39,9 +39,9 @@ function AddPhoto({
     function handlePhotoLinkChange(e) {
         // eslint-disable-next-line no-useless-escape
         const regex = /^(https?:\/\/)(w{3})?([\da-z\.\-]+)\.([a-z\.]{2,6})([\w\.\-\_~:\/?#\[\]@!$&\'()*\+,;=])*#?\/?$/;
-        if (!regex.test(e.target.value)) {
+        if (!regex.test(e.target.value) && e.target.value.length !== 0) {
             setPhotoLinkError('Invalid url');
-        } else if (!e.target.value) {
+        } else if (e.target.value.length === 0) {
             setPhotoLinkError('You missed this field')
         } else {
             setPhotoLinkError('');
@@ -78,7 +78,6 @@ function AddPhoto({
         });
         clearInputs();
     }
-
 
     return (
         <section className='add-photo'>

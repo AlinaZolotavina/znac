@@ -3,8 +3,14 @@
     height: 100%;
     width: 100%;
     cursor: pointer;
+    animation: ani 2s ease;
 }
 
 .photo-card:not(:hover) {
     filter: brightness(60%);
+}
+
+@keyframes ani {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
 }
