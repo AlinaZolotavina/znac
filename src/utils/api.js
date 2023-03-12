@@ -99,9 +99,22 @@ class Api {
         .then((res) => this._checkResponse(res));
     }
 
-    deleteHashtag = (hashtag) => {
+    // deleteHashtag = (hashtag) => {
+    //     return fetch(`${this._serverUrl}/hashtags`, {
+    //         method: 'DELETE',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({
+    //             hashtagName: hashtag,
+    //         })
+    //     })
+    //     .then((res) => this._checkResponse(res));
+    // }
+
+    updateHashtag = (hashtag) => {
         return fetch(`${this._serverUrl}/hashtags`, {
-            method: 'DELETE',
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
             },

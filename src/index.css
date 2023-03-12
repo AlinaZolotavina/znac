@@ -66,6 +66,7 @@
 @import url(./blocks/footer/__icon/_email/footer__icon_email.css);
 @import url(./blocks/footer/__icon/_instagram/footer__icon_instagram.css);
 @import url(./blocks/footer/__link/footer__link.css);
+@import url(./blocks/footer/__paragraph/footer__paragraph.css);
 
 /* popup */
 @import url(./blocks/popup/popup.css);
@@ -141,6 +142,17 @@
 /* add photo */
 @import url(./blocks/add-photo/add-photo.css);
 @import url(./blocks/add-photo/__form/add-photo__form.css);
+@import url(./blocks/dropdown/dropdown.css);
+@import url(./blocks/dropdown/__btn/dropdown__btn.css);
+@import url(./blocks/dropdown/__btn/_active/dropdown__btn_active.css);
+@import url(./blocks/dropdown/__check-icon/dropdown__check-icon.css);
+@import url(./blocks/dropdown/__check-icon/_active/dropdown__check-icon_active.css);
+@import url(./blocks/dropdown/__icon/dropdown__icon.css);
+@import url(./blocks/dropdown/__icon/__clicked/dropdown__icon_clicked.css);
+@import url(./blocks/dropdown/__option/dropdown__option.css);
+@import url(./blocks/dropdown/__option/_selected/dropdown__option_selected.css);
+@import url(./blocks/dropdown/__options/dropdown__options.css);
+@import url(./blocks/dropdown/__options/_visible/dropdown__options_visible.css);
 
 /* menu */
 @import url(./blocks/menu/menu.css);

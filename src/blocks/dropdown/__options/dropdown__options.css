@@ -1,0 +1,8 @@
+.dropdown__options {
+    position: absolute;
+    top: 74px;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+}

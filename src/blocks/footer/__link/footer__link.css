@@ -1,7 +1,7 @@
 .footer__link {
     display: flex;
     align-items: center;
-    margin: 0 0 5px;
+    margin: 0 0 5px 5px;
     color: #E8E8E8;
     text-decoration: none;
     transition: opacity .2s ease;

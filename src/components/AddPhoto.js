@@ -18,11 +18,16 @@ function AddPhoto({
     email,
     onLogout,
     }) {
+    const [isClicked, setIsClicked] = useState(false);
+    const [dropdownText, setDropdownText] = useState('Select download type');
     const [photoLink, setPhotoLink] = useState('');
     const [photoLinkError, setPhotoLinkError] = useState('');
     const [hashtags, setHashtags] = useState('');
     const [hashtagsError, setHashtagsError] = useState('');
     const [isFormValid, setIsFormValid] = useState(false);
+    const [linkDownloadCheck, setLinkDownloadCheck] = useState(false);
+    const [googleDownloadCheck, setGoogleDownloadCheck] = useState(false);
+    const [googlePhotoId, setGooglePhotoId] = useState('');
     const location = useLocation();
 
     useEffect(() => {
@@ -32,8 +37,12 @@ function AddPhoto({
     function clearInputs() {
         setPhotoLink('');
         setPhotoLinkError('');
+        setDropdownText('Select download type');
+        setIsClicked(false);
         setHashtags('');
         setHashtagsError('');
+        setLinkDownloadCheck(false);
+        setGoogleDownloadCheck(false);
     }
 
     function handlePhotoLinkChange(e) {
@@ -48,6 +57,12 @@ function AddPhoto({
         }
         setPhotoLink(e.target.value);
     }
+
+    useEffect(() => {
+        if (googleDownloadCheck) {
+            setGooglePhotoId(photoLink.split('/')[5]);
+        }
+    }, [photoLink, googleDownloadCheck])
 
     function handleHashtagsChange(e) {
         const regex = /^[A-Za-zА-Яа-я0-9 _]*$/;
@@ -69,14 +84,40 @@ function AddPhoto({
         }
     }, [photoLink, photoLinkError, hashtags, hashtagsError]);
 
+    function handleDropdownClick() {
+        setIsClicked(!isClicked);
+    }
+
+    function handleLinkDownloadClick() {
+        setDropdownText('Link download');
+        setGoogleDownloadCheck(false);
+        setLinkDownloadCheck(true);
+        setIsClicked(false);
+    }
+
+    function handleGoogleDownloadClick() {
+        setDropdownText('Download with Google Drive link');
+        setGoogleDownloadCheck(true);
+        setLinkDownloadCheck(false);
+        setIsClicked(false);
+    }
+
     function handleSubmit(e) {
         e.preventDefault();
-        onAddPhotoViaLink({
-            link: photoLink,
-            hashtags: hashtags,
-            views: 0,
-        });
-        clearInputs();
+        if (linkDownloadCheck) {
+            onAddPhotoViaLink({
+                link: photoLink,
+                hashtags: hashtags,
+                views: 0,
+            });
+            clearInputs();
+        } else if (googleDownloadCheck) {
+            onAddPhotoViaLink({
+                link: `https://drive.google.com/uc?export=view&id=${googlePhotoId}`,
+                hashtags: hashtags,
+                views: 0,
+            });
+        };
     }
 
     return (
@@ -105,7 +146,33 @@ function AddPhoto({
                 isFormValid={isFormValid}
                 isSendingReq={isSendingReq}
                 onSubmit={handleSubmit}
-            >            
+            >   
+                <label className='input dropdown'>
+                    Download type
+                    <div
+                        className={`input__field dropdown__btn ${isClicked && 'dropdown__btn_active'}`}
+                        onClick={handleDropdownClick}
+                    >
+                        {dropdownText}
+                    </div>
+                    <div className={`dropdown__icon ${isClicked && 'dropdown__icon_clicked'}`}/>
+                    <div className={`dropdown__options ${isClicked && 'dropdown__options_visible'}`}>
+                        <div
+                            className={`dropdown__option ${googleDownloadCheck && 'dropdown__option_selected'}`}
+                            onClick={handleGoogleDownloadClick}
+                        >
+                            Download with Google Drive link
+                            <div className={`dropdown__check-icon ${googleDownloadCheck && 'dropdown__check-icon_active'}`}/>
+                        </div>
+                        <div
+                            className={`dropdown__option ${linkDownloadCheck && 'dropdown__option_selected'}`}
+                            onClick={handleLinkDownloadClick}
+                        >
+                            Insert photo link
+                            <div className={`dropdown__check-icon ${linkDownloadCheck && 'dropdown__check-icon_active'} `}/>
+                        </div>
+                    </div> 
+                </label>         
                 <Input
                     labelClassname=''
                     inputLabel='Photo'

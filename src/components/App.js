@@ -115,21 +115,14 @@ function App() {
                 const [photosData, hashtagsData] = data;
                 setAllPhotos(photosData);
                 setPhotosToRender(photosData.reverse());
-                // const hashtags = hashtagsData.map(h => h.name);
-                setLastHashtags(hashtagsData.reverse());
+                setLastHashtags(hashtagsData);
             })
-        // api.getInitialPhotos()
-        //     .then(data => {
-        //         const photosData = data.reverse();
-        //         setAllPhotos(photosData);
-        //         setPhotosToRender(photosData);
-        //     })
             .catch(err => {
                 console.log(err);
             })
     }, []);
-    
-    // if logged in, get and set current user
+
+   // if logged in, get and set current user
     useEffect(() => {
         if (loggedIn) {
             api.getUserData(currentUser._id)
@@ -581,7 +574,7 @@ function App() {
             window.removeEventListener('keydown', handleEscClose);
             window.removeEventListener('mousedown', handleOverlayClickClose);
         };
-    }, [photoIndex, photosToRender, selectedPhoto]);
+    }, [photoIndex, photosToRender, selectedPhoto, isLeftFlipDisabled, isRightFlipDisabled]);
 
     function closeAllPopups() {
         setIsPhotoPopupOpen(false);
@@ -632,29 +625,26 @@ function App() {
             .then(data => {
                 const photosData = data.reverse();
                 setPhotosToRender(photosData);
+                const isHashtagUniq = checkUniqueness(hashtag, lastHashtags);
                 if (photosData.length !== 0) {
-                    if (checkUniqueness(hashtag, lastHashtags)) {
+                    if (isHashtagUniq) {
                         api.addHashtag(hashtag)
-                            .then(data => {
-                                setLastHashtags([
-                                    { name: data.name, _id: data._id, __v: data.__v, createdAt: data.createdAt },
-                                    ...lastHashtags
-                                ]);
-                            })
-                            .catch(err => console.log(err));
+                        .then(data => {
+                            setLastHashtags([
+                                { name: data.name, _id: data._id, __v: data.__v, createdAt: data.createdAt },
+                                ...lastHashtags
+                            ]);
+                        })
+                        .catch(err => console.log(err));
                     } else {
-                        setLastHashtags(lastHashtags.filter(h => h.name !== hashtag));
-                        api.deleteHashtag(hashtag)
-                            .then(() => {
-                                api.addHashtag(hashtag)
-                                    .then((data) => {
-                                        setLastHashtags([
-                                            { name: data.name, _id: data._id, __v: data.__v, createdAt: data.createdAt },
-                                            ...lastHashtags
-                                        ]);
-                                    })                                
-                            }) 
-                            .catch(err => console.log(err));
+                        const hashtagsArr = [...lastHashtags].filter(h => h.name.toString() !== hashtag.toString());
+                        api.updateHashtag(hashtag)
+                        .then((data) => {
+                            setLastHashtags([
+                                { name: data.name, _id: data._id, __v: data.__v, createdAt: data.createdAt },
+                                ...hashtagsArr
+                            ]);
+                        })
                     }
                 }
             })

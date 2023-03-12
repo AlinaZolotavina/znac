@@ -9,6 +9,7 @@
     line-height: 12px;
     color: #ABABAB;
     box-sizing: border-box;
+    align-items: center;
 }
 
 @media screen and (max-width: 768px) {
