@@ -7,7 +7,7 @@ import PhotoPopup from './PhotoPopup';
 import DeletePhotoModal from './DeletePhotoModal';
 import ProtectedRoute from './ProtectedRoute';
 import SignIn from './SignIn';
-import SignUp from './SignUp';
+// import SignUp from './SignUp';
 import Profile from './Profile';
 import ForgotPassword from './ForgotPassword';
 import AddPhoto from './AddPhoto';
@@ -29,9 +29,9 @@ import {
     // PHOTO_NOT_FOUND_ERROR_MSG,
     AUTHORIZATION_FAILED_ERROR_MSG,
     UNAUTHORIZED_ERROR_MSG,
-    BAD_REQUEST_ERROR_MSG,
-    CONFLICT_SIGNUP_EMAIL_ERROR_MSG,
-    SUCCESSFUL_SIGNUP_MSG,
+    // BAD_REQUEST_ERROR_MSG,
+    // CONFLICT_SIGNUP_EMAIL_ERROR_MSG,
+    // SUCCESSFUL_SIGNUP_MSG,
     // CONFLICT_UPDATE_EMAIL_ERROR_MSG,
     // PHOTO_FORBIDDEN_ERROR_MSG,
     // ADD_PHOTO_ERROR_MSG,
@@ -200,28 +200,28 @@ function App() {
         setCurrentPhotosNumber((prev) => prev + photosToAdd);
     };
 
-    function handleSignup(email, password) {
-        setIsSendingReq(true);
-        auth.signup(email, password)
-            .then((res) => {
-                if (res) {
-                    handleSignin(email, password);
-                    setIsModalOpen(true);
-                    setIsSuccess(true);
-                    setModalMessage(SUCCESSFUL_SIGNUP_MSG);
-                }
-            })
-            .catch((err) => {
-                if (err.status === 'Ошибка: 400') {
-                    handleError(BAD_REQUEST_ERROR_MSG);
-                } else if (err.status === 'Ошибка: 409') {
-                    handleError(CONFLICT_SIGNUP_EMAIL_ERROR_MSG);
-                } else {
-                    handleError(DEFAULT_ERROR_MSG);
-                };
-            })
-            .finally(() => setIsSendingReq(false));
-    };
+    // function handleSignup(email, password) {
+    //     setIsSendingReq(true);
+    //     auth.signup(email, password)
+    //         .then((res) => {
+    //             if (res) {
+    //                 handleSignin(email, password);
+    //                 setIsModalOpen(true);
+    //                 setIsSuccess(true);
+    //                 setModalMessage(SUCCESSFUL_SIGNUP_MSG);
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             if (err.status === 'Ошибка: 400') {
+    //                 handleError(BAD_REQUEST_ERROR_MSG);
+    //             } else if (err.status === 'Ошибка: 409') {
+    //                 handleError(CONFLICT_SIGNUP_EMAIL_ERROR_MSG);
+    //             } else {
+    //                 handleError(DEFAULT_ERROR_MSG);
+    //             };
+    //         })
+    //         .finally(() => setIsSendingReq(false));
+    // };
 
     function handleSignin(email, password) {
         setIsSendingReq(true);
@@ -706,12 +706,12 @@ function App() {
                     />
                 </Route>
 
-                <Route path='/signup'>
+                {/* <Route path='/signup'>
                     <SignUp 
                         onSignup={handleSignup}
                         isSendingReq={isSendingReq}
                     />
-                </Route>
+                </Route> */}
 
                 <Route path='/signin/recovery'>
                     <ForgotPassword

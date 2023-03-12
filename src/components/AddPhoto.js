@@ -110,7 +110,6 @@ function AddPhoto({
                 hashtags: hashtags,
                 views: 0,
             });
-            clearInputs();
         } else if (googleDownloadCheck) {
             onAddPhotoViaLink({
                 link: `https://drive.google.com/uc?export=view&id=${googlePhotoId}`,
@@ -118,6 +117,7 @@ function AddPhoto({
                 views: 0,
             });
         };
+        clearInputs();
     }
 
     return (
