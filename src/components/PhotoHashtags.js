@@ -10,11 +10,12 @@ function PhotoHashtags({
     isSendingReq,
     photoId,
     }) {
+    const hashtagsToEdit = photoHashtags.join(' ');
     return (
         <section className={classname}>
             {areHashtagsEditing ?
                 <EditingHashtags
-                    editingHashtags={photoHashtags}
+                    editingHashtags={hashtagsToEdit}
                     onSubmit={onEditHashtags}
                     isSendingReq={isSendingReq}
                     photoId={photoId}    
