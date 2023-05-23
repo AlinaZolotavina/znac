@@ -5,7 +5,7 @@
     width: 29px;
     height: 25px;
     background-image: url(../../images/burger-menu.svg);
-    background-color: #000;
+    background-color: rgba(0, 0, 0, .3);
     background-position: center;
     background-repeat: no-repeat;
     background-size: auto;

@@ -12,3 +12,11 @@
     cursor: pointer;
     opacity: .7;
 }
+
+@media screen and (max-width: 700px) {
+    .not-found__link {
+        font-size: 10px;
+        line-height: 13px;
+        margin: 30px;
+    }
+}

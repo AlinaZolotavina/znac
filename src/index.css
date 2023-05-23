@@ -52,6 +52,7 @@
 @import url(./blocks/photo-card/photo-card.css);
 @import url(./blocks/photo-card/__image/photo-card__image.css);
 @import url(./blocks/photo-card/__delete-btn/photo-card__delete-btn.css);
+@import url(./blocks/photo-card/__placeholder/photo-card__placeholder.css);
 
 /* more */
 @import url(./blocks/more/more.css);
@@ -60,7 +61,6 @@
 /* footer */
 @import url(./blocks/footer/footer.css);
 @import url(./blocks/footer/__column/footer__column.css);
-@import url(./blocks/footer/__column/_right/footer__column__rigth.css);
 @import url(./blocks/footer/__social-media/footer__social-media.css);
 @import url(./blocks/footer/__icon/footer__icon.css);
 @import url(./blocks/footer/__icon/_email/footer__icon_email.css);
@@ -189,6 +189,11 @@
 @import url(./blocks/photo-upload/__span/photo-upload__span.css);
 @import url(./blocks/photo-input/photo-input.css);
 @import url(./blocks/photo-input/_visible/photo-input_visible.css);
+@import url(./blocks/upload-file/upload-file.css);
+@import url(./blocks/upload-file/__input/upload-file__input.css);
+@import url(./blocks/upload-file/__btn/upload-file__btn.css);
+@import url(./blocks/upload-file/__icon/upload-file__icon.css);
+@import url(./blocks/upload-file/__info/upload-file__info.css);
 
 /* photos not found */
 @import url(./blocks/photos-not-found/photos-not-found.css);

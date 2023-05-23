@@ -15,6 +15,7 @@ function AddPhoto({
     onMenuClick,
     isSendingReq,
     onAddPhotoViaLink,
+    onUploadPhotoToServer,
     email,
     onLogout,
     }) {
@@ -22,9 +23,12 @@ function AddPhoto({
     const [dropdownText, setDropdownText] = useState('Select download type');
     const [photoLink, setPhotoLink] = useState('');
     const [photoLinkError, setPhotoLinkError] = useState('');
+    const [photoFile, setPhotoFile] = useState(null);
+    const [fileInfo, setFileInfo] = useState('Photo not selected');
     const [hashtags, setHashtags] = useState('');
     const [hashtagsError, setHashtagsError] = useState('');
     const [isFormValid, setIsFormValid] = useState(false);
+    const [pcDownloadCheck, setPcDownloadCheck] = useState(false);
     const [linkDownloadCheck, setLinkDownloadCheck] = useState(false);
     const [googleDownloadCheck, setGoogleDownloadCheck] = useState(false);
     const [googlePhotoId, setGooglePhotoId] = useState('');
@@ -43,6 +47,8 @@ function AddPhoto({
         setHashtagsError('');
         setLinkDownloadCheck(false);
         setGoogleDownloadCheck(false);
+        setPcDownloadCheck(false);
+        setFileInfo('Photo not selected')
     }
 
     function handlePhotoLinkChange(e) {
@@ -77,19 +83,28 @@ function AddPhoto({
     }
 
     useEffect(() => {
-        if (photoLink && hashtags && !photoLinkError && !hashtagsError) {
+        if ((photoLink && hashtags && !photoLinkError && !hashtagsError) || (fileInfo !== 'Photo not selected' && hashtags && !hashtagsError)) {
             setIsFormValid(true);
         } else {
             setIsFormValid(false);
         }
-    }, [photoLink, photoLinkError, hashtags, hashtagsError]);
+    }, [photoLink, photoLinkError, hashtags, hashtagsError, fileInfo]);
 
     function handleDropdownClick() {
         setIsClicked(!isClicked);
     }
 
+    function handlePcDownloadClick() {
+        setDropdownText('Upload from PC');
+        setPcDownloadCheck(true);
+        setGoogleDownloadCheck(false);
+        setLinkDownloadCheck(false);
+        setIsClicked(false);
+    }
+
     function handleLinkDownloadClick() {
         setDropdownText('Link download');
+        setPcDownloadCheck(false);
         setGoogleDownloadCheck(false);
         setLinkDownloadCheck(true);
         setIsClicked(false);
@@ -97,12 +112,20 @@ function AddPhoto({
 
     function handleGoogleDownloadClick() {
         setDropdownText('Download with Google Drive link');
+        setPcDownloadCheck(false);
         setGoogleDownloadCheck(true);
         setLinkDownloadCheck(false);
         setIsClicked(false);
     }
 
-    function handleSubmit(e) {
+    function handleUploadFromPc(e) {
+        if (e.target.files) {
+            setPhotoFile(e.target.files[0]);
+            setFileInfo(e.target.files[0].name);
+        }
+    }
+
+    function handleSubmit(e) { 
         e.preventDefault();
         if (linkDownloadCheck) {
             onAddPhotoViaLink({
@@ -116,6 +139,12 @@ function AddPhoto({
                 hashtags: hashtags,
                 views: 0,
             });
+        } else if (pcDownloadCheck) {
+            onUploadPhotoToServer({
+                file: photoFile,
+                hashtags: hashtags,
+                views: 0,
+            })
         };
         clearInputs();
     }
@@ -158,6 +187,13 @@ function AddPhoto({
                     <div className={`dropdown__icon ${isClicked && 'dropdown__icon_clicked'}`}/>
                     <div className={`dropdown__options ${isClicked && 'dropdown__options_visible'}`}>
                         <div
+                            className={`dropdown__option ${pcDownloadCheck && 'dropdown__option_selected'}`}
+                            onClick={handlePcDownloadClick}
+                        >
+                            Upload from PC
+                            <div className={`dropdown__check-icon ${pcDownloadCheck && 'dropdown__check-icon_active'}`}/>
+                        </div>
+                        <div
                             className={`dropdown__option ${googleDownloadCheck && 'dropdown__option_selected'}`}
                             onClick={handleGoogleDownloadClick}
                         >
@@ -172,28 +208,42 @@ function AddPhoto({
                             <div className={`dropdown__check-icon ${linkDownloadCheck && 'dropdown__check-icon_active'} `}/>
                         </div>
                     </div> 
-                </label>         
-                <Input
-                    labelClassname=''
-                    inputLabel='Photo'
-                    classname='input__field'
-                    placeholder='Paste image link'
-                    inputType='url'
-                    inputValue={photoLink}
-                    onChange={handlePhotoLinkChange}
-                    isSendingReq={isSendingReq}
-                    error={photoLinkError}
-                />         
+                </label>
+                {pcDownloadCheck ?
+                    <label className='upload-file'>
+                        <input
+                            className='upload-file__input'
+                            type='file'
+                            onChange={handleUploadFromPc}
+                        />
+                        <span className='upload-file__btn'>
+                            <div className='upload-file__icon'/>
+                            Select photo
+                        </span>
+                        <span className='upload-file__info'>{fileInfo}</span>
+                    </label>
+                    : <Input
+                        labelClassname=''
+                        inputLabel='Photo'
+                        classname='input__field'
+                        placeholder='Paste image link'
+                        inputType='url'
+                        inputValue={photoLink}
+                        onChange={handlePhotoLinkChange}
+                        isSendingReq={isSendingReq}
+                        error={photoLinkError}
+                    />         
+                }
                 <Input 
-                    inputLabel='Hashtags'
-                    placeholder='Enter hashtags separated by spaces'
-                    classname='input__field'
-                    inputType='text'
-                    inputValue={hashtags}
-                    onChange={handleHashtagsChange}
-                    isSendingReq={isSendingReq}
-                    error={hashtagsError}
-                />
+                        inputLabel='Hashtags'
+                        placeholder='Enter hashtags separated by spaces'
+                        classname='input__field'
+                        inputType='text'
+                        inputValue={hashtags}
+                        onChange={handleHashtagsChange}
+                        isSendingReq={isSendingReq}
+                        error={hashtagsError}
+                    />
             </Form>
         </section>
     );

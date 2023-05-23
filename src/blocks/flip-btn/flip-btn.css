@@ -14,3 +14,15 @@
 .flip-btn:hover {
     opacity: 1;
 }
+
+@media screen and (max-width: 700px) {
+    .flip-btn {
+        background-size: 20px auto;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .flip-btn {
+        background-size: 15px auto;
+    }
+}

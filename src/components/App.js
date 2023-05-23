@@ -420,6 +420,21 @@ function App() {
             .finally(() => setIsSendingReq(false));
     }
 
+    function handlePhotoUpload(newPhoto) {
+        setIsSendingReq(true);
+        console.log(newPhoto);
+        // api.uploadPhoto(newPhoto)
+        //     .then(newPhoto => {
+        //         setIsModalOpen(true);
+        //         setIsSuccess(true);
+        //         setModalMessage('Photo was added successfully');
+        //         setAllPhotos([newPhoto, ...allPhotos]);
+        //         setPhotosToRender([newPhoto, ...photosToRender]);
+        //     })
+        //     .catch(err => console.log(err))
+        //     .finally(() => setIsSendingReq(false));
+    }
+
     // delete photo
     function handleDeletePhotoModalOpen(photo) {
         setIsDeletePhotoModalOpen(!isDeletePhotoModalOpen);
@@ -621,7 +636,7 @@ function App() {
     }
 
     function handleSearch(hashtag) {
-        api.findPhoto(hashtag)
+        api.findPhoto(hashtag.toLowerCase())
             .then(data => {
                 const photosData = data.reverse();
                 setPhotosToRender(photosData);
@@ -756,13 +771,14 @@ function App() {
                 <ProtectedRoute
                     component={AddPhoto}
                     path='/addphoto'
-                    loggedIn={loggedIn}
+                    loggedIn={true}
                     nGalleryClick={handleGalleryClick}
                     onContactClick={handleContactClick}
                     onMenuClick={handleMenuClick}
                     onSignout={handleSignout}
                     isSendingReq={isSendingReq}
                     onAddPhotoViaLink={handleAddPhotoViaLink}
+                    onUploadPhotoToServer={handlePhotoUpload}
                     email={currentUser.email}
                     onLogout={handleSignout}
                 />
@@ -814,6 +830,8 @@ function App() {
                 onHomeClick={handleHomeClick}
                 onProfileClick={handleProfileClick}
                 onAddPhotoClick={handleAddPhotoClick}
+                onGalleryClick={handleGalleryClick}
+                onContactClick={handleContactClick}
                 onClose={closeMenu}
                 onLogout={handleSignout}
             />

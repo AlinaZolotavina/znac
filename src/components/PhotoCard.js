@@ -1,4 +1,32 @@
-function PhotoCard({ photo, loggedIn,  onPhotoClick, onDeleteBtnClick }) {
+import { useState, useEffect } from 'react';
+import errorImage from '../images/image-error.png';
+
+function PhotoCard({
+    photo,
+    loggedIn,
+    onPhotoClick,
+    onDeleteBtnClick
+}) {
+    const [currentImage, setCurrentImage] = useState(errorImage);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const fetchImage = (src) => {
+        const loadingImage = new Image();
+        loadingImage.src = src;
+        loadingImage.onload = () => {
+            setCurrentImage(loadingImage.src);
+            setIsLoading(false);
+        };
+        loadingImage.onerror = () => {
+            setCurrentImage(errorImage);
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchImage(photo.link);
+    })
+
     function handlePhotoClick() {
         onPhotoClick(photo);
     }
@@ -9,7 +37,13 @@ function PhotoCard({ photo, loggedIn,  onPhotoClick, onDeleteBtnClick }) {
 
     return (
         <li className="photo-card">
-            <img className="photo-card__image" src={photo.link} alt={photo.hashtags} onClick={handlePhotoClick} />
+            <img
+                className={`${!isLoading ? 'photo-card__image' : 'photo-card__placeholder'}`}
+                src={currentImage}
+                alt={photo.hashtags}
+                onClick={handlePhotoClick}
+                style={{ transition: `opacity 1s ease` }}
+                loading='lazy' />
             {loggedIn && <button className="photo-card__delete-btn" onClick={handlePhotoDelete}/>}
         </li>
     );

@@ -45,6 +45,10 @@ class Api {
         .then((res) => this._checkResponse(res));
     }
 
+    // uploadPhoto(data) {
+    //     return fetch(`${this._serverUrl}/photos`)
+    // }
+
     increaseViews(photoId) {
         return fetch(`${this._serverUrl}/photos/${photoId}/views`, {
             method: 'PUT',

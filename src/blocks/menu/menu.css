@@ -11,4 +11,5 @@
     justify-content: center;
     opacity: 0;
     visibility: hidden;
+    z-index: 2;
 }

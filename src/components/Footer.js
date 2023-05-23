@@ -7,7 +7,7 @@ function Footer() {
                     <a className="footer__link" href="https://www.linkedin.com/in/alina-zolotavina-38a612259/" target="_blank" rel="noreferrer">Alina Zolotavina</a>
                 </p>
             </div>
-            <div className="footer__column footer__column_right">
+            <div className="footer__column">
                 <a className="footer__link" href="mailto:znacompany@gmail.com">
                     <div className="footer__icon footer__icon_email"/>
                     znacompany@gmail.com

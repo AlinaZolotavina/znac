@@ -1,6 +1,7 @@
 import PhotoCard from './PhotoCard';
 import notFound from '../images/photos-not-found-icon.svg';
 function Gallery({ loggedIn, photos, onPhotoClick, onDeleteBtnClick, photosQuantity }) {
+
     return (
         <>
             {
