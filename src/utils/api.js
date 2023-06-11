@@ -7,6 +7,7 @@ class Api {
         if (res.ok) {
             return res.json();
         } else {
+
             return Promise.reject(`Ошибка: ${res.status}`);
         }
     }
@@ -40,14 +41,22 @@ class Api {
                 link: data.link,
                 hashtags: data.hashtags,
                 views: data.views,
-            })
+            }),
         })
         .then((res) => this._checkResponse(res));
     }
 
-    // uploadPhoto(data) {
-    //     return fetch(`${this._serverUrl}/photos`)
-    // }
+    uploadPhoto(data) {
+        if (!data) {
+            return;
+        }
+        return fetch(`${this._serverUrl}/public`, {
+            method: 'POST',
+            credentials: 'include',
+            body: data,
+        })
+        .then((res) => this._checkResponse(res));
+    }
 
     increaseViews(photoId) {
         return fetch(`${this._serverUrl}/photos/${photoId}/views`, {
@@ -191,8 +200,8 @@ class Api {
 }
 
 const api = new Api({
-    serverUrl: 'https://api.znac.org',
-    // serverUrl: 'http://localhost:4000',
+    // serverUrl: 'https://api.znac.org',
+    serverUrl: 'http://localhost:4000',
 });
 
 export default api;

@@ -7,7 +7,7 @@ import PhotoPopup from './PhotoPopup';
 import DeletePhotoModal from './DeletePhotoModal';
 import ProtectedRoute from './ProtectedRoute';
 import SignIn from './SignIn';
-// import SignUp from './SignUp';
+import SignUp from './SignUp';
 import Profile from './Profile';
 import ForgotPassword from './ForgotPassword';
 import AddPhoto from './AddPhoto';
@@ -29,14 +29,13 @@ import {
     // PHOTO_NOT_FOUND_ERROR_MSG,
     AUTHORIZATION_FAILED_ERROR_MSG,
     UNAUTHORIZED_ERROR_MSG,
-    // BAD_REQUEST_ERROR_MSG,
-    // CONFLICT_SIGNUP_EMAIL_ERROR_MSG,
-    // SUCCESSFUL_SIGNUP_MSG,
+    BAD_REQUEST_ERROR_MSG,
+    CONFLICT_SIGNUP_EMAIL_ERROR_MSG,
+    SUCCESSFUL_SIGNUP_MSG,
     // CONFLICT_UPDATE_EMAIL_ERROR_MSG,
     // PHOTO_FORBIDDEN_ERROR_MSG,
     // ADD_PHOTO_ERROR_MSG,
     // DELETE_PHOTO_ERROR_MSG,
-    // SUCCESSFUL_SIGNUP_MSG,
     // SUCCESSFUL_PROFILE_UPDATE_MSG,
 } from '../utils/constants';
 import {
@@ -200,28 +199,28 @@ function App() {
         setCurrentPhotosNumber((prev) => prev + photosToAdd);
     };
 
-    // function handleSignup(email, password) {
-    //     setIsSendingReq(true);
-    //     auth.signup(email, password)
-    //         .then((res) => {
-    //             if (res) {
-    //                 handleSignin(email, password);
-    //                 setIsModalOpen(true);
-    //                 setIsSuccess(true);
-    //                 setModalMessage(SUCCESSFUL_SIGNUP_MSG);
-    //             }
-    //         })
-    //         .catch((err) => {
-    //             if (err.status === 'Ошибка: 400') {
-    //                 handleError(BAD_REQUEST_ERROR_MSG);
-    //             } else if (err.status === 'Ошибка: 409') {
-    //                 handleError(CONFLICT_SIGNUP_EMAIL_ERROR_MSG);
-    //             } else {
-    //                 handleError(DEFAULT_ERROR_MSG);
-    //             };
-    //         })
-    //         .finally(() => setIsSendingReq(false));
-    // };
+    function handleSignup(email, password) {
+        setIsSendingReq(true);
+        auth.signup(email, password)
+            .then((res) => {
+                if (res) {
+                    handleSignin(email, password);
+                    setIsModalOpen(true);
+                    setIsSuccess(true);
+                    setModalMessage(SUCCESSFUL_SIGNUP_MSG);
+                }
+            })
+            .catch((err) => {
+                if (err.status === 'Ошибка: 400') {
+                    handleError(BAD_REQUEST_ERROR_MSG);
+                } else if (err.status === 'Ошибка: 409') {
+                    handleError(CONFLICT_SIGNUP_EMAIL_ERROR_MSG);
+                } else {
+                    handleError(DEFAULT_ERROR_MSG);
+                };
+            })
+            .finally(() => setIsSendingReq(false));
+    };
 
     function handleSignin(email, password) {
         setIsSendingReq(true);
@@ -416,23 +415,37 @@ function App() {
                 setAllPhotos([newPhoto, ...allPhotos]);
                 setPhotosToRender([newPhoto, ...photosToRender]);
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+                setIsModalOpen(false);
+                setIsSuccess(false);
+                setModalMessage('Photo cannot be added');
+            })
             .finally(() => setIsSendingReq(false));
     }
 
-    function handlePhotoUpload(newPhoto) {
+    async function handlePhotoUpload(photoData, hashtags, views) {
         setIsSendingReq(true);
-        console.log(newPhoto);
-        // api.uploadPhoto(newPhoto)
-        //     .then(newPhoto => {
-        //         setIsModalOpen(true);
-        //         setIsSuccess(true);
-        //         setModalMessage('Photo was added successfully');
-        //         setAllPhotos([newPhoto, ...allPhotos]);
-        //         setPhotosToRender([newPhoto, ...photosToRender]);
-        //     })
-        //     .catch(err => console.log(err))
-        //     .finally(() => setIsSendingReq(false));
+        const response = await api.uploadPhoto(photoData);
+        const data = {
+            link: response.data.path,
+            hashtags,
+            views,
+        }
+        api.addPhoto(data)
+            .then(newPhoto => {
+                setIsModalOpen(true);
+                setIsSuccess(true);
+                setModalMessage('Photo was added successfully');
+                setAllPhotos([newPhoto, ...allPhotos]);
+                setPhotosToRender([newPhoto, ...photosToRender]);
+            })
+            .catch(err => {
+                console.log(err);
+                setIsModalOpen(false);
+                setIsSuccess(false);
+                setModalMessage('Something went wrong');
+            })
+            .finally(() => setIsSendingReq(false));
     }
 
     // delete photo
@@ -570,10 +583,10 @@ function App() {
             if (e.keyCode === 27) {
                 closeAllPopups();
             }
-            if (e.keyCode === 37 && !isLeftFlipDisabled) {
+            if (e.keyCode === 37 && !isLeftFlipDisabled && location.pathname === 'addphoto') {
                 handlePhotoFlip('left');
             } 
-            if (e.keyCode === 39 && !isRightFlipDisabled) {
+            if (e.keyCode === 39 && !isRightFlipDisabled && location.pathname === 'addphoto') {
                 handlePhotoFlip('right');
             }
         }
@@ -721,12 +734,12 @@ function App() {
                     />
                 </Route>
 
-                {/* <Route path='/signup'>
+                <Route path='/signup'>
                     <SignUp 
                         onSignup={handleSignup}
                         isSendingReq={isSendingReq}
                     />
-                </Route> */}
+                </Route>
 
                 <Route path='/signin/recovery'>
                     <ForgotPassword

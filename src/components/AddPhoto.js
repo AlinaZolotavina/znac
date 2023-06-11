@@ -33,6 +33,7 @@ function AddPhoto({
     const [googleDownloadCheck, setGoogleDownloadCheck] = useState(false);
     const [googlePhotoId, setGooglePhotoId] = useState('');
     const location = useLocation();
+    const views = 0;
 
     useEffect(() => {
         clearInputs();
@@ -48,12 +49,13 @@ function AddPhoto({
         setLinkDownloadCheck(false);
         setGoogleDownloadCheck(false);
         setPcDownloadCheck(false);
-        setFileInfo('Photo not selected')
+        // setPhotoFile(null);
+        setFileInfo('Photo not selected');
     }
 
     function handlePhotoLinkChange(e) {
         // eslint-disable-next-line no-useless-escape
-        const regex = /^(https?:\/\/)(w{3})?([\da-z\.\-]+)\.([a-z\.]{2,6})([\w\.\-\_~:\/?#\[\]@!$&\'()*\+,;=])*#?\/?$/;
+        const regex = /^(https?:\/\/)(w{3})?([\da-z\.\-]+)\.([a-z\.]{2,6})([\w\.\-\_%~:\/?#\[\]@!$&\'()*\+,;=])*#?\/?$/;
         if (!regex.test(e.target.value) && e.target.value.length !== 0) {
             setPhotoLinkError('Invalid url');
         } else if (e.target.value.length === 0) {
@@ -83,12 +85,12 @@ function AddPhoto({
     }
 
     useEffect(() => {
-        if ((photoLink && hashtags && !photoLinkError && !hashtagsError) || (fileInfo !== 'Photo not selected' && hashtags && !hashtagsError)) {
+        if ((photoLink && hashtags && !photoLinkError && !hashtagsError) || (photoFile && hashtags && !hashtagsError)) {
             setIsFormValid(true);
         } else {
             setIsFormValid(false);
         }
-    }, [photoLink, photoLinkError, hashtags, hashtagsError, fileInfo]);
+    }, [photoLink, photoLinkError, hashtags, hashtagsError, photoFile]);
 
     function handleDropdownClick() {
         setIsClicked(!isClicked);
@@ -119,10 +121,8 @@ function AddPhoto({
     }
 
     function handleUploadFromPc(e) {
-        if (e.target.files) {
-            setPhotoFile(e.target.files[0]);
-            setFileInfo(e.target.files[0].name);
-        }
+        setPhotoFile(e.target.files[0]);
+        setFileInfo(e.target.files[0].name);
     }
 
     function handleSubmit(e) { 
@@ -131,20 +131,20 @@ function AddPhoto({
             onAddPhotoViaLink({
                 link: photoLink,
                 hashtags: hashtags,
-                views: 0,
+                views,
             });
         } else if (googleDownloadCheck) {
             onAddPhotoViaLink({
                 link: `https://drive.google.com/uc?export=view&id=${googlePhotoId}`,
                 hashtags: hashtags,
-                views: 0,
+                views,
             });
         } else if (pcDownloadCheck) {
-            onUploadPhotoToServer({
-                file: photoFile,
-                hashtags: hashtags,
-                views: 0,
-            })
+            const formData = new FormData();
+            if (photoFile) {
+                formData.append('file', photoFile);
+            }
+            onUploadPhotoToServer(formData, hashtags, views);
         };
         clearInputs();
     }
@@ -212,6 +212,7 @@ function AddPhoto({
                 {pcDownloadCheck ?
                     <label className='upload-file'>
                         <input
+                            name='photoFile'
                             className='upload-file__input'
                             type='file'
                             onChange={handleUploadFromPc}
