@@ -5,7 +5,7 @@ import Form from "./Form";
 import Input from "./Input";
 import { useState } from "react";
 import BurgerMenuBtn from "./BurgerMenuBtn";
-import { useEffect } from "react";
+import { useEffect  } from "react";
 import { useLocation } from "react-router-dom";
 
 function AddPhoto({ 
@@ -34,7 +34,8 @@ function AddPhoto({
     const [googlePhotoId, setGooglePhotoId] = useState('');
     const location = useLocation();
     const views = 0;
-
+    let fileName;
+    
     useEffect(() => {
         clearInputs();
     }, [location.pathname]);
@@ -118,11 +119,53 @@ function AddPhoto({
         setGoogleDownloadCheck(true);
         setLinkDownloadCheck(false);
         setIsClicked(false);
+    
     }
 
-    function handleUploadFromPc(e) {
+    async function handleUploadFromPc(e) {
         setPhotoFile(e.target.files[0]);
+        // convert(photoFile);
+        fileName = e.target.files[0].name.slice(0, -4);
         setFileInfo(e.target.files[0].name);
+        if (e.target.files[0]) {
+            const webPFile = await convert(e.target.files[0], 50);
+            console.log(webPFile);
+            setPhotoFile(webPFile);
+        } else {
+            console.error('Error converting JPG to AVIF');
+        }      
+    }
+
+    const convert = (jpgFile) => {
+        return new Promise((resolve, reject) => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+
+            img.onload = () => {
+                canvas.width = img.width;
+                canvas.height = img.height;
+
+                ctx.drawImage(img, 0, 0);
+
+                canvas.toBlob((blob) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        const webPData = reader.result;
+                        const webPBlob = new Blob([webPData], { type: 'image/webp' });
+
+                        const webPFile = new File([webPBlob], `${fileName}.webp`);
+                        resolve(webPFile);
+                    };
+                    reader.onerror = reject;
+
+                    reader.readAsArrayBuffer(blob);
+                }, 'image/webp', .5);
+            };
+            img.onerror = reject;
+
+            img.src = URL.createObjectURL(jpgFile);
+        });
     }
 
     function handleSubmit(e) { 
@@ -215,6 +258,7 @@ function AddPhoto({
                             name='photoFile'
                             className='upload-file__input'
                             type='file'
+                            accept='.jpg'
                             onChange={handleUploadFromPc}
                         />
                         <span className='upload-file__btn'>
