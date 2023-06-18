@@ -1,0 +1,12 @@
+.visibility-btn {
+    width: 30px;
+    height: 30px;
+    border-style: none;
+    margin: 37px 5px auto;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}

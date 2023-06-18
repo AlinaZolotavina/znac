@@ -128,6 +128,13 @@
 @import url(./blocks/input/input.css);
 @import url(./blocks/input/__field/input__field.css);
 @import url(./blocks/input/__error/input__error.css);
+@import url(./blocks/input/__field/_type/input__field_type_password.css);
+@import url(./blocks/password-field/password-field.css);
+
+/* password visibility toggle button */
+@import url(./blocks/visibility-btn/visibility-btn.css);
+@import url(./blocks/visibility-btn/_state/visibility-btn_state_invisible.css);
+@import url(./blocks/visibility-btn/_state/visibility-btn_state_visible.css);
 
 /* profile */
 @import url(./blocks/profile/profile.css);
