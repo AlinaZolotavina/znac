@@ -145,8 +145,6 @@ function AddPhoto({
         };
         setPhotoFiles([addedFiles, ...photoFiles]);
         setFileNames(names);
-        console.log(addedFiles);
-        console.log(fileNames);
     }
 
     const convert = (jpgFile) => {
@@ -196,11 +194,6 @@ function AddPhoto({
                 views,
             });
         } else if (pcDownloadCheck) {
-            // const formData = new FormData();
-            // photoFiles.forEach(file => {
-            //     formData.append('files', file);
-            // })
-            // console.log(formData.getAll);
             onUploadPhotoToServer(photoFiles, hashtags, views);
         };
         clearInputs();
@@ -267,27 +260,6 @@ function AddPhoto({
                     </div> 
                 </label>
                 {pcDownloadCheck ?
-                    // <div className='drag-end-drop'>
-                    //     <div className='drag-end-drop__container'>
-                    //         <div className='drag-end-drop__icon'/>
-                    //         <p className='drag-end-drop__note drag-end-drop__note_bold'>Drag and drop files here</p>
-                    //         <p className='drag-end-drop__note drag-end-drop__note_thin'>or</p>
-                    //         <label className='upload-file'>
-                    //             <input
-                    //                 name='photoFile'
-                    //                 className='upload-file__input'
-                    //                 type='file'
-                    //                 accept='.jpg'
-                    //                 onChange={handleUploadFromPc}
-                    //             />
-                    //             <span className='upload-file__btn'>
-                    //                     Select photo
-                    //             </span>
-                    //         </label>                            
-                    //     </div>
-                    //     <ul className='drag-end-drop__files'>
-                    //     </ul>
-                    // </div>
                     <div className='upload-container'>
                         <label className='upload-file'>
                             <input

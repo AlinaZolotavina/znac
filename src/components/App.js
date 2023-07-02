@@ -426,22 +426,22 @@ function App() {
     async function handlePhotoUpload(photoData, hashtags, views) {
         setIsSendingReq(true);
         const files = photoData[0];
-        console.log(`photo data`, photoData);
-        console.log(`files`, files);
-        for (let i = 0; i < files.length; i++) {
+        const addedPhotos = [];
+        for (const file of files) {
             const formData = new FormData();
-            formData.append('file', files[i]);
+            formData.append('file', file);
             const response = await api.uploadPhoto(formData);
             const data = {
                 link: response.data.path,
                 hashtags,
                 views,
             }
-            api.addPhoto(data)
+            await api.addPhoto(data)
                 .then(newPhoto => {
                     setIsModalOpen(true);
                     setIsSuccess(true);
                     setModalMessage('Photo was added successfully');
+                    addedPhotos.push(newPhoto);
                     setAllPhotos([newPhoto, ...allPhotos]);
                     setPhotosToRender([newPhoto, ...photosToRender]);
                 })
@@ -450,33 +450,11 @@ function App() {
                     setIsModalOpen(false);
                     setIsSuccess(false);
                     setModalMessage('Something went wrong');
-                })
-                .finally(() => {
-
-                    setIsSendingReq(false);
-                })
-        }
-        // const response = await api.uploadPhoto(photoData);
-        // const data = {
-        //     link: response.data.path,
-        //     hashtags,
-        //     views,
-        // }
-        // api.addPhoto(data)
-        //     .then(newPhoto => {
-        //         setIsModalOpen(true);
-        //         setIsSuccess(true);
-        //         setModalMessage('Photo was added successfully');
-        //         setAllPhotos([newPhoto, ...allPhotos]);
-        //         setPhotosToRender([newPhoto, ...photosToRender]);
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //         setIsModalOpen(false);
-        //         setIsSuccess(false);
-        //         setModalMessage('Something went wrong');
-        //     })
-        //     .finally(() => setIsSendingReq(false));
+                });
+        };
+        setAllPhotos([...addedPhotos, ...allPhotos]);
+        setPhotosToRender([...addedPhotos, ...photosToRender]);
+        setIsSendingReq(false);
     }
 
     // delete photo
@@ -491,8 +469,8 @@ function App() {
                 setPhotosToRender((state) => state.filter((p) => p._id !== photo._id && p));
                 setAllPhotos((state) => state.filter((p) => p._id !== photo._id && p));
             })
-            .catch(err => console.log(err));
-        closeAllPopups();
+            .catch(err => console.log(err))
+            .finally(() => closeAllPopups());        
     }    
 
     // increase views (when open photo popup, when flip photo by buttons' click)
@@ -609,31 +587,39 @@ function App() {
     // close popups and modals by close btn, ESC and overlay click;
     // flip photos by keyboard arrows;
     // close menu;
-    useEffect((e) => {
-        const handleEscClose = (e) => {
-            if (e.keyCode === 27) {
+    const handleKeyPress = (e) => {
+        const { keyCode } = e;
+        if (isPhotoPopupOpen) {
+            if (keyCode === 27) {
                 closeAllPopups();
-            }
-            if (e.keyCode === 37 && !isLeftFlipDisabled && location.pathname === 'addphoto') {
+            };
+            if (keyCode === 37 && !isLeftFlipDisabled) {
                 handlePhotoFlip('left');
-            } 
-            if (e.keyCode === 39 && !isRightFlipDisabled && location.pathname === 'addphoto') {
+            };
+            if (keyCode === 39 && !isRightFlipDisabled) {
                 handlePhotoFlip('right');
-            }
-        }
-        
-        const handleOverlayClickClose = (e) => {
-            if (e.target.classList.contains('popup_is-opened') || e.target.classList.contains('popup__close-btn')) {
-                closeAllPopups();
-            }
-        }
-        window.addEventListener('keydown', handleEscClose);
+            };
+        };
+        if (keyCode === 13  && isDeletePhotoModalOpen) {
+            console.log('delete photo');
+            handlePhotoDelete(selectedPhoto);
+        }   
+    };
+
+    const handleOverlayClickClose = (e) => {
+        if (e.target.classList.contains('popup_is-opened') || e.target.classList.contains('popup__close-btn')) {
+            closeAllPopups();
+        };
+    };
+
+    useEffect((e) => {
+        window.addEventListener('keydown', handleKeyPress);
         window.addEventListener('mousedown', handleOverlayClickClose);
         return () => {
-            window.removeEventListener('keydown', handleEscClose);
+            window.removeEventListener('keydown', handleKeyPress);
             window.removeEventListener('mousedown', handleOverlayClickClose);
         };
-    }, [photoIndex, photosToRender, selectedPhoto, isLeftFlipDisabled, isRightFlipDisabled]);
+    }, [photoIndex, photosToRender, selectedPhoto, isLeftFlipDisabled, isRightFlipDisabled, isPhotoPopupOpen, isDeletePhotoModalOpen]);
 
     function closeAllPopups() {
         setIsPhotoPopupOpen(false);
