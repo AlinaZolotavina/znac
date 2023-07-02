@@ -1,0 +1,7 @@
+.upload-file__image-icon {
+    width: 28px;
+    height: 28px;
+    margin-right: 15px;
+    background-image: url(../../../images/image-icon.svg);
+    background-repeat: no-repeat;
+}

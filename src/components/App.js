@@ -425,27 +425,58 @@ function App() {
 
     async function handlePhotoUpload(photoData, hashtags, views) {
         setIsSendingReq(true);
-        const response = await api.uploadPhoto(photoData);
-        const data = {
-            link: response.data.path,
-            hashtags,
-            views,
+        const files = photoData[0];
+        console.log(`photo data`, photoData);
+        console.log(`files`, files);
+        for (let i = 0; i < files.length; i++) {
+            const formData = new FormData();
+            formData.append('file', files[i]);
+            const response = await api.uploadPhoto(formData);
+            const data = {
+                link: response.data.path,
+                hashtags,
+                views,
+            }
+            api.addPhoto(data)
+                .then(newPhoto => {
+                    setIsModalOpen(true);
+                    setIsSuccess(true);
+                    setModalMessage('Photo was added successfully');
+                    setAllPhotos([newPhoto, ...allPhotos]);
+                    setPhotosToRender([newPhoto, ...photosToRender]);
+                })
+                .catch(err => {
+                    console.log(err);
+                    setIsModalOpen(false);
+                    setIsSuccess(false);
+                    setModalMessage('Something went wrong');
+                })
+                .finally(() => {
+
+                    setIsSendingReq(false);
+                })
         }
-        api.addPhoto(data)
-            .then(newPhoto => {
-                setIsModalOpen(true);
-                setIsSuccess(true);
-                setModalMessage('Photo was added successfully');
-                setAllPhotos([newPhoto, ...allPhotos]);
-                setPhotosToRender([newPhoto, ...photosToRender]);
-            })
-            .catch(err => {
-                console.log(err);
-                setIsModalOpen(false);
-                setIsSuccess(false);
-                setModalMessage('Something went wrong');
-            })
-            .finally(() => setIsSendingReq(false));
+        // const response = await api.uploadPhoto(photoData);
+        // const data = {
+        //     link: response.data.path,
+        //     hashtags,
+        //     views,
+        // }
+        // api.addPhoto(data)
+        //     .then(newPhoto => {
+        //         setIsModalOpen(true);
+        //         setIsSuccess(true);
+        //         setModalMessage('Photo was added successfully');
+        //         setAllPhotos([newPhoto, ...allPhotos]);
+        //         setPhotosToRender([newPhoto, ...photosToRender]);
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //         setIsModalOpen(false);
+        //         setIsSuccess(false);
+        //         setModalMessage('Something went wrong');
+        //     })
+        //     .finally(() => setIsSendingReq(false));
     }
 
     // delete photo

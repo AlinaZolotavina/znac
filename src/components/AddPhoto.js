@@ -5,6 +5,7 @@ import Form from "./Form";
 import Input from "./Input";
 import { useState } from "react";
 import BurgerMenuBtn from "./BurgerMenuBtn";
+import UploadFileInfo from "./UploadFileInfo";
 import { useEffect  } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -23,7 +24,7 @@ function AddPhoto({
     const [dropdownText, setDropdownText] = useState('Select download type');
     const [photoLink, setPhotoLink] = useState('');
     const [photoLinkError, setPhotoLinkError] = useState('');
-    const [photoFile, setPhotoFile] = useState(null);
+    const [photoFiles, setPhotoFiles] = useState([]);
     const [fileInfo, setFileInfo] = useState('Photo not selected');
     const [hashtags, setHashtags] = useState('');
     const [hashtagsError, setHashtagsError] = useState('');
@@ -35,10 +36,19 @@ function AddPhoto({
     const location = useLocation();
     const views = 0;
     let fileName;
+    const [fileNames, setFileNames] = useState([]);
     
     useEffect(() => {
         clearInputs();
     }, [location.pathname]);
+
+    useEffect(() => {
+        if (photoFiles.length === 0) {
+            setFileInfo('Photo not selected');
+        } else {
+            setFileInfo('');
+        }
+    }, [photoFiles])
 
     function clearInputs() {
         setPhotoLink('');
@@ -50,8 +60,9 @@ function AddPhoto({
         setLinkDownloadCheck(false);
         setGoogleDownloadCheck(false);
         setPcDownloadCheck(false);
-        // setPhotoFile(null);
+        setFileNames([]);
         setFileInfo('Photo not selected');
+        setPhotoFiles([]);
     }
 
     function handlePhotoLinkChange(e) {
@@ -86,12 +97,12 @@ function AddPhoto({
     }
 
     useEffect(() => {
-        if ((photoLink && hashtags && !photoLinkError && !hashtagsError) || (photoFile && hashtags && !hashtagsError)) {
+        if ((photoLink && hashtags && !photoLinkError && !hashtagsError) || (photoFiles.lenght !== 0 && hashtags && !hashtagsError)) {
             setIsFormValid(true);
         } else {
             setIsFormValid(false);
         }
-    }, [photoLink, photoLinkError, hashtags, hashtagsError, photoFile]);
+    }, [photoLink, photoLinkError, hashtags, hashtagsError, photoFiles]);
 
     function handleDropdownClick() {
         setIsClicked(!isClicked);
@@ -123,17 +134,19 @@ function AddPhoto({
     }
 
     async function handleUploadFromPc(e) {
-        setPhotoFile(e.target.files[0]);
-        // convert(photoFile);
-        fileName = e.target.files[0].name.slice(0, -4);
-        setFileInfo(e.target.files[0].name);
-        if (e.target.files[0]) {
-            const webPFile = await convert(e.target.files[0], 50);
-            console.log(webPFile);
-            setPhotoFile(webPFile);
-        } else {
-            console.error('Error converting JPG to AVIF');
-        }      
+        let addedFiles = [];
+        let names = []
+        const files = Array.from(e.target.files);
+        for (const item of files) {
+            fileName = await item.name.slice(0, -4);
+            const webPFile = await convert(item, 50);
+            names.push(`${fileName}.jpg`);
+            addedFiles.push(webPFile);
+        };
+        setPhotoFiles([addedFiles, ...photoFiles]);
+        setFileNames(names);
+        console.log(addedFiles);
+        console.log(fileNames);
     }
 
     const convert = (jpgFile) => {
@@ -183,11 +196,12 @@ function AddPhoto({
                 views,
             });
         } else if (pcDownloadCheck) {
-            const formData = new FormData();
-            if (photoFile) {
-                formData.append('file', photoFile);
-            }
-            onUploadPhotoToServer(formData, hashtags, views);
+            // const formData = new FormData();
+            // photoFiles.forEach(file => {
+            //     formData.append('files', file);
+            // })
+            // console.log(formData.getAll);
+            onUploadPhotoToServer(photoFiles, hashtags, views);
         };
         clearInputs();
     }
@@ -253,20 +267,51 @@ function AddPhoto({
                     </div> 
                 </label>
                 {pcDownloadCheck ?
-                    <label className='upload-file'>
-                        <input
-                            name='photoFile'
-                            className='upload-file__input'
-                            type='file'
-                            accept='.jpg'
-                            onChange={handleUploadFromPc}
-                        />
-                        <span className='upload-file__btn'>
-                            <div className='upload-file__icon'/>
-                            Select photo
-                        </span>
-                        <span className='upload-file__info'>{fileInfo}</span>
-                    </label>
+                    // <div className='drag-end-drop'>
+                    //     <div className='drag-end-drop__container'>
+                    //         <div className='drag-end-drop__icon'/>
+                    //         <p className='drag-end-drop__note drag-end-drop__note_bold'>Drag and drop files here</p>
+                    //         <p className='drag-end-drop__note drag-end-drop__note_thin'>or</p>
+                    //         <label className='upload-file'>
+                    //             <input
+                    //                 name='photoFile'
+                    //                 className='upload-file__input'
+                    //                 type='file'
+                    //                 accept='.jpg'
+                    //                 onChange={handleUploadFromPc}
+                    //             />
+                    //             <span className='upload-file__btn'>
+                    //                     Select photo
+                    //             </span>
+                    //         </label>                            
+                    //     </div>
+                    //     <ul className='drag-end-drop__files'>
+                    //     </ul>
+                    // </div>
+                    <div className='upload-container'>
+                        <label className='upload-file'>
+                            <input
+                                name='photoFile'
+                                className='upload-file__input'
+                                type='file'
+                                multiple
+                                accept='.jpg'
+                                onChange={handleUploadFromPc}
+                            />
+                            <span className='upload-file__btn'>
+                                <div className='upload-file__icon'/>
+                                Select photo
+                            </span>
+                            {/* <span className='upload-file__info'>{fileInfo}</span> */}
+                        </label>
+                        <ul className='upload-file__info'>
+                            {photoFiles.length === 0 ?
+                            <li className='upload-file__info_empty'>{fileInfo}</li>
+                            : fileNames.map(n => (
+                                <UploadFileInfo fileName={n} key={n}/>
+                            ))}
+                        </ul>
+                    </div>
                     : <Input
                         labelClassname=''
                         inputLabel='Photo'

@@ -1,0 +1,5 @@
+.upload-file__item {
+    display: flex;
+    margin: 10px 30px 10px 20px;
+    align-items: center;
+}

@@ -131,6 +131,15 @@
 @import url(./blocks/input/__field/_type/input__field_type_password.css);
 @import url(./blocks/password-field/password-field.css);
 
+/* drag and drop files */
+@import url(./blocks/drag-end-drop/drag-end-drop.css);
+@import url(./blocks/drag-end-drop/__container/drag-end-drop__container.css);
+@import url(./blocks/drag-end-drop/__icon/drag-end-drop__icon.css);
+@import url(./blocks/drag-end-drop/__files/drag-end-drop__files.css);
+@import url(./blocks/drag-end-drop/__note/drag-end-drop__note.css);
+@import url(./blocks/drag-end-drop/__note/_bold/drag-end-drop__note_bold.css);
+@import url(./blocks/drag-end-drop/__note/_thin/drag-end-drop__note_thin.css);
+
 /* password visibility toggle button */
 @import url(./blocks/visibility-btn/visibility-btn.css);
 @import url(./blocks/visibility-btn/_state/visibility-btn_state_invisible.css);
@@ -201,6 +210,9 @@
 @import url(./blocks/upload-file/__btn/upload-file__btn.css);
 @import url(./blocks/upload-file/__icon/upload-file__icon.css);
 @import url(./blocks/upload-file/__info/upload-file__info.css);
+@import url(./blocks/upload-file/__info/_empty/upload-file__info_empty.css);
+@import url(./blocks/upload-file/__item/upload-file__item.css);
+@import url(./blocks/upload-file/__image-icon/upload-file__image-icon.css);
 
 /* photos not found */
 @import url(./blocks/photos-not-found/photos-not-found.css);
