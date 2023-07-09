@@ -7,4 +7,6 @@
     width: inherit;
     list-style: none;
     padding: 0;
+    opacity: 1;
+    transition: opacity .5s ease-in;
 }

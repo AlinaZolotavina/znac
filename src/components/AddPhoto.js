@@ -20,8 +20,6 @@ function AddPhoto({
     email,
     onLogout,
     }) {
-    const [isClicked, setIsClicked] = useState(false);
-    const [dropdownText, setDropdownText] = useState('Select download type');
     const [photoLink, setPhotoLink] = useState('');
     const [photoLinkError, setPhotoLinkError] = useState('');
     const [photoFiles, setPhotoFiles] = useState([]);
@@ -29,7 +27,7 @@ function AddPhoto({
     const [hashtags, setHashtags] = useState('');
     const [hashtagsError, setHashtagsError] = useState('');
     const [isFormValid, setIsFormValid] = useState(false);
-    const [pcDownloadCheck, setPcDownloadCheck] = useState(false);
+    const [pcDownloadCheck, setPcDownloadCheck] = useState(true);
     const [linkDownloadCheck, setLinkDownloadCheck] = useState(false);
     const [googleDownloadCheck, setGoogleDownloadCheck] = useState(false);
     const [googlePhotoId, setGooglePhotoId] = useState('');
@@ -53,13 +51,11 @@ function AddPhoto({
     function clearInputs() {
         setPhotoLink('');
         setPhotoLinkError('');
-        setDropdownText('Select download type');
-        setIsClicked(false);
         setHashtags('');
         setHashtagsError('');
         setLinkDownloadCheck(false);
         setGoogleDownloadCheck(false);
-        setPcDownloadCheck(false);
+        setPcDownloadCheck(true);
         setFileNames([]);
         setFileInfo('Photo not selected');
         setPhotoFiles([]);
@@ -104,33 +100,22 @@ function AddPhoto({
         }
     }, [photoLink, photoLinkError, hashtags, hashtagsError, photoFiles]);
 
-    function handleDropdownClick() {
-        setIsClicked(!isClicked);
-    }
-
     function handlePcDownloadClick() {
-        setDropdownText('Upload from PC');
         setPcDownloadCheck(true);
         setGoogleDownloadCheck(false);
         setLinkDownloadCheck(false);
-        setIsClicked(false);
     }
 
     function handleLinkDownloadClick() {
-        setDropdownText('Link download');
         setPcDownloadCheck(false);
         setGoogleDownloadCheck(false);
         setLinkDownloadCheck(true);
-        setIsClicked(false);
     }
 
     function handleGoogleDownloadClick() {
-        setDropdownText('Download with Google Drive link');
         setPcDownloadCheck(false);
         setGoogleDownloadCheck(true);
         setLinkDownloadCheck(false);
-        setIsClicked(false);
-    
     }
 
     async function handleUploadFromPc(e) {
@@ -142,9 +127,9 @@ function AddPhoto({
             const webPFile = await convert(item, 50);
             names.push(`${fileName}.jpg`);
             addedFiles.push(webPFile);
+            setPhotoFiles([addedFiles, ...photoFiles]);
+            setFileNames(names);
         };
-        setPhotoFiles([addedFiles, ...photoFiles]);
-        setFileNames(names);
     }
 
     const convert = (jpgFile) => {
@@ -226,39 +211,41 @@ function AddPhoto({
                 isSendingReq={isSendingReq}
                 onSubmit={handleSubmit}
             >   
-                <label className='input dropdown'>
-                    Download type
+                <div className='radio-buttons-container'>
                     <div
-                        className={`input__field dropdown__btn ${isClicked && 'dropdown__btn_active'}`}
-                        onClick={handleDropdownClick}
+                        className={`radio-btn ${pcDownloadCheck ? 'radio-btn_state_active' : 'radio-btn_state_inactive'}`}
+                        onClick={handlePcDownloadClick}
                     >
-                        {dropdownText}
+                        <input
+                            type='radio'
+                            className='radio-btn__input'
+                        />
+                        <label className='radio-btn__label radio-btn__label_type_pc' />
+                        <span className='radio-btn__tooltip'>Upload photo from PC</span>
                     </div>
-                    <div className={`dropdown__icon ${isClicked && 'dropdown__icon_clicked'}`}/>
-                    <div className={`dropdown__options ${isClicked && 'dropdown__options_visible'}`}>
-                        <div
-                            className={`dropdown__option ${pcDownloadCheck && 'dropdown__option_selected'}`}
-                            onClick={handlePcDownloadClick}
-                        >
-                            Upload from PC
-                            <div className={`dropdown__check-icon ${pcDownloadCheck && 'dropdown__check-icon_active'}`}/>
-                        </div>
-                        <div
-                            className={`dropdown__option ${googleDownloadCheck && 'dropdown__option_selected'}`}
-                            onClick={handleGoogleDownloadClick}
-                        >
-                            Download with Google Drive link
-                            <div className={`dropdown__check-icon ${googleDownloadCheck && 'dropdown__check-icon_active'}`}/>
-                        </div>
-                        <div
-                            className={`dropdown__option ${linkDownloadCheck && 'dropdown__option_selected'}`}
-                            onClick={handleLinkDownloadClick}
-                        >
-                            Insert photo link
-                            <div className={`dropdown__check-icon ${linkDownloadCheck && 'dropdown__check-icon_active'} `}/>
-                        </div>
-                    </div> 
-                </label>
+                    <div
+                        className={`radio-btn ${googleDownloadCheck ? 'radio-btn_state_active' : 'radio-btn_state_inactive'}`}
+                        onClick={handleGoogleDownloadClick}
+                    >
+                        <input
+                            type='radio'
+                            className='radio-btn__input'
+                        />
+                        <label className='radio-btn__label radio-btn__label_type_google-drive' />
+                        <span className='radio-btn__tooltip'>Add photo via its Google Drive link</span>
+                    </div>
+                    <div
+                        className={`radio-btn ${linkDownloadCheck ? 'radio-btn_state_active' : 'radio-btn_state_inactive'}`}
+                        onClick={handleLinkDownloadClick}
+                    >
+                        <input 
+                            type='radio'
+                            className='radio-btn__input'
+                        />
+                        <label className='radio-btn__label radio-btn__label_type_link' />
+                        <span className='radio-btn__tooltip'>Add photo via link</span>
+                    </div>
+                </div>
                 {pcDownloadCheck ?
                     <div className='upload-container'>
                         <label className='upload-file'>

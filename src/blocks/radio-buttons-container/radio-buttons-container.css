@@ -1,0 +1,6 @@
+.radio-buttons-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: start;
+    height: 75px;
+}

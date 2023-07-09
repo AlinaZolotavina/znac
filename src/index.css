@@ -124,6 +124,18 @@
 @import url(./blocks/form/__link-note/form__link-note.css);
 @import url(./blocks/form/__link/form__link.css);
 
+/* radio buttons */
+@import url(./blocks/radio-buttons-container/radio-buttons-container.css);
+@import url(./blocks/radio-btn/radio-btn.css);
+@import url(./blocks/radio-btn/__input/radio-btn__input.css);
+@import url(./blocks/radio-btn/__label/radio-btn__label.css);
+@import url(./blocks/radio-btn/__label/_type/radio-btn__label_type_google-drive.css);
+@import url(./blocks/radio-btn/__label/_type/radio-btn__label_type_link.css);
+@import url(./blocks/radio-btn/__label/_type/radio-btn__label_type_pc.css);
+@import url(./blocks/radio-btn/_state/radio-btn_state_active.css);
+@import url(./blocks/radio-btn/_state/radio-btn_state_inactive.css);
+@import url(./blocks/radio-btn/__tooltip/radio-btn__tooltip.css);
+
 /* input */
 @import url(./blocks/input/input.css);
 @import url(./blocks/input/__field/input__field.css);
@@ -149,17 +161,6 @@
 /* add photo */
 @import url(./blocks/add-photo/add-photo.css);
 @import url(./blocks/add-photo/__form/add-photo__form.css);
-@import url(./blocks/dropdown/dropdown.css);
-@import url(./blocks/dropdown/__btn/dropdown__btn.css);
-@import url(./blocks/dropdown/__btn/_active/dropdown__btn_active.css);
-@import url(./blocks/dropdown/__check-icon/dropdown__check-icon.css);
-@import url(./blocks/dropdown/__check-icon/_active/dropdown__check-icon_active.css);
-@import url(./blocks/dropdown/__icon/dropdown__icon.css);
-@import url(./blocks/dropdown/__icon/__clicked/dropdown__icon_clicked.css);
-@import url(./blocks/dropdown/__option/dropdown__option.css);
-@import url(./blocks/dropdown/__option/_selected/dropdown__option_selected.css);
-@import url(./blocks/dropdown/__options/dropdown__options.css);
-@import url(./blocks/dropdown/__options/_visible/dropdown__options_visible.css);
 
 /* menu */
 @import url(./blocks/menu/menu.css);
