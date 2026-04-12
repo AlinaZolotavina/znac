@@ -1,0 +1,6 @@
+.post__image_not-loaded {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    background-image: url('../../../../../images/image-error.svg');
+}

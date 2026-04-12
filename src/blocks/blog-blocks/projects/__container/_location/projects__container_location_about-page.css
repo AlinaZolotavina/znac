@@ -1,0 +1,19 @@
+.projects__container_location_about-page {
+  grid-template-columns: repeat(2, 48%);
+  gap: 4%;
+}
+
+@media (max-width: 700px) {
+  .projects__container_location_about-page {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
+
+@media (max-width: 500px) {
+  .projects__container_location_about-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}

@@ -1,0 +1,13 @@
+.new-project {
+    position: relative;
+    display: flex;
+    max-height: -moz-fit-content;
+    max-height: fit-content;
+    justify-content: center;
+    box-sizing: border-box;
+    margin: auto;
+    padding: 60px;
+    background-color: #F3F7FF;
+    border-radius: 10px;
+    color: #000;
+}

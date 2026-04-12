@@ -1,0 +1,19 @@
+.games__find-pair {
+  width: 100%;
+  height: 35vh;
+  background-image: url(../../../../images/find-pair-logo.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  transition:
+    opacity 0.2s ease,
+    scale 0.2s ease;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .games__find-pair {
+    width: 80%;
+    height: 30vh;
+  }
+}

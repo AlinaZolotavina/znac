@@ -1,0 +1,9 @@
+.blog-menu__close-btn {
+    top: 26px;
+    right: 26px;
+    background: url(../../../../images/blog-close-btn.svg);
+    background-size: 100%;
+    background-color: transparent;
+    background-position: center;
+    background-repeat: no-repeat;
+}

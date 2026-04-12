@@ -1,0 +1,7 @@
+.new-post__form-section {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 50% 43%;
+  grid-template-rows: min-content;
+  gap: 7%;
+}

@@ -93,7 +93,7 @@ function AddPhoto({
     }
 
     useEffect(() => {
-        if ((photoLink && hashtags && !photoLinkError && !hashtagsError) || (photoFiles.lenght !== 0 && hashtags && !hashtagsError)) {
+        if ((photoLink && hashtags && !photoLinkError && !hashtagsError) || (photoFiles.length !== 0 && hashtags && !hashtagsError)) {
             setIsFormValid(true);
         } else {
             setIsFormValid(false);
@@ -261,7 +261,6 @@ function AddPhoto({
                                 <div className='upload-file__icon'/>
                                 Select photo
                             </span>
-                            {/* <span className='upload-file__info'>{fileInfo}</span> */}
                         </label>
                         <ul className='upload-file__info'>
                             {photoFiles.length === 0 ?

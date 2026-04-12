@@ -1,0 +1,14 @@
+.game__play-again-btn {
+    margin: 35px;
+    width: 120px;
+    height: 40px;
+    border-radius: 7px;
+    border-style: none;
+    background-color: #CFE0F3;
+    transition: opacity .2s ease;
+    cursor: pointer;
+}
+
+.game__play-again-btn:hover {
+    opacity: .7;
+}

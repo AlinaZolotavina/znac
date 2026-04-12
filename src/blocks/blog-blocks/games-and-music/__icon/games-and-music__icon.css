@@ -1,0 +1,11 @@
+.games-and-music__icon {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+@media screen and (max-width: 400px) {
+  .games-and-music__icon {
+    display: none;
+  }
+}

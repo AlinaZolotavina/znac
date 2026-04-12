@@ -1,0 +1,17 @@
+.post__date-and-tools_location_main-page {
+  margin: 0;
+}
+
+@media screen and (min-width: 1281px) {
+  .post__date-and-tools_location_main-page {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .post__date-and-tools_location_main-page {
+    justify-content: start;
+  }
+}

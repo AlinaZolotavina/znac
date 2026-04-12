@@ -1,0 +1,18 @@
+.post__hashtag {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #e072a4;
+
+  min-width: fit-content;
+  margin: 0 20px 0 0;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .post-hashtag {
+    font-size: 12px;
+    line-height: 15px;
+  }
+}

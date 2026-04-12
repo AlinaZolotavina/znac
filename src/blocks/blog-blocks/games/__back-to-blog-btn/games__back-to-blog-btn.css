@@ -1,0 +1,8 @@
+.games__back-to-blog-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 50px;
+    width: 100%;
+}

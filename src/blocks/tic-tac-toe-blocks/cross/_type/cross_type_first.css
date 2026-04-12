@@ -1,0 +1,21 @@
+.cross_type_first {
+  width: 45%;
+  height: 40%;
+  background-image: url(../../../../images/cross-first.svg);
+  grid-area: cross1;
+  align-self: start;
+  justify-self: start;
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 700px) {
+  .cross_type_first {
+    display: none;
+  }
+}

@@ -1,0 +1,7 @@
+.blog-upload-file__image-icon {
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
+    background-image: url(../../../../images/blog-uploaded-photo-icon.svg);
+    background-repeat: no-repeat;
+}

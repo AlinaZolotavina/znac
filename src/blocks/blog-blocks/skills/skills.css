@@ -1,0 +1,11 @@
+.skills {
+  width: 65vw;
+  display: grid;
+  justify-content: center;
+}
+
+/* @media (max-width: 1280px) {
+  .skills {
+    width: 70vw;
+  }
+} */

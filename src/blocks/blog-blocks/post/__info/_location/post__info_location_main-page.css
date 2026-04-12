@@ -1,0 +1,11 @@
+.post__info_location_main-page {
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0 0 6px;
+}
+
+@media (max-width: 900px) {
+  .post__info_location_main-page {
+    grid-area: title-and-info;
+  }
+}

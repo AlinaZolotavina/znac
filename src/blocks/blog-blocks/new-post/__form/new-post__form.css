@@ -1,0 +1,11 @@
+.new-post__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+@media (max-width: 768px) {
+  .new-post__form {
+    width: 100%;
+  }
+}

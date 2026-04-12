@@ -1,0 +1,37 @@
+.contact-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 40px;
+    background-color: #90ABF1;
+    color: #F4FFFF;
+    cursor: pointer;
+    border-style: none;
+    border-radius: 20px;
+    padding: 0;
+    transition: opacity .2s ease;
+    margin: 0 0 0 auto;
+}
+
+.contact-button:hover {
+    opacity: .7;
+}
+
+@media screen and (max-width: 960px) {
+    .contact-button {
+        width: 130px;
+        height: 35px;
+    }
+    
+}
+
+@media screen and (max-width: 768px) {
+    .contact-button {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+    }
+    
+}
+

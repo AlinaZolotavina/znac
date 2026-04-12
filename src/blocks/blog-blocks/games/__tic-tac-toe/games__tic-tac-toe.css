@@ -1,0 +1,39 @@
+.games__tic-tac-toe {
+  width: 100%;
+  height: 30vh;
+  background-image: url(../../../../images/tic-tac-toe-logo.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  transition:
+    opacity 0.2s ease,
+    scale 0.2s ease;
+  cursor: pointer;
+  align-self: center;
+}
+
+@media (max-width: 900px) {
+  .games__tic-tac-toe {
+    width: 80%;
+    height: 23vh;
+  }
+}
+
+@media (max-width: 750px) {
+  .games__tic-tac-toe {
+    height: 19vh;
+  }
+}
+
+@media (max-width: 600px) {
+  .games__tic-tac-toe {
+    height: 16vh;
+  }
+}
+
+@media (max-width: 400px) {
+  .games__tic-tac-toe {
+    height: 100%;
+    justify-self: center;
+  }
+}

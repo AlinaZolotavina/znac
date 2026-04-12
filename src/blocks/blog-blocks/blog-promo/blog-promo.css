@@ -1,0 +1,25 @@
+.blog-promo {
+  display: flex;
+  align-items: center;
+  padding: 90px 20px 85px;
+  width: 65vw;
+}
+
+@media (max-width: 900px) {
+  .blog-promo {
+    padding: 90px 40px 75px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .blog-promo {
+    padding: 85px 50px 65px;
+  }
+}
+@media screen and (max-width: 500px) {
+  .blog-promo {
+    flex-direction: column;
+    justify-content: center;
+    padding: 50px 0;
+  }
+}

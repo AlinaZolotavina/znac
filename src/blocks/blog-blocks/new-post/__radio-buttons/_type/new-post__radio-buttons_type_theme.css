@@ -1,0 +1,9 @@
+.new-post__radio-buttons_type_theme {
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .new-post__radio-buttons_type_theme {
+    justify-content: space-between;
+  }
+}

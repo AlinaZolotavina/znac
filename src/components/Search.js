@@ -13,7 +13,7 @@ function Search({ onSubmit, isLoading, hashtag, hashtagSetter }) {
             setHashtagError('');
         }
         hashtagSetter(e.target.value);
-    }
+    };
 
     useEffect(() => {
         if (hashtag && !hashtagError) {

@@ -1,0 +1,18 @@
+.show-more-button {
+    width: 360px;
+    height: 50px;
+    border-style: none;
+    border-radius: 25px;
+    background-color: #90ABF1;
+    color: #F4FFFF;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 21px;
+    margin: 0 0 100px;
+    transition: opacity .2s ease;
+    cursor: pointer;
+}
+
+.show-more-button:hover {
+    opacity: .7;
+}

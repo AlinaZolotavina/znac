@@ -1,0 +1,19 @@
+.blog-edit-btn {
+    width: 22px;
+    height: 22px;
+    background-image: url(../../../images/blog-edit-btn.svg);
+    background-color: transparent;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    border-style: none;
+    padding: 0;
+    z-index: 1;
+    transition: opacity .2s ease;
+    cursor: pointer;
+    margin: 0 10px 0 0;
+}
+
+.blog-edit-btn {
+    opacity: .7;
+}

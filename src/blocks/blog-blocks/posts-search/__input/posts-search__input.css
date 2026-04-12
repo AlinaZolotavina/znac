@@ -1,0 +1,31 @@
+.posts-search__input {
+  background-color: transparent;
+  border-style: none;
+  height: 20px;
+  margin: 0 0 0 20px;
+  box-sizing: border-box;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19px;
+  outline: none;
+  color: #0f1111;
+  min-width: calc(100% - 90px);
+}
+
+@media (max-width: 768px) {
+  .posts-search__input {
+    min-width: calc(100% - 65px);
+    margin: 0 0 0 15px;
+    font-size: 14px;
+    line-height: 17px;
+  }
+}
+
+@media (max-width: 420px) {
+  .posts-search__input {
+    width: calc(100% - 65px);
+    font-size: 12px;
+    line-height: 15px;
+    margin: 0 0 0 10px;
+  }
+}

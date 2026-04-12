@@ -1,0 +1,3 @@
+.new-post__flip-btn_disabled {
+    filter: grayscale(70%);
+}

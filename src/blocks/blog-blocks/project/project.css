@@ -1,0 +1,14 @@
+.project {
+  background-color: #f3f7ff;
+  border-radius: 15px;
+  padding: 20px 25px 15px;
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  /* animation: ani 2s ease; */
+}
+/* 
+@keyframes ani {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+} */

@@ -1,0 +1,14 @@
+.blog-promo__text {
+  font-weight: 300;
+  color: #0f1111;
+  width: 20vw;
+  text-align: start;
+}
+
+@media screen and (max-width: 500px) {
+  .blog-promo__text {
+    width: 100%;
+    text-align: center;
+    padding: 0;
+  }
+}

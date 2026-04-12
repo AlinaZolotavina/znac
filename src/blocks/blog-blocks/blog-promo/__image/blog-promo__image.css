@@ -1,0 +1,15 @@
+.blog-promo__image {
+  background-image: url(../../../../images/bear-hi.svg);
+  width: 27vw;
+  height: 26vw;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  margin: 0;
+}
+
+@media screen and (max-width: 500px) {
+  .blog-promo__image {
+    margin: 0 0 20px;
+  }
+}

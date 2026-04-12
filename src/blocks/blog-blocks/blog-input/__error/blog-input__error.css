@@ -1,0 +1,8 @@
+.blog-input__error {
+    height: 15px;
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 15px;
+    color: #FF3055;
+    margin: 5px 15px 0;
+}

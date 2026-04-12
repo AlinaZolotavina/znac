@@ -1,0 +1,35 @@
+.post_location_main-page {
+  display: grid;
+  grid-template-areas:
+    "image theme date-and-tools"
+    "image title title"
+    "image text text";
+  gap: 2px 15px;
+  align-items: center;
+  border-radius: 10px;
+  padding: 15px;
+  background-color: #fff;
+  margin: 0 0 30px;
+  position: relative;
+  cursor: pointer;
+  grid-template-columns: 15% 1fr 150px;
+  grid-template-rows: 28% 25% 1fr;
+}
+
+.post_location_main-page:last-child {
+  margin: 0 0 60px;
+}
+
+@media (max-width: 700px) {
+  .post_location_main-page {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    grid-template-areas:
+      "theme"
+      "title"
+      "text"
+      "date-and-tools";
+    gap: 2px;
+    padding: 20px;
+  }
+}

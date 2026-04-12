@@ -1,0 +1,30 @@
+.games-and-music__item {
+  width: 100%;
+  height: fit-content;
+  padding: 30px 35px;
+  box-sizing: border-box;
+  background-color: #f3f7ff;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 26px;
+  color: #90abf1;
+  text-align: center;
+}
+
+.games-and-music__item:hover {
+  opacity: 0.7;
+}
+
+@media screen and (max-width: 700px) {
+  .games-and-music__item {
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 3%;
+  }
+}

@@ -1,0 +1,15 @@
+.new-post__flip-btn {
+    width: 30px;
+    height: 30px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    border-style: none;
+    transition: opacity .3s ease;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.new-post__flip-btn:hover {
+    opacity: .7;
+}

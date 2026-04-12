@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import errorImage from '../images/image-error.png';
+import errorImage from '../images/image-error.svg';
 
 function PhotoCard({
     photo,

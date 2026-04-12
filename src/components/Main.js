@@ -45,7 +45,12 @@ function Main({
                     onLogout={onLogout}
                 />}
             </div>
-            <Search onSubmit={onSearch} isLoading={isSendingReq} hashtag={hashtag} hashtagSetter={hashtagSetter}/>
+            <Search
+                onSubmit={onSearch}
+                isLoading={isSendingReq}
+                hashtag={hashtag}
+                hashtagSetter={hashtagSetter}
+            />
             <MainPageHashtags
                 photoHashtags={photoHashtags}
                 onClick={onHashtagClick}

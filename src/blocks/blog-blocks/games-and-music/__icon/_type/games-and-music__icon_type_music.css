@@ -1,0 +1,11 @@
+.games-and-music__icon_type_music {
+  background-image: url(../../../../../images/spotify-icon.svg);
+  width: 30%;
+  height: 90px;
+}
+
+@media screen and (max-width: 700px) {
+  .games-and-music__icon_type_music {
+    width: 15%;
+  }
+}

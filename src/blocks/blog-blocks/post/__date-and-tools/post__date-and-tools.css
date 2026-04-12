@@ -1,0 +1,8 @@
+.post__date-and-tools {
+  min-width: fit-content;
+  display: flex;
+  align-self: flex-start;
+  justify-content: space-between;
+  align-items: center;
+  grid-area: date-and-tools;
+}

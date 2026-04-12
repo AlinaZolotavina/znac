@@ -1,0 +1,10 @@
+.post__info_location_posts {
+  position: relative;
+  flex-direction: column-reverse;
+}
+
+@media (max-width: 900px) {
+  .post__info_location_posts {
+    grid-area: title-and-info;
+  }
+}

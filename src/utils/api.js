@@ -194,8 +194,135 @@ class Api {
         .then((res) => this._checkResponse(res));
     }
 
+    ////////////////////////
+    ///////   BLOG  ////////
+    ////////////////////////
+    getInitialPosts() {
+        return fetch(`${this._serverUrl}/posts`, {
+            method: 'GET',
+        })
+        .then((res) => this._checkResponse(res));
+    }
+
+    ///////// Don't need it, because post search works on the client side
+    ///////// But still can be useful someday though :)
+
+    // findPost(data) {
+    //     return fetch(`${this._serverUrl}/posts/found`, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({ keyWord: data.query, selectedTheme: data.theme })
+    //     })
+    //     .then((res) => this._checkResponse(res));
+    // }
+ 
+    addPost(data) {
+        return fetch(`${this._serverUrl}/posts`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                theme: data.theme,
+                icon: data.icon,
+                title: data.title,
+                photoLink: data.photoLink,
+                hashtags: data.hashtags,
+                text: data.text,
+            }),
+        })
+        .then((res) => this._checkResponse(res));
+    }
+
+    editPost(postId, data) {
+        return fetch(`${this._serverUrl}/posts/${postId}`, {
+            method: 'PATCH',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                newTheme: data.theme,
+                newIcon: data.icon,
+                newTitle: data.title,
+                newPhotoLink: data.photoLink,
+                newHashtags: data.hashtags,
+                newText: data.text,
+            }),
+        })
+        .then((res) => this._checkResponse(res));
+    }
+
+    deletePost(data) {
+        return fetch(`${this._serverUrl}/posts/${data}`, {
+            method: 'DELETE',
+            credentials: 'include',
+        })
+        .then((res) => this._checkResponse(res));
+    }
+
+    getInitialPRojects() {
+        return fetch(`${this._serverUrl}/projects`, {
+            method: 'GET',
+        })
+        .then((res) => this._checkResponse(res));
+    }
+
+    addProject(data) {
+        return fetch(`${this._serverUrl}/projects`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title: data.title,
+                hashtags: data.hashtags,
+                text: data.text,
+                link: data.link,
+            }),
+        })
+        .then((res) => this._checkResponse(res));
+    }
+
+    editProject(projectId, data) {
+        return fetch(`${this._serverUrl}/projects/${projectId}`, {
+            method: 'PATCH',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                newTitle: data.title,
+                newHashtags: data.hashtags,
+                newText: data.text,
+                newLink: data.link,
+            }),
+        })
+        .then((res) => this._checkResponse(res));
+    }
+
+    deleteProject(data) {
+        return fetch(`${this._serverUrl}/projects/${data}`, {
+            method: 'DELETE',
+            credentials: 'include',
+        })
+        .then((res) => this._checkResponse(res));
+    }
+
+    getProjectHashtags = () => {
+        return fetch(`${this._serverUrl}/projecthashtags`, {
+            method: 'GET',
+        })
+        .then((res) => this._checkResponse(res));
+    }
+
     getInitialData() {
-        return Promise.all([this.getInitialPhotos(), this.getHashtags()]);
+        return Promise.all([this.getInitialPhotos(), this.getHashtags(), this.getInitialPosts(), this.getInitialPRojects(), this.getProjectHashtags()]);
     }
 }
 

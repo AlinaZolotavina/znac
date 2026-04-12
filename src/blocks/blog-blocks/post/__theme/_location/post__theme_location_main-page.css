@@ -1,0 +1,11 @@
+.post__theme_location_main-page {
+  font-size: 16px;
+  line-height: 16px;
+}
+
+@media (max-width: 1280px) {
+  .post__theme_location_main-page {
+    font-size: 12px;
+    line-height: 12px;
+  }
+}

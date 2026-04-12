@@ -1,0 +1,12 @@
+.project__hashtags {
+    display: flex;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 19px;
+    color: #E072A4;
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 15px;
+    max-width: 100%;
+    flex-wrap: wrap;
+}

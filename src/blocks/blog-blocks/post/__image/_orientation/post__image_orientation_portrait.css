@@ -1,0 +1,4 @@
+.post__image_orientation_portrait {
+  max-height: 400px;
+  object-fit: cover;
+}

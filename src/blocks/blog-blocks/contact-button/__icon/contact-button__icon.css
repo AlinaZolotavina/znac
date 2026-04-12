@@ -1,0 +1,16 @@
+.contact-button__icon {
+    display: none;
+    background-image: url('../../../../images/contact-icon.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+}
+
+@media screen and (max-width: 768px) {
+    .contact-button__icon {
+        display: block;
+        width: 15px;
+        height: 15px;
+    } 
+}

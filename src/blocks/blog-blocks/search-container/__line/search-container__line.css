@@ -1,0 +1,17 @@
+.search-container__line {
+  background-image: url(../../../../images/magic-line.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 587px;
+  height: 148px;
+  position: absolute;
+  top: 58px;
+  left: 271px;
+}
+
+@media (max-width: 1250px) {
+  .search-container__line {
+    display: none;
+  }
+}

@@ -1,0 +1,23 @@
+.post__text_location_main-page {
+  font-size: 20px;
+  line-height: 27px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin: 0 15px 0 0;
+  grid-area: text;
+}
+
+@media (max-width: 1280px) {
+  .post__text_location_main-page {
+    font-size: 16px;
+    line-height: 22px;
+  }
+}
+
+@media screen and (max-width: 960px) {
+  .post__text_location_main-page {
+    font-size: 12px;
+    line-height: 18px;
+  }
+}

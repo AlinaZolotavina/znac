@@ -1,0 +1,18 @@
+.games__container {
+  width: 70%;
+  height: 70vh;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-content: center;
+  justify-items: center;
+}
+
+@media (max-width: 400px) {
+  .games__container {
+    height: 50vh;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 48%);
+    margin-top: 35px;
+    gap: 4%;
+  }
+}
