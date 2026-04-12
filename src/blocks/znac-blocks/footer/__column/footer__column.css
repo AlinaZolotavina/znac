@@ -1,0 +1,19 @@
+.footer__column {
+    display: flex;
+    flex-direction: column;
+    width: 44vw;
+    list-style: none;
+    padding: 0;
+    margin: 40px 0 0;
+}
+
+@media screen and (max-width: 650px) {
+    .footer__column {
+        width: fit-content;
+        align-self: center;
+    }
+
+    .footer__column:last-child {
+        margin: 20px 0 0;
+    }
+}

@@ -1,0 +1,11 @@
+.form__additional-info {
+  display: flex;
+  justify-content: center;
+  width: 450px;
+}
+
+@media (max-width: 600px) {
+  .form__additional-info {
+    width: 100%;
+  }
+}

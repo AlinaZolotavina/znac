@@ -1,0 +1,16 @@
+.edit-hashtags__field {
+    height: 25px;
+    width: 100%;
+    background-color: transparent;
+    border: 1px dotted #E8E8E8;
+    border-radius: 5px;
+    margin: 0;
+    padding: 0 15px;
+    outline: none;
+    color: #fff;
+    box-sizing: border-box;
+}
+
+.edit-hashtags__field:focus {
+    border: 2px dotted #fff;
+}

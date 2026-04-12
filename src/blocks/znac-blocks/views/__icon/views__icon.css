@@ -1,0 +1,22 @@
+.views__icon {
+    width: 23px;
+    height: 23px;
+    background-image: url(../../../../images/views-icon.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+@media screen and (max-width: 700px) {
+    .views__icon {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .views__icon {
+        width: 14px;
+        height: 14px;
+    }
+}

@@ -1,0 +1,17 @@
+.nav {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media screen and (max-width: 768px) {
+    .nav {
+        padding: 30px 0;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .nav {
+        padding: 0;
+    }
+}
+

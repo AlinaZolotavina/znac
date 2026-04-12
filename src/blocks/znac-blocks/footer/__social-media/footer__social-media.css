@@ -1,0 +1,11 @@
+.footer__social-media {
+    display: flex;
+    align-items: center;
+    margin: 0 0 5px;
+    transition: opacity .2s ease;
+    cursor: pointer;
+}
+
+.footer__social-media:hover {
+    opacity: .7;
+}

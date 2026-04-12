@@ -1,0 +1,18 @@
+.radio-btn__tooltip {
+    transition: opacity .4s ease-in;
+    opacity: 0;
+    color: #D9D9D9;
+    position: absolute;
+    top: 47px;
+    left: 20px;
+    width: max-content;
+    height:30px;
+    padding: 6px;
+    z-index: 2;
+    background-color: #396675;
+    box-sizing: border-box;
+}
+
+.radio-btn:hover .radio-btn__tooltip {
+    opacity: 1;
+}

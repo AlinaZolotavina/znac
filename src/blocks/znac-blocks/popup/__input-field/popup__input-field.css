@@ -1,0 +1,11 @@
+.popup__input-field {
+    width: 300px;
+    height: 20px;
+    padding: 0 5px 5px;
+    margin: 0 0 5px;
+    box-sizing: border-box;
+    border-style: none;
+    border-bottom: 1px solid #0F1111;
+    background-color: transparent;
+    outline: none;
+}
