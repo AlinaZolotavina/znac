@@ -8,7 +8,6 @@ function Project({
   onEditProjectButtonClick,
 }) {
   const projectHashtags = project.hashtags.split(" ");
-  const date = Date.now();
 
   function handleClick(e) {
     if (e.target.id === "project-delete-btn") {
@@ -21,9 +20,9 @@ function Project({
     <div className="project" onClick={handleClick}>
       <h3 className="project__title">{project.title}</h3>
       <ul className="project__hashtags">
-        {projectHashtags.map((hashtag) => (
+        {projectHashtags.map((hashtag, index) => (
           <BlogHashtag
-            key={`hashtags${project._id}${date}`}
+            key={`${project._id}-${hashtag}-${index}`}
             hashtag={hashtag}
             isSymbolActive={true}
             classname="project__hashtag"

@@ -1,5 +1,3 @@
-// строка 889
-
 import React, { useState, useEffect } from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import Home from "./Home";
@@ -55,7 +53,6 @@ import {
 } from "../utils/constants";
 
 import ResetPassword from "./ResetPassword";
-import EmailSentModal from "./EmailSentModal";
 import PasswordChanged from "./PasswordChanged";
 import NotFound from "./NotFound";
 
@@ -74,7 +71,9 @@ import DeleteProjectModal from "./blog/DeleteProjectModal.js";
 
 import getCurrentActivePage from "../utils/getCurrentActivePage.js";
 
-import FindPair from "./find-pair/FindPair.js";
+import FindPairMenu from "./find-pair/FindPairMenu.js";
+import GetPlayerName from "./find-pair/GetPlayerName.js";
+import FindPairGame from "./find-pair/FindPairGame.js";
 
 import GameSettings from "./tic-tac-toe/GameSettings.js";
 import Board from "./tic-tac-toe/Board";
@@ -87,7 +86,6 @@ function App() {
   // user info
   const [currentUser, setCurrentUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
-  // const [theWantedNewEmail, setTheWantedNewEmail] = useState('');
 
   // history & location
   const history = useHistory();
@@ -112,12 +110,13 @@ function App() {
   const [isEditEmailModalOpen, setIsEditEmailModalOpen] = useState(false);
   const [isEditPasswordModalOpen, setIsEditPasswordModalOpen] = useState(false);
   const [isDeletePhotoModalOpen, setIsDeletePhotoModalOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isEmailSentModalOpen, setIsEmailSentModalOpen] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    status: null, // 'success' | 'error' | null
+    type: "default", // 'default' | 'email'
+    message: "",
+  });
   const [hashtag, setHashtag] = useState(""); // search input
   const [lastHashtags, setLastHashtags] = useState([]);
 
@@ -144,9 +143,9 @@ function App() {
   const [projectHashtags, setProjectHashtags] = useState("");
   const [allProjects, setAllProjects] = useState([]);
   const [projectsToRender, setProjectsToRender] = useState([]);
-  const [currentPostsNumber, setCurrentPostsNumber] = useState(0);
+  const [currentPostsNumber, setCurrentPostsNumber] = useState(3);
   const [postsToAdd, setPostsToAdd] = useState(0);
-  const [currentProjectsNumber, setCurrentProjectsNumber] = useState(0);
+  const [currentProjectsNumber, setCurrentProjectsNumber] = useState(3);
   const [projectsToAdd, setProjectsToAdd] = useState(0);
   const [activePostHashtag, setActivePostHashtag] = useState("All");
   const [activeProjectHashtag, setActiveProjectHashtag] = useState("All");
@@ -158,15 +157,6 @@ function App() {
   const [humanShape, setHumanShape] = useState("x");
   const [winner, setWinner] = useState(null);
   const [fireworkVisibility, setFireworkVisibility] = useState(false);
-
-  // const updateHomepageHashtags = (hashtags, resentHashtags) => {
-  //     hashtags.split('').forEach(h => {
-  //         for (let i = 0; i < resentHashtags.length; i++) {
-  //             if (resentHashtags[i] === h) {
-  //                  setLastHashtags(state => state.push(h));
-  //             };
-  //         }});
-  // }
 
   // get photos to render
   useEffect(() => {
@@ -336,18 +326,28 @@ function App() {
       .then((res) => {
         if (res) {
           handleSignin(email, password);
-          setIsModalOpen(true);
-          setIsSuccess(true);
-          setModalMessage(SUCCESSFUL_SIGNUP_MSG);
+          openModal({
+            status: "success",
+            message: SUCCESSFUL_SIGNUP_MSG,
+          });
         }
       })
       .catch((err) => {
         if (err.status === "Ошибка: 400") {
-          handleError(BAD_REQUEST_ERROR_MSG);
+          openModal({
+            status: "error",
+            message: BAD_REQUEST_ERROR_MSG,
+          });
         } else if (err.status === "Ошибка: 409") {
-          handleError(CONFLICT_SIGNUP_EMAIL_ERROR_MSG);
+          openModal({
+            status: "error",
+            message: CONFLICT_SIGNUP_EMAIL_ERROR_MSG,
+          });
         } else {
-          handleError(DEFAULT_ERROR_MSG);
+          openModal({
+            status: "error",
+            message: DEFAULT_ERROR_MSG,
+          });
         }
       })
       .finally(() => setIsSendingReq(false));
@@ -364,11 +364,20 @@ function App() {
       })
       .catch((err) => {
         if (err.status === "Ошибка: 404") {
-          handleError(USER_NOT_FOUND_ERROR_MSG);
+          openModal({
+            status: "error",
+            message: USER_NOT_FOUND_ERROR_MSG,
+          });
         } else if (err.status === "Ошибка: 401") {
-          handleError(AUTHORIZATION_FAILED_ERROR_MSG);
+          openModal({
+            status: "error",
+            message: AUTHORIZATION_FAILED_ERROR_MSG,
+          });
         } else {
-          handleError(DEFAULT_ERROR_MSG);
+          openModal({
+            status: "error",
+            message: DEFAULT_ERROR_MSG,
+          });
         }
       })
       .finally(() => setIsSendingReq(false));
@@ -385,11 +394,20 @@ function App() {
       .catch((err) => {
         console.log(err);
         if (err.status === "Ошибка: 404") {
-          handleError(USER_NOT_FOUND_ERROR_MSG);
+          openModal({
+            status: "error",
+            message: USER_NOT_FOUND_ERROR_MSG,
+          });
         } else if (err.status === "Ошибка: 401") {
-          handleError(UNAUTHORIZED_ERROR_MSG);
+          openModal({
+            status: "error",
+            message: UNAUTHORIZED_ERROR_MSG,
+          });
         } else {
-          handleError(DEFAULT_ERROR_MSG);
+          openModal({
+            status: "error",
+            message: DEFAULT_ERROR_MSG,
+          });
         }
       });
   }
@@ -400,18 +418,24 @@ function App() {
     auth
       .forgotPassword(email)
       .then(() => {
-        setIsEmailSentModalOpen(true);
-        setIsSuccess(true);
-        setModalMessage(
-          "E-mail has been sent, please follow the instructions.",
-        );
+        openModal({
+          status: "success",
+          type: "email",
+          message: "E-mail has been sent, please follow the instructions.",
+        });
       })
       .then(() => history.push("/"))
       .catch((err) => {
         if (err === "Ошибка: 404") {
-          handleError(USER_NOT_FOUND_ERROR_MSG);
+          openModal({
+            status: "error",
+            message: USER_NOT_FOUND_ERROR_MSG,
+          });
         } else {
-          handleError(DEFAULT_ERROR_MSG);
+          openModal({
+            status: "error",
+            message: DEFAULT_ERROR_MSG,
+          });
         }
       })
       .finally(() => setIsSendingReq(false));
@@ -431,20 +455,34 @@ function App() {
       .catch((err) => {
         console.log(err);
         if (err === "Ошибка: 401") {
-          handleError("Wrong reset link or it was expired");
+          openModal({
+            status: "error",
+            message: "Wrong reset link or it was expired",
+          });
         }
         if (err === "Ошибка: 400") {
-          handleError("The entered passwords do not match");
+          openModal({
+            status: "error",
+            message: "The entered passwords do not match",
+          });
         }
         if (err === "Ошибка: 409") {
-          handleError(
-            "Your new password must not be the same as the previous one",
-          );
+          openModal({
+            status: "error",
+            message:
+              "Your new password must not be the same as the previous one",
+          });
         }
         if (err === "Ошибка: 404") {
-          handleError("Nothing found");
+          openModal({
+            status: "error",
+            message: "Nothing found",
+          });
         }
-        // handleError(DEFAULT_ERROR_MSG);
+        openModal({
+          status: "error",
+          message: DEFAULT_ERROR_MSG,
+        });
       });
   }
 
@@ -460,16 +498,16 @@ function App() {
     api
       .requestEmailUpdate(newEmail.email, currentUser.email)
       .then(() => {
-        setIsEmailSentModalOpen(true);
-        setIsSuccess(true);
-        setModalMessage(
-          "E-mail has been sent, please follow the instructions.",
-        );
+        openModal({
+          status: "success",
+          message: "E-mail has been sent, please follow the instructions.",
+        });
       })
       .catch((err) => {
-        setIsSuccess(false);
-        setIsModalOpen(true);
-        setModalMessage("Error! E-mail change request failed");
+        openModal({
+          status: "error",
+          message: "Error! E-mail change request failed",
+        });
       })
       .finally(() => {
         setIsSendingReq(false);
@@ -482,14 +520,16 @@ function App() {
       .then((data) => {
         setCurrentUser(data.user);
         history.push("/profile");
-        setIsSuccess(true);
-        setIsModalOpen(true);
-        setModalMessage("E-mail has been successfully updated");
+        openModal({
+          status: "success",
+          message: "E-mail has been successfully updated",
+        });
       })
       .catch(() => {
-        setIsSuccess(false);
-        setIsModalOpen(true);
-        setModalMessage("Error! E-mail has not been updated");
+        openModal({
+          status: "error",
+          message: "Error! E-mail has not been updated",
+        });
       });
   }
 
@@ -557,16 +597,18 @@ function App() {
     api
       .addPhoto(newPhoto)
       .then((newPhoto) => {
-        setIsModalOpen(true);
-        setIsSuccess(true);
-        setModalMessage("Photo was added successfully");
+        openModal({
+          status: "success",
+          message: "Photo was added successfully",
+        });
         setAllPhotos([newPhoto, ...allPhotos]);
         setPhotosToRender([newPhoto, ...photosToRender]);
       })
       .catch((err) => {
-        setIsModalOpen(false);
-        setIsSuccess(false);
-        setModalMessage("Photo cannot be added");
+        openModal({
+          status: "error",
+          message: "Photo cannot be added",
+        });
       })
       .finally(() => setIsSendingReq(false));
   }
@@ -587,18 +629,20 @@ function App() {
       await api
         .addPhoto(data)
         .then((newPhoto) => {
-          setIsModalOpen(true);
-          setIsSuccess(true);
-          setModalMessage("Photo was added successfully");
+          openModal({
+            status: "success",
+            message: "Photo was added successfully",
+          });
           addedPhotos.push(newPhoto);
           setAllPhotos([newPhoto, ...allPhotos]);
           setPhotosToRender([newPhoto, ...photosToRender]);
         })
         .catch((err) => {
           console.log(err);
-          setIsModalOpen(false);
-          setIsSuccess(false);
-          setModalMessage("Something went wrong");
+          openModal({
+            status: "error",
+            message: "Something went wrong",
+          });
         });
     }
     setAllPhotos([...addedPhotos, ...allPhotos]);
@@ -758,6 +802,7 @@ function App() {
       closeAllBlogPopups();
       closeMenu();
       closeBlogMenu();
+      closeFindPairPopup();
     }
     if (isPhotoPopupOpen) {
       if (keyCode === 37 && !isLeftFlipDisabled) {
@@ -780,6 +825,7 @@ function App() {
     ) {
       closeAllPopups();
       closeAllBlogPopups();
+      closeFindPairPopup();
     }
   };
 
@@ -803,24 +849,36 @@ function App() {
     ],
   );
 
+  const openModal = ({ status, message, type = "default" }) => {
+    setModalState({
+      isOpen: true,
+      status,
+      type,
+      message,
+    });
+  };
+
+  const closeModal = () => {
+    setModalState({
+      isOpen: false,
+      status: null,
+      type: "default",
+      message: "",
+    });
+  };
+
   function closeAllPopups() {
     setIsPhotoPopupOpen(false);
     setIsDeletePhotoModalOpen(false);
     setIsEditEmailModalOpen(false);
     setIsEditPasswordModalOpen(false);
-    setIsModalOpen(false);
-    setIsEmailSentModalOpen(false);
+    // setIsModalOpen(false);
+    closeModal();
+    // setIsEmailSentModalOpen(false);
   }
 
   function closeMenu() {
     setIsMenuOpen(false);
-  }
-
-  // handle errors
-  function handleError(errorText) {
-    setIsSuccess(false);
-    setIsModalOpen(true);
-    setModalMessage(errorText);
   }
 
   // handle photo search (also by hashtag's click)
@@ -933,7 +991,7 @@ function App() {
     setProjectToEdit(project);
   }
 
-  function handleContactClick() {
+  function handleBlogContactClick() {
     setIsGetInTouchPopupOpen(true);
   }
 
@@ -1091,16 +1149,18 @@ function App() {
     api
       .addProject(newProject)
       .then((newProject) => {
-        setIsModalOpen(true);
-        setIsSuccess(true);
-        setModalMessage("Project was successfully added");
+        openModal({
+          status: "success",
+          message: "Project was successfully added",
+        });
         setAllProjects([newProject, ...allProjects]);
         setProjectsToRender([newProject, ...projectsToRender]);
       })
       .catch((err) => {
-        setIsModalOpen(false);
-        setIsSuccess(false);
-        setModalMessage("Project cannot be added");
+        openModal({
+          status: "error",
+          message: "Project cannot be added",
+        });
       })
       .finally(() => {
         setIsSendingReq(false);
@@ -1119,9 +1179,10 @@ function App() {
     api
       .editProject(projectId, data)
       .then((newProject) => {
-        setIsModalOpen(true);
-        setIsSuccess(true);
-        setModalMessage("Project was  successfully edited");
+        openModal({
+          status: "success",
+          message: "Project was successfully edited",
+        });
         setAllProjects((state) =>
           state.map((p) => (p._id === projectId ? newProject : p)),
         );
@@ -1130,9 +1191,10 @@ function App() {
         );
       })
       .catch((err) => {
-        setIsModalOpen(true);
-        setIsSuccess(false);
-        setModalMessage("Editing error, please try again later");
+        openModal({
+          status: "error",
+          message: "Editing error, please try again later",
+        });
       })
       .finally(() => {
         setIsSendingReq(false);
@@ -1160,18 +1222,20 @@ function App() {
         await api
           .addPost(data)
           .then((newPost) => {
-            setIsModalOpen(true);
-            setIsSuccess(true);
-            setModalMessage("Post was successfully added");
+            openModal({
+              status: "success",
+              message: "Post was successfully added",
+            });
             addedPosts.push(newPost);
             setAllPosts([newPost, ...allPosts]);
             setPostsToRender([newPost, ...postsToRender]);
           })
           .catch((err) => {
             console.log(err);
-            setIsModalOpen(false);
-            setIsSuccess(false);
-            setModalMessage("Post cannot be added");
+            openModal({
+              status: "error",
+              message: "Post cannot be added",
+            });
           })
           .finally(() => {
             setIsSendingReq(false);
@@ -1189,18 +1253,20 @@ function App() {
       api
         .addPost(data)
         .then((newPost) => {
-          setIsModalOpen(true);
-          setIsSuccess(true);
-          setModalMessage("Post was successfully added");
+          openModal({
+            status: "success",
+            message: "Post was successfully added",
+          });
           addedPosts.push(newPost);
           setAllPosts([newPost, ...allPosts]);
           setPostsToRender([newPost, ...postsToRender]);
         })
         .catch((err) => {
           console.log(err);
-          setIsModalOpen(false);
-          setIsSuccess(false);
-          setModalMessage("Post cannot be added");
+          openModal({
+            status: "error",
+            message: "Post cannot be added",
+          });
         })
         .finally(() => {
           setIsSendingReq(false);
@@ -1232,9 +1298,10 @@ function App() {
         api
           .editPost(postId, data)
           .then((newPost) => {
-            setIsModalOpen(true);
-            setIsSuccess(true);
-            setModalMessage("Post was successfully edited");
+            openModal({
+              status: "success",
+              message: "Post was successfully edited",
+            });
             setAllPosts((state) =>
               state.map((p) => (p._id === postId ? newPost : p)),
             );
@@ -1245,9 +1312,10 @@ function App() {
           })
           .catch((err) => {
             console.log(err);
-            setIsModalOpen(false);
-            setIsSuccess(false);
-            setModalMessage("Editing error, please try again later");
+            openModal({
+              status: "error",
+              message: "Editing error, please try again later",
+            });
           })
           .finally(() => {
             setIsSendingReq(false);
@@ -1381,7 +1449,6 @@ function App() {
   }
 
   function moveToFindPairPage() {
-    console.log("find pair");
     history.push("/alina/games/find-pair");
   }
 
@@ -1420,6 +1487,26 @@ function App() {
   //     setWinner(null);
   //     setFireworkVisibility(false);
   //   }
+
+  //////////////// FIND PAIR ////////////
+  const [findPairPlayerName, setFindPairPlayerName] = useState("");
+  const [findPairGameResult, setFindPairGameResult] = useState(null);
+  const [isFindPairGameFinished, setIsFindPairGameFinished] = useState(false);
+  const [restartFindPairHandler, setRestarFindPairtHandler] = useState(null);
+  const [isFindPairPopupOpen, setIsFindPairPopupOpen] = useState(false);
+
+  function openFindPairPopup() {
+    setIsFindPairPopupOpen(true);
+  }
+
+  function closeFindPairPopup() {
+    setIsFindPairPopupOpen(false);
+  }
+
+  function restartFindPairGame() {
+    setRestarFindPairtHandler?.();
+    setIsFindPairPopupOpen(false);
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -1475,7 +1562,7 @@ function App() {
             onPostsClick={moveToPostsPage}
             onProjectsClick={moveToProjectsPage}
             onAboutClick={moveToAboutPage}
-            onContactClick={handleContactClick}
+            onContactClick={handleBlogContactClick}
             onNewPostClick={handleNewPostPopupOpen}
             onNewProjectClick={handleNewProjectPopupOpen}
             onViewAllPostsClick={moveToPostsPage}
@@ -1501,7 +1588,7 @@ function App() {
             onPostsClick={moveToPostsPage}
             onProjectsClick={moveToProjectsPage}
             onAboutClick={moveToAboutPage}
-            onContactClick={handleContactClick}
+            onContactClick={handleBlogContactClick}
             onPostsSearch={handlePostsSearch}
             onPostClick={handlePostClick}
             postsQuantity={currentPostsNumber}
@@ -1522,7 +1609,7 @@ function App() {
             onPostsClick={moveToPostsPage}
             onProjectsClick={moveToProjectsPage}
             onAboutClick={moveToAboutPage}
-            onContactClick={handleContactClick}
+            onContactClick={handleBlogContactClick}
             post={selectedPost}
             onBackButtonClick={moveToPreviousPage}
             onEditPostButtonClick={handleEditPostPopupOpen}
@@ -1544,7 +1631,7 @@ function App() {
             onPostsClick={moveToPostsPage}
             onProjectsClick={moveToProjectsPage}
             onAboutClick={moveToAboutPage}
-            onContactClick={handleContactClick}
+            onContactClick={handleBlogContactClick}
             projectsQuantity={currentProjectsNumber}
             onShowMoreProjects={showMoreProjects}
             onEditProjectButtonClick={handleEditProjectPopupOpen}
@@ -1563,7 +1650,7 @@ function App() {
             onPostsClick={moveToPostsPage}
             onProjectsClick={moveToProjectsPage}
             onAboutClick={moveToAboutPage}
-            onContactClick={handleContactClick}
+            onContactClick={handleBlogContactClick}
             onAddProjectClick={handleNewProjectPopupOpen}
             onGamesClick={handleGamesClick}
             onMusicClick={handleMusicClick}
@@ -1578,7 +1665,22 @@ function App() {
         </Route>
 
         <Route exact path="/alina/games/find-pair">
-          <FindPair />
+          <FindPairMenu />
+        </Route>
+
+        <Route exact path="/alina/games/find-pair/get-player-name">
+          <GetPlayerName playerNameSetter={setFindPairPlayerName} />
+        </Route>
+
+        <Route exact path="/alina/games/find-pair/new-game">
+          <FindPairGame
+            playerName={findPairPlayerName}
+            gameResultSetter={setFindPairGameResult}
+            popupOpener={openFindPairPopup}
+            isGameFinished={isFindPairGameFinished}
+            isGameFinishedSetter={setIsFindPairGameFinished}
+            restartHandlerSetter={setRestarFindPairtHandler}
+          />
         </Route>
 
         <Route exact path="/alina/games/tic-tac-toe">
@@ -1605,7 +1707,6 @@ function App() {
               human={humanShape}
               winnerSetter={setWinner}
               fireworkVisibilitySetter={setFireworkVisibility}
-              screenWidth={screenWidth}
             />
             <Firework
               classname="firework_number_first"
@@ -1763,17 +1864,11 @@ function App() {
       />
 
       <Modal
-        isOpen={isModalOpen}
-        isSuccess={isSuccess}
+        isOpen={modalState.isOpen}
+        status={modalState.status}
+        type={modalState.type}
         onClose={closeAllPopups}
-        message={modalMessage}
-      />
-
-      <EmailSentModal
-        isOpen={isEmailSentModalOpen}
-        isSuccess={isSuccess}
-        onClose={closeAllPopups}
-        message={modalMessage}
+        message={modalState.message}
       />
 
       <BlogMenu

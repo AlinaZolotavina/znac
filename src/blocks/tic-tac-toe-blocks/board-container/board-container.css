@@ -28,6 +28,7 @@
   .board-container {
     width: 55vw;
     height: 55vw;
+    margin: 30px 6vw 15px;
   }
 }
 

@@ -17,3 +17,22 @@
     height: 30vh;
   }
 }
+
+@media (max-width: 750px) {
+  .games__find-pair {
+    height: 30vh;
+  }
+}
+
+@media (max-width: 600px) {
+  .games__find-pair {
+    height: 25vh;
+  }
+}
+
+@media (max-width: 400px) {
+  .games__find-pair {
+    height: 100%;
+    justify-self: center;
+  }
+}

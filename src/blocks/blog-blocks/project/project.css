@@ -5,6 +5,7 @@
   box-sizing: border-box;
   position: relative;
   width: 100%;
+  height: fit-content;
   /* animation: ani 2s ease; */
 }
 /* 

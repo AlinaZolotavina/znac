@@ -9,14 +9,13 @@ function ProjectsContainer({
   onDeleteProjectButtonClick,
   onHashtagClick,
 }) {
-  const date = Date.now();
   return (
     <ul
       className={`projects__container projects__container_location_${classname}`}
     >
       {projects.slice(0, projectsNumber).map((project) => (
         <Project
-          key={`${project._id}${date}`}
+          key={project._id}
           loggedIn={loggedIn}
           project={project}
           onEditProjectButtonClick={onEditProjectButtonClick}

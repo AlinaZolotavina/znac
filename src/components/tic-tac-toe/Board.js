@@ -5,14 +5,7 @@ import GameStatus from "./GameStatus";
 import GamesButtons from "../blog/GamesButtons";
 import { SMALL_SCREEN_WIDTH } from "../../utils/constants";
 
-function Board({
-  AiMode,
-  ai,
-  human,
-  winnerSetter,
-  fireworkVisibilitySetter,
-  screenWidth,
-}) {
+function Board({ AiMode, ai, human, winnerSetter, fireworkVisibilitySetter }) {
   const [isSmallScreen, setIsSmallScreen] = useState(
     window.innerWidth < SMALL_SCREEN_WIDTH,
   );
