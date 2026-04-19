@@ -1,0 +1,22 @@
+.find-pair__menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  margin-top: 10px;
+}
+
+.find-pair__menu:first-child {
+  padding-bottom: 7px;
+}
+
+.find-pair__menu:nth-child(2) {
+  padding-top: 7px;
+}
+
+.find-pair__menu:has(.find-pair__menu-option:hover)
+  > .find-pair__menu-option:not(:hover) {
+  opacity: 0.5;
+  transform: scale(0.95);
+}

@@ -1,0 +1,18 @@
+.get-player-name__input {
+  width: 300px;
+  height: 40px;
+  padding: 0 16px 0;
+  color: #848282;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 17px;
+  box-sizing: border-box;
+  border-style: none;
+  border: 2px solid #cfe0f3;
+  border-radius: 5px;
+}
+
+.get-player-name__input:focus {
+  outline: none;
+  border: 2px solid #3162ac;
+}

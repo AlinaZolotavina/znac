@@ -1,0 +1,20 @@
+.timer {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-around;
+  margin: 25px auto;
+}
+
+@media (max-width: 830px) {
+  .timer {
+    justify-content: space-between;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 500px) {
+  .timer {
+    margin: 10px auto;
+  }
+}

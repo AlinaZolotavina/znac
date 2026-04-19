@@ -1,0 +1,23 @@
+.find-pair__back-link {
+  justify-self: center;
+  position: fixed;
+  bottom: 50px;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 15px;
+  color: #2a2643;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+  padding: 0 50px;
+}
+
+.find-pair__back-link:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+@media (max-width: 830px) {
+  .find-pair__back-link {
+    position: static;
+  }
+}

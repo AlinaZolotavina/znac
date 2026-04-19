@@ -1,0 +1,8 @@
+.get-player-name__error {
+  color: #d7596b;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 15px;
+  height: 15px;
+  margin: 10px 16px;
+}

@@ -1,0 +1,19 @@
+.get-player-name__submit-btn {
+  width: 100px;
+  height: 40px;
+  box-sizing: border-box;
+  border-style: none;
+  border-radius: 20px;
+  background-color: #4e89c8;
+  color: #daebf8;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 17px;
+  margin: 10px;
+  transition: transform 0.4s ease;
+  cursor: pointer;
+}
+
+.get-player-name__submit-btn:not(:disabled):hover {
+  transform: scale(1.1);
+}

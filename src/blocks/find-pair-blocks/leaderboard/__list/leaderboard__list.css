@@ -1,0 +1,9 @@
+.leaderboard__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  /* Disable interaction and apply blur effect because there is no info from server for leaderboard yet */
+  filter: blur(6px);
+  pointer-events: none; /* disable interaction */
+  user-select: none; /* disable text selection */
+}

@@ -1,0 +1,7 @@
+.find-pair-game__info {
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  align-items: center;
+  position: relative;
+}

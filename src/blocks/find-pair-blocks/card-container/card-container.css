@@ -1,0 +1,20 @@
+.card-container {
+  width: 15vh;
+  height: 15vh;
+  perspective: 800px;
+  border: 1px;
+}
+
+@media screen and (max-width: 1240px) {
+  .card-container {
+    width: 10vh;
+    height: 10vh;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .card-container {
+    width: 20vw;
+    height: 20vw;
+  }
+}

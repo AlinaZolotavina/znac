@@ -1,0 +1,23 @@
+.find-pair__menu-option-container {
+    width: 200px;
+    height: 50px;
+    cursor: pointer;
+}
+
+.find-pair__menu-option-container:first-child {
+    padding-bottom: 7px;
+}
+
+.find-pair__menu-option-container:nth-child(2) {
+    padding-top: 7px;
+}
+
+.find-pair__menu:hover > .find-pair__menu-option-container:not(:hover) {
+    opacity: .5;
+}
+
+.find-pair__menu-option-container:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+

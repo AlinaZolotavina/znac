@@ -1,0 +1,3 @@
+.card_state_flipped {
+  transform: rotateY(180deg);
+}

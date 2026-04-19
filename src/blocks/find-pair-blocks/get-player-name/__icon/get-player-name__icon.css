@@ -1,0 +1,10 @@
+.get-player-name__icon {
+  background-image: url(../../../../images/get-player-name.svg);
+  width: 200px;
+  height: 200px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  z-index: 10;
+  pointer-events: none;
+}

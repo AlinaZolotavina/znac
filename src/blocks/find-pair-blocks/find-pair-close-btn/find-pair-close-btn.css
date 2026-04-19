@@ -1,0 +1,22 @@
+.find-pair-close-btn {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  background: url("../../../images/find-pair-close-btn.svg") no-repeat center;
+  background-color: transparent;
+}
+
+.find-pair-close-btn:hover {
+  opacity: 0.6;
+}
+
+@media screen and (max-width: 600px) {
+  .find-pair-close-btn {
+    width: 24px;
+    height: 24px;
+  }
+}

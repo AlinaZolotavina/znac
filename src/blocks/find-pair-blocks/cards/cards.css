@@ -1,0 +1,26 @@
+.cards {
+  width: calc(90vh + 75px);
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(4, 15vh);
+  gap: 10px;
+}
+
+@media screen and (max-width: 1240px) {
+  .cards {
+    width: calc(40vh + 40px);
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(6, 10vh);
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .cards {
+    width: calc(80vw + 54px);
+    gap: 8px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    grid-template-columns: repeat(4, 20vw);
+    grid-template-rows: repeat(6, 20vw);
+  }
+}

@@ -1,0 +1,24 @@
+.find-pair-game {
+  display: flex;
+  /* display: grid;
+  grid-template-columns: calc(90vh + 75px) 220px; */
+  gap: 0 50px;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f9fdff;
+}
+
+@media screen and (max-width: 1240px) {
+  .find-pair-game {
+  }
+}
+
+@media screen and (max-width: 830px) {
+  .find-pair-game {
+    flex-direction: column;
+    gap: 30px 0;
+    padding-top: 40px;
+    justify-content: flex-start;
+  }
+}

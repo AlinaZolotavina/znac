@@ -1,0 +1,24 @@
+.timer__icon {
+  background-image: url(../../../../images/Timer.svg);
+  width: 70px;
+  height: 70px;
+  border-style: none;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+}
+
+@media (max-width: 830px) {
+  .timer__icon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 500px) {
+  .timer__icon {
+    width: 30px;
+    height: 30px;
+  }
+}
