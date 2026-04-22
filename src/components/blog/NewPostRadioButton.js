@@ -21,9 +21,10 @@ function NewPostRadioButton({
         checked={radioBtnValue === checkValue}
         value={radioBtnValue}
         name={radioBtnName}
+        id={radioBtnValue}
         onChange={() => onClick(radioBtnValue)}
       />
-      <label>{labelText}</label>
+      <label htmlFor={radioBtnValue}>{labelText}</label>
     </div>
   );
 }

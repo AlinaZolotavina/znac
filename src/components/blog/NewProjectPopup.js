@@ -144,6 +144,7 @@ function NewProjectPopup({ isOpen, onClose, onAddProject, isSendingReq }) {
             onChange={handleProjectTitleChange}
             isSendingReq={isSendingReq}
             error={projectTitleError}
+            inputName="project title"
           />
           <BlogInput
             placeholder="Hashtags separated by spaces"
@@ -153,6 +154,7 @@ function NewProjectPopup({ isOpen, onClose, onAddProject, isSendingReq }) {
             onChange={handleProjectHashtagsChange}
             isSendingReq={isSendingReq}
             error={projectHashtagsError}
+            inputName="project hashtags"
           />
           <BlogTextArea
             placeholder="Project description"
@@ -160,6 +162,7 @@ function NewProjectPopup({ isOpen, onClose, onAddProject, isSendingReq }) {
             onChange={handleTextareaChange}
             isSendingReq={isSendingReq}
             error={textareaError}
+            inputName="project description"
           />
           <BlogInput
             placeholder="Link to the project"
@@ -169,6 +172,7 @@ function NewProjectPopup({ isOpen, onClose, onAddProject, isSendingReq }) {
             onChange={handleProjectLinkChange}
             isSendingReq={isSendingReq}
             error={projectLinkError}
+            inputName="project link"
           />
         </BlogForm>
         <BlogCloseButton classname="blog-close-btn" onClick={handleClose} />

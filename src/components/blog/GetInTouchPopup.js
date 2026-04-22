@@ -109,6 +109,7 @@ function GetInTouchPopup({ isOpen, isSendingReq, onClose }) {
             onChange={handleVisitorNameChange}
             isSendingReq={isSendingReq}
             error={visitorNameError}
+            inputName="get-in-touch name"
           />
           <BlogInput
             placeholder="Email"
@@ -118,6 +119,7 @@ function GetInTouchPopup({ isOpen, isSendingReq, onClose }) {
             onChange={handleVisitorEmailChange}
             isSendingReq={isSendingReq}
             error={visitorEmailError}
+            inputName="get-in-touch email"
           />
           <label className="blog-input">
             <textarea
@@ -127,6 +129,7 @@ function GetInTouchPopup({ isOpen, isSendingReq, onClose }) {
               onChange={handleTextareaChange}
               required
               disabled={isSendingReq}
+              name="get-in-touch text"
             />
             <span className="blog-input__error">{textareaError}</span>
           </label>

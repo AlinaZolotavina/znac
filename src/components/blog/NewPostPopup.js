@@ -345,12 +345,13 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
           <div className="new-post__form-section">
             <BlogInput
               placeholder="Title"
-              classname="blog-input__field blog-input__field_type_project-title"
+              classname="blog-input__field blog-input__field_type_post-title"
               inputType="text"
               inputValue={title}
               onChange={handleTitleChange}
               isSendingReq={isSendingReq}
               error={titleError}
+              inputName="post title"
             />
             <div className="new-post__upload-container">
               <label className="blog-upload-file">
@@ -387,6 +388,7 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
             onChange={handleHashtagsChange}
             isSendingReq={isSendingReq}
             error={hashtagsError}
+            inputName="post hashtags"
           />
 
           <BlogTextArea
@@ -395,6 +397,7 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
             onChange={handleTextareaChange}
             isSendingReq={isSendingReq}
             error={textareaError}
+            inputName="post text"
           />
         </BlogForm>
         <BlogCloseButton

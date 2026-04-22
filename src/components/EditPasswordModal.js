@@ -17,11 +17,13 @@ function EditPasswordModal({ isOpen, onClose }) {
             inputLabel=""
             placeholder="Enter old password"
             classname="popup__input-field"
+            inputName="old password"
           />
           <Input
             inputLabel=""
             placeholder="Enter new password"
             classname="popup__input-field"
+            inputName="new password"
           />
         </Form>
         <CloseButton classname="close-btn popup__close-btn" onClick={onClose} />
