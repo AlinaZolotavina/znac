@@ -1,88 +1,69 @@
+import { createRequest } from "./request";
 // export const BASE_URL = 'https://api.znac.org';
-export const BASE_URL = 'http://localhost:4000';
+export const BASE_URL = "http://localhost:4000";
 
-function checkResponse(res) {
-    if (res.ok) {
-        return res.json();
-    } else {
-        return Promise.reject(`Ошибка: ${res.status}`);
-    }
-}
+const request = createRequest(BASE_URL);
 
 export const signup = (email, password) => {
-    return fetch(`${BASE_URL}/signup`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({email, password})
-    })
-    .then((res) => checkResponse(res));
-}
+  return request("/signup", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
+  });
+};
 
 export const signin = (email, password) => {
-    return fetch(`${BASE_URL}/signin`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({email, password})
-    })
-    .then((res) => checkResponse(res));
-}
+  return request("/signin", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
+  });
+};
 
-export const signout = (email) => {
-    return fetch(`${BASE_URL}/signout`, {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            'email': email,
-        }),
-    })
-    .then((res) => checkResponse(res));
-}
+export const signout = () => {
+  return request("/signout", {
+    method: "DELETE",
+  });
+};
 
 export const getContent = () => {
-    return fetch(`${BASE_URL}/profile`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }
-    })
-    .then((res) => checkResponse(res));
-}
+  return request("/profile", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+};
 
 export const forgotPassword = (email) => {
-    return fetch(`${BASE_URL}/forgot-password`, {
-        method: 'PUT', 
-        credentials: 'include',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({email})
-    })
-    .then((res) => checkResponse(res));
-}
+  return request("/forgot-password", {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  });
+};
 
-export const resetPassword = (newPassword, confirmPassword, resetPasswordLink) => {
-    return fetch(`${BASE_URL}/reset-password/${resetPasswordLink}`, {
-        method: 'PUT',
-        credentials: 'include',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({newPassword, confirmPassword})
-    })
-    .then((res) => checkResponse(res));
-}
+export const resetPassword = (
+  newPassword,
+  confirmPassword,
+  resetPasswordLink,
+) => {
+  return request(`/reset-password/${resetPasswordLink}`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ newPassword, confirmPassword }),
+  });
+};

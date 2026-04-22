@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from "react";
+
+import useAuth from "../hooks/useAuth";
+import useRequestState from "../hooks/useRequestStatus";
+
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import Home from "./Home";
 import Main from "./Main";
@@ -22,21 +26,21 @@ import * as auth from "../utils/auth.js";
 import { Switch, Route, useLocation, useHistory } from "react-router-dom";
 
 import {
-  // INTERNAL_SERVER_ERROR_MSG,
+  INTERNAL_SERVER_ERROR_MSG,
   DEFAULT_ERROR_MSG,
-  // NOT_FOUND_ERROR_MSG,
+  NOT_FOUND_ERROR_MSG,
   USER_NOT_FOUND_ERROR_MSG,
-  // PHOTO_NOT_FOUND_ERROR_MSG,
+  PHOTO_NOT_FOUND_ERROR_MSG,
   AUTHORIZATION_FAILED_ERROR_MSG,
   UNAUTHORIZED_ERROR_MSG,
   BAD_REQUEST_ERROR_MSG,
-  CONFLICT_SIGNUP_EMAIL_ERROR_MSG,
   SUCCESSFUL_SIGNUP_MSG,
-  // CONFLICT_UPDATE_EMAIL_ERROR_MSG,
-  // PHOTO_FORBIDDEN_ERROR_MSG,
-  // ADD_PHOTO_ERROR_MSG,
-  // DELETE_PHOTO_ERROR_MSG,
-  // SUCCESSFUL_PROFILE_UPDATE_MSG,
+  SIGNUP_ERROR_MSG,
+  SIGNOUT_ERROR_MSG,
+  PHOTO_FORBIDDEN_ERROR_MSG,
+  ADD_PHOTO_ERROR_MSG,
+  DELETE_PHOTO_ERROR_MSG,
+  SUCCESSFUL_PROFILE_UPDATE_MSG,
 } from "../utils/constants";
 import {
   LARGE_SCREEN_WIDTH,
@@ -83,10 +87,6 @@ import CurrentPostPage from "./blog/CurrentPostPage.js";
 import GamesPage from "./blog/GamesPage.js";
 
 function App() {
-  // user info
-  const [currentUser, setCurrentUser] = useState({});
-  const [loggedIn, setLoggedIn] = useState(false);
-
   // history & location
   const history = useHistory();
   const location = useLocation();
@@ -119,8 +119,6 @@ function App() {
   });
   const [hashtag, setHashtag] = useState(""); // search input
   const [lastHashtags, setLastHashtags] = useState([]);
-
-  const [isSendingReq, setIsSendingReq] = useState(false);
 
   /////////////////////////////// BLOG /////////////////////////////
   const [isBlogMenuOpen, setIsBlogMenuOpen] = useState(false);
@@ -184,42 +182,6 @@ function App() {
         console.log(err);
       });
   }, []);
-
-  // if logged in, get and set current user
-  useEffect(() => {
-    if (loggedIn) {
-      api
-        .getUserData(currentUser._id)
-        .then((data) => {
-          const userData = data;
-          setCurrentUser(userData);
-        })
-        .catch((err) => console.log(err));
-    }
-  }, [loggedIn]);
-
-  useEffect(() => {
-    if (!loggedIn) {
-      checkToken();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loggedIn]);
-
-  function checkToken() {
-    auth
-      .getContent()
-      .then((res) => {
-        const userData = res;
-        setLoggedIn(true);
-        if (location.pathname === "signin" || location.pathname === "signup") {
-          history.push("/");
-        } else {
-          history.push(location.pathname);
-        }
-        setCurrentUser(userData);
-      })
-      .catch((err) => console.log(err));
-  }
 
   // calculate photos count depending on screen demensions
   // (including when changing the screen resolution)
@@ -319,102 +281,9 @@ function App() {
     setCurrentPostsNumber((prev) => prev + postsToAdd);
   }
 
-  function handleSignup(email, password) {
-    setIsSendingReq(true);
-    auth
-      .signup(email, password)
-      .then((res) => {
-        if (res) {
-          handleSignin(email, password);
-          openModal({
-            status: "success",
-            message: SUCCESSFUL_SIGNUP_MSG,
-          });
-        }
-      })
-      .catch((err) => {
-        if (err.status === "Ошибка: 400") {
-          openModal({
-            status: "error",
-            message: BAD_REQUEST_ERROR_MSG,
-          });
-        } else if (err.status === "Ошибка: 409") {
-          openModal({
-            status: "error",
-            message: CONFLICT_SIGNUP_EMAIL_ERROR_MSG,
-          });
-        } else {
-          openModal({
-            status: "error",
-            message: DEFAULT_ERROR_MSG,
-          });
-        }
-      })
-      .finally(() => setIsSendingReq(false));
-  }
-
-  function handleSignin(email, password) {
-    setIsSendingReq(true);
-    auth
-      .signin(email, password)
-      .then((data) => {
-        setLoggedIn(true);
-        setCurrentUser(data.user);
-        history.push("/");
-      })
-      .catch((err) => {
-        if (err.status === "Ошибка: 404") {
-          openModal({
-            status: "error",
-            message: USER_NOT_FOUND_ERROR_MSG,
-          });
-        } else if (err.status === "Ошибка: 401") {
-          openModal({
-            status: "error",
-            message: AUTHORIZATION_FAILED_ERROR_MSG,
-          });
-        } else {
-          openModal({
-            status: "error",
-            message: DEFAULT_ERROR_MSG,
-          });
-        }
-      })
-      .finally(() => setIsSendingReq(false));
-  }
-
-  function handleSignout(email) {
-    auth
-      .signout(email)
-      .then(() => {
-        setLoggedIn(false);
-        history.push("/");
-        setCurrentUser({});
-      })
-      .catch((err) => {
-        console.log(err);
-        if (err.status === "Ошибка: 404") {
-          openModal({
-            status: "error",
-            message: USER_NOT_FOUND_ERROR_MSG,
-          });
-        } else if (err.status === "Ошибка: 401") {
-          openModal({
-            status: "error",
-            message: UNAUTHORIZED_ERROR_MSG,
-          });
-        } else {
-          openModal({
-            status: "error",
-            message: DEFAULT_ERROR_MSG,
-          });
-        }
-      });
-  }
-
   // password reset
   function handleReceiveResetPasswordLink(email) {
-    setIsSendingReq(true);
+    startLoading();
     auth
       .forgotPassword(email)
       .then(() => {
@@ -438,7 +307,7 @@ function App() {
           });
         }
       })
-      .finally(() => setIsSendingReq(false));
+      .finally(() => stopLoading());
   }
 
   function handleResetPassword(
@@ -446,7 +315,7 @@ function App() {
     confirmPassword,
     resetPasswordLink,
   ) {
-    setIsSendingReq(true);
+    startLoading();
     auth
       .resetPassword(newPassword, confirmPassword, resetPasswordLink)
       .then(() => {
@@ -493,7 +362,7 @@ function App() {
 
   function handleEmailChangeRequest(newEmail) {
     console.log(currentUser.email);
-    setIsSendingReq(true);
+    startLoading();
     localStorage.setItem("email", JSON.stringify(newEmail));
     api
       .requestEmailUpdate(newEmail.email, currentUser.email)
@@ -510,7 +379,7 @@ function App() {
         });
       })
       .finally(() => {
-        setIsSendingReq(false);
+        stopLoading();
       });
   }
 
@@ -518,7 +387,7 @@ function App() {
     api
       .updateEmail(updateEmailLink, newEmail)
       .then((data) => {
-        setCurrentUser(data.user);
+        updateUser(data.user);
         history.push("/profile");
         openModal({
           status: "success",
@@ -593,7 +462,7 @@ function App() {
 
   // add photo
   function handleAddPhotoViaLink(newPhoto) {
-    setIsSendingReq(true);
+    startLoading();
     api
       .addPhoto(newPhoto)
       .then((newPhoto) => {
@@ -610,11 +479,11 @@ function App() {
           message: "Photo cannot be added",
         });
       })
-      .finally(() => setIsSendingReq(false));
+      .finally(() => stopLoading());
   }
 
   async function handlePhotoUpload(photoData, hashtags, views) {
-    setIsSendingReq(true);
+    startLoading();
     const files = photoData[0];
     const addedPhotos = [];
     for (const file of files) {
@@ -647,7 +516,7 @@ function App() {
     }
     setAllPhotos([...addedPhotos, ...allPhotos]);
     setPhotosToRender([...addedPhotos, ...photosToRender]);
-    setIsSendingReq(false);
+    stopLoading();
   }
 
   // delete photo
@@ -1145,7 +1014,7 @@ function App() {
   // }
 
   function handleAddProject(newProject) {
-    setIsSendingReq(true);
+    startLoading();
     api
       .addProject(newProject)
       .then((newProject) => {
@@ -1163,13 +1032,13 @@ function App() {
         });
       })
       .finally(() => {
-        setIsSendingReq(false);
+        stopLoading();
         closeAllBlogPopups();
       });
   }
 
   function handleEditProject(projectId, props) {
-    setIsSendingReq(true);
+    startLoading();
     const data = {
       title: props.title,
       hashtags: props.hashtags,
@@ -1197,13 +1066,13 @@ function App() {
         });
       })
       .finally(() => {
-        setIsSendingReq(false);
+        stopLoading();
         closeAllBlogPopups();
       });
   }
 
   async function handleAddPost(props) {
-    setIsSendingReq(true);
+    startLoading();
     const addedPosts = [];
     if (props.photoData[0]) {
       const files = props.photoData[0];
@@ -1238,7 +1107,7 @@ function App() {
             });
           })
           .finally(() => {
-            setIsSendingReq(false);
+            stopLoading();
             closeAllBlogPopups();
           });
       }
@@ -1269,17 +1138,17 @@ function App() {
           });
         })
         .finally(() => {
-          setIsSendingReq(false);
+          stopLoading();
           closeAllBlogPopups();
         });
     }
     setAllPosts([...addedPosts, ...allPosts]);
     setPostsToRender([...addedPosts, ...postsToRender]);
-    setIsSendingReq(false);
+    stopLoading();
   }
 
   async function handleEditPost(postId, props) {
-    setIsSendingReq(true);
+    startLoading();
 
     if (props.photoData[0]) {
       const files = props.photoData[0];
@@ -1318,7 +1187,7 @@ function App() {
             });
           })
           .finally(() => {
-            setIsSendingReq(false);
+            stopLoading();
             closeAllBlogPopups();
           });
       }
@@ -1344,11 +1213,11 @@ function App() {
         })
         .catch((err) => console.log(err))
         .finally(() => {
-          setIsSendingReq(false);
+          stopLoading();
           closeAllBlogPopups();
         });
     }
-    setIsSendingReq(false);
+    stopLoading();
     closeAllBlogPopups();
   }
 
@@ -1508,6 +1377,30 @@ function App() {
     setIsFindPairPopupOpen(false);
   }
 
+  ////////////////////////////////////////
+  const { isLoading, startLoading, stopLoading } = useRequestState();
+
+  const {
+    currentUser,
+    loggedIn,
+    handleSignin,
+    handleSignup,
+    handleSignout,
+    updateUser,
+  } = useAuth({
+    history,
+    location,
+    openModal,
+    messages: {
+      AUTHORIZATION_FAILED_ERROR_MSG,
+      SIGNUP_ERROR_MSG,
+      SUCCESSFUL_SIGNUP_MSG,
+      SIGNOUT_ERROR_MSG,
+    },
+    startLoading,
+    stopLoading,
+  });
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <Switch>
@@ -1520,7 +1413,7 @@ function App() {
             onContactClick={handleContactClick}
             onMenuClick={handleMenuClick}
             onSignout={handleSignout}
-            isSendingReq={isSendingReq}
+            isSendingReq={isLoading}
             email={currentUser.email}
             onLogout={handleSignout}
           />
@@ -1544,7 +1437,7 @@ function App() {
             onLogout={handleSignout}
             areHashtagsEditing={false}
             onEditHashtags={handleEditHashtags}
-            isSendingReq={isSendingReq}
+            isSendingReq={isLoading}
             hashtagsNumber={10}
           />
           <Footer />
@@ -1593,7 +1486,7 @@ function App() {
             onPostClick={handlePostClick}
             postsQuantity={currentPostsNumber}
             onShowMorePosts={showMorePosts}
-            isLoading={isSendingReq}
+            isLoading={isLoading}
             query={query}
             querySetter={setQuery}
             onPostHashtagClick={handlePostHashtagClick}
@@ -1747,24 +1640,24 @@ function App() {
         </Route>
 
         <Route exact path="/signin">
-          <SignIn onSignin={handleSignin} isSendingReq={isSendingReq} />
+          <SignIn onSignin={handleSignin} isSendingReq={isLoading} />
         </Route>
 
         <Route path="/signup">
-          <SignUp onSignup={handleSignup} isSendingReq={isSendingReq} />
+          <SignUp onSignup={handleSignup} isSendingReq={isLoading} />
         </Route>
 
         <Route path="/signin/recovery">
           <ForgotPassword
             onReceiveEmail={handleReceiveResetPasswordLink}
-            isSendingReq={isSendingReq}
+            isSendingReq={isLoading}
           />
         </Route>
 
         <Route path="/reset-password/:resetPasswordLink">
           <ResetPassword
             onResetPassword={handleResetPassword}
-            isSendingReq={isSendingReq}
+            isSendingReq={isLoading}
           />
         </Route>
 
@@ -1783,7 +1676,7 @@ function App() {
           onEditPasswordBtnClick={handleEditPasswordBtnClick}
           onMenuClick={handleMenuClick}
           onSignout={handleSignout}
-          isSendingReq={isSendingReq}
+          isSendingReq={isLoading}
           email={currentUser.email}
           onLogout={handleSignout}
         />
@@ -1803,7 +1696,7 @@ function App() {
           onContactClick={handleContactClick}
           onMenuClick={handleMenuClick}
           onSignout={handleSignout}
-          isSendingReq={isSendingReq}
+          isSendingReq={isLoading}
           onAddPhotoViaLink={handleAddPhotoViaLink}
           onUploadPhotoToServer={handlePhotoUpload}
           email={currentUser.email}
@@ -1825,7 +1718,7 @@ function App() {
         onHashtagClick={handleHashtagClick}
         areHashtagsEditing={areHashtagsEditing}
         onEditHashtags={handleEditHashtags}
-        isSendingReq={isSendingReq}
+        isSendingReq={isLoading}
         onEditHashtagsBtnClick={handleEditHashtagsBtnClick}
         onPhotoFlip={handlePhotoFlip}
         isLeftFlipDisabled={isLeftFlipDisabled}
@@ -1835,7 +1728,7 @@ function App() {
       <EditEmailModal
         isOpen={isEditEmailModalOpen}
         onClose={closeAllPopups}
-        isSendingReq={isSendingReq}
+        isSendingReq={isLoading}
         onRequestEmailChange={handleEmailChangeRequest}
       />
 
@@ -1884,34 +1777,34 @@ function App() {
       <GetInTouchPopup
         isOpen={isGetInTouchPopupOpen}
         onClose={closeAllBlogPopups}
-        isSendingReq={isSendingReq}
+        isSendingReq={isLoading}
       />
 
       <NewProjectPopup
         isOpen={isNewProjectPopupOpen}
         onClose={closeAllBlogPopups}
         onAddProject={handleAddProject}
-        isSendingReq={isSendingReq}
+        isSendingReq={isLoading}
       />
 
       <NewPostPopup
         isOpen={isPostPopupOpen}
         onClose={closeAllBlogPopups}
-        isSendingReq={isSendingReq}
+        isSendingReq={isLoading}
         onAddPost={handleAddPost}
       />
 
       <EditPostPopup
         isOpen={isEditPostPopupOpen}
         onClose={closeAllBlogPopups}
-        isSendingReq={isSendingReq}
+        isSendingReq={isLoading}
         post={postToEdit}
         onEditPost={handleEditPost}
       />
       <EditProjectPopup
         isOpen={isEditProjectPopupOpen}
         onClose={closeAllBlogPopups}
-        isSendingReq={isSendingReq}
+        isSendingReq={isLoading}
         project={projectToEdit}
         onEditProject={handleEditProject}
       />

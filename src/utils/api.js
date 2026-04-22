@@ -1,334 +1,296 @@
+import { createRequest } from "./request";
 class Api {
-    constructor(data) {
-        this._serverUrl = data.serverUrl;
+  constructor(data) {
+    this._serverUrl = data.serverUrl;
+    this._request = createRequest(this._serverUrl);
+  }
+
+  getInitialPhotos() {
+    return this._request("/photos", {
+      method: "GET",
+    });
+  }
+
+  findPhoto(data) {
+    return this._request("/photos/found", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ keyWord: data }),
+    });
+  }
+
+  addPhoto(data) {
+    return this._request("/photos", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        link: data.link,
+        hashtags: data.hashtags,
+        views: data.views,
+      }),
+    });
+  }
+
+  uploadPhoto(data) {
+    if (!data) {
+      return;
     }
+    return this._request("/public", {
+      method: "POST",
+      credentials: "include",
+      body: data,
+    });
+  }
 
-    _checkResponse(res) {
-        if (res.ok) {
-            return res.json();
-        } else {
+  increaseViews(photoId) {
+    return this._request(`/photos/${photoId}/views`, {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
 
-            return Promise.reject(`Ошибка: ${res.status}`);
-        }
-    }
+  editHashtags(photoId, hashtags) {
+    return this._request(`/photos/${photoId}/hashtags`, {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        newHashtags: hashtags,
+      }),
+    });
+  }
 
-    getInitialPhotos() {
-        return fetch(`${this._serverUrl}/photos`, {
-            method: 'GET',
-        })
-        .then((res) => this._checkResponse(res));
-    }
+  deletePhoto(data) {
+    return this._request(`/photos/${data}`, {
+      method: "DELETE",
+    });
+  }
 
-    findPhoto(data) {
-        return fetch(`${this._serverUrl}/photos/found`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ keyWord: data })
-        })
-        .then((res) => this._checkResponse(res));
-    }
- 
-    addPhoto(data) {
-        return fetch(`${this._serverUrl}/photos`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                link: data.link,
-                hashtags: data.hashtags,
-                views: data.views,
-            }),
-        })
-        .then((res) => this._checkResponse(res));
-    }
+  getHashtags = () => {
+    return this._request("/hashtags", {
+      method: "GET",
+    });
+  };
 
-    uploadPhoto(data) {
-        if (!data) {
-            return;
-        }
-        return fetch(`${this._serverUrl}/public`, {
-            method: 'POST',
-            credentials: 'include',
-            body: data,
-        })
-        .then((res) => this._checkResponse(res));
-    }
+  addHashtag = (hashtag) => {
+    return this._request("/hashtags", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        newHashtag: hashtag,
+      }),
+    });
+  };
 
-    increaseViews(photoId) {
-        return fetch(`${this._serverUrl}/photos/${photoId}/views`, {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+  // deleteHashtag = (hashtag) => {
+  //     return this._request("/hashtags", {
+  //         method: 'DELETE',
+  //         headers: {
+  //             'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({
+  //             hashtagName: hashtag,
+  //         })
+  //     })
+  // }
 
-        })
-        .then(res => this._checkResponse(res));
-    }
+  updateHashtag = (hashtag) => {
+    return this._request("/hashtags", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        hashtagName: hashtag,
+      }),
+    });
+  };
 
-    editHashtags(photoId, hashtags) {
-        return fetch(`${this._serverUrl}/photos/${photoId}/hashtags`, {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                newHashtags: hashtags,
-            })
-        })
-        .then(res => this._checkResponse(res));
-    }
+  getUserData() {
+    return this._request("/profile", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+  }
 
-    deletePhoto(data) {
-        return fetch(`${this._serverUrl}/photos/${data}`, {
-            method: 'DELETE',
-            credentials: 'include',
-        })
-        .then((res) => this._checkResponse(res));
-    }
+  requestEmailUpdate(newEmail, oldEmail) {
+    return this._request("/profile/update-email", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        newEmail: newEmail,
+        oldEmail: oldEmail,
+      }),
+    });
+  }
 
-    getHashtags = () => {
-        return fetch(`${this._serverUrl}/hashtags`, {
-            method: 'GET',
-        })
-        .then((res) => this._checkResponse(res));
-    }
+  updateEmail(updateEmailLink, newEmail) {
+    return this._request(`/profile/update-email/${updateEmailLink}`, {
+      method: "PATCH",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ newEmail }),
+    });
+  }
 
-    addHashtag = (hashtag) => {
-        return fetch(`${this._serverUrl}/hashtags`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                newHashtag: hashtag,
-            })
-        })
-        .then((res) => this._checkResponse(res));
-    }
+  updatePassword(data) {
+    return this._request("/profile/update-password", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: data.email,
+        oldPassword: data.oldPassword,
+        newPassword: data.newPassword,
+      }),
+    });
+  }
 
-    // deleteHashtag = (hashtag) => {
-    //     return fetch(`${this._serverUrl}/hashtags`, {
-    //         method: 'DELETE',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({
-    //             hashtagName: hashtag,
-    //         })
-    //     })
-    //     .then((res) => this._checkResponse(res));
-    // }
+  ////////////////////////
+  ///////   BLOG  ////////
+  ////////////////////////
+  getInitialPosts() {
+    return this._request("/posts", {
+      method: "GET",
+    });
+  }
 
-    updateHashtag = (hashtag) => {
-        return fetch(`${this._serverUrl}/hashtags`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                hashtagName: hashtag,
-            })
-        })
-        .then((res) => this._checkResponse(res));
-    }
+  ///////// Don't need it, because post search works on the client side
+  ///////// But still can be useful someday though :)
 
-    getUserData() {
-        return fetch(`${this._serverUrl}/profile`, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            }
-        })
-        .then((res) => this._checkResponse(res));
-    }
+  //   findPost(data) {
+  //     return this._request("/posts/found", {
+  //         method: 'POST',
+  //           headers: {
+  //               'Content-Type': 'application/json',
+  //           },
+  //           body: JSON.stringify({ keyWord: data.query, selectedTheme: data.theme })
+  //     })
+  //   }
 
-    requestEmailUpdate(newEmail, oldEmail) {
-        return fetch(`${this._serverUrl}/profile/update-email`, {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                newEmail: newEmail,
-                oldEmail: oldEmail,
-            })
-        })
-        .then((res) => this._checkResponse(res));
-    }
+  addPost(data) {
+    return this._request("/posts", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        theme: data.theme,
+        icon: data.icon,
+        title: data.title,
+        photoLink: data.photoLink,
+        hashtags: data.hashtags,
+        text: data.text,
+      }),
+    });
+  }
 
-    updateEmail(updateEmailLink, newEmail) {
-        return fetch(`${this._serverUrl}/profile/update-email/${updateEmailLink}`, {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ newEmail })
-        })
-        .then((res) => this._checkResponse(res));
-    }
+  editPost(postId, data) {
+    return this._request(`/posts/${postId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        newTheme: data.theme,
+        newIcon: data.icon,
+        newTitle: data.title,
+        newPhotoLink: data.photoLink,
+        newHashtags: data.hashtags,
+        newText: data.text,
+      }),
+    });
+  }
 
-    updatePassword(data) {
-        return fetch(`${this._serverUrl}/profile/update-password`, {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: data.email,
-                oldPassword: data.oldPassword,
-                newPassword: data.newPassword,
-            })
-        })
-        .then((res) => this._checkResponse(res));
-    }
+  deletePost(data) {
+    return this._request(`/posts/${data}`, {
+      method: "DELETE",
+    });
+  }
 
-    ////////////////////////
-    ///////   BLOG  ////////
-    ////////////////////////
-    getInitialPosts() {
-        return fetch(`${this._serverUrl}/posts`, {
-            method: 'GET',
-        })
-        .then((res) => this._checkResponse(res));
-    }
+  getInitialPRojects() {
+    return this._request("/projects", {
+      method: "GET",
+    });
+  }
 
-    ///////// Don't need it, because post search works on the client side
-    ///////// But still can be useful someday though :)
+  addProject(data) {
+    return this._request("/projects", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: data.title,
+        hashtags: data.hashtags,
+        text: data.text,
+        link: data.link,
+      }),
+    });
+  }
 
-    // findPost(data) {
-    //     return fetch(`${this._serverUrl}/posts/found`, {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({ keyWord: data.query, selectedTheme: data.theme })
-    //     })
-    //     .then((res) => this._checkResponse(res));
-    // }
- 
-    addPost(data) {
-        return fetch(`${this._serverUrl}/posts`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                theme: data.theme,
-                icon: data.icon,
-                title: data.title,
-                photoLink: data.photoLink,
-                hashtags: data.hashtags,
-                text: data.text,
-            }),
-        })
-        .then((res) => this._checkResponse(res));
-    }
+  editProject(projectId, data) {
+    return this._request(`/projects/${projectId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        newTitle: data.title,
+        newHashtags: data.hashtags,
+        newText: data.text,
+        newLink: data.link,
+      }),
+    });
+  }
 
-    editPost(postId, data) {
-        return fetch(`${this._serverUrl}/posts/${postId}`, {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                newTheme: data.theme,
-                newIcon: data.icon,
-                newTitle: data.title,
-                newPhotoLink: data.photoLink,
-                newHashtags: data.hashtags,
-                newText: data.text,
-            }),
-        })
-        .then((res) => this._checkResponse(res));
-    }
+  deleteProject(data) {
+    return this._request(`/projects/${data}`, {
+      method: "DELETE",
+    });
+  }
 
-    deletePost(data) {
-        return fetch(`${this._serverUrl}/posts/${data}`, {
-            method: 'DELETE',
-            credentials: 'include',
-        })
-        .then((res) => this._checkResponse(res));
-    }
+  getProjectHashtags = () => {
+    return this._request("/projecthashtags", {
+      method: "GET",
+    });
+  };
 
-    getInitialPRojects() {
-        return fetch(`${this._serverUrl}/projects`, {
-            method: 'GET',
-        })
-        .then((res) => this._checkResponse(res));
-    }
-
-    addProject(data) {
-        return fetch(`${this._serverUrl}/projects`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                title: data.title,
-                hashtags: data.hashtags,
-                text: data.text,
-                link: data.link,
-            }),
-        })
-        .then((res) => this._checkResponse(res));
-    }
-
-    editProject(projectId, data) {
-        return fetch(`${this._serverUrl}/projects/${projectId}`, {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                newTitle: data.title,
-                newHashtags: data.hashtags,
-                newText: data.text,
-                newLink: data.link,
-            }),
-        })
-        .then((res) => this._checkResponse(res));
-    }
-
-    deleteProject(data) {
-        return fetch(`${this._serverUrl}/projects/${data}`, {
-            method: 'DELETE',
-            credentials: 'include',
-        })
-        .then((res) => this._checkResponse(res));
-    }
-
-    getProjectHashtags = () => {
-        return fetch(`${this._serverUrl}/projecthashtags`, {
-            method: 'GET',
-        })
-        .then((res) => this._checkResponse(res));
-    }
-
-    getInitialData() {
-        return Promise.all([this.getInitialPhotos(), this.getHashtags(), this.getInitialPosts(), this.getInitialPRojects(), this.getProjectHashtags()]);
-    }
+  getInitialData() {
+    return Promise.all([
+      this.getInitialPhotos(),
+      this.getHashtags(),
+      this.getInitialPosts(),
+      this.getInitialPRojects(),
+      this.getProjectHashtags(),
+    ]);
+  }
 }
 
 const api = new Api({
-    // serverUrl: 'https://api.znac.org',
-    serverUrl: 'http://localhost:4000',
+  // serverUrl: 'https://api.znac.org',
+  serverUrl: "http://localhost:4000",
 });
 
 export default api;
