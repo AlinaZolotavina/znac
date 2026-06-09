@@ -8,28 +8,26 @@ import GamesAndMusic from "./GamesAndMusic.js";
 
 function AboutPage({
   loggedIn,
-  activePage,
   projectsToRender,
   onBlogMenuClick,
-  onHomeClick,
-  onPostsClick,
-  onProjectsClick,
-  onAboutClick,
   onContactClick,
   onAddProjectClick,
   onGamesClick,
   onMusicClick,
+  onHomeClick,
+  onPostsClick,
+  onProjectsClick,
+  onAboutClick,
 }) {
   return (
     <div className="blog">
       <BlogHeader
-        activePage={activePage}
         onBlogMenuClick={onBlogMenuClick}
+        onContactClick={onContactClick}
         onHomeClick={onHomeClick}
         onPostsClick={onPostsClick}
-        onProjectsClick={onProjectsClick}
+        onProjectsClic={onProjectsClick}
         onAboutClick={onAboutClick}
-        onContactClick={onContactClick}
       />
       <BlogPromo />
       <Skills />

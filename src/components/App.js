@@ -27,21 +27,21 @@ import * as auth from "../utils/auth.js";
 import { Switch, Route, useLocation, useHistory } from "react-router-dom";
 
 import {
-  INTERNAL_SERVER_ERROR_MSG,
+  // INTERNAL_SERVER_ERROR_MSG,
   DEFAULT_ERROR_MSG,
-  NOT_FOUND_ERROR_MSG,
+  // NOT_FOUND_ERROR_MSG,
   USER_NOT_FOUND_ERROR_MSG,
-  PHOTO_NOT_FOUND_ERROR_MSG,
+  // PHOTO_NOT_FOUND_ERROR_MSG,
   AUTHORIZATION_FAILED_ERROR_MSG,
-  UNAUTHORIZED_ERROR_MSG,
-  BAD_REQUEST_ERROR_MSG,
+  // UNAUTHORIZED_ERROR_MSG,
+  // BAD_REQUEST_ERROR_MSG,
   SUCCESSFUL_SIGNUP_MSG,
   SIGNUP_ERROR_MSG,
   SIGNOUT_ERROR_MSG,
-  PHOTO_FORBIDDEN_ERROR_MSG,
-  ADD_PHOTO_ERROR_MSG,
-  DELETE_PHOTO_ERROR_MSG,
-  SUCCESSFUL_PROFILE_UPDATE_MSG,
+  // PHOTO_FORBIDDEN_ERROR_MSG,
+  // ADD_PHOTO_ERROR_MSG,
+  // DELETE_PHOTO_ERROR_MSG,
+  // SUCCESSFUL_PROFILE_UPDATE_MSG,
 } from "../utils/constants";
 import {
   LARGE_SCREEN_WIDTH,
@@ -1182,7 +1182,15 @@ function App() {
     closeBlogMenu();
   }
   function moveToPostsPage() {
-    history.push("/alina/posts");
+    setSelectedPost({});
+    closeBlogMenu();
+  }
+  function moveToProjectsPage() {
+    setSelectedPost({});
+    closeBlogMenu();
+  }
+
+  function moveToAboutPage() {
     setSelectedPost({});
     closeBlogMenu();
   }
@@ -1190,17 +1198,12 @@ function App() {
     history.goBack();
     setSelectedPost({});
   }
-  function moveToProjectsPage() {
-    history.push("/alina/projects");
-    setSelectedPost({});
-    closeBlogMenu();
-  }
-  function moveToAboutPage() {
-    history.push("/alina/about");
-    setSelectedPost({});
-    closeBlogMenu();
-  }
 
+  function handleBlogClick() {
+    console.log("blog click");
+    window.scrollTo(0, 0);
+    closeMenu();
+  }
   function handleGamesClick() {
     history.push("/alina/games");
   }
@@ -1295,6 +1298,7 @@ function App() {
             loggedIn={loggedIn}
             homeActive={homeActive}
             onHomeClick={handleHomeClick}
+            onBlogClick={handleBlogClick}
             onGalleryClick={handleGalleryClick}
             onContactClick={handleContactClick}
             onMenuClick={handleMenuClick}
@@ -1310,6 +1314,7 @@ function App() {
             onPhotoClick={handlePhotoOpen}
             onDeleteBtnClick={handleDeletePhotoModalOpen}
             onHomeClick={handleHomeClick}
+            onBlogClick={handleBlogClick}
             onGalleryClick={handleGalleryClick}
             onContactClick={handleContactClick}
             onHashtagClick={handleHashtagClick}
@@ -1332,25 +1337,22 @@ function App() {
         <Route exact path="/alina">
           <BlogMainPage
             loggedIn={loggedIn}
-            activePage={activeBlogPage}
             postsToRender={postsToRender}
             projectsToRender={projectsToRender}
             projectsQuantity={2}
             onBlogMenuClick={handleBlogMenuClick}
-            onHomeClick={moveToHomePage}
-            onPostsClick={moveToPostsPage}
-            onProjectsClick={moveToProjectsPage}
-            onAboutClick={moveToAboutPage}
             onContactClick={handleBlogContactClick}
             onNewPostClick={handleNewPostPopupOpen}
             onNewProjectClick={handleNewProjectPopupOpen}
-            onViewAllPostsClick={moveToPostsPage}
-            onViewAllProjectsClick={moveToProjectsPage}
             onPostClick={handlePostClick}
             onEditPostButtonClick={handleEditPostPopupOpen}
             onDeletePostButtonClick={handleDeletePostModalOpen}
             onEditProjectButtonClick={handleEditProjectPopupOpen}
             onDeleteProjectButtonClick={handleDeleteProjectModalOpen}
+            onHomeClick={moveToHomePage}
+            onPostsClick={moveToPostsPage}
+            onProjectsClick={moveToProjectsPage}
+            onAboutClick={moveToAboutPage}
           />
         </Route>
 
@@ -1363,10 +1365,6 @@ function App() {
             onEditPostButtonClick={handleEditPostPopupOpen}
             onDeletePostButtonClick={handleDeletePostModalOpen}
             onBlogMenuClick={handleBlogMenuClick}
-            onHomeClick={moveToHomePage}
-            onPostsClick={moveToPostsPage}
-            onProjectsClick={moveToProjectsPage}
-            onAboutClick={moveToAboutPage}
             onContactClick={handleBlogContactClick}
             onPostsSearch={handlePostsSearch}
             onPostClick={handlePostClick}
@@ -1384,10 +1382,6 @@ function App() {
           <CurrentPostPage
             activePage="posts"
             onBlogMenuClick={handleBlogMenuClick}
-            onHomeClick={moveToHomePage}
-            onPostsClick={moveToPostsPage}
-            onProjectsClick={moveToProjectsPage}
-            onAboutClick={moveToAboutPage}
             onContactClick={handleBlogContactClick}
             post={selectedPost}
             onBackButtonClick={moveToPreviousPage}
@@ -1406,10 +1400,6 @@ function App() {
             projectsToRender={projectsToRender}
             onNewProjectClick={handleNewProjectPopupOpen}
             onBlogMenuClick={handleBlogMenuClick}
-            onHomeClick={moveToHomePage}
-            onPostsClick={moveToPostsPage}
-            onProjectsClick={moveToProjectsPage}
-            onAboutClick={moveToAboutPage}
             onContactClick={handleBlogContactClick}
             projectsQuantity={currentProjectsNumber}
             onShowMoreProjects={showMoreProjects}
@@ -1425,10 +1415,6 @@ function App() {
             activePage={activeBlogPage}
             projectsToRender={projectsToRender}
             onBlogMenuClick={handleBlogMenuClick}
-            onHomeClick={moveToHomePage}
-            onPostsClick={moveToPostsPage}
-            onProjectsClick={moveToProjectsPage}
-            onAboutClick={moveToAboutPage}
             onContactClick={handleBlogContactClick}
             onAddProjectClick={handleNewProjectPopupOpen}
             onGamesClick={handleGamesClick}
@@ -1617,6 +1603,7 @@ function App() {
         onAddPhotoClick={handleAddPhotoClick}
         onGalleryClick={handleGalleryClick}
         onContactClick={handleContactClick}
+        onBlogClick={handleBlogClick}
         onClose={closeMenu}
         onLogout={handleSignout}
       />
@@ -1634,7 +1621,7 @@ function App() {
         activeBlogPage={activeBlogPage}
         onHomeClick={moveToHomePage}
         onPostsClick={moveToPostsPage}
-        onProjestsClick={moveToProjectsPage}
+        onProjectsClick={moveToProjectsPage}
         onAboutClick={moveToAboutPage}
         onClose={closeBlogMenu}
       />

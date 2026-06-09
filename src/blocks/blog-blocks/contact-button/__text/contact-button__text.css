@@ -1,8 +1,8 @@
 .contact-button__text {
-    display: block;
+  display: block;
 }
-@media screen and (max-width: 768px) {
-    .contact-button__text {
-        display: none;
-    }
+@media screen and (max-width: 900px) {
+  .contact-button__text {
+    display: none;
+  }
 }

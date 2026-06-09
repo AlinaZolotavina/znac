@@ -10,22 +10,21 @@ import ContentNotFound from "./ContentNotFound.js";
 
 function ProjectsPage({
   loggedIn,
-  activePage,
   hashtags,
   activeProjectHashtag,
   projectsToRender,
   onNewProjectClick,
   onBlogMenuClick,
-  onHomeClick,
-  onPostsClick,
-  onProjectsClick,
-  onAboutClick,
   onContactClick,
   projectsQuantity,
   onShowMoreProjects,
   onEditProjectButtonClick,
   onDeleteProjectButtonClick,
   onProjectHashtagClick,
+  onHomeClick,
+  onPostsClick,
+  onProjectsClick,
+  onAboutClick,
 }) {
   useEffect(() => {
     window.scrollTo({
@@ -50,13 +49,12 @@ function ProjectsPage({
   return (
     <div className="blog">
       <BlogHeader
-        activePage={activePage}
         onBlogMenuClick={onBlogMenuClick}
+        onContactClick={onContactClick}
         onHomeClick={onHomeClick}
         onPostsClick={onPostsClick}
-        onProjectsClick={onProjectsClick}
+        onProjectsClic={onProjectsClick}
         onAboutClick={onAboutClick}
-        onContactClick={onContactClick}
       />
       <ProjectHashtags
         hashtags={hashtagsToRender || []}

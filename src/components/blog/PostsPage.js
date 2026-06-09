@@ -10,16 +10,11 @@ import ContentNotFound from "./ContentNotFound.js";
 
 function PostsPage({
   loggedIn,
-  activePage,
   postsToRender,
   onNewPostClick,
   onEditPostButtonClick,
   onDeletePostButtonClick,
   onBlogMenuClick,
-  onHomeClick,
-  onPostsClick,
-  onProjectsClick,
-  onAboutClick,
   onContactClick,
   onPostsSearch,
   onPostClick,
@@ -30,6 +25,10 @@ function PostsPage({
   querySetter,
   onPostHashtagClick,
   activeHashtag,
+  onHomeClick,
+  onPostsClick,
+  onProjectsClick,
+  onAboutClick,
 }) {
   useEffect(() => {
     window.scrollTo({
@@ -41,13 +40,12 @@ function PostsPage({
   return (
     <div className="blog">
       <BlogHeader
-        activePage={activePage}
         onBlogMenuClick={onBlogMenuClick}
+        onContactClick={onContactClick}
         onHomeClick={onHomeClick}
         onPostsClick={onPostsClick}
-        onProjectsClick={onProjectsClick}
+        onProjectsClic={onProjectsClick}
         onAboutClick={onAboutClick}
-        onContactClick={onContactClick}
       />
       <PostsSearch
         onSubmit={onPostsSearch}
