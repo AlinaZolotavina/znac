@@ -9,12 +9,12 @@ function NewProjectPopup({ isOpen, onClose, onAddProject, isSendingReq }) {
   const [projectTitle, setProjectTitle] = useState("");
   const [projectTitleError, setProjectTitleError] = useState("");
   function handleProjectTitleChange(e) {
-    const regex = /^[A-Za-zА-Яа-я0-9 _\"\'-]*$/;
+    const regex = /^[\p{L}0-9 _()\-:!?]*$/u;
     if (e.target.value.length === 0) {
       setProjectTitleError("Title is required");
     } else if (!regex.test(e.target.value)) {
       setProjectTitleError(
-        "Only letters, numbers, quotes and underscores are allowed",
+        "Only letters, numbers, spaces and _()-:!? are allowed",
       );
     } else {
       setProjectTitleError("");

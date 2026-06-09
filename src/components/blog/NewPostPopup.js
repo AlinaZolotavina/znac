@@ -77,11 +77,11 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
   const [title, setTitle] = useState("");
   const [titleError, setTitleError] = useState("");
   function handleTitleChange(e) {
-    const regex = /^[A-Za-zА-Яа-я0-9 _]*$/;
+    const regex = /^[\p{L}0-9 _()\-:!?]*$/u;
     if (e.target.value.length === 0) {
       setTitleError("Title is required");
     } else if (!regex.test(e.target.value)) {
-      setTitleError("Only letters, numbers and underscores are allowed");
+      setTitleError("Only letters, numbers, spaces and _()-:!? are allowed");
     } else {
       setTitleError("");
     }
