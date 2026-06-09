@@ -1537,9 +1537,10 @@ function App() {
           <SignIn onSignin={handleSignin} isSendingReq={isLoading} />
         </Route>
 
-        <Route path="/signup">
+        {/* New users registration is disabled*/}
+        {/* <Route path="/signup">
           <SignUp onSignup={handleSignup} isSendingReq={isLoading} />
-        </Route>
+        </Route> */}
 
         <Route path="/signin/recovery">
           <ForgotPassword

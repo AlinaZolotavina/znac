@@ -1,40 +1,39 @@
 .logout-btn {
-    width: 90px;
-    margin-left: 40px;
-    height: 30px;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 14px;
-    color: #0F1111;
-    transition: opacity .2s ease;
-    cursor: pointer;
+  width: 90px;
+  margin-left: 40px;
+  height: 30px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 14px;
+  color: #0f1111;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
 }
 
 .logout-btn:hover {
-    opacity: .7;
+  opacity: 0.7;
 }
 
 @media screen and (max-width: 1280px) {
-    .logout-btn {
-        width: 100px;
-        font-size: 14px;
-        line-height: 14px;
-    }
+  .logout-btn {
+    width: 100px;
+    font-size: 14px;
+    line-height: 14px;
+  }
 }
 
 @media screen and (max-width: 900px) {
-    .logout-btn {
-        width: 80px;
-        height: 25px;
-        font-size: 12px;
-        line-height: 12px;
-        margin-left: 30px;
-    }
+  .logout-btn {
+    width: 80px;
+    height: 25px;
+    font-size: 12px;
+    line-height: 12px;
+    margin-left: 30px;
+  }
 }
 
 @media screen and (max-width: 700px) {
-    .logout-btn {
-        opacity: 0;
-        visibility: hidden;
-    }
+  .logout-btn {
+    margin: 0;
+  }
 }
