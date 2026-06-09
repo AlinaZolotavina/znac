@@ -1,9 +1,0 @@
-.leaderboard__element {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.leaderboard__element:last-child {
-    margin: 0;
-}

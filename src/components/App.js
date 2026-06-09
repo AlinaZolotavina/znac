@@ -12,7 +12,7 @@ import PhotoPopup from "./PhotoPopup";
 import DeletePhotoModal from "./DeletePhotoModal";
 import ProtectedRoute from "./ProtectedRoute";
 import SignIn from "./SignIn";
-import SignUp from "./SignUp";
+// import SignUp from "./SignUp";
 import Profile from "./Profile";
 import ForgotPassword from "./ForgotPassword";
 import AddPhoto from "./AddPhoto";
@@ -75,10 +75,6 @@ import DeletePostModal from "./blog/DeletePostModal.js";
 import DeleteProjectModal from "./blog/DeleteProjectModal.js";
 
 import getCurrentActivePage from "../utils/getCurrentActivePage.js";
-
-import FindPairMenu from "./find-pair/FindPairMenu.js";
-import GetPlayerName from "./find-pair/GetPlayerName.js";
-import FindPairGame from "./find-pair/FindPairGame.js";
 
 import GameSettings from "./tic-tac-toe/GameSettings.js";
 import Board from "./tic-tac-toe/Board";
@@ -1213,10 +1209,6 @@ function App() {
     history.push("/alina/games/tic-tac-toe");
   }
 
-  function moveToFindPairPage() {
-    history.push("/alina/games/find-pair");
-  }
-
   function handleMusicClick() {
     window.open(
       "https://open.spotify.com/playlist/6jhUvEAvi9laleDSaEenSK?si=m-_cgJDpRH-buMRqXpS6WA&pi=e-5IWoIJ-1TL-8",
@@ -1445,29 +1437,7 @@ function App() {
         </Route>
 
         <Route exact path="/alina/games">
-          <GamesPage
-            onTicTacToeClick={moveToTicTacToePage}
-            onFindPairClick={moveToFindPairPage}
-          />
-        </Route>
-
-        <Route exact path="/alina/games/find-pair">
-          <FindPairMenu />
-        </Route>
-
-        <Route exact path="/alina/games/find-pair/get-player-name">
-          <GetPlayerName playerNameSetter={setFindPairPlayerName} />
-        </Route>
-
-        <Route exact path="/alina/games/find-pair/new-game">
-          <FindPairGame
-            playerName={findPairPlayerName}
-            gameResultSetter={setFindPairGameResult}
-            popupOpener={openFindPairPopup}
-            isGameFinished={isFindPairGameFinished}
-            isGameFinishedSetter={setIsFindPairGameFinished}
-            restartHandlerSetter={setRestarFindPairtHandler}
-          />
+          <GamesPage onTicTacToeClick={moveToTicTacToePage} />
         </Route>
 
         <Route exact path="/alina/games/tic-tac-toe">
