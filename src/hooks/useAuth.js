@@ -12,7 +12,7 @@ export default function useAuth({
   const [currentUser, setCurrentUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
 
-  // 🔐 проверка токена
+  // проверка токена
   const checkToken = () => {
     auth
       .getContent()
@@ -44,7 +44,7 @@ export default function useAuth({
     // eslint-disable-next-line
   }, []);
 
-  // 🔑 login
+  // login
   const handleSignin = async (email, password) => {
     startLoading();
     try {
@@ -62,7 +62,7 @@ export default function useAuth({
     }
   };
 
-  // 📝 signup
+  // signup
   const handleSignup = async (email, password) => {
     startLoading();
     try {
@@ -83,7 +83,7 @@ export default function useAuth({
     }
   };
 
-  // 🚪 logout
+  // logout
   const handleSignout = async () => {
     try {
       await auth.signout();

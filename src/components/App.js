@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import useAuth from "../hooks/useAuth";
 import useRequestState from "../hooks/useRequestStatus";
+import usePhotos from "../hooks/usePhotos.js";
 
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import Home from "./Home";
@@ -87,6 +88,26 @@ import CurrentPostPage from "./blog/CurrentPostPage.js";
 import GamesPage from "./blog/GamesPage.js";
 
 function App() {
+  const { isLoading, startLoading, stopLoading } = useRequestState();
+
+  const openModal = ({ status, message, type = "default" }) => {
+    setModalState({
+      isOpen: true,
+      status,
+      type,
+      message,
+    });
+  };
+
+  const closeModal = () => {
+    setModalState({
+      isOpen: false,
+      status: null,
+      type: "default",
+      message: "",
+    });
+  };
+
   // history & location
   const history = useHistory();
   const location = useLocation();
@@ -97,13 +118,6 @@ function App() {
   const [photosToAdd, setPhotosToAdd] = useState(0);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [currentPhotosNumber, setCurrentPhotosNumber] = useState(0);
-  const [selectedPhoto, setSelectedPhoto] = useState({});
-  const [photoIndex, setPhotoIndex] = useState(0);
-  const [hashtagsOfSelectedPhoto, setHashtagsOfSelectedPhoto] = useState("");
-  const [areHashtagsEditing, setAreHashtagsEditing] = useState(false);
-  const [viewsOfSelectedPhoto, setViewsOfSelectedPhoto] = useState(0);
-  const [isLeftFlipDisabled, setIsLeftFlipDisabled] = useState(false);
-  const [isRightFlipDisabled, setIsRightFlipDisabled] = useState(false);
 
   // popups & modals
   const [isPhotoPopupOpen, setIsPhotoPopupOpen] = useState(false);
@@ -162,15 +176,8 @@ function App() {
     api
       .getInitialData()
       .then((data) => {
-        const [
-          photosData,
-          hashtagsData,
-          postsData,
-          projectsData,
-          projectHashtagsData,
-        ] = data;
-        setAllPhotos(photosData);
-        setPhotosToRender(photosData.reverse());
+        const [, hashtagsData, postsData, projectsData, projectHashtagsData] =
+          data;
         setLastHashtags(hashtagsData);
         setAllPosts(postsData);
         setPostsToRender(postsData.reverse());
@@ -402,86 +409,6 @@ function App() {
       });
   }
 
-  // open photo popup, handle photo flip
-  useEffect(() => {
-    const selectedPhotoIndex = findPhotoIndex(selectedPhoto);
-    setPhotoIndex(selectedPhotoIndex);
-  }, [selectedPhoto]);
-
-  useEffect(() => {
-    setHashtagsOfSelectedPhoto(selectedPhoto.hashtags);
-    setViewsOfSelectedPhoto(selectedPhoto.views);
-  }, [selectedPhoto]);
-
-  useEffect(() => {
-    if (photoIndex === photosToRender.length - 1) {
-      setIsRightFlipDisabled(true);
-    } else {
-      setIsRightFlipDisabled(false);
-    }
-    if (photoIndex === 0) {
-      setIsLeftFlipDisabled(true);
-    } else {
-      setIsLeftFlipDisabled(false);
-    }
-  }, [photoIndex, photosToRender]);
-
-  function handlePhotoClick(photo) {
-    setIsPhotoPopupOpen(true);
-    setSelectedPhoto(photo);
-    setHashtagsOfSelectedPhoto(photo.hashtags);
-    setViewsOfSelectedPhoto(photo.views);
-    increaseViewsNumber(photo._id);
-    const selectedPhotoIndex = findPhotoIndex(photo);
-    setPhotoIndex(selectedPhotoIndex);
-  }
-
-  function findPhotoIndex(photo) {
-    for (let i = 0; i < photosToRender.length; i++) {
-      if (photosToRender[i]._id === photo._id) {
-        return i;
-      }
-    }
-  }
-
-  function handlePhotoFlip(direction) {
-    if (direction === "right") {
-      const rightPhoto = photosToRender[photoIndex + 1];
-      setSelectedPhoto(rightPhoto);
-      increaseViewsNumber(rightPhoto._id);
-      setPhotoIndex((state) => state + 1);
-      setAreHashtagsEditing(false);
-    } else if (direction === "left") {
-      const leftPhoto = photosToRender[photoIndex - 1];
-      setSelectedPhoto(leftPhoto);
-      increaseViewsNumber(leftPhoto._id);
-      setPhotoIndex((state) => state - 1);
-      setAreHashtagsEditing(false);
-    }
-  }
-
-  // add photo
-  function handleAddPhotoViaLink(newPhoto) {
-    startLoading();
-    api
-      .addPhoto(newPhoto)
-      .then((newPhoto) => {
-        openModal({
-          status: "success",
-          message: "Photo was added successfully",
-        });
-        setAllPhotos([newPhoto, ...allPhotos]);
-        setPhotosToRender([newPhoto, ...photosToRender]);
-      })
-      .catch((err) => {
-        openModal({
-          status: "error",
-          message: "Photo cannot be added",
-        });
-      })
-      .finally(() => stopLoading());
-  }
-
   async function handlePhotoUpload(photoData, hashtags, views) {
     startLoading();
     const files = photoData[0];
@@ -519,62 +446,50 @@ function App() {
     stopLoading();
   }
 
+  /////// NEW PHOTO LOGIC
+  const {
+    selectedPhoto,
+    setSelectedPhoto,
+    hashtagsOfSelectedPhoto,
+    viewsOfSelectedPhoto,
+    areHashtagsEditing,
+    setAreHashtagsEditing,
+    handleEditHashtags,
+    isLeftFlipDisabled,
+    isRightFlipDisabled,
+    handlePhotoClick,
+    handlePhotoFlip,
+    handleAddPhotoViaLink,
+    handlePhotoDelete,
+  } = usePhotos({
+    openModal,
+    startLoading,
+    stopLoading,
+    closeAllPopups,
+    setAllPhotos,
+    photosToRender,
+    setPhotosToRender,
+  });
+
+  // open photo popup
+  const handlePhotoOpen = (photo) => {
+    handlePhotoClick(photo);
+    setIsPhotoPopupOpen(true);
+  };
   // delete photo
-  function handleDeletePhotoModalOpen(photo) {
-    setIsDeletePhotoModalOpen(!isDeletePhotoModalOpen);
-    setSelectedPhoto(photo);
-  }
+  const handleDeletePhotoModalOpen = (photo) => {
+    setSelectedPhoto(photo); // или selectPhoto
+    setIsDeletePhotoModalOpen(true);
+  };
 
-  function handlePhotoDelete(photo) {
-    api
-      .deletePhoto(photo._id)
-      .then(() => {
-        setPhotosToRender((state) =>
-          state.filter((p) => p._id !== photo._id && p),
-        );
-        setAllPhotos((state) => state.filter((p) => p._id !== photo._id && p));
-      })
-      .catch((err) => console.log(err))
-      .finally(() => closeAllPopups());
-  }
-
-  // increase views (when open photo popup, when flip photo by buttons' click)
-  function increaseViewsNumber(photoId) {
-    api
-      .increaseViews(photoId)
-      .then((newPhoto) => {
-        setAllPhotos((state) =>
-          state.map((p) => (p._id === photoId ? newPhoto : p)),
-        );
-        setPhotosToRender((state) =>
-          state.map((p) => (p._id === photoId ? newPhoto : p)),
-        );
-        setSelectedPhoto(newPhoto);
-      })
-      .catch((err) => console.log(err));
-  }
+  const handleConfirmDelete = () => {
+    if (!selectedPhoto) return;
+    handlePhotoDelete(selectedPhoto);
+  };
 
   // edit photo hashtags
   function handleEditHashtagsBtnClick() {
     setAreHashtagsEditing(!areHashtagsEditing);
-  }
-
-  function handleEditHashtags(photoId, hashtags) {
-    api
-      .editHashtags(photoId, hashtags)
-      .then((newPhoto) => {
-        setAllPhotos((state) =>
-          state.map((p) => (p._id === photoId ? newPhoto : p)),
-        );
-        setPhotosToRender((state) =>
-          state.map((p) => (p._id === photoId ? newPhoto : p)),
-        );
-        setSelectedPhoto(newPhoto);
-      })
-      .then(() => {
-        setAreHashtagsEditing(false);
-      })
-      .catch((err) => console.log(err));
   }
 
   // handle app navigation & mark active navigation block / page
@@ -708,7 +623,6 @@ function App() {
       };
     },
     [
-      photoIndex,
       photosToRender,
       selectedPhoto,
       isLeftFlipDisabled,
@@ -717,24 +631,6 @@ function App() {
       isDeletePhotoModalOpen,
     ],
   );
-
-  const openModal = ({ status, message, type = "default" }) => {
-    setModalState({
-      isOpen: true,
-      status,
-      type,
-      message,
-    });
-  };
-
-  const closeModal = () => {
-    setModalState({
-      isOpen: false,
-      status: null,
-      type: "default",
-      message: "",
-    });
-  };
 
   function closeAllPopups() {
     setIsPhotoPopupOpen(false);
@@ -1378,8 +1274,6 @@ function App() {
   }
 
   ////////////////////////////////////////
-  const { isLoading, startLoading, stopLoading } = useRequestState();
-
   const {
     currentUser,
     loggedIn,
@@ -1421,7 +1315,7 @@ function App() {
             photos={photosToRender}
             loggedIn={loggedIn}
             homeActive={homeActive}
-            onPhotoClick={handlePhotoClick}
+            onPhotoClick={handlePhotoOpen}
             onDeleteBtnClick={handleDeletePhotoModalOpen}
             onHomeClick={handleHomeClick}
             onGalleryClick={handleGalleryClick}
