@@ -158,6 +158,8 @@
 
 /* logout button */
 @import url(./blocks/znac-blocks/logout-btn/logout-btn.css);
+@import url(./blocks/znac-blocks/logout-btn/_position/logout-btn_position_nav.css);
+@import url(./blocks/znac-blocks/logout-btn/_position/logout-btn_position_burger-menu.css);
 
 /* add photo */
 @import url(./blocks/znac-blocks/add-photo/add-photo.css);
@@ -167,6 +169,7 @@
 @import url(./blocks/znac-blocks/menu/menu.css);
 @import url(./blocks/znac-blocks/menu/_visible/menu_visible.css);
 @import url(./blocks/znac-blocks/menu/__link/menu__link.css);
+@import url(./blocks/znac-blocks/menu/__link/_active/menu__link_active.css);
 @import url(./blocks/znac-blocks/menu/__logout-btn/menu__logout-btn.css);
 @import url(./blocks/znac-blocks/menu/__close-btn/menu__close-btn.css);
 

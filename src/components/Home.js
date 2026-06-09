@@ -28,7 +28,7 @@ function Home({
         />
         {loggedIn && (
           <LogoutButton
-            className="logout-btn"
+            className="logout-btn logout-btn_position_nav"
             email={email}
             onLogout={onLogout}
           />

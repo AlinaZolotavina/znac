@@ -26,11 +26,22 @@ function Menu({
 
   return (
     <div className={`menu ${isOpen && "menu_visible"}`}>
-      <NavLink exact className="menu__link" to="/" onClick={onHomeClick}>
+      <NavLink
+        exact
+        className="menu__link"
+        activeClassName="menu__link_active"
+        to="/"
+        onClick={onHomeClick}
+      >
         HOME
       </NavLink>
       {loggedIn ? (
-        <NavLink className="menu__link" to="/profile" onClick={onProfileClick}>
+        <NavLink
+          className="menu__link"
+          activeClassName="menu__link_active"
+          to="/profile"
+          onClick={onProfileClick}
+        >
           PROFILE
         </NavLink>
       ) : (
@@ -41,6 +52,7 @@ function Menu({
       {loggedIn ? (
         <NavLink
           className="menu__link"
+          activeClassName="menu__link_active"
           to="/addphoto"
           onClick={onAddPhotoClick}
         >
@@ -51,10 +63,20 @@ function Menu({
           CONTACT
         </button>
       )}
-      <NavLink className="menu__link" to="/alina" onClick={onBlogClick}>
+      <NavLink
+        className="menu__link"
+        activeClassName="menu__link_active"
+        to="/alina"
+        onClick={onBlogClick}
+      >
         BLOG
       </NavLink>
-      {loggedIn && <LogoutButton className="logout-btn" onLogout={onLogout} />}
+      {loggedIn && (
+        <LogoutButton
+          className="logout-btn logout-btn_position_burger-menu"
+          onLogout={onLogout}
+        />
+      )}
       <CloseButton classname="close-btn menu__close-btn" onClick={onClose} />
     </div>
   );
