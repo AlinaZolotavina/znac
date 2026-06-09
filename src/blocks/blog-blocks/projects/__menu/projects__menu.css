@@ -16,5 +16,6 @@
 @media (max-width: 500px) {
   .projects__menu {
     padding: 0;
+    width: 80%;
   }
 }

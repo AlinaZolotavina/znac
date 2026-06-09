@@ -97,7 +97,7 @@ function NewProjectPopup({ isOpen, onClose, onAddProject, isSendingReq }) {
     const modifiedTextarea = textarea.replace(/(\r\n|\n|\r)/gm, "");
     onAddProject({
       title: projectTitle,
-      hashtags: projectHashtags,
+      hashtags: projectHashtags.toLowerCase(),
       text: modifiedTextarea,
       link: projectLink,
     });
@@ -175,7 +175,10 @@ function NewProjectPopup({ isOpen, onClose, onAddProject, isSendingReq }) {
             inputName="project link"
           />
         </BlogForm>
-        <BlogCloseButton classname="blog-close-btn" onClick={handleClose} />
+        <BlogCloseButton
+          classname="blog-close-btn blog-close-btn_location_new-project-popup"
+          onClick={handleClose}
+        />
       </div>
     </div>
   );

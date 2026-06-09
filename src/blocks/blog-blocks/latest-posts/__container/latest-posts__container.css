@@ -6,3 +6,9 @@
   max-width: 1000px;
   list-style: none;
 }
+
+@media (max-width: 500px) {
+  .latest-posts__container {
+    margin: 0;
+  }
+}

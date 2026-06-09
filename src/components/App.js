@@ -718,21 +718,21 @@ function App() {
 
   ////////////////////////////  BLOG  ///////////////////////////////////////
 
-  // function viewAllPostsClick() {
-  //     history.push('./alina/posts');
-  //     window.scrollTo({
-  //         top: 0,
-  //         behavior: 'smooth',
-  //     });
-  // }
+  function viewAllPostsClick() {
+    history.push("./alina/posts");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
 
-  // function viewAllProjectsClick() {
-  //     history.push('./alina/projects');
-  //     window.scrollTo({
-  //         top: 0,
-  //         behavior: 'smooth',
-  //     });
-  // }
+  function viewAllProjectsClick() {
+    history.push("./alina/projects");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
 
   function handleNewPostPopupOpen() {
     setIsPostPopupOpen(true);
@@ -1344,6 +1344,8 @@ function App() {
             onContactClick={handleBlogContactClick}
             onNewPostClick={handleNewPostPopupOpen}
             onNewProjectClick={handleNewProjectPopupOpen}
+            onViewAllPostsClick={viewAllPostsClick}
+            onViewAllProjectsClick={viewAllProjectsClick}
             onPostClick={handlePostClick}
             onEditPostButtonClick={handleEditPostPopupOpen}
             onDeletePostButtonClick={handleDeletePostModalOpen}

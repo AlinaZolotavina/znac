@@ -5,3 +5,9 @@
   width: 65vw;
   overflow: hidden;
 }
+
+@media screen and (max-width: 500px) {
+  .latest-posts {
+    width: 85vw;
+  }
+}

@@ -408,6 +408,7 @@
 
 @import url(./blocks/blog-blocks/blog-close-btn/blog-close-btn.css);
 @import url(./blocks/blog-blocks/blog-close-btn/_location/blog-close-btn_location_new-post-popup.css);
+@import url(./blocks/blog-blocks/blog-close-btn/_location/blog-close-btn_location_new-project-popup.css);
 @import url(./blocks/blog-blocks/blog-edit-btn/blog-edit-btn.css);
 @import url(./blocks/blog-blocks/blog-delete-btn/blog-delete-btn.css);
 

@@ -6,4 +6,5 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   grid-area: title;
+  text-wrap: auto;
 }

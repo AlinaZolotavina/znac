@@ -16,8 +16,8 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
 
   const [iconCheckValue, setIconCheckValue] = useState("");
   const [iconError, setIconError] = useState("");
-  function handleIconClick(e) {
-    setIconCheckValue(e.target.value);
+  function handleIconClick(value) {
+    setIconCheckValue(value);
   }
 
   const [slideStart, setSlideStart] = useState(0);

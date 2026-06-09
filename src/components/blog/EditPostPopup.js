@@ -450,7 +450,10 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
             error={textareaError}
           />
         </BlogForm>
-        <BlogCloseButton classname="blog-close-btn" onClick={handleClose} />
+        <BlogCloseButton
+          classname="blog-close-btn blog-close-btn_location_new-post-popup"
+          onClick={handleClose}
+        />
       </div>
     </div>
   );

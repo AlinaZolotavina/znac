@@ -1,6 +1,6 @@
 import { createRequest } from "./request";
-// export const BASE_URL = 'https://api.znac.org';
-export const BASE_URL = "http://localhost:4000";
+export const BASE_URL = "https://api.znac.org";
+// export const BASE_URL = "http://localhost:4000";
 
 const request = createRequest(BASE_URL);
 
