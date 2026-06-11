@@ -1,70 +1,100 @@
-# Getting Started with Create React App
+# ZNAC
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Frontend application for ZNAC, a personal website that combines a portfolio, blog, photo gallery, and administration dashboard for content management.
 
-## Available Scripts
+Designed and developed independently, including UI/UX design, frontend architecture, implementation, deployment coordination, and ongoing maintenance.
 
-In the project directory, you can run:
+## Demo
 
-### `npm start`
+Live version: https://znac.org
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Screenshots
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+<p align="center">
+  <img src="./src/images/screenshots/screenshot-blog.png" width="48%" valign="top">
+  <img src="./src/images/screenshots/screenshot-gallery.png" width="48%" valign="top">
+</p>
 
-### `npm test`
+<p align="center">
+  <img src="./src/images/screenshots/screenshot-posts-page.png" width="48%" valign="top">
+  <img src="./src/images/screenshots/screenshot-new-post.png" width="48%" valign="top">
+</p>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Features
 
-### `npm run build`
+Content Management
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Create, edit, and delete blog posts
+- Manage projects and portfolio entries
+- Upload and organize photos
+- Manage hashtags and categories
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Authentication
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Secure login system
+- Protected administration routes
+- Profile management
 
-### `npm run eject`
+Content Discovery
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- Search functionality
+- Category filtering
+- Hashtag-based navigation
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Responsive Experience
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- Desktop
+- Tablet
+- Mobile
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Design highlights:
 
-## Learn More
+- Custom UI/UX design
+- Responsive layouts
+- Mobile-first approach
+- Reusable components and modal system
+- Consistent visual identity across all sections
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Click here to see [Photo Gallery Design](https://www.figma.com/design/9Ope6gJMSxNlTgW2xmiadI/ZNAC-Photo-Gallery?node-id=0-1&t=LaVz5AllRF0P5ARz-1).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+And here is [Blog & Portfolio Design](https://www.figma.com/design/nr7iR1eT478g28M8Mrc6BX/BLOG?node-id=0-1&t=F0lEJgBEDi8ssd8K-1).
 
-### Code Splitting
+## Architecture
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+The application is organized into reusable UI components and feature-based sections.
 
-### Analyzing the Bundle Size
+Main areas:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- Portfolio
+- Blog
+- Projects
+- Photo Gallery
+- Authentication
+- Profile Management
+- Administration Dashboard
 
-### Making a Progressive Web App
+The application communicates with a custom REST API and uses protected routes for authenticated areas.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Technologies
 
-### Advanced Configuration
+- React
+- React Router
+- JavaScript (ES6+)
+- HTML5
+- CSS3
+- REST API
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Related Repository
 
-### Deployment
+Backend API: ZNAC Backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Deployment
 
-### `npm run build` fails to minify
+Hosted on AWS Lightsail.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Future Improvements
+
+- Migration to TypeScript
+- Performance optimization
+- Accessibility improvements
+- Additional automated testing
