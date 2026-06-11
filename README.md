@@ -10,12 +10,12 @@ Live version: https://znac.org
 
 ## Screenshots
 
-<p align="center">
+<p>
   <img src="./src/images/screenshots/screenshot-blog.png" width="48%" valign="top">
   <img src="./src/images/screenshots/screenshot-gallery.png" width="48%" valign="top">
 </p>
 
-<p align="center">
+<p>
   <img src="./src/images/screenshots/screenshot-posts-page.png" width="48%" valign="top">
   <img src="./src/images/screenshots/screenshot-new-post.png" width="48%" valign="top">
 </p>
@@ -86,7 +86,7 @@ The application communicates with a custom REST API and uses protected routes fo
 
 ## Related Repository
 
-Backend API: ZNAC Backend
+Backend API: [ZNAC API](https://github.com/AlinaZolotavina/znac-api)
 
 ## Deployment
 
