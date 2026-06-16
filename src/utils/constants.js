@@ -1,6 +1,3 @@
-// server addresses
-export const BASE_URL = "http://api.znac.org";
-
 // error messages
 export const INTERNAL_SERVER_ERROR_MSG =
   "Request error. There may be a connection problem or the server is unavailable. Wait and try again.";

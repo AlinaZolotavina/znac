@@ -1,6 +1,5 @@
 import { createRequest } from "./request";
-export const BASE_URL = "https://api.znac.org";
-// export const BASE_URL = "http://localhost:4000";
+const BASE_URL = process.env.REACT_APP_API_URL;
 
 const request = createRequest(BASE_URL);
 

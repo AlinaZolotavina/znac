@@ -407,39 +407,57 @@ function App() {
 
   async function handlePhotoUpload(photoData, hashtags, views) {
     startLoading();
-    const files = photoData[0];
-    const addedPhotos = [];
-    for (const file of files) {
-      const formData = new FormData();
-      formData.append("file", file);
-      const response = await api.uploadPhoto(formData);
-      const data = {
-        link: response.data.path,
-        hashtags,
-        views,
-      };
-      await api
-        .addPhoto(data)
-        .then((newPhoto) => {
-          openModal({
-            status: "success",
-            message: "Photo was added successfully",
-          });
-          addedPhotos.push(newPhoto);
-          setAllPhotos([newPhoto, ...allPhotos]);
-          setPhotosToRender([newPhoto, ...photosToRender]);
-        })
-        .catch((err) => {
-          console.log(err);
-          openModal({
-            status: "error",
-            message: "Something went wrong",
-          });
-        });
+
+    try {
+      const addedPhotos = [];
+
+      for (const file of photoData) {
+        const formData = new FormData();
+
+        formData.append("file", file);
+
+        const response = await api.uploadPhoto(formData);
+
+        if (!response.data?.length) {
+          throw new Error("Upload response is invalid");
+        }
+
+        const photoDataToSave = {
+          link: response.data[0].path,
+          hashtags,
+          views,
+        };
+
+        const newPhoto = await api.addPhoto(photoDataToSave);
+
+        addedPhotos.push(newPhoto);
+      }
+
+      setAllPhotos((prev) => [...addedPhotos, ...prev]);
+
+      setPhotosToRender((prev) => [...addedPhotos, ...prev]);
+
+      openModal({
+        status: "success",
+        message:
+          addedPhotos.length === 1
+            ? "Photo was added successfully"
+            : `${addedPhotos.length} photos were added successfully`,
+      });
+
+      return addedPhotos;
+    } catch (err) {
+      console.error(err);
+
+      openModal({
+        status: "error",
+        message: "Something went wrong",
+      });
+
+      throw err;
+    } finally {
+      stopLoading();
     }
-    setAllPhotos([...addedPhotos, ...allPhotos]);
-    setPhotosToRender([...addedPhotos, ...photosToRender]);
-    stopLoading();
   }
 
   /////// NEW PHOTO LOGIC
