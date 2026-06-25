@@ -27,27 +27,14 @@ import * as auth from "../utils/auth.js";
 import { Switch, Route, useLocation, useHistory } from "react-router-dom";
 
 import {
-  // INTERNAL_SERVER_ERROR_MSG,
   DEFAULT_ERROR_MSG,
-  // NOT_FOUND_ERROR_MSG,
   USER_NOT_FOUND_ERROR_MSG,
-  // PHOTO_NOT_FOUND_ERROR_MSG,
   AUTHORIZATION_FAILED_ERROR_MSG,
-  // UNAUTHORIZED_ERROR_MSG,
-  // BAD_REQUEST_ERROR_MSG,
   SUCCESSFUL_SIGNUP_MSG,
   SIGNUP_ERROR_MSG,
   SIGNOUT_ERROR_MSG,
-  // PHOTO_FORBIDDEN_ERROR_MSG,
-  // ADD_PHOTO_ERROR_MSG,
-  // DELETE_PHOTO_ERROR_MSG,
-  // SUCCESSFUL_PROFILE_UPDATE_MSG,
 } from "../utils/constants";
-import {
-  LARGE_SCREEN_WIDTH,
-  MIDDLE_SCREEN_WIDTH,
-  SMALL_SCREEN_WIDTH,
-} from "../utils/constants";
+import { LARGE_SCREEN_WIDTH, MIDDLE_SCREEN_WIDTH } from "../utils/constants";
 import {
   LARGE_SCREEN_PHOTOS_NUMBER,
   MIDDLE_SCREEN_PHOTOS_NUMBER,
@@ -107,13 +94,20 @@ function App() {
   // history & location
   const history = useHistory();
   const location = useLocation();
+  const isAlinaRoute = location.pathname.startsWith("/alina");
 
   // everything related to photos (including screen width, on which depends the photos to render count)
   const [allPhotos, setAllPhotos] = useState([]);
   const [photosToRender, setPhotosToRender] = useState([]);
+  const [loadedPhotos, setLoadedPhotos] = useState([]);
+  const [visibleLoadedPhotosCount, setVisibleLoadedPhotosCount] = useState(0);
   const [photosToAdd, setPhotosToAdd] = useState(0);
+  const [photosPage, setPhotosPage] = useState(1);
+  const [photosPages, setPhotosPages] = useState(1);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [currentPhotosNumber, setCurrentPhotosNumber] = useState(0);
+  const hasMorePhotos =
+    currentPhotosNumber < allPhotos.length || photosPage < photosPages;
 
   // popups & modals
   const [isPhotoPopupOpen, setIsPhotoPopupOpen] = useState(false);
@@ -130,7 +124,6 @@ function App() {
   const [hashtag, setHashtag] = useState(""); // search input
   const [lastHashtags, setLastHashtags] = useState([]);
 
-  /////////////////////////////// BLOG /////////////////////////////
   const [isBlogMenuOpen, setIsBlogMenuOpen] = useState(false);
   const [isGetInTouchPopupOpen, setIsGetInTouchPopupOpen] = useState(false);
   const [isPostPopupOpen, setIsPostPopupOpen] = useState(false);
@@ -142,19 +135,33 @@ function App() {
     useState(false);
   const [query, setQuery] = useState("");
   const [allPosts, setAllPosts] = useState([]);
+  const [loadedPosts, setLoadedPosts] = useState([]);
   const [postsToRender, setPostsToRender] = useState([]);
+  const [currentPostsNumber, setCurrentPostsNumber] = useState(3);
+  const [postsToAdd, setPostsToAdd] = useState(0);
+  const [postsPage, setPostsPage] = useState(1);
+  const [postsPages, setPostsPages] = useState(1);
+  const hasMorePosts =
+    currentPostsNumber < allPosts.length || postsPage < postsPages;
   const [postToEdit, setPostToEdit] = useState({});
   const [selectedPost, setSelectedPost] = useState({});
   const [postToDelete, setPostToDelete] = useState({});
+
+  const [allProjects, setAllProjects] = useState([]);
+  const [loadedProjects, setLoadedProjects] = useState([]);
+  const [projectsToRender, setProjectsToRender] = useState([]);
+  const [currentProjectsNumber, setCurrentProjectsNumber] = useState(2);
+  const [visibleLoadedProjectsCount, setVisibleLoadedProjectsCount] =
+    useState(0);
+  const [projectsToAdd, setProjectsToAdd] = useState(0);
+  const [projectsPage, setProjectsPage] = useState(1);
+  const [projectsPages, setProjectsPages] = useState(1);
+  const hasMoreProjects =
+    currentProjectsNumber < allProjects.length || projectsPage < projectsPages;
   const [projectToEdit, setProjectToEdit] = useState({});
   const [projectToDelete, setProjectToDelete] = useState({});
-  const [projectHashtags, setProjectHashtags] = useState("");
-  const [allProjects, setAllProjects] = useState([]);
-  const [projectsToRender, setProjectsToRender] = useState([]);
-  const [currentPostsNumber, setCurrentPostsNumber] = useState(3);
-  const [postsToAdd, setPostsToAdd] = useState(0);
-  const [currentProjectsNumber, setCurrentProjectsNumber] = useState(3);
-  const [projectsToAdd, setProjectsToAdd] = useState(0);
+
+  const [projectHashtags, setProjectHashtags] = useState([]);
   const [activePostHashtag, setActivePostHashtag] = useState("All");
   const [activeProjectHashtag, setActiveProjectHashtag] = useState("All");
   const [activeBlogPage, setActiveBlogPage] = useState("Home");
@@ -166,25 +173,75 @@ function App() {
   const [winner, setWinner] = useState(null);
   const [fireworkVisibility, setFireworkVisibility] = useState(false);
 
-  // get photos to render
   useEffect(() => {
-    setHomeActive("nav__link_active");
+    if (loadedPhotos.length > 0) {
+      return;
+    }
+
+    loadPhotos({
+      page: 1,
+      append: false,
+      hashtag: "",
+    });
+  }, [loadedPhotos.length]);
+
+  useEffect(() => {
+    if (lastHashtags.length > 0) {
+      return;
+    }
+
     api
-      .getInitialData()
-      .then((data) => {
-        const [, hashtagsData, postsData, projectsData, projectHashtagsData] =
-          data;
-        setLastHashtags(hashtagsData);
-        setAllPosts(postsData);
-        setPostsToRender(postsData.reverse());
-        setAllProjects(projectsData);
-        setProjectsToRender(projectsData.reverse());
-        setProjectHashtags(projectHashtagsData);
+      .getHashtags(1, 10)
+      .then((response) => {
+        setLastHashtags(response.data);
       })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+      .catch(console.log);
+  }, [lastHashtags.length]);
+
+  useEffect(() => {
+    setPhotosToRender(allPhotos.slice(0, currentPhotosNumber));
+  }, [allPhotos, currentPhotosNumber]);
+
+  useEffect(() => {
+    if (!isAlinaRoute || allPosts.length > 0) {
+      return;
+    }
+
+    loadPosts();
+  }, [isAlinaRoute, loadedPosts.length]);
+
+  useEffect(() => {
+    setPostsToRender(allPosts.slice(0, currentPostsNumber));
+  }, [allPosts, currentPostsNumber]);
+
+  useEffect(() => {
+    if (!isAlinaRoute || loadedProjects.length > 0) {
+      return;
+    }
+
+    loadProjects({
+      page: 1,
+      append: false,
+      hashtag: "",
+    });
+  }, [isAlinaRoute, loadedProjects.length]);
+
+  useEffect(() => {
+    setProjectsToRender(allProjects.slice(0, currentProjectsNumber));
+  }, [allProjects, currentProjectsNumber]);
+
+  useEffect(() => {
+    if (!isAlinaRoute || projectHashtags.length > 0) {
+      return;
+    }
+
+    api
+      .getProjectHashtags()
+      .then((hashtags) => {
+        setProjectHashtags(hashtags);
+      })
+      .catch(console.log);
+  }, [isAlinaRoute, projectHashtags.length]);
 
   // calculate photos count depending on screen demensions
   // (including when changing the screen resolution)
@@ -197,12 +254,7 @@ function App() {
     calculatePhotosCount();
     calculatePostsCount();
     calculateProjectsCount();
-  }, [
-    currentPhotosNumber,
-    currentPostsNumber,
-    currentProjectsNumber,
-    screenWidth,
-  ]);
+  }, [screenWidth]);
 
   const updateDemensions = () => {
     let resizeTimeout;
@@ -214,74 +266,313 @@ function App() {
     }
   };
 
-  const calculatePhotosCount = () => {
-    let initialPhotosNumber;
-
+  const getPhotosLayout = () => {
     if (screenWidth >= LARGE_SCREEN_WIDTH) {
-      initialPhotosNumber = LARGE_SCREEN_PHOTOS_NUMBER;
-      setPhotosToAdd(LARGE_SCREEN_PHOTOS_TO_ADD_NUMBER);
+      return {
+        initialPhotosNumber: LARGE_SCREEN_PHOTOS_NUMBER,
+        photosToAdd: LARGE_SCREEN_PHOTOS_TO_ADD_NUMBER,
+      };
     }
-    if (screenWidth < MIDDLE_SCREEN_WIDTH) {
-      initialPhotosNumber = MIDDLE_SCREEN_PHOTOS_NUMBER;
-      setPhotosToAdd(MIDDLE_SCREEN_PHOTOS_TO_ADD_NUMBER);
+
+    if (screenWidth >= MIDDLE_SCREEN_WIDTH) {
+      return {
+        initialPhotosNumber: MIDDLE_SCREEN_PHOTOS_NUMBER,
+        photosToAdd: MIDDLE_SCREEN_PHOTOS_TO_ADD_NUMBER,
+      };
     }
-    if (screenWidth < SMALL_SCREEN_WIDTH) {
-      initialPhotosNumber = SMALL_SCREEN_PHOTOS_NUMBER;
-      setPhotosToAdd(SMALL_SCREEN_PHOTOS_TO_ADD_NUMBER);
-    }
-    if (currentPhotosNumber < initialPhotosNumber) {
-      setCurrentPhotosNumber(initialPhotosNumber);
-    }
+
+    return {
+      initialPhotosNumber: SMALL_SCREEN_PHOTOS_NUMBER,
+      photosToAdd: SMALL_SCREEN_PHOTOS_TO_ADD_NUMBER,
+    };
+  };
+
+  const calculatePhotosCount = () => {
+    const { initialPhotosNumber, photosToAdd: nextPhotosToAdd } =
+      getPhotosLayout();
+
+    setPhotosToAdd(nextPhotosToAdd);
+
+    setCurrentPhotosNumber((current) => Math.max(current, initialPhotosNumber));
   };
 
   const calculatePostsCount = () => {
     let initialPostsNumber;
+    let nextPostsToAdd;
     if (screenWidth >= LARGE_SCREEN_WIDTH) {
       initialPostsNumber = 6;
-      setPostsToAdd(4);
-    }
-    if (screenWidth < MIDDLE_SCREEN_WIDTH) {
+      nextPostsToAdd = 4;
+    } else if (screenWidth >= MIDDLE_SCREEN_WIDTH) {
       initialPostsNumber = 3;
-      setPostsToAdd(3);
-    }
-    if (screenWidth < SMALL_SCREEN_WIDTH) {
+      nextPostsToAdd = 3;
+    } else {
       initialPostsNumber = 3;
-      setPostsToAdd(2);
+      nextPostsToAdd = 2;
     }
-    if (currentPostsNumber < initialPostsNumber) {
-      setCurrentPostsNumber(initialPostsNumber);
+    setPostsToAdd(nextPostsToAdd);
+    setCurrentPostsNumber((current) => Math.max(current, initialPostsNumber));
+  };
+
+  const getProjectsLayout = () => {
+    if (screenWidth >= LARGE_SCREEN_WIDTH) {
+      return {
+        initialProjectsNumber: 9,
+        projectsToAdd: 3,
+      };
     }
+
+    if (screenWidth >= MIDDLE_SCREEN_WIDTH) {
+      return {
+        initialProjectsNumber: 4,
+        projectsToAdd: 2,
+      };
+    }
+
+    return {
+      initialProjectsNumber: 2,
+      projectsToAdd: 2,
+    };
   };
 
   const calculateProjectsCount = () => {
-    let initialProjectsNumber;
-    if (screenWidth >= LARGE_SCREEN_WIDTH) {
-      initialProjectsNumber = 9;
-      setProjectsToAdd(3);
-    }
-    if (screenWidth < MIDDLE_SCREEN_WIDTH) {
-      initialProjectsNumber = 4;
-      setProjectsToAdd(2);
-    }
-    if (screenWidth < SMALL_SCREEN_WIDTH) {
-      initialProjectsNumber = 2;
-      setProjectsToAdd(2);
-    }
-    if (currentProjectsNumber < initialProjectsNumber) {
-      setCurrentProjectsNumber(initialProjectsNumber);
-    }
+    const { initialProjectsNumber, projectsToAdd } = getProjectsLayout();
+
+    setProjectsToAdd(projectsToAdd);
+
+    setCurrentProjectsNumber((current) =>
+      Math.max(current, initialProjectsNumber),
+    );
   };
 
+  function loadPhotos({ page = 1, append = false, hashtag = "" } = {}) {
+    const normalizedHashtag = hashtag.trim().toLowerCase();
+    const hasFilter = Boolean(normalizedHashtag);
+
+    const request = hasFilter
+      ? api.findPhoto(normalizedHashtag, page, 20)
+      : api.getPhotos(page, 20);
+
+    return request
+      .then((response) => {
+        const { data, page: responsePage, pages } = response;
+
+        setAllPhotos((previousPhotos) =>
+          append ? [...previousPhotos, ...data] : data,
+        );
+
+        // Кэшируем только обычную галерею.
+        if (!hasFilter) {
+          setLoadedPhotos((previousPhotos) =>
+            append ? [...previousPhotos, ...data] : data,
+          );
+        }
+
+        setPhotosPage(responsePage);
+        setPhotosPages(pages);
+
+        if (!append) {
+          const { initialPhotosNumber } = getPhotosLayout();
+          const visibleCount = Math.min(initialPhotosNumber, data.length);
+
+          setCurrentPhotosNumber(visibleCount);
+
+          if (!hasFilter) {
+            setVisibleLoadedPhotosCount(visibleCount);
+          }
+        }
+
+        return response;
+      })
+      .catch((err) => {
+        console.log(err);
+        throw err;
+      });
+  }
+
   function showMorePhotos() {
-    setCurrentPhotosNumber((prev) => prev + photosToAdd);
+    const nextVisibleCount = currentPhotosNumber + photosToAdd;
+    const isFiltered = Boolean(hashtag.trim());
+
+    if (nextVisibleCount <= allPhotos.length) {
+      setCurrentPhotosNumber(nextVisibleCount);
+
+      if (!isFiltered) {
+        setVisibleLoadedPhotosCount(nextVisibleCount);
+      }
+
+      return;
+    }
+
+    if (photosPage >= photosPages) {
+      setCurrentPhotosNumber(allPhotos.length);
+
+      if (!isFiltered) {
+        setVisibleLoadedPhotosCount(allPhotos.length);
+      }
+
+      return;
+    }
+
+    loadPhotos({
+      page: photosPage + 1,
+      append: true,
+      hashtag,
+    })
+      .then((response) => {
+        const nextCount = Math.min(
+          nextVisibleCount,
+          allPhotos.length + response.data.length,
+        );
+
+        setCurrentPhotosNumber(nextCount);
+
+        if (!isFiltered) {
+          setVisibleLoadedPhotosCount(nextCount);
+        }
+      })
+      .catch(console.log);
+  }
+
+  function loadProjects({ page = 1, append = false, hashtag = "" } = {}) {
+    const normalizedHashtag = hashtag === "All" ? "" : hashtag.trim();
+
+    const hasFilter = Boolean(normalizedHashtag);
+
+    return api
+      .getProjects(page, 12, {
+        hashtag: normalizedHashtag,
+      })
+      .then((response) => {
+        const { data, page: responsePage, pages } = response;
+
+        setAllProjects((previousProjects) =>
+          append ? [...previousProjects, ...data] : data,
+        );
+
+        if (!hasFilter) {
+          setLoadedProjects((previousProjects) =>
+            append ? [...previousProjects, ...data] : data,
+          );
+        }
+
+        setProjectsPage(responsePage);
+        setProjectsPages(pages);
+
+        if (!append) {
+          const { initialProjectsNumber } = getProjectsLayout();
+          const visibleCount = Math.min(initialProjectsNumber, data.length);
+
+          setCurrentProjectsNumber(visibleCount);
+
+          if (!hasFilter) {
+            setVisibleLoadedProjectsCount(visibleCount);
+          }
+        }
+
+        return response;
+      })
+      .catch((err) => {
+        console.log(err);
+        throw err;
+      });
   }
 
   function showMoreProjects() {
-    setCurrentProjectsNumber((prev) => prev + projectsToAdd);
+    const nextVisibleCount = currentProjectsNumber + projectsToAdd;
+
+    if (nextVisibleCount <= allProjects.length) {
+      setCurrentProjectsNumber(nextVisibleCount);
+      if (!activeProjectHashtag) {
+        setVisibleLoadedProjectsCount(nextVisibleCount);
+      }
+      return;
+    }
+
+    if (projectsPage >= projectsPages) {
+      setCurrentProjectsNumber(allProjects.length);
+      if (!activeProjectHashtag) {
+        setVisibleLoadedProjectsCount(allProjects.length);
+      }
+      return;
+    }
+
+    loadProjects({
+      page: projectsPage + 1,
+      append: true,
+      hashtag: activeProjectHashtag,
+    }).then(() => {
+      setCurrentProjectsNumber(nextVisibleCount);
+      if (!activeProjectHashtag) {
+        setVisibleLoadedProjectsCount(allProjects.length);
+      }
+    });
+  }
+
+  function loadPosts({
+    page = 1,
+    append = false,
+    search = "",
+    theme = "All",
+  } = {}) {
+    const normalizedSearch = search.trim();
+    const hasSearch = Boolean(normalizedSearch);
+    const hasThemeFilter = theme && theme !== "All";
+    const hasFilters = hasSearch || hasThemeFilter;
+
+    return api
+      .getPosts(page, 8, {
+        search: normalizedSearch,
+        theme,
+      })
+      .then((response) => {
+        const { data, page: responsePage, pages } = response;
+
+        // The current list is standard or filtering results
+        setAllPosts((previousPosts) =>
+          append ? [...previousPosts, ...data] : data,
+        );
+
+        // Update the source list cache only there are no filters
+        if (!hasFilters) {
+          setLoadedPosts((previousPosts) =>
+            append ? [...previousPosts, ...data] : data,
+          );
+        }
+
+        setPostsPage(responsePage);
+        setPostsPages(pages);
+
+        // For a new set of results (search / theme), use an adaptive initial quantity
+        if (!append) {
+          setCurrentPostsNumber((current) => Math.max(current, 3));
+        }
+
+        return response;
+      })
+      .catch(console.log);
   }
 
   function showMorePosts() {
-    setCurrentPostsNumber((prev) => prev + postsToAdd);
+    const nextVisibleCount = currentPostsNumber + postsToAdd;
+
+    if (nextVisibleCount <= allPosts.length) {
+      setCurrentPostsNumber(nextVisibleCount);
+      return;
+    }
+
+    if (postsPage >= postsPages) {
+      setCurrentPostsNumber(allPosts.length);
+      return;
+    }
+
+    loadPosts({
+      page: postsPage + 1,
+      append: true,
+      search: query,
+      theme: activePostHashtag,
+    }).then(() => {
+      setCurrentPostsNumber(nextVisibleCount);
+    });
   }
 
   // password reset
@@ -481,7 +772,7 @@ function App() {
     stopLoading,
     closeAllPopups,
     setAllPhotos,
-    photosToRender,
+    allPhotos,
     setPhotosToRender,
   });
 
@@ -665,12 +956,6 @@ function App() {
     setHashtag("");
   }, [location.pathname]);
 
-  useEffect(() => {
-    if (hashtag === "" || !hashtag) {
-      setPhotosToRender(allPhotos);
-    }
-  }, [hashtag]);
-
   function checkUniqueness(obj, arr) {
     if (arr.length === 0) {
       return true;
@@ -684,54 +969,62 @@ function App() {
     return true;
   }
 
-  function handleSearch(hashtag) {
-    api
-      .findPhoto(hashtag.toLowerCase())
-      .then((data) => {
-        const photosData = data.reverse();
-        setPhotosToRender(photosData);
-        const isHashtagUniq = checkUniqueness(hashtag, lastHashtags);
-        if (photosData.length !== 0) {
-          if (isHashtagUniq) {
-            api
-              .addHashtag(hashtag)
-              .then((data) => {
-                setLastHashtags([
-                  {
-                    name: data.name,
-                    _id: data._id,
-                    __v: data.__v,
-                    createdAt: data.createdAt,
-                  },
-                  ...lastHashtags,
-                ]);
-              })
-              .catch((err) => console.log(err));
-          } else {
-            const hashtagsArr = [...lastHashtags].filter(
-              (h) => h.name.toString() !== hashtag.toString(),
-            );
-            api.updateHashtag(hashtag).then((data) => {
-              setLastHashtags([
-                {
-                  name: data.name,
-                  _id: data._id,
-                  __v: data.__v,
-                  createdAt: data.createdAt,
-                },
-                ...hashtagsArr,
-              ]);
-            });
-          }
+  function handlePhotoSearch(nextValue) {
+    const normalizedHashtag = nextValue.trim().toLowerCase();
+
+    setHashtag(nextValue);
+
+    // Поиск очищен: возвращаем нефильтрованный кэш без нового запроса.
+    if (!normalizedHashtag) {
+      const { initialPhotosNumber } = getPhotosLayout();
+
+      const restoredVisibleCount = Math.min(
+        visibleLoadedPhotosCount || initialPhotosNumber,
+        loadedPhotos.length,
+      );
+
+      setAllPhotos(loadedPhotos);
+      setPhotosPage(1);
+      setPhotosPages(Math.max(1, Math.ceil(loadedPhotos.length / 20)));
+      setCurrentPhotosNumber(restoredVisibleCount);
+
+      return;
+    }
+
+    loadPhotos({
+      page: 1,
+      append: false,
+      hashtag: normalizedHashtag,
+    })
+      .then((response) => {
+        if (response.data.length === 0) {
+          return;
         }
+
+        // Оставь здесь свою текущую логику обновления lastHashtags:
+        // checkUniqueness / api.addHashtag / api.updateHashtag.
       })
-      .catch((err) => console.log(err));
+      .catch(console.log);
   }
 
-  function handleHashtagClick(hashtag) {
+  function handleClearPhotoSearch() {
+    const { initialPhotosNumber } = getPhotosLayout();
+
+    const restoredVisibleCount = Math.min(
+      visibleLoadedPhotosCount || initialPhotosNumber,
+      loadedPhotos.length,
+    );
+
+    setHashtag("");
+    setAllPhotos(loadedPhotos);
+    setPhotosPage(1);
+    setPhotosPages(Math.max(1, Math.ceil(loadedPhotos.length / 20)));
+    setCurrentPhotosNumber(restoredVisibleCount);
+  }
+
+  function handlePhotoHashtagClick(nextHashtag) {
     closeAllPopups();
-    setHashtag(hashtag);
-    handleSearch(hashtag);
+    handlePhotoSearch(nextHashtag);
   }
 
   ////////////////////////////  BLOG  ///////////////////////////////////////
@@ -809,45 +1102,41 @@ function App() {
     }
   }, [query, activePostHashtag]);
 
-  function handlePostsSearch(query, theme) {
-    const lowerCaseQuery = query.toLowerCase();
-    const capitalizedQuery =
-      query[0].toUpperCase() + query.substr(1, query.length);
-    let foundPosts;
-    if (theme === "All") {
-      foundPosts = allPosts.filter(
-        (post) =>
-          post.theme.includes(lowerCaseQuery) ||
-          post.theme.includes(query) ||
-          post.theme.includes(capitalizedQuery) ||
-          post.title.includes(lowerCaseQuery) ||
-          post.title.includes(query) ||
-          post.title.includes(capitalizedQuery) ||
-          post.text.includes(lowerCaseQuery) ||
-          post.text.includes(query) ||
-          post.text.includes(capitalizedQuery),
-      );
-      setPostsToRender(foundPosts);
-    } else {
-      foundPosts = allPosts.filter(
-        (post) =>
-          post.theme === theme &&
-          (post.theme.includes(lowerCaseQuery) ||
-            post.title.includes(lowerCaseQuery) ||
-            post.text.includes(lowerCaseQuery)),
-      );
-      setPostsToRender(foundPosts);
+  function handlePostsSearch(nextQuery) {
+    const normalizedQuery = nextQuery.trim();
+    const hasThemeFilter = activePostHashtag && activePostHashtag !== "All";
+
+    console.log({
+      normalizedQuery,
+      activePostHashtag,
+      loadedPosts,
+      allPosts,
+    });
+
+    setQuery(nextQuery);
+
+    if (!normalizedQuery && !hasThemeFilter) {
+      if (loadedPosts.length > 0) {
+        setAllPosts(loadedPosts);
+        setPostsPage(1);
+        setPostsPages(Math.ceil(loadedPosts.length / 8));
+        setCurrentPostsNumber(loadedPosts.length);
+      } else {
+        loadPosts({
+          page: 1,
+          search: "",
+          theme: "All",
+        });
+      }
+
+      return;
     }
 
-    /////// no need to send a request to the server, because post search works on the client side
-    /////// but still can be useful someday though :)
-
-    // api.findPost({ query: modifiedQuery, theme })
-    //     .then(data => {
-    //         const postsData = data.reverse();
-    //         setPostsToRender(postsData);
-    //     })
-    //     .catch(err => console.log(err));
+    loadPosts({
+      page: 1,
+      search: normalizedQuery,
+      theme: activePostHashtag,
+    });
   }
 
   function handleProjectsFilter(hashtag) {
@@ -862,61 +1151,43 @@ function App() {
   }
 
   function handleProjectHashtagClick(hashtag) {
-    // console.log(hashtag);
-    if (hashtag === "All") {
-      setProjectsToRender(allProjects);
-      setActiveProjectHashtag("All");
-    } else {
-      handleProjectsFilter(hashtag);
-      setActiveProjectHashtag(hashtag);
+    const isAll = hashtag === "All";
+    const isSameHashtag = activeProjectHashtag === hashtag;
+
+    const nextHashtag = isAll || isSameHashtag ? "" : hashtag;
+
+    setActiveProjectHashtag(nextHashtag);
+
+    if (!nextHashtag) {
+      const { initialProjectsNumber } = getProjectsLayout();
+
+      const restoredVisibleCount = Math.min(
+        visibleLoadedProjectsCount || initialProjectsNumber,
+        loadedProjects.length,
+      );
+
+      setAllProjects(loadedProjects);
+      setProjectsPage(1);
+      setProjectsPages(Math.max(1, Math.ceil(loadedProjects.length / 12)));
+      setCurrentProjectsNumber(restoredVisibleCount);
+
+      return;
     }
+
+    loadProjects({
+      page: 1,
+      append: false,
+      hashtag: nextHashtag,
+    });
   }
 
-  function handlePostHashtagClick(theme, query) {
-    let lowerCaseQuery;
-    let capitalizedQuery;
-    let selectedPosts;
-
-    if (query) {
-      lowerCaseQuery = query.toLowerCase();
-      capitalizedQuery = query[0].toUpperCase() + query.substr(1, query.length);
-      setActivePostHashtag(theme);
-      if (theme !== "All") {
-        selectedPosts = allPosts.filter(
-          (post) =>
-            post.theme === theme &&
-            (post.theme.includes(lowerCaseQuery) ||
-              post.theme.includes(query) ||
-              post.theme.includes(capitalizedQuery) ||
-              post.title.includes(lowerCaseQuery) ||
-              post.title.includes(query) ||
-              post.title.includes(capitalizedQuery) ||
-              post.text.includes(lowerCaseQuery) ||
-              post.text.includes(query) ||
-              post.text.includes(capitalizedQuery)),
-        );
-        setPostsToRender(selectedPosts);
-      } else {
-        selectedPosts = allPosts.filter(
-          (post) =>
-            post.theme.includes(lowerCaseQuery) ||
-            post.theme.includes(query) ||
-            post.theme.includes(capitalizedQuery) ||
-            post.title.includes(lowerCaseQuery) ||
-            post.title.includes(query) ||
-            post.title.includes(capitalizedQuery) ||
-            post.text.includes(lowerCaseQuery) ||
-            post.text.includes(query) ||
-            post.text.includes(capitalizedQuery),
-        );
-        setPostsToRender(selectedPosts);
-      }
-    } else {
-      console.log("no query");
-      setActivePostHashtag(theme);
-      selectedPosts = allPosts.filter((post) => post.theme === theme);
-      setPostsToRender(selectedPosts);
-    }
+  function handlePostHashtagClick(theme) {
+    setActivePostHashtag(theme);
+    loadPosts({
+      page: 1,
+      search: query,
+      theme,
+    });
   }
 
   // function hadleProjectHashtagClick(hashtag) {
@@ -1218,7 +1489,6 @@ function App() {
   }
 
   function handleBlogClick() {
-    console.log("blog click");
     window.scrollTo(0, 0);
     closeMenu();
   }
@@ -1335,12 +1605,14 @@ function App() {
             onBlogClick={handleBlogClick}
             onGalleryClick={handleGalleryClick}
             onContactClick={handleContactClick}
-            onHashtagClick={handleHashtagClick}
+            onHashtagClick={handlePhotoHashtagClick}
             hashtag={hashtag}
             photoHashtags={lastHashtags || []}
             hashtagSetter={setHashtag}
-            onSearch={handleSearch}
+            onSearch={handlePhotoSearch}
+            onClearSearch={handleClearPhotoSearch}
             photosQuantity={currentPhotosNumber}
+            hasMorePhotos={hasMorePhotos}
             onShowMore={showMorePhotos}
             email={currentUser.email}
             onLogout={handleSignout}
@@ -1388,6 +1660,7 @@ function App() {
             onContactClick={handleBlogContactClick}
             onPostsSearch={handlePostsSearch}
             onPostClick={handlePostClick}
+            hasMorePosts={hasMorePosts}
             postsQuantity={currentPostsNumber}
             onShowMorePosts={showMorePosts}
             isLoading={isLoading}
@@ -1418,6 +1691,7 @@ function App() {
             hashtags={projectHashtags}
             activeProjectHashtag={activeProjectHashtag}
             projectsToRender={projectsToRender}
+            hasMoreProjects={hasMoreProjects}
             onNewProjectClick={handleNewProjectPopupOpen}
             onBlogMenuClick={handleBlogMenuClick}
             onContactClick={handleBlogContactClick}
@@ -1586,7 +1860,7 @@ function App() {
         photoHashtags={hashtagsOfSelectedPhoto || []}
         views={viewsOfSelectedPhoto}
         onClose={closeAllPopups}
-        onHashtagClick={handleHashtagClick}
+        onHashtagClick={handlePhotoHashtagClick}
         areHashtagsEditing={areHashtagsEditing}
         onEditHashtags={handleEditHashtags}
         isSendingReq={isLoading}

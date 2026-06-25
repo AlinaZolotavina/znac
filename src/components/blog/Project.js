@@ -7,8 +7,6 @@ function Project({
   onHashtagClick,
   onEditProjectButtonClick,
 }) {
-  const projectHashtags = project.hashtags.split(" ");
-
   function handleClick(e) {
     if (e.target.id === "project-delete-btn") {
       onDeleteProjectButtonClick(project);
@@ -20,7 +18,7 @@ function Project({
     <div className="project" onClick={handleClick}>
       <h3 className="project__title">{project.title}</h3>
       <ul className="project__hashtags">
-        {projectHashtags.map((hashtag, index) => (
+        {project.hashtags.map((hashtag, index) => (
           <BlogHashtag
             key={`${project._id}-${hashtag}-${index}`}
             hashtag={hashtag}

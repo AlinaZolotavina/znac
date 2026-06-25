@@ -23,7 +23,9 @@ function Main({
   photoHashtags,
   hashtagSetter,
   onSearch,
+  onClearSearch,
   photosQuantity,
+  hasMorePhotos,
   onShowMore,
   email,
   onLogout,
@@ -51,6 +53,7 @@ function Main({
       </div>
       <Search
         onSubmit={onSearch}
+        onClearSearch={onClearSearch}
         isLoading={isSendingReq}
         hashtag={hashtag}
         hashtagSetter={hashtagSetter}
@@ -67,7 +70,7 @@ function Main({
         photosQuantity={photosQuantity}
         isSearching={isSearching}
       />
-      {photos.length > photosQuantity ? <More onShowMore={onShowMore} /> : ""}
+      {hasMorePhotos && <More onShowMore={onShowMore} />}
     </main>
   );
 }

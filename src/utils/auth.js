@@ -1,6 +1,5 @@
 import { createRequest } from "./request";
 const BASE_URL = process.env.REACT_APP_API_URL;
-
 const request = createRequest(BASE_URL);
 
 export const signup = (email, password) => {

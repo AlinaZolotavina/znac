@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import api from "../utils/api";
 
 export default function usePhotos({
@@ -7,25 +7,13 @@ export default function usePhotos({
   stopLoading,
   closeAllPopups,
   setAllPhotos,
-  photosToRender,
+  allPhotos,
   setPhotosToRender,
 }) {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const hashtagsOfSelectedPhoto = selectedPhoto?.hashtags || [];
   const viewsOfSelectedPhoto = selectedPhoto?.views || 0;
   const [areHashtagsEditing, setAreHashtagsEditing] = useState(false);
-
-  // get photos to render
-  useEffect(() => {
-    api
-      .getInitialData()
-      .then(([photosData]) => {
-        const reversed = [...photosData].reverse();
-        setAllPhotos(reversed);
-        setPhotosToRender(reversed);
-      })
-      .catch(console.log);
-  }, []);
 
   // open photo popup, handle photo flip
 
@@ -35,16 +23,16 @@ export default function usePhotos({
   }
 
   const currentIndex = selectedPhoto
-    ? photosToRender.findIndex((p) => p._id === selectedPhoto._id)
+    ? allPhotos.findIndex((p) => p._id === selectedPhoto._id)
     : -1;
 
   const isLeftFlipDisabled = currentIndex <= 0;
 
   const isRightFlipDisabled =
-    currentIndex === -1 || currentIndex >= photosToRender.length - 1;
+    currentIndex === -1 || currentIndex >= allPhotos.length - 1;
 
   function handlePhotoFlip(direction) {
-    const currentIndex = photosToRender.findIndex(
+    const currentIndex = allPhotos.findIndex(
       (p) => p._id === selectedPhoto?._id,
     );
 
@@ -53,7 +41,7 @@ export default function usePhotos({
     const nextIndex =
       direction === "right" ? currentIndex + 1 : currentIndex - 1;
 
-    const nextPhoto = photosToRender[nextIndex];
+    const nextPhoto = allPhotos[nextIndex];
     if (!nextPhoto) return;
 
     increaseViewsNumber(nextPhoto._id);

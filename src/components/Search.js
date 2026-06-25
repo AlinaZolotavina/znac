@@ -1,38 +1,43 @@
 import { useEffect, useState } from "react";
 
-function Search({ onSubmit, isLoading, hashtag, hashtagSetter }) {
+function Search({
+  onSubmit,
+  onClearSearch,
+  isLoading,
+  hashtag,
+  hashtagSetter,
+}) {
   const [hashtagError, setHashtagError] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
   function handleHashtagChange(e) {
+    const nextValue = e.target.value;
     const regex = /^[A-Za-zА-Яа-я0-9_]*$/;
-    if (e.target.value.length === 0) {
-      setHashtagError("Field must not be empty");
-    } else if (!regex.test(e.target.value)) {
+
+    if (nextValue.length === 0) {
+      setHashtagError("");
+      hashtagSetter("");
+      onClearSearch();
+      return;
+    }
+
+    if (!regex.test(nextValue)) {
       setHashtagError("Only letters, numbers and underscores are allowed");
     } else {
       setHashtagError("");
     }
-    hashtagSetter(e.target.value);
+
+    hashtagSetter(nextValue);
   }
 
   useEffect(() => {
-    if (hashtag && !hashtagError) {
-      setIsFormValid(true);
-    } else {
-      setIsFormValid(false);
-    }
+    setIsFormValid(Boolean(hashtag && !hashtagError));
   }, [hashtag, hashtagError]);
-
-  useEffect(() => {
-    if (!hashtag) {
-      setHashtagError("");
-    }
-  }, [hashtag]);
 
   function handleSearch(e) {
     e.preventDefault();
     onSubmit(hashtag);
   }
+
   return (
     <section className="search">
       <form className="search__form" onSubmit={handleSearch}>

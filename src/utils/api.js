@@ -5,19 +5,28 @@ class Api {
     this._request = createRequest(this._serverUrl);
   }
 
-  getInitialPhotos() {
-    return this._request("/photos", {
+  getPhotos(page = 1, limit = 20) {
+    const params = new URLSearchParams({
+      page: String(page),
+      limit: String(limit),
+    });
+    return this._request(`/photos?${params.toString()}`, {
       method: "GET",
     });
   }
 
-  findPhoto(data) {
-    return this._request("/photos/found", {
+  findPhoto(keyWord, page = 1, limit = 20) {
+    const params = new URLSearchParams({
+      page: String(page),
+      limit: String(limit),
+    });
+
+    return this._request(`/photos/found?${params.toString()}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ keyWord: data }),
+      body: JSON.stringify({ keyWord }),
     });
   }
 
@@ -76,8 +85,12 @@ class Api {
     });
   }
 
-  getHashtags = () => {
-    return this._request("/hashtags", {
+  getHashtags = (page = 1, limit = 10) => {
+    const params = new URLSearchParams({
+      page: String(page),
+      limit: String(limit),
+    });
+    return this._request(`/hashtags?${params.toString()}`, {
       method: "GET",
     });
   };
@@ -169,8 +182,21 @@ class Api {
   ////////////////////////
   ///////   BLOG  ////////
   ////////////////////////
-  getInitialPosts() {
-    return this._request("/posts", {
+  getPosts(page = 1, limit = 8, { search = "", theme = "All" } = {}) {
+    const params = new URLSearchParams({
+      page: String(page),
+      limit: String(limit),
+    });
+
+    if (search.trim()) {
+      params.set("search", search.trim());
+    }
+
+    if (theme && theme !== "All") {
+      params.set("theme", theme);
+    }
+
+    return this._request(`/posts?${params.toString()}`, {
       method: "GET",
     });
   }
@@ -229,8 +255,17 @@ class Api {
     });
   }
 
-  getInitialPRojects() {
-    return this._request("/projects", {
+  getProjects(page = 1, limit = 12, { hashtag = "" } = {}) {
+    const params = new URLSearchParams({
+      page: String(page),
+      limit: String(limit),
+    });
+
+    if (hashtag.trim()) {
+      params.set("hashtag", hashtag.trim());
+    }
+
+    return this._request(`/projects?${params.toString()}`, {
       method: "GET",
     });
   }
@@ -271,25 +306,19 @@ class Api {
     });
   }
 
-  getProjectHashtags = () => {
-    return this._request("/projecthashtags", {
+  getProjectHashtags(limit = 20) {
+    const params = new URLSearchParams({
+      limit: String(limit),
+    });
+
+    return this._request(`/projecthashtags?${params.toString()}`, {
       method: "GET",
     });
-  };
-
-  getInitialData() {
-    return Promise.all([
-      this.getInitialPhotos(),
-      this.getHashtags(),
-      this.getInitialPosts(),
-      this.getInitialPRojects(),
-      this.getProjectHashtags(),
-    ]);
   }
 }
 
 const api = new Api({
-  serverUrl: process.env.REACT_APP_API_URL || "http://localhost:4000",
+  serverUrl: process.env.REACT_APP_API_URL,
 });
 
 export default api;

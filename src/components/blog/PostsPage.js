@@ -18,6 +18,7 @@ function PostsPage({
   onContactClick,
   onPostsSearch,
   onPostClick,
+  hasMorePosts,
   postsQuantity,
   onShowMorePosts,
   isLoading,
@@ -69,13 +70,11 @@ function PostsPage({
             onDeletePostButtonClick={onDeletePostButtonClick}
             loggedIn={loggedIn}
           />
-          {postsToRender.length > postsQuantity ? (
+          {hasMorePosts && (
             <ShowMoreButton
               onShowMoreButtonClick={onShowMorePosts}
               buttonText="Show more posts"
             />
-          ) : (
-            ""
           )}
           {loggedIn && (
             <AddNewItemButton
@@ -87,7 +86,6 @@ function PostsPage({
       ) : (
         <ContentNotFound
           loggedIn={loggedIn}
-          classname="content-not-found_screen_full"
           altText="posts not found icon"
           text="Sorry, there are no posts yet"
           buttonText="Add post"

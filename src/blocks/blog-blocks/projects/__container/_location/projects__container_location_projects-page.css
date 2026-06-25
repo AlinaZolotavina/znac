@@ -1,5 +1,4 @@
 .projects__container_location_projects-page {
-  grid-template-rows: repeat(3, 1fr);
   grid-template-columns: repeat(3, calc((100% - 60px) / 3));
   max-width: 1140px;
   gap: 30px;

@@ -1,5 +1,17 @@
 .modal__icon {
-    width: 120px;
-    align-self: center;
-    margin-bottom: 32px;
+  width: 120px;
+  align-self: center;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 800px) {
+  .modal__icon {
+    width: 80px;
+  }
+}
+
+@media (max-width: 500px) {
+  .modal__icon {
+    width: 60px;
+  }
 }

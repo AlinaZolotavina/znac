@@ -11,13 +11,18 @@ function PostsSearch({
   const [queryError, setQueryError] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
   function handleQueryChange(e) {
+    const value = e.target.value;
     const regex = /^[A-Za-zА-Яа-я0-9_]*$/;
-    if (!regex.test(e.target.value)) {
+    if (!regex.test(value)) {
       setQueryError("Only letters, numbers and underscores are allowed");
     } else {
       setQueryError("");
     }
-    querySetter(e.target.value);
+    querySetter(value);
+
+    if (value.trim() === "") {
+      onSubmit("");
+    }
   }
 
   useEffect(() => {

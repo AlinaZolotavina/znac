@@ -13,6 +13,7 @@ function ProjectsPage({
   hashtags,
   activeProjectHashtag,
   projectsToRender,
+  hasMoreProjects,
   onNewProjectClick,
   onBlogMenuClick,
   onContactClick,
@@ -44,7 +45,7 @@ function ProjectsPage({
     return Object.entries(result).sort((a, b) => b[1] - a[1]);
   };
 
-  const hashtagsToRender = getMostUsedHashtags(hashtags);
+  const hashtagsToRender = getMostUsedHashtags(hashtags || []);
 
   return (
     <div className="blog">
@@ -72,13 +73,11 @@ function ProjectsPage({
             onDeleteProjectButtonClick={onDeleteProjectButtonClick}
             onHashtagClick={onProjectHashtagClick}
           />
-          {projectsToRender.length > projectsQuantity ? (
+          {hasMoreProjects && (
             <ShowMoreButton
               onShowMoreButtonClick={onShowMoreProjects}
               buttonText="Show more projects"
             />
-          ) : (
-            ""
           )}
           {loggedIn && (
             <AddNewItemButton
@@ -90,7 +89,6 @@ function ProjectsPage({
       ) : (
         <ContentNotFound
           loggedIn={loggedIn}
-          classname="content-not-found_screen_full"
           altText="projects not found icon"
           text="Sorry, there are no projects yet"
           buttonText="Add project"
