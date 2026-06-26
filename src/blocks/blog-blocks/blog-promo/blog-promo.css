@@ -1,6 +1,7 @@
 .blog-promo {
   display: flex;
   align-items: center;
+  justify-content: center;
   padding: 90px 20px 85px;
   width: 65vw;
 }
@@ -20,7 +21,6 @@
   .blog-promo {
     width: 85vw;
     flex-direction: column;
-    justify-content: center;
     padding: 50px 0;
   }
 }

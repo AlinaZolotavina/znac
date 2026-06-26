@@ -16,9 +16,9 @@ function BlogPromo() {
         )}
         {location.pathname === "/alina/about" && (
           <h1 className="blog-promo__text blog-promo__text_location_about">
-            Hey! My name is Alina. I'm newbie in frontend development. I have
-            started and keep learning Java Script and React JS. In my free time
-            I create vector graphic in AI, do some{" "}
+            Hi! My name is Alina. I'm a Frontend Developer who enjoys building
+            modern web applications with React, TypeScript and JavaScript. In my
+            free time I create vector graphic in AI, do some{" "}
             <a
               className="blog-promo__highlighted-text blog-promo__highlighted-text_type_link"
               href="https://www.behance.net/gallery/133689531/Enjoy-your-Korea"
