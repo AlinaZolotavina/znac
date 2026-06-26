@@ -81,6 +81,7 @@
 @import url(./blocks/znac-blocks/popup/__submit-btn/_disabled/popup__submit-btn_diabled.css);
 @import url(./blocks/znac-blocks/popup/__photo-container/popup__photo-container.css);
 @import url(./blocks/znac-blocks/popup/__image/popup__image.css);
+@import url(./blocks/znac-blocks/popup/__image-error/popup__image-error.css);
 @import url(./blocks/znac-blocks/popup/__right-flip/popup__right-flip.css);
 @import url(./blocks/znac-blocks/popup/__left-flip/popup__left-flip.css);
 @import url(./blocks/znac-blocks/popup/__caption/popup__caption.css);

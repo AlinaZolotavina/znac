@@ -1,3 +1,6 @@
+import { useState, useEffect } from "react";
+import errorImage from "../images/image-error.svg";
+
 import EditButton from "./EditButton";
 import PhotoHashtags from "./PhotoHashtags";
 import CloseButton from "./CloseButton";
@@ -18,7 +21,18 @@ function PhotoPopup({
   isLeftFlipDisabled,
   isRightFlipDisabled,
 }) {
-  const hashtags = (photoHashtags || []).toString().split(" ");
+  const [imageSrc, setImageSrc] = useState(photo?.link);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setImageSrc(photo?.link);
+    setHasError(false);
+  }, [photo?.link]);
+
+  const hashtags = photoHashtags?.length
+    ? photoHashtags.toString().split(" ")
+    : [];
+
   function handleRightFlip() {
     onPhotoFlip("right");
   }
@@ -32,26 +46,39 @@ function PhotoPopup({
       <div className="popup__wrapper">
         <div className="popup__photo-container">
           <button
-            className={`popup__left-flip flip-btn ${isLeftFlipDisabled && "flip-btn_hidden"}`}
+            className={`popup__left-flip flip-btn ${
+              isLeftFlipDisabled && "flip-btn_hidden"
+            }`}
             onClick={handleLeftFlip}
             disabled={isLeftFlipDisabled}
           />
+
           <div className="popup__photo">
             <img
-              className="popup__image"
-              src={photo?.link}
+              className={hasError ? "popup__image-error" : "popup__image"}
+              src={imageSrc}
               alt={photo?.hashtags}
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                setHasError(true);
+                setImageSrc(errorImage);
+              }}
             />
+
             <CloseButton
               classname="close-btn popup__close-btn"
               onClick={onClose}
             />
           </div>
+
           <button
-            className={`popup__right-flip flip-btn ${isRightFlipDisabled && "flip-btn_hidden"}`}
+            className={`popup__right-flip flip-btn ${
+              isRightFlipDisabled && "flip-btn_hidden"
+            }`}
             onClick={handleRightFlip}
             disabled={isRightFlipDisabled}
           />
+
           <div className="popup__caption">
             <div className="popup__hashtags">
               {loggedIn && (
@@ -60,9 +87,10 @@ function PhotoPopup({
                   onClick={onEditHashtagsBtnClick}
                 />
               )}
+
               <PhotoHashtags
                 classname="hashtags hashtags_to-photo"
-                photoHashtags={hashtags || []}
+                photoHashtags={hashtags}
                 onClick={onHashtagClick}
                 areHashtagsEditing={areHashtagsEditing}
                 onEditHashtags={onEditHashtags}
@@ -70,6 +98,7 @@ function PhotoPopup({
                 photoId={photo?._id}
               />
             </div>
+
             <div className="views">
               <p className="views__number">{views}</p>
               <div className="views__icon" />

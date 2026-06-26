@@ -1,3 +1,6 @@
 .popup__photo {
-    position: relative;
+  display: inline-block;
+  justify-self: center;
+  position: relative;
+  width: auto;
 }

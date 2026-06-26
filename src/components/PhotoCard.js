@@ -1,52 +1,44 @@
-import { useState, useEffect } from 'react';
-import errorImage from '../images/image-error.svg';
+import { useState, useEffect } from "react";
+import errorImage from "../images/image-error.svg";
 
-function PhotoCard({
-    photo,
-    loggedIn,
-    onPhotoClick,
-    onDeleteBtnClick
-}) {
-    const [currentImage, setCurrentImage] = useState(errorImage);
-    const [isLoading, setIsLoading] = useState(true);
+function PhotoCard({ photo, loggedIn, onPhotoClick, onDeleteBtnClick }) {
+  const [imageSrc, setImageSrc] = useState(photo.link);
 
-    const fetchImage = (src) => {
-        const loadingImage = new Image();
-        loadingImage.src = src;
-        loadingImage.onload = () => {
-            setCurrentImage(loadingImage.src);
-            setIsLoading(false);
-        };
-        loadingImage.onerror = () => {
-            setCurrentImage(errorImage);
-            setIsLoading(false);
-        }
-    };
+  useEffect(() => {
+    setImageSrc(photo.link);
+  }, [photo.link]);
 
-    useEffect(() => {
-        fetchImage(photo.link);
-    })
+  function handlePhotoClick() {
+    onPhotoClick(photo);
+  }
 
-    function handlePhotoClick() {
-        onPhotoClick(photo);
-    }
+  function handlePhotoDelete() {
+    onDeleteBtnClick(photo);
+  }
 
-    function handlePhotoDelete() {
-        onDeleteBtnClick(photo);
-    }
+  return (
+    <li className="photo-card">
+      <img
+        className="photo-card__image"
+        src={imageSrc}
+        alt={photo.hashtags}
+        loading="lazy"
+        onError={(e) => {
+          if (e.currentTarget.src !== errorImage) {
+            setImageSrc(errorImage);
+          }
+        }}
+        onClick={handlePhotoClick}
+      />
 
-    return (
-        <li className="photo-card">
-            <img
-                className={`${!isLoading ? 'photo-card__image' : 'photo-card__placeholder'}`}
-                src={currentImage}
-                alt={photo.hashtags}
-                onClick={handlePhotoClick}
-                style={{ transition: `opacity 1s ease` }}
-                loading='lazy' />
-            {loggedIn && <button className="photo-card__delete-btn" onClick={handlePhotoDelete}/>}
-        </li>
-    );
+      {loggedIn && (
+        <button
+          className="photo-card__delete-btn"
+          onClick={handlePhotoDelete}
+        />
+      )}
+    </li>
+  );
 }
 
 export default PhotoCard;

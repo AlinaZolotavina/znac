@@ -1,28 +1,31 @@
 .flip-btn {
-    background-color: transparent;
-    background-repeat: no-repeat;
-    background-size: 30px auto;
-    border-style: none;
-    min-width: 12vw;
-    opacity: .5;
-    transition: opacity .3s ease;
-    cursor: pointer;
-    padding: 0;
-    overflow: hidden;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-size: 30px auto;
+  border-style: none;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
 }
 
 .flip-btn:hover {
-    opacity: 1;
+  opacity: 1;
+}
+
+.flip-btn:focus {
+  outline: none;
 }
 
 @media screen and (max-width: 700px) {
-    .flip-btn {
-        background-size: 20px auto;
-    }
+  .flip-btn {
+    background-size: 20px auto;
+  }
 }
 
 @media screen and (max-width: 400px) {
-    .flip-btn {
-        background-size: 15px auto;
-    }
+  .flip-btn {
+    background-size: 15px auto;
+  }
 }

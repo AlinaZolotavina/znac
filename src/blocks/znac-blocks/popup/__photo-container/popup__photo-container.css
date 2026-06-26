@@ -1,9 +1,12 @@
 .popup__photo-container {
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-areas: 
-        "left-flip photo right-flip"
-        ". caption .";
-    row-gap: 15px;
+  position: relative;
+  display: grid;
+  grid-template-columns:
+    60px
+    fit-content(calc(100vw - 120px))
+    60px;
+  grid-template-areas:
+    "left-flip photo right-flip"
+    ". caption .";
+  row-gap: 15px;
 }
