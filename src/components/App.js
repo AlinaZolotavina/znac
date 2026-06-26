@@ -63,15 +63,16 @@ import DeleteProjectModal from "./blog/DeleteProjectModal.js";
 
 import getCurrentActivePage from "../utils/getCurrentActivePage.js";
 
-import GameSettings from "./tic-tac-toe/GameSettings.js";
-import Board from "./tic-tac-toe/Board";
-import ShapeSelection from "./tic-tac-toe/ShapeSelection";
-import Firework from "./tic-tac-toe/Firework";
 import CurrentPostPage from "./blog/CurrentPostPage.js";
 import GamesPage from "./blog/GamesPage.js";
 
 function App() {
   const { isLoading, startLoading, stopLoading } = useRequestState();
+  const {
+    isLoading: isContactSending,
+    startLoading: startContactSending,
+    stopLoading: stopContactSending,
+  } = useRequestState();
 
   const openModal = ({ status, message, type = "default" }) => {
     setModalState({
@@ -165,13 +166,6 @@ function App() {
   const [activePostHashtag, setActivePostHashtag] = useState("All");
   const [activeProjectHashtag, setActiveProjectHashtag] = useState("All");
   const [activeBlogPage, setActiveBlogPage] = useState("Home");
-
-  // tic-tac-toe
-  const [AI, setAI] = useState(false);
-  const [aiShape, setAiShape] = useState("o");
-  const [humanShape, setHumanShape] = useState("x");
-  const [winner, setWinner] = useState(null);
-  const [fireworkVisibility, setFireworkVisibility] = useState(false);
 
   useEffect(() => {
     if (loadedPhotos.length > 0) {
@@ -655,7 +649,6 @@ function App() {
   }
 
   function handleEmailChangeRequest(newEmail) {
-    console.log(currentUser.email);
     startLoading();
     localStorage.setItem("email", JSON.stringify(newEmail));
     api
@@ -891,7 +884,6 @@ function App() {
       closeAllBlogPopups();
       closeMenu();
       closeBlogMenu();
-      closeFindPairPopup();
     }
     if (isPhotoPopupOpen) {
       if (keyCode === 37 && !isLeftFlipDisabled) {
@@ -902,7 +894,6 @@ function App() {
       }
     }
     if (keyCode === 13 && isDeletePhotoModalOpen) {
-      console.log("delete photo");
       handlePhotoDelete(selectedPhoto);
     }
   };
@@ -914,7 +905,6 @@ function App() {
     ) {
       closeAllPopups();
       closeAllBlogPopups();
-      closeFindPairPopup();
     }
   };
 
@@ -1068,7 +1058,6 @@ function App() {
   }
 
   function closeAllBlogPopups() {
-    setIsGetInTouchPopupOpen(false);
     setIsPostPopupOpen(false);
     setIsEditPostPopupOpen(false);
     setIsEditProjectPopupOpen(false);
@@ -1076,6 +1065,10 @@ function App() {
     setIsDeletePostModalOpen(false);
     setIsDeleteProjectModalOpen(false);
   }
+
+  const closeGetInTouchPopup = () => {
+    setIsGetInTouchPopupOpen(false);
+  };
 
   function handleBlogMenuClick(e) {
     setIsBlogMenuOpen(!isBlogMenuOpen);
@@ -1105,13 +1098,6 @@ function App() {
   function handlePostsSearch(nextQuery) {
     const normalizedQuery = nextQuery.trim();
     const hasThemeFilter = activePostHashtag && activePostHashtag !== "All";
-
-    console.log({
-      normalizedQuery,
-      activePostHashtag,
-      loadedPosts,
-      allPosts,
-    });
 
     setQuery(nextQuery);
 
@@ -1403,7 +1389,7 @@ function App() {
   }
 
   function handleDeletePostModalOpen(post) {
-    setIsDeletePostModalOpen(!isDeletePhotoModalOpen);
+    setIsDeletePostModalOpen(!isDeletePostModalOpen);
     setPostToDelete(post);
   }
 
@@ -1434,27 +1420,19 @@ function App() {
   }
 
   function handleProjectDelete(project) {
-    console.log(project);
     api
       .deleteProject(project._id)
       .then(() => {
         setProjectsToRender((state) =>
           state.filter((p) => p._id !== project._id && p),
         );
-        setAllProjects((state) =>
-          state.filter((p) => p.id !== project._is && p),
+        setAllProjects((projects) =>
+          projects.filter((p) => p._id !== project._id),
         );
       })
       .catch((err) => console.log(err))
       .finally(() => closeAllBlogPopups());
   }
-
-  // ???? ???? ???? ????? ?????
-
-  // function handleBackButtonClick() {
-  //     history.push('/alina/posts');
-  //     setSelectedPost({});
-  // };
 
   useEffect(() => {
     const currentPage = getCurrentActivePage(location.pathname);
@@ -1507,54 +1485,37 @@ function App() {
     );
   }
 
-  //  TIC TAC TOE
-  function handleTwoPlayersClick() {
-    history.push("/alina/games/tic-tac-toe/new-game");
-    setAI(false);
-    setHumanShape("x");
-    setAiShape("o");
-  }
+  const handleSendContactMessage = ({ name, email, message }) => {
+    startContactSending();
 
-  function handleOnePlayerClick() {
-    history.push("/alina/games/tic-tac-toe/shape-selection");
-    setAI(true);
-  }
+    return api
+      .sendContactMessage({ name, email, message })
+      .then(() => {
+        setModalState({
+          isOpen: true,
+          status: "success",
+          type: "default",
+          message: "Your message has been sent.",
+        });
 
-  function handleShapeSelect(shape) {
-    history.push("/alina/games/tic-tac-toe/new-game");
-    setHumanShape(shape);
-    if (shape === "x") {
-      setAiShape("o");
-    } else {
-      setAiShape("x");
-    }
-  }
+        return true;
+      })
+      .catch((err) => {
+        setModalState({
+          isOpen: true,
+          status: "error",
+          type: "default",
+          message:
+            err.message ||
+            "Failed to send the message. Please try again later.",
+        });
 
-  //   function handleBackToSettingsBtnClick() {
-  //     history.push("/alina/games/tic-tac-toe");
-  //     setWinner(null);
-  //     setFireworkVisibility(false);
-  //   }
-
-  //////////////// FIND PAIR ////////////
-  const [findPairPlayerName, setFindPairPlayerName] = useState("");
-  const [findPairGameResult, setFindPairGameResult] = useState(null);
-  const [isFindPairGameFinished, setIsFindPairGameFinished] = useState(false);
-  const [restartFindPairHandler, setRestarFindPairtHandler] = useState(null);
-  const [isFindPairPopupOpen, setIsFindPairPopupOpen] = useState(false);
-
-  function openFindPairPopup() {
-    setIsFindPairPopupOpen(true);
-  }
-
-  function closeFindPairPopup() {
-    setIsFindPairPopupOpen(false);
-  }
-
-  function restartFindPairGame() {
-    setRestarFindPairtHandler?.();
-    setIsFindPairPopupOpen(false);
-  }
+        return false;
+      })
+      .finally(() => {
+        stopContactSending();
+      });
+  };
 
   ////////////////////////////////////////
   const {
@@ -1720,69 +1681,6 @@ function App() {
           <GamesPage onTicTacToeClick={moveToTicTacToePage} />
         </Route>
 
-        <Route exact path="/alina/games/tic-tac-toe">
-          <GameSettings
-            onTwoPlayersClick={handleTwoPlayersClick}
-            onOnePlayerClick={handleOnePlayerClick}
-            onShapeSelect={handleShapeSelect}
-            // onBackToSettingsBtnClick={handleBackToSettingsBtnClick}
-          />
-        </Route>
-
-        <Route exact path="/alina/games/tic-tac-toe/shape-selection">
-          <ShapeSelection
-            onShapeSelect={handleShapeSelect}
-            onBlogBtnClick={moveToHomePage}
-          />
-        </Route>
-
-        <Route path="/alina/games/tic-tac-toe/new-game">
-          <div className="game">
-            <Board
-              AiMode={AI}
-              ai={aiShape}
-              human={humanShape}
-              winnerSetter={setWinner}
-              fireworkVisibilitySetter={setFireworkVisibility}
-            />
-            <Firework
-              classname="firework_number_first"
-              visible={fireworkVisibility}
-              color="light-blue"
-            />
-            <Firework
-              classname="firework_number_second"
-              visible={fireworkVisibility}
-              color="yellow"
-            />
-            <Firework
-              classname="firework_number_third"
-              visible={fireworkVisibility}
-              color="pink"
-            />
-            <Firework
-              classname="firework_number_fourth"
-              visible={fireworkVisibility}
-              color="green"
-            />
-            <Firework
-              classname="firework_number_fifth"
-              visible={fireworkVisibility}
-              color="light-blue"
-            />
-            <Firework
-              classname="firework_number_sixth"
-              visible={fireworkVisibility}
-              color="yellow"
-            />
-            <Firework
-              classname="firework_number_seventh"
-              visible={fireworkVisibility}
-              color="pink"
-            />
-          </div>
-        </Route>
-
         <Route exact path="/signin">
           <SignIn onSignin={handleSignin} isSendingReq={isLoading} />
         </Route>
@@ -1836,7 +1734,7 @@ function App() {
         <ProtectedRoute
           component={AddPhoto}
           path="/addphoto"
-          loggedIn={true}
+          loggedIn={loggedIn}
           nGalleryClick={handleGalleryClick}
           onContactClick={handleContactClick}
           onMenuClick={handleMenuClick}
@@ -1922,8 +1820,9 @@ function App() {
 
       <GetInTouchPopup
         isOpen={isGetInTouchPopupOpen}
-        onClose={closeAllBlogPopups}
-        isSendingReq={isLoading}
+        isSendingReq={isContactSending}
+        onClose={closeGetInTouchPopup}
+        onSubmit={handleSendContactMessage}
       />
 
       <NewProjectPopup

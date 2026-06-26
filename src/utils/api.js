@@ -315,6 +315,20 @@ class Api {
       method: "GET",
     });
   }
+
+  sendContactMessage({ name, email, message }) {
+    return this._request("/contact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        message,
+      }),
+    });
+  }
 }
 
 const api = new Api({

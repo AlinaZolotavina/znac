@@ -7,6 +7,7 @@ function BlogInput({
   isSendingReq,
   error,
   inputName,
+  maxLength,
 }) {
   return (
     <label className="blog-input">
@@ -19,6 +20,7 @@ function BlogInput({
         required
         disabled={isSendingReq}
         name={inputName}
+        maxLength={maxLength}
       />
       <span className="blog-input__error">{error}</span>
     </label>

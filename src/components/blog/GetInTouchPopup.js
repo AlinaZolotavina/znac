@@ -4,11 +4,11 @@ import BlogInput from "./BlogInput";
 import { useState, useEffect } from "react";
 import BlogCloseButton from "./BlogCloseButton";
 
-function GetInTouchPopup({ isOpen, isSendingReq, onClose }) {
+function GetInTouchPopup({ isOpen, isSendingReq, onClose, onSubmit }) {
   const [visitorName, setVisitorName] = useState("");
   const [visitorNameError, setVisitorNameError] = useState("");
   function handleVisitorNameChange(e) {
-    const regex = /^[A-Za-zА-Яа-я]*$/;
+    const regex = /^[A-Za-zА-Яа-яЁё -]*$/;
     if (e.target.value.length === 0) {
       setVisitorNameError("Name is required");
     } else if (!regex.test(e.target.value)) {
@@ -67,17 +67,36 @@ function GetInTouchPopup({ isOpen, isSendingReq, onClose }) {
     textareaError,
   ]);
 
-  function handleSubmit() {
-    console.log("get in touch submit");
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    if (!isFormValid || isSendingReq) {
+      return;
+    }
+
+    const sent = await onSubmit({
+      name: visitorName.trim(),
+      email: visitorEmail.trim(),
+      message: textarea.trim(),
+    });
+
+    if (sent) {
+      resetForm();
+      onClose();
+    }
   }
 
-  function handleClose() {
+  function resetForm() {
     setVisitorName("");
     setVisitorNameError("");
     setVisitorEmail("");
     setVisitorEmailError("");
     setTextarea("");
     setTextareaError("");
+  }
+
+  function handleClose() {
+    resetForm();
     onClose();
   }
 
@@ -110,6 +129,7 @@ function GetInTouchPopup({ isOpen, isSendingReq, onClose }) {
             isSendingReq={isSendingReq}
             error={visitorNameError}
             inputName="get-in-touch name"
+            maxLength={80}
           />
           <BlogInput
             placeholder="Email"
@@ -120,6 +140,7 @@ function GetInTouchPopup({ isOpen, isSendingReq, onClose }) {
             isSendingReq={isSendingReq}
             error={visitorEmailError}
             inputName="get-in-touch email"
+            maxLength={254}
           />
           <label className="blog-input">
             <textarea
@@ -130,6 +151,7 @@ function GetInTouchPopup({ isOpen, isSendingReq, onClose }) {
               required
               disabled={isSendingReq}
               name="get-in-touch text"
+              maxLength="3000"
             />
             <span className="blog-input__error">{textareaError}</span>
           </label>
