@@ -1,22 +1,26 @@
+import { forwardRef } from "react";
 import Header from "./Header";
 import BurgerMenuBtn from "./BurgerMenuBtn";
 import Navigation from "./Navigation";
 import LogoutButton from "./LogoutButton";
 import Promo from "./Promo";
 
-function Home({
-  loggedIn,
-  homeActive,
-  onHomeClick,
-  onBlogClick,
-  onGalleryClick,
-  onContactClick,
-  onMenuClick,
-  email,
-  onLogout,
-}) {
+const Home = forwardRef(function Home(
+  {
+    loggedIn,
+    homeActive,
+    onHomeClick,
+    onBlogClick,
+    onGalleryClick,
+    onContactClick,
+    onMenuClick,
+    email,
+    onLogout,
+  },
+  ref,
+) {
   return (
-    <section className="home section" id="home">
+    <section ref={ref} className="home section" id="home">
       <Header className="header">
         <Navigation
           loggedIn={loggedIn}
@@ -38,6 +42,6 @@ function Home({
       <Promo />
     </section>
   );
-}
+});
 
 export default Home;

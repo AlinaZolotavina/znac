@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import useAuth from "../hooks/useAuth";
 import useRequestState from "../hooks/useRequestStatus";
@@ -21,6 +21,7 @@ import Menu from "./Menu";
 import Modal from "./Modal";
 import ConfirmEmailUpdate from "./ConfirmEmailUpdate";
 import api from "../utils/api";
+import scrollToRef from "../utils/scrollToRef";
 import * as auth from "../utils/auth.js";
 
 import { Switch, Route, useLocation, useHistory } from "react-router-dom";
@@ -731,17 +732,9 @@ function App() {
   }
 
   // handle app navigation & mark active navigation block / page
-  const [home, setHome] = useState(document.querySelector("home"));
-  const [main, setMain] = useState(document.querySelector("main"));
-  const [footer, setFooter] = useState(document.querySelector("footer"));
-  const [homeActive, setHomeActive] = useState("");
-
-  useEffect(() => {
-    setHome(document.querySelector(".home"));
-    setMain(document.querySelector(".main"));
-    setFooter(document.querySelector(".footer"));
-  }, [location, home, main, footer]);
-
+  const homeRef = useRef(null);
+  const mainRef = useRef(null);
+  const footerRef = useRef(null);
   useEffect(() => {
     const markLinkActiveDependingOnScroll = () => {
       const sections = document.querySelectorAll(".section");
@@ -775,24 +768,18 @@ function App() {
   function handleHomeClick() {
     closeMenu();
     history.push("/");
-    home.scrollIntoView({
-      block: "start",
-      behavior: "smooth",
+
+    requestAnimationFrame(() => {
+      scrollToRef(homeRef);
     });
   }
 
   function handleGalleryClick() {
-    main.scrollIntoView({
-      block: "start",
-      behavior: "smooth",
-    });
+    scrollToRef(mainRef);
   }
 
   function handleContactClick() {
-    footer.scrollIntoView({
-      block: "start",
-      behavior: "smooth",
-    });
+    scrollToRef(footerRef);
   }
 
   function handleProfileClick() {
@@ -1448,7 +1435,7 @@ function App() {
         <Route exact path="/">
           <Home
             loggedIn={loggedIn}
-            homeActive={homeActive}
+            ref={homeRef}
             onHomeClick={handleHomeClick}
             onBlogClick={handleBlogClick}
             onGalleryClick={handleGalleryClick}
@@ -1462,7 +1449,7 @@ function App() {
           <Main
             photos={photosToRender}
             loggedIn={loggedIn}
-            homeActive={homeActive}
+            ref={mainRef}
             onPhotoClick={handlePhotoOpen}
             onDeleteBtnClick={handleDeletePhotoModalOpen}
             onHomeClick={handleHomeClick}
@@ -1485,7 +1472,7 @@ function App() {
             isSendingReq={isLoading}
             hashtagsNumber={10}
           />
-          <Footer />
+          <Footer ref={footerRef} />
         </Route>
 
         <Route exact path="/alina">

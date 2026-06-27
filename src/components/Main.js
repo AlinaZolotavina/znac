@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import Navigation from "./Navigation";
 import LogoutButton from "./LogoutButton";
 import Search from "./Search";
@@ -5,39 +6,37 @@ import MainPageHashtags from "./MainPageHashtags";
 import Gallery from "./Gallery";
 import More from "./More";
 
-// import photosList from '../utils/photosList';
-// import photoHashtags from '../utils/photoHashtags';
-
-function Main({
-  photos,
-  loggedIn,
-  homeActive,
-  onHomeClick,
-  onBlogClick,
-  onGalleryClick,
-  onContactClick,
-  onPhotoClick,
-  onDeleteBtnClick,
-  onHashtagClick,
-  hashtag,
-  photoHashtags,
-  hashtagSetter,
-  onSearch,
-  onClearSearch,
-  photosQuantity,
-  hasMorePhotos,
-  onShowMore,
-  email,
-  onLogout,
-  isSendingReq,
-  isSearching,
-}) {
+const Main = forwardRef(function Main(
+  {
+    photos,
+    loggedIn,
+    onHomeClick,
+    onBlogClick,
+    onGalleryClick,
+    onContactClick,
+    onPhotoClick,
+    onDeleteBtnClick,
+    onHashtagClick,
+    hashtag,
+    photoHashtags,
+    hashtagSetter,
+    onSearch,
+    onClearSearch,
+    photosQuantity,
+    hasMorePhotos,
+    onShowMore,
+    email,
+    onLogout,
+    isSendingReq,
+    isSearching,
+  },
+  ref,
+) {
   return (
-    <main className="main section" id="main">
+    <main className="main section" id="main" ref={ref}>
       <div className="main__navigation main__navigation_fixed">
         <Navigation
           loggedIn={loggedIn}
-          homeActive={homeActive}
           onHomeClick={onHomeClick}
           onBlogClick={onBlogClick}
           onGalleryClick={onGalleryClick}
@@ -73,6 +72,6 @@ function Main({
       {hasMorePhotos && <More onShowMore={onShowMore} />}
     </main>
   );
-}
+});
 
 export default Main;

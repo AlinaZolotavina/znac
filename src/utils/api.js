@@ -33,7 +33,6 @@ class Api {
   addPhoto(data) {
     return this._request("/photos", {
       method: "POST",
-      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -51,7 +50,6 @@ class Api {
     }
     return this._request("/public", {
       method: "POST",
-      credentials: "include",
       body: data,
     });
   }
@@ -59,7 +57,6 @@ class Api {
   increaseViews(photoId) {
     return this._request(`/photos/${photoId}/views`, {
       method: "PUT",
-      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -69,7 +66,6 @@ class Api {
   editHashtags(photoId, hashtags) {
     return this._request(`/photos/${photoId}/hashtags`, {
       method: "PATCH",
-      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },

@@ -1,6 +1,8 @@
-function Footer() {
+import { forwardRef } from "react";
+
+const Footer = forwardRef(function Footer(_, ref) {
   return (
-    <footer className="footer section" id="footer">
+    <footer className="footer section" id="footer" ref={ref}>
       <div className="footer__column">
         <p className="footer__paragraph">
           © {new Date().getFullYear()} All rights reserved | ZNAC
@@ -34,6 +36,6 @@ function Footer() {
       </div>
     </footer>
   );
-}
+});
 
 export default Footer;
