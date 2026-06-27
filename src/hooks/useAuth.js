@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import * as auth from "../utils/auth";
+import * as messages from "../utils/messages";
 
 export default function useAuth({
   history,
   location,
   openModal,
-  messages,
   startLoading,
   stopLoading,
 }) {
@@ -13,7 +13,7 @@ export default function useAuth({
   const [loggedIn, setLoggedIn] = useState(false);
 
   // проверка токена
-  const checkToken = () => {
+  const checkToken = useCallback(() => {
     auth
       .getContent()
       .then((userData) => {
@@ -34,15 +34,13 @@ export default function useAuth({
           return;
         }
 
-        // остальные ошибки — не обязательно логинить/разлогинивать
         console.error(err);
       });
-  };
+  }, [history, location.pathname]);
 
   useEffect(() => {
     checkToken();
-    // eslint-disable-next-line
-  }, []);
+  }, [checkToken]);
 
   // login
   const handleSignin = async (email, password) => {
@@ -67,12 +65,13 @@ export default function useAuth({
     startLoading();
     try {
       await auth.signup(email, password);
-      await handleSignin(email, password);
 
       openModal({
         status: "success",
         message: messages.SUCCESSFUL_SIGNUP_MSG,
       });
+
+      await handleSignin(email, password);
     } catch (err) {
       openModal({
         status: "error",
@@ -87,15 +86,18 @@ export default function useAuth({
   const handleSignout = async () => {
     try {
       await auth.signout();
-      setLoggedIn(false);
-      setCurrentUser({});
-      history.push("/");
+
+      openModal({
+        status: "success",
+        message: messages.SUCCESSFUL_SIGNOUT_MSG,
+      });
     } catch (err) {
       openModal({
         status: "error",
         message: messages.SIGNOUT_ERROR_MSG,
       });
-      console.log(err);
+
+      console.error(err);
     } finally {
       setLoggedIn(false);
       setCurrentUser({});

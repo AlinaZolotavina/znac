@@ -3,6 +3,7 @@ import BlogForm from "./BlogForm";
 import BlogInput from "./BlogInput";
 import BlogCloseButton from "./BlogCloseButton";
 import BlogTextArea from "./BlogTextArea";
+import isValidUrl from "../../utils/isValidUrl";
 
 function EditProjectPopup({
   isOpen,
@@ -70,17 +71,17 @@ function EditProjectPopup({
   const [projectLink, setProjectLink] = useState("");
   const [projectLinkError, setProjectLinkError] = useState("");
   function handleProjectLinkChange(e) {
-    // eslint-disable-next-line no-useless-escape
-    const regex =
-      /^(https?:\/\/)(w{3})?([\da-z\.\-]+)\.([a-z\.]{2,6})([\w\.\-\_%~:\/?#\[\]@!$&\'()*\+,;=])*#?\/?$/;
-    if (!regex.test(e.target.value) && e.target.value.length !== 0) {
-      setProjectLinkError("Invalid url");
-    } else if (e.target.value.length === 0) {
+    const value = e.target.value.trim();
+
+    if (!value) {
       setProjectLinkError("You missed this field");
+    } else if (!isValidUrl(value)) {
+      setProjectLinkError("Invalid URL");
     } else {
       setProjectLinkError("");
     }
-    setProjectLink(e.target.value);
+
+    setProjectLink(value);
     setIsEdited(true);
   }
 

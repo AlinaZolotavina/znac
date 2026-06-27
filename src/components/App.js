@@ -12,7 +12,6 @@ import PhotoPopup from "./PhotoPopup";
 import DeletePhotoModal from "./DeletePhotoModal";
 import ProtectedRoute from "./ProtectedRoute";
 import SignIn from "./SignIn";
-// import SignUp from "./SignUp";
 import Profile from "./Profile";
 import ForgotPassword from "./ForgotPassword";
 import AddPhoto from "./AddPhoto";
@@ -27,22 +26,16 @@ import * as auth from "../utils/auth.js";
 import { Switch, Route, useLocation, useHistory } from "react-router-dom";
 
 import {
-  DEFAULT_ERROR_MSG,
-  USER_NOT_FOUND_ERROR_MSG,
-  AUTHORIZATION_FAILED_ERROR_MSG,
-  SUCCESSFUL_SIGNUP_MSG,
-  SIGNUP_ERROR_MSG,
-  SIGNOUT_ERROR_MSG,
-} from "../utils/constants";
-import { LARGE_SCREEN_WIDTH, MIDDLE_SCREEN_WIDTH } from "../utils/constants";
-import {
+  LARGE_SCREEN_WIDTH,
+  MIDDLE_SCREEN_WIDTH,
   LARGE_SCREEN_PHOTOS_NUMBER,
-  MIDDLE_SCREEN_PHOTOS_NUMBER,
-  SMALL_SCREEN_PHOTOS_NUMBER,
   LARGE_SCREEN_PHOTOS_TO_ADD_NUMBER,
+  MIDDLE_SCREEN_PHOTOS_NUMBER,
   MIDDLE_SCREEN_PHOTOS_TO_ADD_NUMBER,
+  SMALL_SCREEN_PHOTOS_NUMBER,
   SMALL_SCREEN_PHOTOS_TO_ADD_NUMBER,
 } from "../utils/constants";
+import * as messages from "../utils/messages";
 
 import ResetPassword from "./ResetPassword";
 import PasswordChanged from "./PasswordChanged";
@@ -171,7 +164,6 @@ function App() {
     if (loadedPhotos.length > 0) {
       return;
     }
-
     loadPhotos({
       page: 1,
       append: false,
@@ -183,13 +175,12 @@ function App() {
     if (lastHashtags.length > 0) {
       return;
     }
-
     api
       .getHashtags(1, 10)
       .then((response) => {
         setLastHashtags(response.data);
       })
-      .catch(console.log);
+      .catch(console.error);
   }, [lastHashtags.length]);
 
   useEffect(() => {
@@ -200,7 +191,6 @@ function App() {
     if (!isAlinaRoute || allPosts.length > 0) {
       return;
     }
-
     loadPosts();
   }, [isAlinaRoute, loadedPosts.length]);
 
@@ -212,7 +202,6 @@ function App() {
     if (!isAlinaRoute || loadedProjects.length > 0) {
       return;
     }
-
     loadProjects({
       page: 1,
       append: false,
@@ -228,13 +217,12 @@ function App() {
     if (!isAlinaRoute || projectHashtags.length > 0) {
       return;
     }
-
     api
       .getProjectHashtags()
       .then((hashtags) => {
         setProjectHashtags(hashtags);
       })
-      .catch(console.log);
+      .catch(console.error);
   }, [isAlinaRoute, projectHashtags.length]);
 
   // calculate photos count depending on screen demensions
@@ -284,9 +272,7 @@ function App() {
   const calculatePhotosCount = () => {
     const { initialPhotosNumber, photosToAdd: nextPhotosToAdd } =
       getPhotosLayout();
-
     setPhotosToAdd(nextPhotosToAdd);
-
     setCurrentPhotosNumber((current) => Math.max(current, initialPhotosNumber));
   };
 
@@ -330,9 +316,7 @@ function App() {
 
   const calculateProjectsCount = () => {
     const { initialProjectsNumber, projectsToAdd } = getProjectsLayout();
-
     setProjectsToAdd(projectsToAdd);
-
     setCurrentProjectsNumber((current) =>
       Math.max(current, initialProjectsNumber),
     );
@@ -349,27 +333,22 @@ function App() {
     return request
       .then((response) => {
         const { data, page: responsePage, pages } = response;
-
         setAllPhotos((previousPhotos) =>
           append ? [...previousPhotos, ...data] : data,
         );
-
-        // Кэшируем только обычную галерею.
+        // Кэшируем только обычную галерею
         if (!hasFilter) {
           setLoadedPhotos((previousPhotos) =>
             append ? [...previousPhotos, ...data] : data,
           );
         }
-
         setPhotosPage(responsePage);
         setPhotosPages(pages);
 
         if (!append) {
           const { initialPhotosNumber } = getPhotosLayout();
           const visibleCount = Math.min(initialPhotosNumber, data.length);
-
           setCurrentPhotosNumber(visibleCount);
-
           if (!hasFilter) {
             setVisibleLoadedPhotosCount(visibleCount);
           }
@@ -378,7 +357,11 @@ function App() {
         return response;
       })
       .catch((err) => {
-        console.log(err);
+        openModal({
+          status: "error",
+          message: err.message || messages.DEFAULT_ERROR_MSG,
+        });
+
         throw err;
       });
   }
@@ -389,21 +372,17 @@ function App() {
 
     if (nextVisibleCount <= allPhotos.length) {
       setCurrentPhotosNumber(nextVisibleCount);
-
       if (!isFiltered) {
         setVisibleLoadedPhotosCount(nextVisibleCount);
       }
-
       return;
     }
 
     if (photosPage >= photosPages) {
       setCurrentPhotosNumber(allPhotos.length);
-
       if (!isFiltered) {
         setVisibleLoadedPhotosCount(allPhotos.length);
       }
-
       return;
     }
 
@@ -417,28 +396,23 @@ function App() {
           nextVisibleCount,
           allPhotos.length + response.data.length,
         );
-
         setCurrentPhotosNumber(nextCount);
-
         if (!isFiltered) {
           setVisibleLoadedPhotosCount(nextCount);
         }
       })
-      .catch(console.log);
+      .catch(console.error);
   }
 
   function loadProjects({ page = 1, append = false, hashtag = "" } = {}) {
     const normalizedHashtag = hashtag === "All" ? "" : hashtag.trim();
-
     const hasFilter = Boolean(normalizedHashtag);
-
     return api
       .getProjects(page, 12, {
         hashtag: normalizedHashtag,
       })
       .then((response) => {
         const { data, page: responsePage, pages } = response;
-
         setAllProjects((previousProjects) =>
           append ? [...previousProjects, ...data] : data,
         );
@@ -448,16 +422,13 @@ function App() {
             append ? [...previousProjects, ...data] : data,
           );
         }
-
         setProjectsPage(responsePage);
         setProjectsPages(pages);
 
         if (!append) {
           const { initialProjectsNumber } = getProjectsLayout();
           const visibleCount = Math.min(initialProjectsNumber, data.length);
-
           setCurrentProjectsNumber(visibleCount);
-
           if (!hasFilter) {
             setVisibleLoadedProjectsCount(visibleCount);
           }
@@ -466,7 +437,11 @@ function App() {
         return response;
       })
       .catch((err) => {
-        console.log(err);
+        openModal({
+          status: "error",
+          message: err.message || messages.DEFAULT_ERROR_MSG,
+        });
+
         throw err;
       });
   }
@@ -495,7 +470,9 @@ function App() {
       append: true,
       hashtag: activeProjectHashtag,
     }).then(() => {
-      setCurrentProjectsNumber(nextVisibleCount);
+      setCurrentProjectsNumber((current) =>
+        Math.min(current + projectsToAdd, allProjects.length),
+      );
       if (!activeProjectHashtag) {
         setVisibleLoadedProjectsCount(allProjects.length);
       }
@@ -543,7 +520,7 @@ function App() {
 
         return response;
       })
-      .catch(console.log);
+      .catch(console.error);
   }
 
   function showMorePosts() {
@@ -565,7 +542,9 @@ function App() {
       search: query,
       theme: activePostHashtag,
     }).then(() => {
-      setCurrentPostsNumber(nextVisibleCount);
+      setCurrentPostsNumber((current) =>
+        Math.min(current + postsToAdd, allPosts.length),
+      );
     });
   }
 
@@ -578,22 +557,15 @@ function App() {
         openModal({
           status: "success",
           type: "email",
-          message: "E-mail has been sent, please follow the instructions.",
+          message: messages.RESET_PASSWORD_EMAIL_SENT_MSG,
         });
       })
       .then(() => history.push("/"))
-      .catch((err) => {
-        if (err === "Ошибка: 404") {
-          openModal({
-            status: "error",
-            message: USER_NOT_FOUND_ERROR_MSG,
-          });
-        } else {
-          openModal({
-            status: "error",
-            message: DEFAULT_ERROR_MSG,
-          });
-        }
+      .catch(() => {
+        openModal({
+          status: "error",
+          message: messages.DEFAULT_ERROR_MSG,
+        });
       })
       .finally(() => stopLoading());
   }
@@ -610,37 +582,12 @@ function App() {
         history.push("/password-changed");
       })
       .catch((err) => {
-        console.log(err);
-        if (err === "Ошибка: 401") {
-          openModal({
-            status: "error",
-            message: "Wrong reset link or it was expired",
-          });
-        }
-        if (err === "Ошибка: 400") {
-          openModal({
-            status: "error",
-            message: "The entered passwords do not match",
-          });
-        }
-        if (err === "Ошибка: 409") {
-          openModal({
-            status: "error",
-            message:
-              "Your new password must not be the same as the previous one",
-          });
-        }
-        if (err === "Ошибка: 404") {
-          openModal({
-            status: "error",
-            message: "Nothing found",
-          });
-        }
         openModal({
           status: "error",
-          message: DEFAULT_ERROR_MSG,
+          message: err.message || messages.DEFAULT_ERROR_MSG,
         });
-      });
+      })
+      .finally(() => stopLoading());
   }
 
   // e-mail change
@@ -656,18 +603,16 @@ function App() {
       .then(() => {
         openModal({
           status: "success",
-          message: "E-mail has been sent, please follow the instructions.",
+          message: messages.UPDATE_EMAIL_EMAIL_SENT_MSG,
         });
       })
       .catch((err) => {
         openModal({
           status: "error",
-          message: "Error! E-mail change request failed",
+          message: err.message || messages.EMAIL_UPDATE_REQUEST_ERROR_MSG,
         });
       })
-      .finally(() => {
-        stopLoading();
-      });
+      .finally(() => stopLoading());
   }
 
   function handleUpdateEmail(updateEmailLink, newEmail) {
@@ -678,13 +623,13 @@ function App() {
         history.push("/profile");
         openModal({
           status: "success",
-          message: "E-mail has been successfully updated",
+          message: messages.EMAIL_UPDATED_SUCCESSFULLY_MSG,
         });
       })
-      .catch(() => {
+      .catch((err) => {
         openModal({
           status: "error",
-          message: "Error! E-mail has not been updated",
+          message: err.message || messages.EMAIL_UPDATE_ERROR_MSG,
         });
       });
   }
@@ -725,8 +670,8 @@ function App() {
         status: "success",
         message:
           addedPhotos.length === 1
-            ? "Photo was added successfully"
-            : `${addedPhotos.length} photos were added successfully`,
+            ? messages.PHOTO_ADDED_SUCCESSFULLY_MSG
+            : messages.PHOTOS_ADDED_SUCCESSFULLY_MSG(addedPhotos.length),
       });
 
       return addedPhotos;
@@ -735,7 +680,7 @@ function App() {
 
       openModal({
         status: "error",
-        message: "Something went wrong",
+        message: messages.DEFAULT_ERROR_MSG,
       });
 
       throw err;
@@ -778,11 +723,6 @@ function App() {
   const handleDeletePhotoModalOpen = (photo) => {
     setSelectedPhoto(photo); // или selectPhoto
     setIsDeletePhotoModalOpen(true);
-  };
-
-  const handleConfirmDelete = () => {
-    if (!selectedPhoto) return;
-    handlePhotoDelete(selectedPhoto);
   };
 
   // edit photo hashtags
@@ -946,17 +886,8 @@ function App() {
     setHashtag("");
   }, [location.pathname]);
 
-  function checkUniqueness(obj, arr) {
-    if (arr.length === 0) {
-      return true;
-    } else {
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i].name === obj) {
-          return false;
-        }
-      }
-    }
-    return true;
+  function checkUniqueness(hashtag, hashtags) {
+    return !hashtags.some((item) => item.name === hashtag);
   }
 
   function handlePhotoSearch(nextValue) {
@@ -991,10 +922,35 @@ function App() {
           return;
         }
 
-        // Оставь здесь свою текущую логику обновления lastHashtags:
-        // checkUniqueness / api.addHashtag / api.updateHashtag.
+        const isHashtagUniq = checkUniqueness(normalizedHashtag, lastHashtags);
+
+        if (isHashtagUniq) {
+          return api.addHashtag(normalizedHashtag).then((data) => {
+            setLastHashtags((prev) => [
+              {
+                name: data.name,
+                _id: data._id,
+                __v: data.__v,
+                createdAt: data.createdAt,
+              },
+              ...prev,
+            ]);
+          });
+        }
+
+        return api.updateHashtag(normalizedHashtag).then((data) => {
+          setLastHashtags((prev) => [
+            {
+              name: data.name,
+              _id: data._id,
+              __v: data.__v,
+              createdAt: data.createdAt,
+            },
+            ...prev.filter((h) => h.name !== normalizedHashtag),
+          ]);
+        });
       })
-      .catch(console.log);
+      .catch(console.error);
   }
 
   function handleClearPhotoSearch() {
@@ -1125,17 +1081,6 @@ function App() {
     });
   }
 
-  function handleProjectsFilter(hashtag) {
-    const lowerCaseHashtag = hashtag.toLowerCase();
-    let filteredProjects;
-    filteredProjects = allProjects.filter(
-      (project) =>
-        project.hashtags.includes(lowerCaseHashtag) ||
-        project.hashtags.includes(hashtag),
-    );
-    setProjectsToRender(filteredProjects);
-  }
-
   function handleProjectHashtagClick(hashtag) {
     const isAll = hashtag === "All";
     const isSameHashtag = activeProjectHashtag === hashtag;
@@ -1176,26 +1121,22 @@ function App() {
     });
   }
 
-  // function hadleProjectHashtagClick(hashtag) {
-
-  // }
-
   function handleAddProject(newProject) {
     startLoading();
     api
       .addProject(newProject)
-      .then((newProject) => {
+      .then((createdProject) => {
         openModal({
           status: "success",
-          message: "Project was successfully added",
+          message: messages.PROJECT_ADDED_SUCCESSFULLY_MSG,
         });
-        setAllProjects([newProject, ...allProjects]);
-        setProjectsToRender([newProject, ...projectsToRender]);
+        setAllProjects((prev) => [createdProject, ...prev]);
+        setProjectsToRender((prev) => [createdProject, ...prev]);
       })
       .catch((err) => {
         openModal({
           status: "error",
-          message: "Project cannot be added",
+          message: err.message || messages.PROJECT_ADD_ERROR_MSG,
         });
       })
       .finally(() => {
@@ -1217,7 +1158,7 @@ function App() {
       .then((newProject) => {
         openModal({
           status: "success",
-          message: "Project was successfully edited",
+          message: messages.PROJECT_EDITED_SUCCESSFULLY_MSG,
         });
         setAllProjects((state) =>
           state.map((p) => (p._id === projectId ? newProject : p)),
@@ -1229,7 +1170,7 @@ function App() {
       .catch((err) => {
         openModal({
           status: "error",
-          message: "Editing error, please try again later",
+          message: err.message || messages.PROJECT_EDIT_ERROR_MSG,
         });
       })
       .finally(() => {
@@ -1240,152 +1181,118 @@ function App() {
 
   async function handleAddPost(props) {
     startLoading();
-    const addedPosts = [];
-    if (props.photoData[0]) {
-      const files = props.photoData[0];
-      for (const file of files) {
-        const formData = new FormData();
-        formData.append("file", file);
-        const response = await api.uploadPhoto(formData);
+
+    try {
+      const addedPosts = [];
+
+      const createPost = async (photoLink = "") => {
         const data = {
           theme: props.theme,
           icon: props.icon,
           title: props.title,
-          photoLink: response.data.path,
           hashtags: props.hashtags,
           text: props.text,
+          ...(photoLink && { photoLink }),
         };
-        await api
-          .addPost(data)
-          .then((newPost) => {
-            openModal({
-              status: "success",
-              message: "Post was successfully added",
-            });
-            addedPosts.push(newPost);
-            setAllPosts([newPost, ...allPosts]);
-            setPostsToRender([newPost, ...postsToRender]);
-          })
-          .catch((err) => {
-            console.log(err);
-            openModal({
-              status: "error",
-              message: "Post cannot be added",
-            });
-          })
-          .finally(() => {
-            stopLoading();
-            closeAllBlogPopups();
-          });
-      }
-    } else {
-      const data = {
-        theme: props.theme,
-        icon: props.icon,
-        title: props.title,
-        hashtags: props.hashtags,
-        text: props.text,
+
+        const newPost = await api.addPost(data);
+
+        addedPosts.push(newPost);
       };
-      api
-        .addPost(data)
-        .then((newPost) => {
-          openModal({
-            status: "success",
-            message: "Post was successfully added",
-          });
-          addedPosts.push(newPost);
-          setAllPosts([newPost, ...allPosts]);
-          setPostsToRender([newPost, ...postsToRender]);
-        })
-        .catch((err) => {
-          console.log(err);
-          openModal({
-            status: "error",
-            message: "Post cannot be added",
-          });
-        })
-        .finally(() => {
-          stopLoading();
-          closeAllBlogPopups();
-        });
+
+      if (props.photoData[0]?.length) {
+        for (const file of props.photoData[0]) {
+          const formData = new FormData();
+          formData.append("file", file);
+
+          const response = await api.uploadPhoto(formData);
+
+          await createPost(response.data.path);
+        }
+      } else {
+        await createPost();
+      }
+
+      setAllPosts((prev) => [...addedPosts, ...prev]);
+      setPostsToRender((prev) => [...addedPosts, ...prev]);
+
+      openModal({
+        status: "success",
+        message:
+          addedPosts.length === 1
+            ? messages.POST_ADDED_SUCCESSFULLY_MSG
+            : `${addedPosts.length} posts were added successfully`,
+      });
+
+      closeAllBlogPopups();
+    } catch (err) {
+      console.error(err);
+
+      openModal({
+        status: "error",
+        message: err.message || messages.POST_ADD_ERROR_MSG,
+      });
+    } finally {
+      stopLoading();
     }
-    setAllPosts([...addedPosts, ...allPosts]);
-    setPostsToRender([...addedPosts, ...postsToRender]);
-    stopLoading();
   }
 
-  async function handleEditPost(postId, props) {
+  function handleEditPost(postId, props) {
     startLoading();
 
-    if (props.photoData[0]) {
-      const files = props.photoData[0];
-      for (const file of files) {
-        const formData = new FormData();
-        formData.append("file", file);
-        const response = await api.uploadPhoto(formData);
-        const data = {
-          theme: props.theme,
-          icon: props.icon,
-          title: props.title,
-          photoLink: response.data.path,
-          hashtags: props.hashtags,
-          text: props.text,
-        };
-        api
-          .editPost(postId, data)
-          .then((newPost) => {
-            openModal({
-              status: "success",
-              message: "Post was successfully edited",
-            });
-            setAllPosts((state) =>
-              state.map((p) => (p._id === postId ? newPost : p)),
-            );
-            setPostsToRender((state) =>
-              state.map((p) => (p._id === postId ? newPost : p)),
-            );
-            setSelectedPost(newPost);
-          })
-          .catch((err) => {
-            console.log(err);
-            openModal({
-              status: "error",
-              message: "Editing error, please try again later",
-            });
-          })
-          .finally(() => {
-            stopLoading();
-            closeAllBlogPopups();
-          });
-      }
-    } else {
+    const updatePost = (photoLink = "") => {
       const data = {
         theme: props.theme,
         icon: props.icon,
         title: props.title,
-        photoLink: "",
         hashtags: props.hashtags,
         text: props.text,
+        ...(photoLink && { photoLink }),
       };
-      api
-        .editPost(postId, data)
-        .then((newPost) => {
-          setAllPosts((state) =>
-            state.map((p) => (p._id === postId ? newPost : p)),
-          );
-          setPostsToRender((state) =>
-            state.map((p) => (p._id === postId ? newPost : p)),
-          );
-          setSelectedPost(newPost);
-        })
-        .catch((err) => console.log(err))
-        .finally(() => {
-          stopLoading();
-          closeAllBlogPopups();
+
+      return api.editPost(postId, data);
+    };
+
+    const request = props.photoData[0]?.length
+      ? (() => {
+          const formData = new FormData();
+          formData.append("file", props.photoData[0][0]);
+
+          return api
+            .uploadPhoto(formData)
+            .then((response) => updatePost(response.data[0].path));
+        })()
+      : updatePost();
+
+    request
+      .then((updatedPost) => {
+        setAllPosts((prev) =>
+          prev.map((p) => (p._id === postId ? updatedPost : p)),
+        );
+
+        setPostsToRender((prev) =>
+          prev.map((p) => (p._id === postId ? updatedPost : p)),
+        );
+
+        setSelectedPost(updatedPost);
+
+        openModal({
+          status: "success",
+          message: messages.POST_EDITED_SUCCESSFULLY_MSG,
         });
-    }
-    stopLoading();
-    closeAllBlogPopups();
+      })
+      .catch((err) => {
+        console.error(err);
+
+        openModal({
+          status: "error",
+          message: err.message || messages.POST_EDIT_ERROR_MSG,
+        });
+      })
+      .finally(() => {
+        stopLoading();
+        closeAllBlogPopups();
+      });
   }
 
   function handleDeletePostModalOpen(post) {
@@ -1402,7 +1309,12 @@ function App() {
         );
         setAllPosts((state) => state.filter((p) => p._id !== post._id && p));
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        openModal({
+          status: "error",
+          message: err.message || messages.DEFAULT_ERROR_MSG,
+        });
+      })
       .finally(() => {
         closeAllBlogPopups();
       });
@@ -1430,7 +1342,12 @@ function App() {
           projects.filter((p) => p._id !== project._id),
         );
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        openModal({
+          status: "error",
+          message: err.message || messages.DEFAULT_ERROR_MSG,
+        });
+      })
       .finally(() => closeAllBlogPopups());
   }
 
@@ -1482,6 +1399,7 @@ function App() {
     window.open(
       "https://open.spotify.com/playlist/6jhUvEAvi9laleDSaEenSK?si=m-_cgJDpRH-buMRqXpS6WA&pi=e-5IWoIJ-1TL-8",
       "_blank",
+      "noopener,noreferrer",
     );
   }
 
@@ -1495,7 +1413,7 @@ function App() {
           isOpen: true,
           status: "success",
           type: "default",
-          message: "Your message has been sent.",
+          message: messages.CONTACT_MESSAGE_SENT_MSG,
         });
 
         return true;
@@ -1505,9 +1423,7 @@ function App() {
           isOpen: true,
           status: "error",
           type: "default",
-          message:
-            err.message ||
-            "Failed to send the message. Please try again later.",
+          message: err.message || messages.CONTACT_MESSAGE_ERROR_MSG,
         });
 
         return false;
@@ -1517,27 +1433,14 @@ function App() {
       });
   };
 
-  ////////////////////////////////////////
-  const {
-    currentUser,
-    loggedIn,
-    handleSignin,
-    handleSignup,
-    handleSignout,
-    updateUser,
-  } = useAuth({
-    history,
-    location,
-    openModal,
-    messages: {
-      AUTHORIZATION_FAILED_ERROR_MSG,
-      SIGNUP_ERROR_MSG,
-      SUCCESSFUL_SIGNUP_MSG,
-      SIGNOUT_ERROR_MSG,
-    },
-    startLoading,
-    stopLoading,
-  });
+  const { currentUser, loggedIn, handleSignin, handleSignout, updateUser } =
+    useAuth({
+      history,
+      location,
+      openModal,
+      startLoading,
+      stopLoading,
+    });
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

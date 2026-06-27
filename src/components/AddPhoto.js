@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-escape */
 import Header from "./Header";
 import Navigation from "./Navigation";
 import LogoutButton from "./LogoutButton";
@@ -10,6 +9,7 @@ import BurgerMenuBtn from "./BurgerMenuBtn";
 import UploadFileInfo from "./UploadFileInfo";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import isValidUrl from "../utils/isValidUrl";
 
 const MAX_FILES_COUNT = 10;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
@@ -89,17 +89,17 @@ function AddPhoto({
   }
 
   function handlePhotoLinkChange(e) {
-    // eslint-disable-next-line no-useless-escape
-    const regex =
-      /^(https?:\/\/)(w{3})?([\da-z\.\-]+)\.([a-z\.]{2,6})([\w\.\-\_%~:\/?#\[\]@!$&\'()*\+,;=])*#?\/?$/;
-    if (!regex.test(e.target.value) && e.target.value.length !== 0) {
-      setPhotoLinkError("Invalid url");
-    } else if (e.target.value.length === 0) {
+    const value = e.target.value.trim();
+
+    if (!value) {
       setPhotoLinkError("You missed this field");
+    } else if (!isValidUrl(value)) {
+      setPhotoLinkError("Invalid URL");
     } else {
       setPhotoLinkError("");
     }
-    setPhotoLink(e.target.value);
+
+    setPhotoLink(value);
   }
 
   useEffect(() => {

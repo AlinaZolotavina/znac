@@ -1,10 +1,10 @@
-/* eslint-disable no-useless-escape */
 import { useState, useEffect } from "react";
 import errorImage from "../../images/image-error.svg";
 import BlogHashtag from "./BlogHashtag";
 import BackButton from "./BackButton";
 import getDate from "../../utils/getDate";
 import fixShortWords from "../../utils/fixShortWords";
+import isValidUrl from "../../utils/isValidUrl";
 
 function CurrentPost({
   post,
@@ -31,9 +31,7 @@ function CurrentPost({
   };
 
   const checkImageUrl = (src) => {
-    const regex =
-      /^(https?:\/\/)(w{3})?([\da-z\.\-]+)\.([a-z\.]{2,6})([\w\.\-\_%~:\/?#\[\]@!$&\'()*\+,;=])*#?\/?$/;
-    if (regex.test(src)) {
+    if (isValidUrl(src)) {
       setCurrentImage(src);
     } else {
       setCurrentImage(errorImage);
@@ -42,7 +40,7 @@ function CurrentPost({
 
   useEffect(() => {
     checkImageUrl(post.photoLink);
-  });
+  }, [post.photoLink]);
 
   function handleClick(e) {
     if (e.target.id === "blog-delete-btn") {
@@ -71,21 +69,14 @@ function CurrentPost({
           />
         ))}
       </div>
-      {
-        post.photoLink && (
-          // <div className='post__image-container'>
-          //     <button className={`flip-btn flip-btn_left ${isLeftFlipDisabled && 'flip-btn_disabled'}`} onClick={handleLeftFlip} disabled={isLeftFlipDisabled} />
-          // eslint-disable-next-line jsx-a11y/img-redundant-alt
-          <img
-            className={`post__image ${isPortrait ? "post__image_orientation_portrait" : ""}`}
-            src={currentImage}
-            alt="post photo"
-            onLoad={handleLoad}
-          />
-        )
-        //     <button className={`flip-btn flip-btn_right ${isRightFlipDisabled && 'flip-btn_disabled'}`} onClick={handleRightFlip} disabled={isRightFlipDisabled} />
-        // </div>
-      }
+      {post.photoLink && (
+        <img
+          className={`post__image ${isPortrait ? "post__image_orientation_portrait" : ""}`}
+          src={currentImage}
+          alt={`Illustration for post "${post.title}"`}
+          onLoad={handleLoad}
+        />
+      )}
       {paragraps.map((value, key) => (
         <p
           key={`${key}${date}`}

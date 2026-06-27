@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../utils/api";
+import * as messages from "../utils/messages";
 
 export default function usePhotos({
   openModal,
@@ -16,7 +17,6 @@ export default function usePhotos({
   const [areHashtagsEditing, setAreHashtagsEditing] = useState(false);
 
   // open photo popup, handle photo flip
-
   function handlePhotoClick(photo) {
     setSelectedPhoto(photo);
     increaseViewsNumber(photo._id);
@@ -78,8 +78,18 @@ export default function usePhotos({
       .then(() => {
         setPhotosToRender((state) => state.filter((p) => p._id !== photo._id));
         setAllPhotos((state) => state.filter((p) => p._id !== photo._id));
+
+        openModal({
+          status: "success",
+          message: messages.SUCCESSFUL_PHOTO_DELETE_MSG,
+        });
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        openModal({
+          status: "error",
+          message: err.message || messages.DELETE_PHOTO_ERROR_MSG,
+        });
+      })
       .finally(() => closeAllPopups());
   }
 
@@ -114,7 +124,12 @@ export default function usePhotos({
       .then(() => {
         setAreHashtagsEditing(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        openModal({
+          status: "error",
+          message: err.message || messages.EDIT_HASHTAGS_ERROR_MSG,
+        });
+      });
   }
 
   return {

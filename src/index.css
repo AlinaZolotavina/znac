@@ -8,6 +8,7 @@
 @import url(./blocks//znac-blocks/page/page.css);
 
 /* ZNAC STYLES*/
+@import url(./blocks/znac-blocks/visually-hidden/visually-hidden.css);
 /* header */
 @import url(./blocks/znac-blocks/header/header.css);
 @import url(./blocks/znac-blocks/burger-menu/burger-menu.css);
