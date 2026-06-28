@@ -2,9 +2,5 @@
   color: #0f1111;
   font-weight: 500;
   margin: 5px 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   grid-area: title;
-  text-wrap: auto;
 }

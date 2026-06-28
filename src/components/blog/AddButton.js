@@ -1,5 +1,9 @@
-function AddButton({ buttonClassname, buttonText }) {
-  return <button className={buttonClassname}>{buttonText}</button>;
+function AddButton({ buttonClassname, buttonText, onClick }) {
+  return (
+    <button className={buttonClassname} onClick={onClick}>
+      {buttonText}
+    </button>
+  );
 }
 
 export default AddButton;
