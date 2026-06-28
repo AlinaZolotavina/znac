@@ -197,18 +197,11 @@ class Api {
     });
   }
 
-  ///////// Don't need it, because post search works on the client side
-  ///////// But still can be useful someday though :)
-
-  //   findPost(data) {
-  //     return this._request("/posts/found", {
-  //         method: 'POST',
-  //           headers: {
-  //               'Content-Type': 'application/json',
-  //           },
-  //           body: JSON.stringify({ keyWord: data.query, selectedTheme: data.theme })
-  //     })
-  //   }
+  getPost(postId) {
+    return this._request(`/posts/${postId}`, {
+      method: "GET",
+    });
+  }
 
   addPost(data) {
     return this._request("/posts", {

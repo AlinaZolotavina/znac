@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import api from "../../utils/api";
 import BlogHeader from "./BlogHeader";
 import CurrentPost from "./CurrentPost";
-import { useEffect } from "react";
 
 function CurrentPostPage({
   activePage,
@@ -10,12 +12,28 @@ function CurrentPostPage({
   onProjectsClick,
   onAboutClick,
   onContactClick,
-  post,
   onBackButtonClick,
   onEditPostButtonClick,
   onDeletePostButtonClick,
   loggedIn,
+  openModal,
 }) {
+  const { id } = useParams();
+
+  const [post, setPost] = useState(null);
+
+  useEffect(() => {
+    api
+      .getPost(id)
+      .then(setPost)
+      .catch((err) => {
+        openModal({
+          status: "error",
+          message: err.message,
+        });
+      });
+  }, [id]);
+
   return (
     <div className="blog">
       <BlogHeader
@@ -27,18 +45,10 @@ function CurrentPostPage({
         onAboutClick={onAboutClick}
         onContactClick={onContactClick}
       />
-      {post.title ? (
+
+      {post && (
         <CurrentPost
           post={post}
-          location="single-post"
-          onBackButtonClick={onBackButtonClick}
-          onEditPostButtonClick={onEditPostButtonClick}
-          onDeletePostButtonClick={onDeletePostButtonClick}
-          loggedIn={loggedIn}
-        />
-      ) : (
-        <CurrentPost
-          post={JSON.parse(localStorage.getItem("currentPost"))}
           location="single-post"
           onBackButtonClick={onBackButtonClick}
           onEditPostButtonClick={onEditPostButtonClick}

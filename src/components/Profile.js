@@ -9,7 +9,6 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 function Profile({
   loggedIn,
-  activeSection,
   onHomeClick,
   onBlogClick,
   onGalleryClick,
@@ -34,7 +33,6 @@ function Profile({
       <Header className="header admin-header">
         <Navigation
           loggedIn={loggedIn}
-          activeSection={activeSection}
           onHomeClick={onHomeClick}
           onBlogClick={onBlogClick}
           onGalleryClick={onGalleryClick}

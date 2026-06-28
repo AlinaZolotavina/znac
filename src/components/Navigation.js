@@ -2,7 +2,6 @@ import { NavLink, useLocation } from "react-router-dom";
 
 function Navigation({
   loggedIn,
-  activeSection,
   onHomeClick,
   onBlogClick,
   onGalleryClick,

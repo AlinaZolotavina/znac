@@ -15,7 +15,9 @@ function CurrentPost({
   loggedIn,
 }) {
   const postDate = getDate(post.createdAt);
-  const postHashtags = post.hashtags.split(" ");
+  const postHashtags = Array.isArray(post.hashtags)
+    ? post.hashtags
+    : post.hashtags?.split(" ") || [];
   const date = Date.now();
   const [currentImage, setCurrentImage] = useState(errorImage);
   const paragraps = post.text

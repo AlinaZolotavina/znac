@@ -29,9 +29,11 @@ function PhotoPopup({
     setHasError(false);
   }, [photo?.link]);
 
-  const hashtags = photoHashtags?.length
-    ? photoHashtags.toString().split(" ")
-    : [];
+  const hashtags = Array.isArray(photoHashtags)
+    ? photoHashtags.flatMap((tag) => tag.split(/\s+/))
+    : typeof photoHashtags === "string"
+      ? photoHashtags.split(/\s+/)
+      : [];
 
   function handleRightFlip() {
     onPhotoFlip("right");

@@ -90,7 +90,6 @@ function App() {
   const history = useHistory();
   const location = useLocation();
   const isAlinaRoute = location.pathname.startsWith("/alina");
-  const [activeSection, setActiveSection] = useState("home");
 
   // everything related to photos (including screen width, on which depends the photos to render count)
   const [allPhotos, setAllPhotos] = useState([]);
@@ -140,7 +139,6 @@ function App() {
   const hasMorePosts =
     currentPostsNumber < allPosts.length || postsPage < postsPages;
   const [postToEdit, setPostToEdit] = useState({});
-  const [selectedPost, setSelectedPost] = useState({});
   const [postToDelete, setPostToDelete] = useState({});
 
   const [allProjects, setAllProjects] = useState([]);
@@ -738,7 +736,6 @@ function App() {
   const footerRef = useRef(null);
 
   function handleHomeClick() {
-    closeMenu();
     history.push("/");
 
     requestAnimationFrame(() => {
@@ -1233,8 +1230,6 @@ function App() {
           prev.map((p) => (p._id === postId ? updatedPost : p)),
         );
 
-        setSelectedPost(updatedPost);
-
         openModal({
           status: "success",
           message: messages.POST_EDITED_SUCCESSFULLY_MSG,
@@ -1280,9 +1275,7 @@ function App() {
   }
 
   function handlePostClick(post) {
-    history.push(`/alina/posts/${post.title.replace(/\s+/g, "")}`);
-    localStorage.setItem("currentPost", JSON.stringify(post));
-    setSelectedPost(post);
+    history.push(`/alina/posts/${post._id}`);
   }
 
   function handleDeleteProjectModalOpen(project) {
@@ -1321,25 +1314,20 @@ function App() {
 
   function moveToHomePage() {
     history.push("/alina");
-    setSelectedPost({});
     closeBlogMenu();
   }
   function moveToPostsPage() {
-    setSelectedPost({});
     closeBlogMenu();
   }
   function moveToProjectsPage() {
-    setSelectedPost({});
     closeBlogMenu();
   }
 
   function moveToAboutPage() {
-    setSelectedPost({});
     closeBlogMenu();
   }
   function moveToPreviousPage() {
     history.goBack();
-    setSelectedPost({});
   }
 
   function handleBlogClick() {
@@ -1408,7 +1396,6 @@ function App() {
           <Home
             loggedIn={loggedIn}
             ref={homeRef}
-            activeSection={activeSection}
             onHomeClick={handleHomeClick}
             onBlogClick={handleBlogClick}
             onGalleryClick={handleGalleryClick}
@@ -1423,7 +1410,6 @@ function App() {
             photos={photosToRender}
             loggedIn={loggedIn}
             ref={mainRef}
-            activeSection={activeSection}
             onPhotoClick={handlePhotoOpen}
             onDeleteBtnClick={handleDeletePhotoModalOpen}
             onHomeClick={handleHomeClick}
@@ -1501,11 +1487,11 @@ function App() {
             activePage="posts"
             onBlogMenuClick={handleBlogMenuClick}
             onContactClick={handleBlogContactClick}
-            post={selectedPost}
             onBackButtonClick={moveToPreviousPage}
             onEditPostButtonClick={handleEditPostPopupOpen}
             onDeletePostButtonClick={handleDeletePostModalOpen}
             loggedIn={loggedIn}
+            openModal={openModal}
           />
         </Route>
 
@@ -1577,7 +1563,6 @@ function App() {
           exact
           path="/profile"
           loggedIn={loggedIn}
-          activeSection={activeSection}
           onHomeClick={handleHomeClick}
           onBlogClick={handleBlogClick}
           onGalleryClick={handleGalleryClick}
@@ -1602,7 +1587,6 @@ function App() {
           component={AddPhoto}
           path="/addphoto"
           loggedIn={loggedIn}
-          activeSection={activeSection}
           onHomeClick={handleHomeClick}
           onBlogClick={handleBlogClick}
           nGalleryClick={handleGalleryClick}
