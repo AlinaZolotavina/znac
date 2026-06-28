@@ -24,7 +24,6 @@ const Home = forwardRef(function Home(
       <Header className="header">
         <Navigation
           loggedIn={loggedIn}
-          homeActive={homeActive}
           onHomeClick={onHomeClick}
           onBlogClick={onBlogClick}
           onGalleryClick={onGalleryClick}

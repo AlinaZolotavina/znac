@@ -90,6 +90,7 @@ function App() {
   const history = useHistory();
   const location = useLocation();
   const isAlinaRoute = location.pathname.startsWith("/alina");
+  const [activeSection, setActiveSection] = useState("home");
 
   // everything related to photos (including screen width, on which depends the photos to render count)
   const [allPhotos, setAllPhotos] = useState([]);
@@ -735,35 +736,6 @@ function App() {
   const homeRef = useRef(null);
   const mainRef = useRef(null);
   const footerRef = useRef(null);
-  useEffect(() => {
-    const markLinkActiveDependingOnScroll = () => {
-      const sections = document.querySelectorAll(".section");
-      const navLinks = document.querySelectorAll("button.nav__link");
-      let current = "";
-      sections.forEach((section) => {
-        const sectionTop = section.offsetTop;
-        if (sectionTop === 0) {
-          current = "home";
-        }
-        if (window.scrollY >= sectionTop - 60) {
-          current = section.getAttribute("id");
-        }
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-          current = "footer";
-        }
-      });
-
-      navLinks.forEach((link) => {
-        link.classList.remove("nav__link_active");
-        if (link.classList.contains(`${current}-link`)) {
-          link.classList.add("nav__link_active");
-        }
-      });
-    };
-    window.addEventListener("scroll", markLinkActiveDependingOnScroll);
-    return () =>
-      window.removeEventListener("scroll", markLinkActiveDependingOnScroll);
-  }, []);
 
   function handleHomeClick() {
     closeMenu();
@@ -1436,6 +1408,7 @@ function App() {
           <Home
             loggedIn={loggedIn}
             ref={homeRef}
+            activeSection={activeSection}
             onHomeClick={handleHomeClick}
             onBlogClick={handleBlogClick}
             onGalleryClick={handleGalleryClick}
@@ -1450,6 +1423,7 @@ function App() {
             photos={photosToRender}
             loggedIn={loggedIn}
             ref={mainRef}
+            activeSection={activeSection}
             onPhotoClick={handlePhotoOpen}
             onDeleteBtnClick={handleDeletePhotoModalOpen}
             onHomeClick={handleHomeClick}
@@ -1603,6 +1577,9 @@ function App() {
           exact
           path="/profile"
           loggedIn={loggedIn}
+          activeSection={activeSection}
+          onHomeClick={handleHomeClick}
+          onBlogClick={handleBlogClick}
           onGalleryClick={handleGalleryClick}
           onContactClick={handleContactClick}
           onEditEmailBtnClick={handleEditEmailBtnClick}
@@ -1625,6 +1602,9 @@ function App() {
           component={AddPhoto}
           path="/addphoto"
           loggedIn={loggedIn}
+          activeSection={activeSection}
+          onHomeClick={handleHomeClick}
+          onBlogClick={handleBlogClick}
           nGalleryClick={handleGalleryClick}
           onContactClick={handleContactClick}
           onMenuClick={handleMenuClick}

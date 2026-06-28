@@ -2,6 +2,7 @@ import { NavLink, useLocation } from "react-router-dom";
 
 function Navigation({
   loggedIn,
+  activeSection,
   onHomeClick,
   onBlogClick,
   onGalleryClick,
@@ -25,16 +26,14 @@ function Navigation({
           GALLERY
         </button>
       )}
-      {location.pathname === "/" && (
-        <NavLink
-          className="nav__link"
-          activeClassName="nav__link_active"
-          to="/alina"
-          onClick={onBlogClick}
-        >
-          BLOG
-        </NavLink>
-      )}
+      <NavLink
+        className="nav__link"
+        activeClassName="nav__link_active"
+        to="/alina"
+        onClick={onBlogClick}
+      >
+        BLOG
+      </NavLink>
       {location.pathname === "/" && (
         <button className="nav__link" onClick={onContactClick}>
           CONTACT
