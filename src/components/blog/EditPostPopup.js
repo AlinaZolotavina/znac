@@ -6,6 +6,7 @@ import NewPostRadioButton from "./NewPostRadioButton.js";
 import BlogUploadFileInfo from "./BlogUploadFileInfo.js";
 import BlogTextArea from "./BlogTextArea.js";
 import iconButtons from "../../utils/iconButtons.js";
+import hashtagsToInputValue from "../../utils/hashtagsToInputValue";
 
 function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
   const [isEdited, setIsEdited] = useState(false);
@@ -38,7 +39,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
         setIsTherePhoto(false);
       }
       setTitle(post.title);
-      setHashtags(post.hashtags);
+      setHashtags(hashtagsToInputValue(post.hashtags));
       setTextarea(post.text);
     }
   }, [post, isOpen]);

@@ -4,6 +4,7 @@ import BlogInput from "./BlogInput";
 import BlogCloseButton from "./BlogCloseButton";
 import BlogTextArea from "./BlogTextArea";
 import isValidUrl from "../../utils/isValidUrl";
+import hashtagsToInputValue from "../../utils/hashtagsToInputValue";
 
 function EditProjectPopup({
   isOpen,
@@ -16,7 +17,7 @@ function EditProjectPopup({
   useEffect(() => {
     if (Object.keys(project).length !== 0) {
       setProjectTitle(project.title);
-      setProjectHashtags(project.hashtags);
+      setProjectHashtags(hashtagsToInputValue(project.hashtags));
       setTextarea(project.text);
       setProjectLink(project.link);
     }
