@@ -1163,7 +1163,9 @@ function App() {
 
           const response = await api.uploadPhoto(formData);
 
-          await createPost(response.data.path);
+          const [{ path: photoLink }] = response.data;
+
+          await createPost(photoLink);
         }
       } else {
         await createPost();

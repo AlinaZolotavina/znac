@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import BlogForm from "./BlogForm.js";
 import BlogInput from "./BlogInput.js";
 import BlogCloseButton from "./BlogCloseButton.js";
@@ -92,6 +92,8 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
   const [photoInfo, setPhotoInfo] = useState("Not selected");
   let fileName;
   const [photoNames, setPhotoNames] = useState([]);
+  const fileInputRef = useRef(null);
+  const [uploadError, setUploadError] = useState("");
 
   useEffect(() => {
     if (postPhotos.length === 0) {
@@ -102,6 +104,7 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
   }, [postPhotos]);
 
   async function handlePreuploadPhoto(e) {
+    setUploadError("");
     let addedPhotos = [];
     let names = [];
     const files = Array.from(e.target.files);
@@ -208,23 +211,28 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
     textareaError,
   ]);
 
+  useEffect(() => {
+    if (!isOpen) {
+      clearInputs();
+    }
+  }, [isOpen]);
+
   function handleSubmit(e) {
     e.preventDefault();
 
     onAddPost({
       theme: themeCheckValue,
       icon: iconCheckValue,
-      title: title,
+      title,
       photoData: postPhotos,
-      hashtags: hashtags,
+      hashtags,
       text: textarea,
+      setUploadError,
     });
-    clearInputs();
   }
 
   function handleClose() {
     onClose();
-    clearInputs();
   }
 
   function clearInputs() {
@@ -241,11 +249,15 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
     setPostPhotos([]);
     setPhotoInfo("Not selected");
     setPhotoNames([]);
+    setUploadError("");
     setHashtags("");
     setHashtagsError("");
     setTextarea("");
     setTextareaError("");
     setIsFormValid(false);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   }
 
   return (
@@ -356,6 +368,7 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
             <div className="new-post__upload-container">
               <label className="blog-upload-file">
                 <input
+                  ref={fileInputRef}
                   name="photoFile"
                   className="blog-upload-file__input"
                   type="file"
