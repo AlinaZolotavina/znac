@@ -16,13 +16,14 @@ function CurrentPostPage({
   onEditPostButtonClick,
   onDeletePostButtonClick,
   loggedIn,
+  postVersion,
   openModal,
 }) {
   const { id } = useParams();
 
   const [post, setPost] = useState(null);
 
-  useEffect(() => {
+  const loadPost = () =>
     api
       .getPost(id)
       .then(setPost)
@@ -32,7 +33,10 @@ function CurrentPostPage({
           message: err.message,
         });
       });
-  }, [id]);
+
+  useEffect(() => {
+    loadPost();
+  }, [id, postVersion]);
 
   return (
     <div className="blog">

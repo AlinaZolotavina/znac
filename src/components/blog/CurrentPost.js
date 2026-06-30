@@ -46,7 +46,7 @@ function CurrentPost({
 
   function handleClick(e) {
     if (e.target.id === "blog-delete-btn") {
-      onDeletePostButtonClick(post);
+      onDeletePostButtonClick(post, true);
     } else if (e.target.id === "blog-edit-btn") {
       onEditPostButtonClick(post);
     }

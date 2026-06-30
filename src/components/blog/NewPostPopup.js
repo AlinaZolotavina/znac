@@ -89,36 +89,35 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
   }
 
   const [postPhotos, setPostPhotos] = useState([]);
-  const [photoInfo, setPhotoInfo] = useState("Not selected");
-  let fileName;
   const [photoNames, setPhotoNames] = useState([]);
   const fileInputRef = useRef(null);
   const [uploadError, setUploadError] = useState("");
-
-  useEffect(() => {
-    if (postPhotos.length === 0) {
-      setPhotoInfo("Not selected");
-    } else {
-      setPhotoInfo("");
-    }
-  }, [postPhotos]);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
 
   async function handlePreuploadPhoto(e) {
     setUploadError("");
-    let addedPhotos = [];
-    let names = [];
-    const files = Array.from(e.target.files);
-    for (const item of files) {
-      fileName = await item.name.slice(0, -4);
-      const webPFile = await convert(item, 50);
-      names.push(`${fileName}.jpg`);
-      addedPhotos.push(webPFile);
-      setPostPhotos([addedPhotos, ...postPhotos]);
+    setIsUploadingPhoto(true);
+    const addedPhotos = [];
+    const names = [];
+
+    try {
+      const files = Array.from(e.target.files);
+
+      for (const item of files) {
+        const fileName = item.name.slice(0, -4);
+        const webPFile = await convert(item, fileName);
+        names.push(`${fileName}.jpg`);
+        addedPhotos.push(webPFile);
+      }
+
+      setPostPhotos([addedPhotos]);
       setPhotoNames(names);
+    } finally {
+      setIsUploadingPhoto(false);
     }
   }
 
-  const convert = (jpgFile) => {
+  const convert = (jpgFile, fileName) => {
     return new Promise((resolve, reject) => {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
@@ -247,7 +246,6 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
     setTitle("");
     setTitleError("");
     setPostPhotos([]);
-    setPhotoInfo("Not selected");
     setPhotoNames([]);
     setUploadError("");
     setHashtags("");
@@ -258,6 +256,7 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+    setIsUploadingPhoto(false);
   }
 
   return (
@@ -382,11 +381,16 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
                 </span>
               </label>
               <ul className="blog-upload-file__info">
-                {postPhotos.length === 0 ? (
-                  <li className="blog-upload-file__info_empty">{photoInfo}</li>
+                {isUploadingPhoto ? (
+                  <li className="blog-upload-file__status">
+                    Uploading
+                    <span className="blog-upload-file__dots" />
+                  </li>
+                ) : postPhotos.length === 0 ? (
+                  <li className="blog-upload-file__info_empty">Not selected</li>
                 ) : (
                   photoNames.map((n) => (
-                    <BlogUploadFileInfo fileName={n} key={n} />
+                    <BlogUploadFileInfo key={n} fileName={n} />
                   ))
                 )}
               </ul>

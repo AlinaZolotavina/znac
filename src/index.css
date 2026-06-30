@@ -447,6 +447,8 @@
 @import url(./blocks/blog-blocks/blog-upload-file/__info/blog-upload-file__info.css);
 @import url(./blocks/blog-blocks/blog-upload-file/__item/blog-upload-file__item.css);
 @import url(./blocks/blog-blocks/blog-upload-file/__image-icon/blog-upload-file__image-icon.css);
+@import url(./blocks/blog-blocks/blog-upload-file/__status/blog-upload-file__status.css);
+@import url(./blocks/blog-blocks/blog-upload-file/__dots/blog-upload-file__dots.css);
 @import url(./blocks/blog-blocks/new-post/__submit-btn/new-post__submit-btn.css);
 @import url(./blocks/blog-blocks/new-post/__submit-btn/_disabled/new-post__submit-btn_disabled.css);
 @import url(./blocks/blog-blocks/delete-post-submit-btn/delete-post-submit-btn.css);

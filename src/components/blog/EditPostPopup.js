@@ -20,12 +20,13 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
     return currentIconNumber;
   };
 
-  const [isTherePhoto, setIsTherePhoto] = useState(false);
   useEffect(() => {
     if (Object.keys(post).length !== 0) {
       setThemeCheckValue(post.theme);
       setIconCheckValue(post.icon);
+
       const currentIconNumber = getCurrentIconNumber(post.icon);
+
       if (currentIconNumber < 11) {
         setSlideStart(currentIconNumber);
         setSlideEnd(currentIconNumber + 6);
@@ -33,14 +34,11 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
         setSlideStart(10);
         setSlideEnd(16);
       }
-      if (post.photoLink) {
-        setIsTherePhoto(true);
-      } else {
-        setIsTherePhoto(false);
-      }
+
       setTitle(post.title);
       setHashtags(hashtagsToInputValue(post.hashtags));
       setTextarea(post.text);
+      setIsPhotoDeleted(false);
     }
   }, [post, isOpen]);
 
@@ -91,7 +89,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
     }
   }, [slideStart, slideEnd]);
 
-  const [title, setTitle] = useState(post.title);
+  const [title, setTitle] = useState("");
   const [titleError, setTitleError] = useState("");
   function handleTitleChange(e) {
     const regex = /^[\p{L}0-9 _()\-:!?]*$/u;
@@ -107,7 +105,11 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
   }
 
   const [postPhotos, setPostPhotos] = useState([]);
+  const [isPhotoDeleted, setIsPhotoDeleted] = useState(false);
+  const hasPhoto =
+    !isPhotoDeleted && (Boolean(post.photoLink) || postPhotos.length > 0);
   const [photoInfo, setPhotoInfo] = useState("Not selected");
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   let fileName;
   const [photoNames, setPhotoNames] = useState([]);
 
@@ -120,6 +122,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
   }, [postPhotos]);
 
   async function handlePreuploadPhoto(e) {
+    setIsUploadingPhoto(true);
     let addedPhotos = [];
     let names = [];
     const files = Array.from(e.target.files);
@@ -128,10 +131,10 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
       const webPFile = await convert(item, 50);
       names.push(`${fileName}.jpg`);
       addedPhotos.push(webPFile);
-      setPostPhotos([addedPhotos, ...postPhotos]);
       setPhotoNames(names);
     }
-    setIsTherePhoto(true);
+    setPostPhotos([addedPhotos, ...postPhotos]);
+    setIsUploadingPhoto(false);
     setIsEdited(true);
   }
 
@@ -174,11 +177,12 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
   const handlePhotoDelete = (e) => {
     e.preventDefault();
     setPostPhotos([]);
-    setIsTherePhoto(false);
+    setPhotoNames([]);
+    setIsPhotoDeleted(true);
     setIsEdited(true);
   };
 
-  const [hashtags, setHashtags] = useState(post.hashtags);
+  const [hashtags, setHashtags] = useState("");
   const [hashtagsError, setHashtagsError] = useState("");
   function handleHashtagsChange(e) {
     const regex = /^[A-Za-zА-Яа-я0-9 _]*$/;
@@ -193,7 +197,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
     setIsEdited(true);
   }
 
-  const [textarea, setTextarea] = useState(post.text);
+  const [textarea, setTextarea] = useState("");
   const [textareaError, setTextareaError] = useState("");
   function handleTextareaChange(e) {
     if (e.target.value.length === 0) {
@@ -382,7 +386,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
               isSendingReq={isSendingReq}
               error={titleError}
             />
-            {isTherePhoto ? (
+            {hasPhoto ? (
               <div className="new-post__upload-container">
                 <button
                   className="new-post__delete-post-photo-btn"
@@ -391,14 +395,20 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
                   Delete photo
                 </button>
                 <ul className="blog-upload-file__info">
-                  {!post.photoLink || post.photoLink === "" ? (
+                  {photoNames.length > 0 ? (
+                    photoNames.map((name) => (
+                      <BlogUploadFileInfo key={name} fileName={name} />
+                    ))
+                  ) : post.photoLink ? (
+                    <BlogUploadFileInfo
+                      fileName={post.photoLink.slice(
+                        post.photoLink.lastIndexOf("/") + 1,
+                      )}
+                    />
+                  ) : (
                     <li className="blog-upload-file__info_empty">
                       {photoInfo}
                     </li>
-                  ) : (
-                    <BlogUploadFileInfo
-                      fileName={`${post.photoLink.slice(post.photoLink.lastIndexOf("/") + 1)}...jpg`}
-                    />
                   )}
                 </ul>
               </div>
@@ -419,13 +429,18 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
                   </span>
                 </label>
                 <ul className="blog-upload-file__info">
-                  {postPhotos.length === 0 ? (
+                  {isUploadingPhoto ? (
+                    <li className="blog-upload-file__status">
+                      Uploading
+                      <span className="blog-upload-file__dots" />
+                    </li>
+                  ) : postPhotos.length === 0 ? (
                     <li className="blog-upload-file__info_empty">
                       {photoInfo}
                     </li>
                   ) : (
                     photoNames.map((n) => (
-                      <BlogUploadFileInfo fileName={n} key={n} />
+                      <BlogUploadFileInfo key={n} fileName={n} />
                     ))
                   )}
                 </ul>

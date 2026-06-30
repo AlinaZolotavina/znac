@@ -140,6 +140,8 @@ function App() {
     currentPostsNumber < allPosts.length || postsPage < postsPages;
   const [postToEdit, setPostToEdit] = useState({});
   const [postToDelete, setPostToDelete] = useState({});
+  const [postVersion, setPostVersion] = useState(0);
+  const [redirectAfterDelete, setRedirectAfterDelete] = useState(false);
 
   const [allProjects, setAllProjects] = useState([]);
   const [loadedProjects, setLoadedProjects] = useState([]);
@@ -976,6 +978,7 @@ function App() {
     setIsNewProjectPopupOpen(false);
     setIsDeletePostModalOpen(false);
     setIsDeleteProjectModalOpen(false);
+    setRedirectAfterDelete(false);
   }
 
   const closeGetInTouchPopup = () => {
@@ -1232,6 +1235,8 @@ function App() {
           prev.map((p) => (p._id === postId ? updatedPost : p)),
         );
 
+        setPostVersion((v) => v + 1);
+
         openModal({
           status: "success",
           message: messages.POST_EDITED_SUCCESSFULLY_MSG,
@@ -1251,9 +1256,10 @@ function App() {
       });
   }
 
-  function handleDeletePostModalOpen(post) {
-    setIsDeletePostModalOpen(!isDeletePostModalOpen);
+  function handleDeletePostModalOpen(post, shouldRedirect = false) {
     setPostToDelete(post);
+    setRedirectAfterDelete(shouldRedirect);
+    setIsDeletePostModalOpen(true);
   }
 
   function handlePostDelete(post) {
@@ -1264,6 +1270,9 @@ function App() {
           state.filter((p) => p._id !== post._id && p),
         );
         setAllPosts((state) => state.filter((p) => p._id !== post._id && p));
+        if (redirectAfterDelete) {
+          history.replace("/alina/posts");
+        }
       })
       .catch((err) => {
         openModal({
@@ -1484,7 +1493,7 @@ function App() {
           />
         </Route>
 
-        <Route exact path="/alina/posts/:id" component={CurrentPostPage}>
+        <Route exact path="/alina/posts/:id">
           <CurrentPostPage
             activePage="posts"
             onBlogMenuClick={handleBlogMenuClick}
@@ -1493,6 +1502,7 @@ function App() {
             onEditPostButtonClick={handleEditPostPopupOpen}
             onDeletePostButtonClick={handleDeletePostModalOpen}
             loggedIn={loggedIn}
+            postVersion={postVersion}
             openModal={openModal}
           />
         </Route>
