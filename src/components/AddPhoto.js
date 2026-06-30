@@ -41,6 +41,7 @@ function AddPhoto({
   const location = useLocation();
   const views = 0;
   const [fileNames, setFileNames] = useState([]);
+  const [isUploadingPhotos, setIsUploadingPhotos] = useState(false);
   const [modalData, setModalData] = useState({
     isOpen: false,
     status: "",
@@ -88,6 +89,7 @@ function AddPhoto({
     setFileNames([]);
     setFileInfo("Photo not selected");
     setPhotoFiles([]);
+    setIsUploadingPhotos(false);
   }
 
   function handlePhotoLinkChange(e) {
@@ -183,21 +185,27 @@ function AddPhoto({
     }
 
     try {
-      const convertedFiles = [];
-      const names = [];
+      setIsUploadingPhotos(true);
+      const convertedFiles = await Promise.all(
+        selectedFiles.map(async (file) => {
+          const fileName = file.name.replace(/\.[^.]+$/, "");
 
-      for (const file of selectedFiles) {
-        const fileName = file.name.replace(/\.[^.]+$/, "");
+          return {
+            file: await convert(file, fileName),
+            name: `${fileName}.webp`,
+          };
+        }),
+      );
 
-        const webPFile = await convert(file, fileName);
+      setPhotoFiles((prevFiles) => [
+        ...prevFiles,
+        ...convertedFiles.map((item) => item.file),
+      ]);
 
-        convertedFiles.push(webPFile);
-        names.push(`${fileName}.webp`);
-      }
-
-      setPhotoFiles((prevFiles) => [...prevFiles, ...convertedFiles]);
-
-      setFileNames((prevNames) => [...prevNames, ...names]);
+      setFileNames((prevNames) => [
+        ...prevNames,
+        ...convertedFiles.map((item) => item.name),
+      ]);
     } catch (err) {
       console.error(err);
 
@@ -205,6 +213,8 @@ function AddPhoto({
         status: "error",
         message: "Failed to process selected files",
       });
+    } finally {
+      setIsUploadingPhotos(false);
     }
 
     e.target.value = "";
@@ -354,10 +364,15 @@ function AddPhoto({
                 </span>
               </label>
               <ul className="upload-file__info">
-                {photoFiles.length === 0 ? (
+                {isUploadingPhotos ? (
+                  <li className="upload-file__status">
+                    Uploading
+                    <span className="upload-file__dots" />
+                  </li>
+                ) : photoFiles.length === 0 ? (
                   <li className="upload-file__info_empty">{fileInfo}</li>
                 ) : (
-                  fileNames.map((n) => <UploadFileInfo fileName={n} key={n} />)
+                  fileNames.map((n) => <UploadFileInfo key={n} fileName={n} />)
                 )}
               </ul>
             </div>
