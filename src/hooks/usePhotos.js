@@ -18,6 +18,7 @@ export default function usePhotos({
 
   // open photo popup, handle photo flip
   function handlePhotoClick(photo) {
+    console.log("handlePhotoClick:", photo);
     setSelectedPhoto(photo);
     increaseViewsNumber(photo._id);
   }

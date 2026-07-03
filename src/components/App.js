@@ -718,6 +718,7 @@ function App() {
 
   // open photo popup
   const handlePhotoOpen = (photo) => {
+    console.log("Selected photo:", photo);
     handlePhotoClick(photo);
     setIsPhotoPopupOpen(true);
   };
@@ -1144,14 +1145,14 @@ function App() {
     try {
       const addedPosts = [];
 
-      const createPost = async (photoLink = "") => {
+      const createPost = async (photoData = {}) => {
         const data = {
           theme: props.theme,
           icon: props.icon,
           title: props.title,
           hashtags: props.hashtags,
           text: props.text,
-          ...(photoLink && { photoLink }),
+          ...photoData,
         };
 
         const newPost = await api.addPost(data);
@@ -1162,13 +1163,15 @@ function App() {
       if (props.photoData[0]?.length) {
         for (const file of props.photoData[0]) {
           const formData = new FormData();
-          formData.append("file", file);
+          formData.append("images", file);
 
-          const response = await api.uploadPhoto(formData);
+          const response = await api.uploadPhoto(formData, "/posts/image");
 
-          const [{ path: photoLink }] = response.data;
+          const [{ filename }] = response.data;
 
-          await createPost(photoLink);
+          await createPost({
+            photoFilename: filename,
+          });
         }
       } else {
         await createPost();
@@ -1201,15 +1204,19 @@ function App() {
   function handleEditPost(postId, props) {
     startLoading();
 
-    const updatePost = (photoLink = "") => {
+    const updatePost = (photoData = {}) => {
       const data = {
         theme: props.theme,
         icon: props.icon,
         title: props.title,
         hashtags: props.hashtags,
         text: props.text,
-        ...(photoLink && { photoLink }),
+        ...photoData,
       };
+
+      if (props.removePhoto && !data.newPhotoFilename && !data.newPhotoLink) {
+        data.removePhoto = true;
+      }
 
       return api.editPost(postId, data);
     };
@@ -1217,11 +1224,13 @@ function App() {
     const request = props.photoData[0]?.length
       ? (() => {
           const formData = new FormData();
-          formData.append("file", props.photoData[0][0]);
+          formData.append("images", props.photoData[0][0]);
 
-          return api
-            .uploadPhoto(formData)
-            .then((response) => updatePost(response.data[0].path));
+          return api.uploadPhoto(formData, "/posts/image").then((response) =>
+            updatePost({
+              newPhotoFilename: response.data[0].filename,
+            }),
+          );
         })()
       : updatePost();
 

@@ -45,11 +45,12 @@ class Api {
     });
   }
 
-  uploadPhoto(data) {
+  uploadPhoto(data, endpoint = "/upload") {
     if (!data) {
       return;
     }
-    return this._request("/upload", {
+
+    return this._request(endpoint, {
       method: "POST",
       body: data,
     });
@@ -205,37 +206,55 @@ class Api {
   }
 
   addPost(data) {
+    const body = {
+      theme: data.theme,
+      icon: data.icon,
+      title: data.title,
+      hashtags: data.hashtags,
+      text: data.text,
+
+      ...(data.photoLink && {
+        photoLink: data.photoLink,
+      }),
+
+      ...(data.photoFilename && {
+        photoFilename: data.photoFilename,
+      }),
+    };
+
     return this._request("/posts", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        theme: data.theme,
-        icon: data.icon,
-        title: data.title,
-        photoLink: data.photoLink,
-        hashtags: data.hashtags,
-        text: data.text,
-      }),
+      body: JSON.stringify(body),
     });
   }
 
   editPost(postId, data) {
+    const body = {
+      newTheme: data.theme,
+      newIcon: data.icon,
+      newTitle: data.title,
+      newHashtags: data.hashtags,
+      newText: data.text,
+      ...(data.newPhotoFilename && {
+        newPhotoFilename: data.newPhotoFilename,
+      }),
+      ...(data.newPhotoLink && {
+        newPhotoLink: data.newPhotoLink,
+      }),
+      ...(data.removePhoto && {
+        removePhoto: true,
+      }),
+    };
     return this._request(`/posts/${postId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        newTheme: data.theme,
-        newIcon: data.icon,
-        newTitle: data.title,
-        newPhotoLink: data.photoLink,
-        newHashtags: data.hashtags,
-        newText: data.text,
-      }),
+      body: JSON.stringify(body),
     });
   }
 

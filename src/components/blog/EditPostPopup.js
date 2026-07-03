@@ -249,6 +249,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
       icon: iconCheckValue,
       title: title,
       photoData: postPhotos,
+      removePhoto: isPhotoDeleted,
       hashtags: hashtags,
       text: textarea,
     });
