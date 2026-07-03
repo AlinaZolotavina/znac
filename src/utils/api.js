@@ -38,6 +38,7 @@ class Api {
       },
       body: JSON.stringify({
         link: data.link,
+        filename: data.filename,
         hashtags: data.hashtags,
         views: data.views,
       }),
@@ -48,7 +49,7 @@ class Api {
     if (!data) {
       return;
     }
-    return this._request("/public", {
+    return this._request("/upload", {
       method: "POST",
       body: data,
     });

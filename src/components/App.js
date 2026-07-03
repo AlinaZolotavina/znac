@@ -645,7 +645,7 @@ function App() {
       for (const file of photoData) {
         const formData = new FormData();
 
-        formData.append("file", file);
+        formData.append("photos", file);
 
         const response = await api.uploadPhoto(formData);
 
@@ -654,7 +654,7 @@ function App() {
         }
 
         const photoDataToSave = {
-          link: response.data[0].path,
+          filename: response.data[0].filename,
           hashtags,
           views,
         };
