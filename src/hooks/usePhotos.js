@@ -20,7 +20,6 @@ export default function usePhotos({
   closeAllPopups,
   screenWidth,
   setScreenWidth,
-  loadPhotos,
   hashtag,
 }) {
   const [photosToRender, setPhotosToRender] = useState([]);
@@ -133,6 +132,59 @@ export default function usePhotos({
         }
       })
       .catch(console.error);
+  }
+
+  function getRestoredVisibleCount() {
+    const { initialPhotosNumber } = getPhotosLayout();
+
+    return Math.min(
+      visibleLoadedPhotosCount || initialPhotosNumber,
+      loadedPhotos.length,
+    );
+  }
+
+  function loadPhotos({ page = 1, append = false, hashtag = "" } = {}) {
+    const normalizedHashtag = hashtag.trim().toLowerCase();
+    const hasFilter = Boolean(normalizedHashtag);
+
+    const request = hasFilter
+      ? api.findPhoto(normalizedHashtag, page, 20)
+      : api.getPhotos(page, 20);
+
+    return request
+      .then((response) => {
+        const { data, page: responsePage, pages } = response;
+        setAllPhotos((previousPhotos) =>
+          append ? [...previousPhotos, ...data] : data,
+        );
+        // Кэшируем только обычную галерею
+        if (!hasFilter) {
+          setLoadedPhotos((previousPhotos) =>
+            append ? [...previousPhotos, ...data] : data,
+          );
+        }
+        setPhotosPage(responsePage);
+        setPhotosPages(pages);
+
+        if (!append) {
+          const { initialPhotosNumber } = getPhotosLayout();
+          const visibleCount = Math.min(initialPhotosNumber, data.length);
+          setCurrentPhotosNumber(visibleCount);
+          if (!hasFilter) {
+            setVisibleLoadedPhotosCount(visibleCount);
+          }
+        }
+
+        return response;
+      })
+      .catch((err) => {
+        openModal({
+          status: "error",
+          message: err.message || messages.DEFAULT_ERROR_MSG,
+        });
+
+        throw err;
+      });
   }
 
   // open photo popup, handle photo flip
@@ -285,5 +337,7 @@ export default function usePhotos({
     setVisibleLoadedPhotosCount,
     hasMorePhotos,
     showMorePhotos,
+    getRestoredVisibleCount,
+    loadPhotos,
   };
 }

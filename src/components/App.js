@@ -157,22 +157,19 @@ function App() {
     handlePhotoFlip,
     handleAddPhotoViaLink,
     handlePhotoDelete,
-    getPhotosLayout,
     calculatePhotosCount,
-    loadPhotos,
     photosToRender,
     setPhotosToRender,
     setAllPhotos,
     loadedPhotos,
-    setLoadedPhotos,
     setPhotosPage,
     setPhotosPages,
     currentPhotosNumber,
     setCurrentPhotosNumber,
-    visibleLoadedPhotosCount,
-    setVisibleLoadedPhotosCount,
     hasMorePhotos,
     showMorePhotos,
+    getRestoredVisibleCount,
+    loadPhotos,
   } = usePhotos({
     openModal,
     startLoading,
@@ -180,7 +177,6 @@ function App() {
     closeAllPopups,
     screenWidth,
     setScreenWidth,
-    loadPhotos: loadPhotosImpl,
     hashtag,
   });
 
@@ -287,50 +283,6 @@ function App() {
       Math.max(current, initialProjectsNumber),
     );
   };
-
-  function loadPhotosImpl({ page = 1, append = false, hashtag = "" } = {}) {
-    const normalizedHashtag = hashtag.trim().toLowerCase();
-    const hasFilter = Boolean(normalizedHashtag);
-
-    const request = hasFilter
-      ? api.findPhoto(normalizedHashtag, page, 20)
-      : api.getPhotos(page, 20);
-
-    return request
-      .then((response) => {
-        const { data, page: responsePage, pages } = response;
-        setAllPhotos((previousPhotos) =>
-          append ? [...previousPhotos, ...data] : data,
-        );
-        // Кэшируем только обычную галерею
-        if (!hasFilter) {
-          setLoadedPhotos((previousPhotos) =>
-            append ? [...previousPhotos, ...data] : data,
-          );
-        }
-        setPhotosPage(responsePage);
-        setPhotosPages(pages);
-
-        if (!append) {
-          const { initialPhotosNumber } = getPhotosLayout();
-          const visibleCount = Math.min(initialPhotosNumber, data.length);
-          setCurrentPhotosNumber(visibleCount);
-          if (!hasFilter) {
-            setVisibleLoadedPhotosCount(visibleCount);
-          }
-        }
-
-        return response;
-      })
-      .catch((err) => {
-        openModal({
-          status: "error",
-          message: err.message || messages.DEFAULT_ERROR_MSG,
-        });
-
-        throw err;
-      });
-  }
 
   function loadProjects({ page = 1, append = false, hashtag = "" } = {}) {
     const normalizedHashtag = hashtag === "All" ? "" : hashtag.trim();
@@ -757,12 +709,7 @@ function App() {
 
     // Поиск очищен: возвращаем нефильтрованный кэш без нового запроса.
     if (!normalizedHashtag) {
-      const { initialPhotosNumber } = getPhotosLayout();
-
-      const restoredVisibleCount = Math.min(
-        visibleLoadedPhotosCount || initialPhotosNumber,
-        loadedPhotos.length,
-      );
+      const restoredVisibleCount = getRestoredVisibleCount();
 
       setAllPhotos(loadedPhotos);
       setPhotosPage(1);
@@ -814,12 +761,7 @@ function App() {
   }
 
   function handleClearPhotoSearch() {
-    const { initialPhotosNumber } = getPhotosLayout();
-
-    const restoredVisibleCount = Math.min(
-      visibleLoadedPhotosCount || initialPhotosNumber,
-      loadedPhotos.length,
-    );
+    const restoredVisibleCount = getRestoredVisibleCount();
 
     setHashtag("");
     setAllPhotos(loadedPhotos);
