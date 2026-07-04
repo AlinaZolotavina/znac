@@ -149,27 +149,23 @@ function App() {
     hashtagsOfSelectedPhoto,
     viewsOfSelectedPhoto,
     areHashtagsEditing,
-    setAreHashtagsEditing,
+    handleEditHashtagsBtnClick,
     handleEditHashtags,
     isLeftFlipDisabled,
     isRightFlipDisabled,
-    handlePhotoClick,
     handlePhotoFlip,
     handleAddPhotoViaLink,
     handlePhotoDelete,
     calculatePhotosCount,
     photosToRender,
-    setPhotosToRender,
-    setAllPhotos,
-    loadedPhotos,
-    setPhotosPage,
-    setPhotosPages,
     currentPhotosNumber,
-    setCurrentPhotosNumber,
     hasMorePhotos,
     showMorePhotos,
-    getRestoredVisibleCount,
-    loadPhotos,
+    handlePhotoSearch,
+    handleClearPhotoSearch,
+    handlePhotoHashtagClick,
+    prependPhotos,
+    handlePhotoOpen,
   } = usePhotos({
     openModal,
     startLoading,
@@ -178,19 +174,13 @@ function App() {
     screenWidth,
     setScreenWidth,
     hashtag,
+    setHashtag,
+    lastHashtags,
+    setLastHashtags,
+    closeAllPopups,
+    location,
+    setIsPhotoPopupOpen,
   });
-
-  useEffect(() => {
-    if (lastHashtags.length > 0) {
-      return;
-    }
-    api
-      .getHashtags(1, 10)
-      .then((response) => {
-        setLastHashtags(response.data);
-      })
-      .catch(console.error);
-  }, [lastHashtags.length]);
 
   useEffect(() => {
     if (!isAlinaRoute || allPosts.length > 0) {
@@ -542,9 +532,7 @@ function App() {
         addedPhotos.push(newPhoto);
       }
 
-      setAllPhotos((prev) => [...addedPhotos, ...prev]);
-
-      setPhotosToRender((prev) => [...addedPhotos, ...prev]);
+      prependPhotos(addedPhotos);
 
       openModal({
         status: "success",
@@ -569,22 +557,11 @@ function App() {
     }
   }
 
-  // open photo popup
-  const handlePhotoOpen = (photo) => {
-    console.log("Selected photo:", photo);
-    handlePhotoClick(photo);
-    setIsPhotoPopupOpen(true);
-  };
   // delete photo
   const handleDeletePhotoModalOpen = (photo) => {
     setSelectedPhoto(photo); // или selectPhoto
     setIsDeletePhotoModalOpen(true);
   };
-
-  // edit photo hashtags
-  function handleEditHashtagsBtnClick() {
-    setAreHashtagsEditing(!areHashtagsEditing);
-  }
 
   // handle app navigation & mark active navigation block / page
   const homeRef = useRef(null);
@@ -691,88 +668,6 @@ function App() {
 
   function closeMenu() {
     setIsMenuOpen(false);
-  }
-
-  // handle photo search (also by hashtag's click)
-  useEffect(() => {
-    setHashtag("");
-  }, [location.pathname]);
-
-  function checkUniqueness(hashtag, hashtags) {
-    return !hashtags.some((item) => item.name === hashtag);
-  }
-
-  function handlePhotoSearch(nextValue) {
-    const normalizedHashtag = nextValue.trim().toLowerCase();
-
-    setHashtag(nextValue);
-
-    // Поиск очищен: возвращаем нефильтрованный кэш без нового запроса.
-    if (!normalizedHashtag) {
-      const restoredVisibleCount = getRestoredVisibleCount();
-
-      setAllPhotos(loadedPhotos);
-      setPhotosPage(1);
-      setPhotosPages(Math.max(1, Math.ceil(loadedPhotos.length / 20)));
-      setCurrentPhotosNumber(restoredVisibleCount);
-
-      return;
-    }
-
-    loadPhotos({
-      page: 1,
-      append: false,
-      hashtag: normalizedHashtag,
-    })
-      .then((response) => {
-        if (response.data.length === 0) {
-          return;
-        }
-
-        const isHashtagUniq = checkUniqueness(normalizedHashtag, lastHashtags);
-
-        if (isHashtagUniq) {
-          return api.addHashtag(normalizedHashtag).then((data) => {
-            setLastHashtags((prev) => [
-              {
-                name: data.name,
-                _id: data._id,
-                __v: data.__v,
-                createdAt: data.createdAt,
-              },
-              ...prev,
-            ]);
-          });
-        }
-
-        return api.updateHashtag(normalizedHashtag).then((data) => {
-          setLastHashtags((prev) => [
-            {
-              name: data.name,
-              _id: data._id,
-              __v: data.__v,
-              createdAt: data.createdAt,
-            },
-            ...prev.filter((h) => h.name !== normalizedHashtag),
-          ]);
-        });
-      })
-      .catch(console.error);
-  }
-
-  function handleClearPhotoSearch() {
-    const restoredVisibleCount = getRestoredVisibleCount();
-
-    setHashtag("");
-    setAllPhotos(loadedPhotos);
-    setPhotosPage(1);
-    setPhotosPages(Math.max(1, Math.ceil(loadedPhotos.length / 20)));
-    setCurrentPhotosNumber(restoredVisibleCount);
-  }
-
-  function handlePhotoHashtagClick(nextHashtag) {
-    closeAllPopups();
-    handlePhotoSearch(nextHashtag);
   }
 
   ////////////////////////////  BLOG  ///////////////////////////////////////

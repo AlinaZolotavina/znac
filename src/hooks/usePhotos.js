@@ -21,6 +21,11 @@ export default function usePhotos({
   screenWidth,
   setScreenWidth,
   hashtag,
+  setHashtag,
+  lastHashtags,
+  setLastHashtags,
+  location,
+  setIsPhotoPopupOpen,
 }) {
   const [photosToRender, setPhotosToRender] = useState([]);
   const [allPhotos, setAllPhotos] = useState([]);
@@ -43,6 +48,23 @@ export default function usePhotos({
       hashtag: "",
     });
   }, [loadedPhotos.length]);
+
+  useEffect(() => {
+    if (lastHashtags.length > 0) {
+      return;
+    }
+    api
+      .getHashtags(1, 10)
+      .then((response) => {
+        setLastHashtags(response.data);
+      })
+      .catch(console.error);
+  }, [lastHashtags.length]);
+
+  // handle photo search (also by hashtag's click)
+  useEffect(() => {
+    setHashtag("");
+  }, [location.pathname]);
 
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const hashtagsOfSelectedPhoto = selectedPhoto?.hashtags || [];
@@ -187,9 +209,90 @@ export default function usePhotos({
       });
   }
 
+  // open photo popup
+  const handlePhotoOpen = (photo) => {
+    handlePhotoClick(photo);
+    setIsPhotoPopupOpen(true);
+  };
+
+  function checkUniqueness(hashtag, hashtags) {
+    return !hashtags.some((item) => item.name === hashtag);
+  }
+
+  function handlePhotoSearch(nextValue) {
+    const normalizedHashtag = nextValue.trim().toLowerCase();
+
+    setHashtag(nextValue);
+
+    // Поиск очищен: возвращаем нефильтрованный кэш без нового запроса.
+    if (!normalizedHashtag) {
+      const restoredVisibleCount = getRestoredVisibleCount();
+
+      setAllPhotos(loadedPhotos);
+      setPhotosPage(1);
+      setPhotosPages(Math.max(1, Math.ceil(loadedPhotos.length / 20)));
+      setCurrentPhotosNumber(restoredVisibleCount);
+
+      return;
+    }
+
+    loadPhotos({
+      page: 1,
+      append: false,
+      hashtag: normalizedHashtag,
+    })
+      .then((response) => {
+        if (response.data.length === 0) {
+          return;
+        }
+        const isHashtagUniq = checkUniqueness(normalizedHashtag, lastHashtags);
+
+        if (isHashtagUniq) {
+          return api.addHashtag(normalizedHashtag).then((data) => {
+            setLastHashtags((prev) => [
+              {
+                name: data.name,
+                _id: data._id,
+                __v: data.__v,
+                createdAt: data.createdAt,
+              },
+              ...prev,
+            ]);
+          });
+        }
+
+        return api.updateHashtag(normalizedHashtag).then((data) => {
+          setLastHashtags((prev) => [
+            {
+              name: data.name,
+              _id: data._id,
+              __v: data.__v,
+              createdAt: data.createdAt,
+            },
+            ...prev.filter((h) => h.name.toLowerCase() !== normalizedHashtag),
+          ]);
+        });
+      })
+      .catch(console.error);
+  }
+
+  function handleClearPhotoSearch() {
+    const restoredVisibleCount = getRestoredVisibleCount();
+
+    setHashtag("");
+    setAllPhotos(loadedPhotos);
+    setPhotosPage(1);
+    setPhotosPages(Math.max(1, Math.ceil(loadedPhotos.length / 20)));
+    setCurrentPhotosNumber(restoredVisibleCount);
+  }
+
+  function handlePhotoHashtagClick(nextHashtag) {
+    closeAllPopups();
+    handlePhotoSearch(nextHashtag);
+  }
+
   // open photo popup, handle photo flip
   function handlePhotoClick(photo) {
-    console.log("handlePhotoClick:", photo);
     setSelectedPhoto(photo);
     increaseViewsNumber(photo._id);
   }
@@ -242,8 +345,12 @@ export default function usePhotos({
       .finally(() => stopLoading());
   }
 
-  // delete photo
+  function prependPhotos(newPhotos) {
+    setAllPhotos((prev) => [...newPhotos, ...prev]);
+    setPhotosToRender((prev) => [...newPhotos, ...prev]);
+  }
 
+  // delete photo
   function handlePhotoDelete(photo) {
     api
       .deletePhoto(photo._id)
@@ -281,6 +388,11 @@ export default function usePhotos({
       .catch((err) => console.log(err));
   }
 
+  // edit photo hashtags
+  function handleEditHashtagsBtnClick() {
+    setAreHashtagsEditing((prev) => !prev);
+  }
+
   function handleEditHashtags(photoId, hashtags) {
     api
       .editHashtags(photoId, hashtags)
@@ -310,34 +422,22 @@ export default function usePhotos({
     hashtagsOfSelectedPhoto,
     viewsOfSelectedPhoto,
     areHashtagsEditing,
+    handleEditHashtagsBtnClick,
+    handleEditHashtags,
     isLeftFlipDisabled,
     isRightFlipDisabled,
-    handlePhotoClick,
     handlePhotoFlip,
     handleAddPhotoViaLink,
     handlePhotoDelete,
-    setAreHashtagsEditing,
-    handleEditHashtags,
-    getPhotosLayout,
     calculatePhotosCount,
     photosToRender,
-    setPhotosToRender,
-    allPhotos,
-    setAllPhotos,
-    loadedPhotos,
-    setLoadedPhotos,
-    photosPage,
-    setPhotosPage,
-    photosPages,
-    setPhotosPages,
     currentPhotosNumber,
-    setCurrentPhotosNumber,
-    photosToAdd,
-    visibleLoadedPhotosCount,
-    setVisibleLoadedPhotosCount,
     hasMorePhotos,
     showMorePhotos,
-    getRestoredVisibleCount,
-    loadPhotos,
+    handlePhotoSearch,
+    handleClearPhotoSearch,
+    handlePhotoHashtagClick,
+    prependPhotos,
+    handlePhotoOpen,
   };
 }
