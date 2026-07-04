@@ -50,6 +50,7 @@ import getCurrentActivePage from "../utils/getCurrentActivePage.js";
 
 import CurrentPostPage from "./blog/CurrentPostPage.js";
 import GamesPage from "./blog/GamesPage.js";
+import { handlePhotoUpload } from "../utils/photoUploadActions.js";
 
 function App() {
   const { isLoading, startLoading, stopLoading } = useRequestState();
@@ -145,7 +146,6 @@ function App() {
 
   const {
     selectedPhoto,
-    setSelectedPhoto,
     hashtagsOfSelectedPhoto,
     viewsOfSelectedPhoto,
     areHashtagsEditing,
@@ -164,8 +164,9 @@ function App() {
     handlePhotoSearch,
     handleClearPhotoSearch,
     handlePhotoHashtagClick,
-    prependPhotos,
+    addPhotosToGallery,
     handlePhotoOpen,
+    handleDeletePhotoModalOpen,
   } = usePhotos({
     openModal,
     startLoading,
@@ -180,6 +181,7 @@ function App() {
     closeAllPopups,
     location,
     setIsPhotoPopupOpen,
+    setIsDeletePhotoModalOpen,
   });
 
   useEffect(() => {
@@ -503,65 +505,6 @@ function App() {
         });
       });
   }
-
-  async function handlePhotoUpload(photoData, hashtags, views) {
-    startLoading();
-
-    try {
-      const addedPhotos = [];
-
-      for (const file of photoData) {
-        const formData = new FormData();
-
-        formData.append("photos", file);
-
-        const response = await api.uploadPhoto(formData);
-
-        if (!response.data?.length) {
-          throw new Error("Upload response is invalid");
-        }
-
-        const photoDataToSave = {
-          filename: response.data[0].filename,
-          hashtags,
-          views,
-        };
-
-        const newPhoto = await api.addPhoto(photoDataToSave);
-
-        addedPhotos.push(newPhoto);
-      }
-
-      prependPhotos(addedPhotos);
-
-      openModal({
-        status: "success",
-        message:
-          addedPhotos.length === 1
-            ? messages.PHOTO_ADDED_SUCCESSFULLY_MSG
-            : messages.PHOTOS_ADDED_SUCCESSFULLY_MSG(addedPhotos.length),
-      });
-
-      return addedPhotos;
-    } catch (err) {
-      console.error(err);
-
-      openModal({
-        status: "error",
-        message: messages.DEFAULT_ERROR_MSG,
-      });
-
-      throw err;
-    } finally {
-      stopLoading();
-    }
-  }
-
-  // delete photo
-  const handleDeletePhotoModalOpen = (photo) => {
-    setSelectedPhoto(photo); // или selectPhoto
-    setIsDeletePhotoModalOpen(true);
-  };
 
   // handle app navigation & mark active navigation block / page
   const homeRef = useRef(null);
@@ -1354,7 +1297,17 @@ function App() {
           onSignout={handleSignout}
           isSendingReq={isLoading}
           onAddPhotoViaLink={handleAddPhotoViaLink}
-          onUploadPhotoToServer={handlePhotoUpload}
+          onUploadPhotoToServer={(photoData, hashtags, views) =>
+            handlePhotoUpload({
+              photoData,
+              hashtags,
+              views,
+              startLoading,
+              stopLoading,
+              addPhotosToGallery,
+              openModal,
+            })
+          }
           email={currentUser.email}
           onLogout={handleSignout}
         />

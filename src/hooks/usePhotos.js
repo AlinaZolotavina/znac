@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import api from "../utils/api";
 import * as messages from "../utils/messages";
 
@@ -26,6 +26,7 @@ export default function usePhotos({
   setLastHashtags,
   location,
   setIsPhotoPopupOpen,
+  setIsDeletePhotoModalOpen,
 }) {
   const [photosToRender, setPhotosToRender] = useState([]);
   const [allPhotos, setAllPhotos] = useState([]);
@@ -35,6 +36,7 @@ export default function usePhotos({
   const [currentPhotosNumber, setCurrentPhotosNumber] = useState(0);
   const [photosToAdd, setPhotosToAdd] = useState(0);
   const [visibleLoadedPhotosCount, setVisibleLoadedPhotosCount] = useState(0);
+  const resizeTimeoutRef = useRef(null);
   const hasMorePhotos =
     currentPhotosNumber < allPhotos.length || photosPage < photosPages;
 
@@ -72,8 +74,11 @@ export default function usePhotos({
   const [areHashtagsEditing, setAreHashtagsEditing] = useState(false);
 
   useEffect(() => {
-    window.addEventListener("resize", updateDemensions);
-    return () => window.removeEventListener("resize", updateDemensions);
+    window.addEventListener("resize", updateDimensions);
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+      clearTimeout(resizeTimeoutRef.current);
+    };
   }, []);
 
   const getPhotosLayout = () => {
@@ -104,7 +109,7 @@ export default function usePhotos({
     setCurrentPhotosNumber((current) => Math.max(current, initialPhotosNumber));
   };
 
-  const updateDemensions = () => {
+  const updateDimensions = () => {
     let resizeTimeout;
     if (!resizeTimeout) {
       resizeTimeout = setTimeout(function () {
@@ -345,12 +350,17 @@ export default function usePhotos({
       .finally(() => stopLoading());
   }
 
-  function prependPhotos(newPhotos) {
+  function addPhotosToGallery(newPhotos) {
     setAllPhotos((prev) => [...newPhotos, ...prev]);
     setPhotosToRender((prev) => [...newPhotos, ...prev]);
   }
 
   // delete photo
+  const handleDeletePhotoModalOpen = (photo) => {
+    setSelectedPhoto(photo); // или selectPhoto
+    setIsDeletePhotoModalOpen(true);
+  };
+
   function handlePhotoDelete(photo) {
     api
       .deletePhoto(photo._id)
@@ -415,29 +425,34 @@ export default function usePhotos({
         });
       });
   }
-
+  // Public API
   return {
+    // state
     selectedPhoto,
-    setSelectedPhoto,
     hashtagsOfSelectedPhoto,
     viewsOfSelectedPhoto,
     areHashtagsEditing,
-    handleEditHashtagsBtnClick,
-    handleEditHashtags,
     isLeftFlipDisabled,
     isRightFlipDisabled,
-    handlePhotoFlip,
-    handleAddPhotoViaLink,
-    handlePhotoDelete,
-    calculatePhotosCount,
+
+    // gallery
     photosToRender,
     currentPhotosNumber,
     hasMorePhotos,
-    showMorePhotos,
+
+    // actions
+    handlePhotoOpen,
+    handlePhotoFlip,
+    handlePhotoDelete,
+    handleDeletePhotoModalOpen,
     handlePhotoSearch,
     handleClearPhotoSearch,
     handlePhotoHashtagClick,
-    prependPhotos,
-    handlePhotoOpen,
+    handleEditHashtags,
+    handleEditHashtagsBtnClick,
+    handleAddPhotoViaLink,
+    addPhotosToGallery,
+    calculatePhotosCount,
+    showMorePhotos,
   };
 }
