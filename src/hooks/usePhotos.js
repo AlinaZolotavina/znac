@@ -18,14 +18,33 @@ export default function usePhotos({
   startLoading,
   stopLoading,
   closeAllPopups,
-  setAllPhotos,
-  allPhotos,
-  setPhotosToRender,
   screenWidth,
-  setPhotosToAdd,
-  setCurrentPhotosNumber,
   setScreenWidth,
+  loadPhotos,
+  hashtag,
 }) {
+  const [photosToRender, setPhotosToRender] = useState([]);
+  const [allPhotos, setAllPhotos] = useState([]);
+  const [loadedPhotos, setLoadedPhotos] = useState([]);
+  const [photosPage, setPhotosPage] = useState(1);
+  const [photosPages, setPhotosPages] = useState(1);
+  const [currentPhotosNumber, setCurrentPhotosNumber] = useState(0);
+  const [photosToAdd, setPhotosToAdd] = useState(0);
+  const [visibleLoadedPhotosCount, setVisibleLoadedPhotosCount] = useState(0);
+  const hasMorePhotos =
+    currentPhotosNumber < allPhotos.length || photosPage < photosPages;
+
+  useEffect(() => {
+    if (loadedPhotos.length > 0) {
+      return;
+    }
+    loadPhotos({
+      page: 1,
+      append: false,
+      hashtag: "",
+    });
+  }, [loadedPhotos.length]);
+
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const hashtagsOfSelectedPhoto = selectedPhoto?.hashtags || [];
   const viewsOfSelectedPhoto = selectedPhoto?.views || 0;
@@ -73,6 +92,48 @@ export default function usePhotos({
       }, 150);
     }
   };
+
+  useEffect(() => {
+    setPhotosToRender(allPhotos.slice(0, currentPhotosNumber));
+  }, [allPhotos, currentPhotosNumber]);
+
+  function showMorePhotos() {
+    const nextVisibleCount = currentPhotosNumber + photosToAdd;
+    const isFiltered = Boolean(hashtag.trim());
+
+    if (nextVisibleCount <= allPhotos.length) {
+      setCurrentPhotosNumber(nextVisibleCount);
+      if (!isFiltered) {
+        setVisibleLoadedPhotosCount(nextVisibleCount);
+      }
+      return;
+    }
+
+    if (photosPage >= photosPages) {
+      setCurrentPhotosNumber(allPhotos.length);
+      if (!isFiltered) {
+        setVisibleLoadedPhotosCount(allPhotos.length);
+      }
+      return;
+    }
+
+    loadPhotos({
+      page: photosPage + 1,
+      append: true,
+      hashtag,
+    })
+      .then((response) => {
+        const nextCount = Math.min(
+          nextVisibleCount,
+          allPhotos.length + response.data.length,
+        );
+        setCurrentPhotosNumber(nextCount);
+        if (!isFiltered) {
+          setVisibleLoadedPhotosCount(nextCount);
+        }
+      })
+      .catch(console.error);
+  }
 
   // open photo popup, handle photo flip
   function handlePhotoClick(photo) {
@@ -207,6 +268,22 @@ export default function usePhotos({
     handleEditHashtags,
     getPhotosLayout,
     calculatePhotosCount,
-    updateDemensions,
+    photosToRender,
+    setPhotosToRender,
+    allPhotos,
+    setAllPhotos,
+    loadedPhotos,
+    setLoadedPhotos,
+    photosPage,
+    setPhotosPage,
+    photosPages,
+    setPhotosPages,
+    currentPhotosNumber,
+    setCurrentPhotosNumber,
+    photosToAdd,
+    visibleLoadedPhotosCount,
+    setVisibleLoadedPhotosCount,
+    hasMorePhotos,
+    showMorePhotos,
   };
 }

@@ -26,16 +26,7 @@ import * as auth from "../utils/auth.js";
 
 import { Switch, Route, useLocation, useHistory } from "react-router-dom";
 
-import {
-  LARGE_SCREEN_WIDTH,
-  MIDDLE_SCREEN_WIDTH,
-  LARGE_SCREEN_PHOTOS_NUMBER,
-  LARGE_SCREEN_PHOTOS_TO_ADD_NUMBER,
-  MIDDLE_SCREEN_PHOTOS_NUMBER,
-  MIDDLE_SCREEN_PHOTOS_TO_ADD_NUMBER,
-  SMALL_SCREEN_PHOTOS_NUMBER,
-  SMALL_SCREEN_PHOTOS_TO_ADD_NUMBER,
-} from "../utils/constants";
+import { LARGE_SCREEN_WIDTH, MIDDLE_SCREEN_WIDTH } from "../utils/constants";
 import * as messages from "../utils/messages";
 
 import ResetPassword from "./ResetPassword";
@@ -92,17 +83,7 @@ function App() {
   const isAlinaRoute = location.pathname.startsWith("/alina");
 
   // everything related to photos (including screen width, on which depends the photos to render count)
-  const [allPhotos, setAllPhotos] = useState([]);
-  const [photosToRender, setPhotosToRender] = useState([]);
-  const [loadedPhotos, setLoadedPhotos] = useState([]);
-  const [visibleLoadedPhotosCount, setVisibleLoadedPhotosCount] = useState(0);
-  const [photosToAdd, setPhotosToAdd] = useState(0);
-  const [photosPage, setPhotosPage] = useState(1);
-  const [photosPages, setPhotosPages] = useState(1);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-  const [currentPhotosNumber, setCurrentPhotosNumber] = useState(0);
-  const hasMorePhotos =
-    currentPhotosNumber < allPhotos.length || photosPage < photosPages;
 
   // popups & modals
   const [isPhotoPopupOpen, setIsPhotoPopupOpen] = useState(false);
@@ -162,16 +143,46 @@ function App() {
   const [activeProjectHashtag, setActiveProjectHashtag] = useState("All");
   const [activeBlogPage, setActiveBlogPage] = useState("Home");
 
-  useEffect(() => {
-    if (loadedPhotos.length > 0) {
-      return;
-    }
-    loadPhotos({
-      page: 1,
-      append: false,
-      hashtag: "",
-    });
-  }, [loadedPhotos.length]);
+  const {
+    selectedPhoto,
+    setSelectedPhoto,
+    hashtagsOfSelectedPhoto,
+    viewsOfSelectedPhoto,
+    areHashtagsEditing,
+    setAreHashtagsEditing,
+    handleEditHashtags,
+    isLeftFlipDisabled,
+    isRightFlipDisabled,
+    handlePhotoClick,
+    handlePhotoFlip,
+    handleAddPhotoViaLink,
+    handlePhotoDelete,
+    getPhotosLayout,
+    calculatePhotosCount,
+    loadPhotos,
+    photosToRender,
+    setPhotosToRender,
+    setAllPhotos,
+    loadedPhotos,
+    setLoadedPhotos,
+    setPhotosPage,
+    setPhotosPages,
+    currentPhotosNumber,
+    setCurrentPhotosNumber,
+    visibleLoadedPhotosCount,
+    setVisibleLoadedPhotosCount,
+    hasMorePhotos,
+    showMorePhotos,
+  } = usePhotos({
+    openModal,
+    startLoading,
+    stopLoading,
+    closeAllPopups,
+    screenWidth,
+    setScreenWidth,
+    loadPhotos: loadPhotosImpl,
+    hashtag,
+  });
 
   useEffect(() => {
     if (lastHashtags.length > 0) {
@@ -184,10 +195,6 @@ function App() {
       })
       .catch(console.error);
   }, [lastHashtags.length]);
-
-  useEffect(() => {
-    setPhotosToRender(allPhotos.slice(0, currentPhotosNumber));
-  }, [allPhotos, currentPhotosNumber]);
 
   useEffect(() => {
     if (!isAlinaRoute || allPosts.length > 0) {
@@ -281,7 +288,7 @@ function App() {
     );
   };
 
-  function loadPhotos({ page = 1, append = false, hashtag = "" } = {}) {
+  function loadPhotosImpl({ page = 1, append = false, hashtag = "" } = {}) {
     const normalizedHashtag = hashtag.trim().toLowerCase();
     const hasFilter = Boolean(normalizedHashtag);
 
@@ -323,44 +330,6 @@ function App() {
 
         throw err;
       });
-  }
-
-  function showMorePhotos() {
-    const nextVisibleCount = currentPhotosNumber + photosToAdd;
-    const isFiltered = Boolean(hashtag.trim());
-
-    if (nextVisibleCount <= allPhotos.length) {
-      setCurrentPhotosNumber(nextVisibleCount);
-      if (!isFiltered) {
-        setVisibleLoadedPhotosCount(nextVisibleCount);
-      }
-      return;
-    }
-
-    if (photosPage >= photosPages) {
-      setCurrentPhotosNumber(allPhotos.length);
-      if (!isFiltered) {
-        setVisibleLoadedPhotosCount(allPhotos.length);
-      }
-      return;
-    }
-
-    loadPhotos({
-      page: photosPage + 1,
-      append: true,
-      hashtag,
-    })
-      .then((response) => {
-        const nextCount = Math.min(
-          nextVisibleCount,
-          allPhotos.length + response.data.length,
-        );
-        setCurrentPhotosNumber(nextCount);
-        if (!isFiltered) {
-          setVisibleLoadedPhotosCount(nextCount);
-        }
-      })
-      .catch(console.error);
   }
 
   function loadProjects({ page = 1, append = false, hashtag = "" } = {}) {
@@ -647,38 +616,6 @@ function App() {
       stopLoading();
     }
   }
-
-  /////// NEW PHOTO LOGIC
-  const {
-    selectedPhoto,
-    setSelectedPhoto,
-    hashtagsOfSelectedPhoto,
-    viewsOfSelectedPhoto,
-    areHashtagsEditing,
-    setAreHashtagsEditing,
-    handleEditHashtags,
-    isLeftFlipDisabled,
-    isRightFlipDisabled,
-    handlePhotoClick,
-    handlePhotoFlip,
-    handleAddPhotoViaLink,
-    handlePhotoDelete,
-    getPhotosLayout,
-    calculatePhotosCount,
-    updateDemensions,
-  } = usePhotos({
-    openModal,
-    startLoading,
-    stopLoading,
-    closeAllPopups,
-    setAllPhotos,
-    allPhotos,
-    setPhotosToRender,
-    screenWidth,
-    setPhotosToAdd,
-    setCurrentPhotosNumber,
-    setScreenWidth,
-  });
 
   // open photo popup
   const handlePhotoOpen = (photo) => {
