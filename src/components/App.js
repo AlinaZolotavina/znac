@@ -230,53 +230,10 @@ function App() {
   // calculate photos count depending on screen demensions
   // (including when changing the screen resolution)
   useEffect(() => {
-    window.addEventListener("resize", updateDemensions);
-    return () => window.removeEventListener("resize", updateDemensions);
-  }, []);
-
-  useEffect(() => {
     calculatePhotosCount();
     calculatePostsCount();
     calculateProjectsCount();
   }, [screenWidth]);
-
-  const updateDemensions = () => {
-    let resizeTimeout;
-    if (!resizeTimeout) {
-      resizeTimeout = setTimeout(function () {
-        resizeTimeout = null;
-        setScreenWidth(window.innerWidth);
-      }, 150);
-    }
-  };
-
-  const getPhotosLayout = () => {
-    if (screenWidth >= LARGE_SCREEN_WIDTH) {
-      return {
-        initialPhotosNumber: LARGE_SCREEN_PHOTOS_NUMBER,
-        photosToAdd: LARGE_SCREEN_PHOTOS_TO_ADD_NUMBER,
-      };
-    }
-
-    if (screenWidth >= MIDDLE_SCREEN_WIDTH) {
-      return {
-        initialPhotosNumber: MIDDLE_SCREEN_PHOTOS_NUMBER,
-        photosToAdd: MIDDLE_SCREEN_PHOTOS_TO_ADD_NUMBER,
-      };
-    }
-
-    return {
-      initialPhotosNumber: SMALL_SCREEN_PHOTOS_NUMBER,
-      photosToAdd: SMALL_SCREEN_PHOTOS_TO_ADD_NUMBER,
-    };
-  };
-
-  const calculatePhotosCount = () => {
-    const { initialPhotosNumber, photosToAdd: nextPhotosToAdd } =
-      getPhotosLayout();
-    setPhotosToAdd(nextPhotosToAdd);
-    setCurrentPhotosNumber((current) => Math.max(current, initialPhotosNumber));
-  };
 
   const calculatePostsCount = () => {
     let initialPostsNumber;
@@ -706,6 +663,9 @@ function App() {
     handlePhotoFlip,
     handleAddPhotoViaLink,
     handlePhotoDelete,
+    getPhotosLayout,
+    calculatePhotosCount,
+    updateDemensions,
   } = usePhotos({
     openModal,
     startLoading,
@@ -714,6 +674,10 @@ function App() {
     setAllPhotos,
     allPhotos,
     setPhotosToRender,
+    screenWidth,
+    setPhotosToAdd,
+    setCurrentPhotosNumber,
+    setScreenWidth,
   });
 
   // open photo popup

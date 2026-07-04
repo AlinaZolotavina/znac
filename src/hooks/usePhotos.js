@@ -1,6 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import api from "../utils/api";
 import * as messages from "../utils/messages";
+
+import {
+  LARGE_SCREEN_WIDTH,
+  MIDDLE_SCREEN_WIDTH,
+  LARGE_SCREEN_PHOTOS_NUMBER,
+  LARGE_SCREEN_PHOTOS_TO_ADD_NUMBER,
+  MIDDLE_SCREEN_PHOTOS_NUMBER,
+  MIDDLE_SCREEN_PHOTOS_TO_ADD_NUMBER,
+  SMALL_SCREEN_PHOTOS_NUMBER,
+  SMALL_SCREEN_PHOTOS_TO_ADD_NUMBER,
+} from "../utils/constants";
 
 export default function usePhotos({
   openModal,
@@ -10,11 +21,58 @@ export default function usePhotos({
   setAllPhotos,
   allPhotos,
   setPhotosToRender,
+  screenWidth,
+  setPhotosToAdd,
+  setCurrentPhotosNumber,
+  setScreenWidth,
 }) {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const hashtagsOfSelectedPhoto = selectedPhoto?.hashtags || [];
   const viewsOfSelectedPhoto = selectedPhoto?.views || 0;
   const [areHashtagsEditing, setAreHashtagsEditing] = useState(false);
+
+  useEffect(() => {
+    window.addEventListener("resize", updateDemensions);
+    return () => window.removeEventListener("resize", updateDemensions);
+  }, []);
+
+  const getPhotosLayout = () => {
+    if (screenWidth >= LARGE_SCREEN_WIDTH) {
+      return {
+        initialPhotosNumber: LARGE_SCREEN_PHOTOS_NUMBER,
+        photosToAdd: LARGE_SCREEN_PHOTOS_TO_ADD_NUMBER,
+      };
+    }
+
+    if (screenWidth >= MIDDLE_SCREEN_WIDTH) {
+      return {
+        initialPhotosNumber: MIDDLE_SCREEN_PHOTOS_NUMBER,
+        photosToAdd: MIDDLE_SCREEN_PHOTOS_TO_ADD_NUMBER,
+      };
+    }
+
+    return {
+      initialPhotosNumber: SMALL_SCREEN_PHOTOS_NUMBER,
+      photosToAdd: SMALL_SCREEN_PHOTOS_TO_ADD_NUMBER,
+    };
+  };
+
+  const calculatePhotosCount = () => {
+    const { initialPhotosNumber, photosToAdd: nextPhotosToAdd } =
+      getPhotosLayout();
+    setPhotosToAdd(nextPhotosToAdd);
+    setCurrentPhotosNumber((current) => Math.max(current, initialPhotosNumber));
+  };
+
+  const updateDemensions = () => {
+    let resizeTimeout;
+    if (!resizeTimeout) {
+      resizeTimeout = setTimeout(function () {
+        resizeTimeout = null;
+        setScreenWidth(window.innerWidth);
+      }, 150);
+    }
+  };
 
   // open photo popup, handle photo flip
   function handlePhotoClick(photo) {
@@ -147,5 +205,8 @@ export default function usePhotos({
     handlePhotoDelete,
     setAreHashtagsEditing,
     handleEditHashtags,
+    getPhotosLayout,
+    calculatePhotosCount,
+    updateDemensions,
   };
 }
