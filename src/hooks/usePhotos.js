@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import api from "../utils/api";
 import * as messages from "../utils/messages";
+import photoUploadActions from "../utils/photoUploadActions";
 
 import {
   LARGE_SCREEN_WIDTH,
@@ -39,6 +40,13 @@ export default function usePhotos({
   const resizeTimeoutRef = useRef(null);
   const hasMorePhotos =
     currentPhotosNumber < allPhotos.length || photosPage < photosPages;
+
+  const { handlePhotoUpload } = photoUploadActions({
+    startLoading,
+    stopLoading,
+    addPhotosToGallery,
+    openModal,
+  });
 
   useEffect(() => {
     if (loadedPhotos.length > 0) {
@@ -110,13 +118,13 @@ export default function usePhotos({
   };
 
   const updateDimensions = () => {
-    let resizeTimeout;
-    if (!resizeTimeout) {
-      resizeTimeout = setTimeout(function () {
-        resizeTimeout = null;
-        setScreenWidth(window.innerWidth);
-      }, 150);
+    if (resizeTimeoutRef.current) {
+      clearTimeout(resizeTimeoutRef.current);
     }
+
+    resizeTimeoutRef.current = setTimeout(() => {
+      setScreenWidth(window.innerWidth);
+    }, 150);
   };
 
   useEffect(() => {
@@ -329,6 +337,14 @@ export default function usePhotos({
   }
 
   // add photo
+  function handleAddPhotoFromPc(photoData, hashtags, views) {
+    return handlePhotoUpload({
+      photoData,
+      hashtags,
+      views,
+    });
+  }
+
   function handleAddPhotoViaLink(newPhoto) {
     startLoading();
     api
@@ -450,8 +466,8 @@ export default function usePhotos({
     handlePhotoHashtagClick,
     handleEditHashtags,
     handleEditHashtagsBtnClick,
+    handleAddPhotoFromPc,
     handleAddPhotoViaLink,
-    addPhotosToGallery,
     calculatePhotosCount,
     showMorePhotos,
   };

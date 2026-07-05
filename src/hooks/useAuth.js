@@ -105,16 +105,12 @@ export default function useAuth({
     }
   };
 
-  const updateUser = (user) => {
-    setCurrentUser(user);
-  };
-
   return {
     currentUser,
     loggedIn,
     handleSignin,
     handleSignup,
     handleSignout,
-    updateUser,
+    setCurrentUser,
   };
 }

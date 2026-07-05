@@ -116,6 +116,30 @@ export default function useProjects({
       });
   }
 
+  function replaceProject(updatedProject) {
+    setAllProjects((projects) =>
+      projects.map((project) =>
+        project._id === updatedProject._id ? updatedProject : project,
+      ),
+    );
+
+    setProjectsToRender((projects) =>
+      projects.map((project) =>
+        project._id === updatedProject._id ? updatedProject : project,
+      ),
+    );
+  }
+
+  function removeProject(projectId) {
+    setAllProjects((projects) =>
+      projects.filter((project) => project._id !== projectId),
+    );
+
+    setProjectsToRender((projects) =>
+      projects.filter((project) => project._id !== projectId),
+    );
+  }
+
   function showMoreProjects() {
     const nextVisibleCount = currentProjectsNumber + projectsToAdd;
 
@@ -219,12 +243,7 @@ export default function useProjects({
           status: "success",
           message: messages.PROJECT_EDITED_SUCCESSFULLY_MSG,
         });
-        setAllProjects((state) =>
-          state.map((p) => (p._id === projectId ? newProject : p)),
-        );
-        setProjectsToRender((state) =>
-          state.map((p) => (p._id === projectId ? newProject : p)),
-        );
+        replaceProject(newProject);
       })
       .catch((err) => {
         openModal({
@@ -247,12 +266,7 @@ export default function useProjects({
     api
       .deleteProject(project._id)
       .then(() => {
-        setProjectsToRender((state) =>
-          state.filter((p) => p._id !== project._id && p),
-        );
-        setAllProjects((projects) =>
-          projects.filter((p) => p._id !== project._id),
-        );
+        removeProject(project._id);
       })
       .catch((err) => {
         openModal({

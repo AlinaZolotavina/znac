@@ -49,7 +49,6 @@ import getCurrentActivePage from "../utils/getCurrentActivePage.js";
 
 import CurrentPostPage from "./blog/CurrentPostPage.js";
 import GamesPage from "./blog/GamesPage.js";
-import { handlePhotoUpload } from "../utils/photoUploadActions.js";
 import useProjects from "../hooks/useProjects.js";
 import usePosts from "../hooks/usePosts.js";
 
@@ -129,6 +128,7 @@ function App() {
     isLeftFlipDisabled,
     isRightFlipDisabled,
     handlePhotoFlip,
+    handleAddPhotoFromPc,
     handleAddPhotoViaLink,
     handlePhotoDelete,
     calculatePhotosCount,
@@ -139,7 +139,6 @@ function App() {
     handlePhotoSearch,
     handleClearPhotoSearch,
     handlePhotoHashtagClick,
-    addPhotosToGallery,
     handlePhotoOpen,
     handleDeletePhotoModalOpen,
   } = usePhotos({
@@ -312,7 +311,7 @@ function App() {
     api
       .updateEmail(updateEmailLink, newEmail)
       .then((data) => {
-        updateUser(data.user);
+        setCurrentUser(data.user);
         history.push("/profile");
         openModal({
           status: "success",
@@ -584,7 +583,7 @@ function App() {
       });
   };
 
-  const { currentUser, loggedIn, handleSignin, handleSignout, updateUser } =
+  const { currentUser, loggedIn, handleSignin, handleSignout, setCurrentUser } =
     useAuth({
       history,
       location,
@@ -800,17 +799,7 @@ function App() {
           onSignout={handleSignout}
           isSendingReq={isLoading}
           onAddPhotoViaLink={handleAddPhotoViaLink}
-          onUploadPhotoToServer={(photoData, hashtags, views) =>
-            handlePhotoUpload({
-              photoData,
-              hashtags,
-              views,
-              startLoading,
-              stopLoading,
-              addPhotosToGallery,
-              openModal,
-            })
-          }
+          onUploadPhotoToServer={handleAddPhotoFromPc}
           email={currentUser.email}
           onLogout={handleSignout}
         />

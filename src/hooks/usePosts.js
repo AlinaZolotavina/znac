@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import api from "../utils/api";
 import * as messages from "../utils/messages";
+import postUploadActions from "../utils/postUploadActions";
 import { LARGE_SCREEN_WIDTH, MIDDLE_SCREEN_WIDTH } from "../utils/constants";
 
 export default function usePosts({
@@ -34,6 +35,14 @@ export default function usePosts({
 
   const hasMorePosts =
     currentPostsNumber < allPosts.length || postsPage < postsPages;
+
+  const { handlePostUpload } = postUploadActions({
+    startLoading,
+    stopLoading,
+    prependPosts,
+    openModal,
+    closeAllBlogPopups,
+  });
 
   useEffect(() => {
     setPostsToRender(allPosts.slice(0, currentPostsNumber));
@@ -107,6 +116,27 @@ export default function usePosts({
       .catch(console.error);
   }
 
+  function prependPosts(newPosts) {
+    setAllPosts((posts) => [...newPosts, ...posts]);
+    setPostsToRender((posts) => [...newPosts, ...posts]);
+  }
+
+  function replacePost(updatedPost) {
+    setAllPosts((posts) =>
+      posts.map((post) => (post._id === updatedPost._id ? updatedPost : post)),
+    );
+
+    setPostsToRender((posts) =>
+      posts.map((post) => (post._id === updatedPost._id ? updatedPost : post)),
+    );
+  }
+
+  function removePost(postId) {
+    setAllPosts((posts) => posts.filter((post) => post._id !== postId));
+
+    setPostsToRender((posts) => posts.filter((post) => post._id !== postId));
+  }
+
   function showMorePosts() {
     const nextVisibleCount = currentPostsNumber + postsToAdd;
 
@@ -171,115 +201,51 @@ export default function usePosts({
     });
   }
 
-  async function handleAddPost(props) {
-    startLoading();
-
-    try {
-      const addedPosts = [];
-
-      const createPost = async (photoData = {}) => {
-        const data = {
-          theme: props.theme,
-          icon: props.icon,
-          title: props.title,
-          hashtags: props.hashtags,
-          text: props.text,
-          ...photoData,
-        };
-
-        const newPost = await api.addPost(data);
-
-        addedPosts.push(newPost);
-      };
-
-      if (props.photoData[0]?.length) {
-        for (const file of props.photoData[0]) {
-          const formData = new FormData();
-          formData.append("images", file);
-
-          const response = await api.uploadPhoto(formData, "/posts/image");
-
-          const [{ filename }] = response.data;
-
-          await createPost({
-            photoFilename: filename,
-          });
-        }
-      } else {
-        await createPost();
-      }
-
-      setAllPosts((prev) => [...addedPosts, ...prev]);
-      setPostsToRender((prev) => [...addedPosts, ...prev]);
-
-      openModal({
-        status: "success",
-        message:
-          addedPosts.length === 1
-            ? messages.POST_ADDED_SUCCESSFULLY_MSG
-            : `${addedPosts.length} posts were added successfully`,
-      });
-
-      closeAllBlogPopups();
-    } catch (err) {
-      console.error(err);
-
-      openModal({
-        status: "error",
-        message: err.message || messages.POST_ADD_ERROR_MSG,
-      });
-    } finally {
-      stopLoading();
-    }
-  }
-
   function handleEditPostPopupOpen(post) {
     setIsEditPostPopupOpen(true);
     setPostToEdit(post);
   }
 
+  function createPostUpdateRequest(postId, props, photoData = {}) {
+    const data = {
+      theme: props.theme,
+      icon: props.icon,
+      title: props.title,
+      hashtags: props.hashtags,
+      text: props.text,
+      ...photoData,
+    };
+
+    if (props.removePhoto && !data.newPhotoFilename && !data.newPhotoLink) {
+      data.removePhoto = true;
+    }
+
+    return api.editPost(postId, data);
+  }
+
+  async function uploadPostImage(file) {
+    const formData = new FormData();
+    formData.append("images", file);
+
+    const response = await api.uploadPhoto(formData, "/posts/image");
+
+    return response.data[0].filename;
+  }
+
   function handleEditPost(postId, props) {
     startLoading();
 
-    const updatePost = (photoData = {}) => {
-      const data = {
-        theme: props.theme,
-        icon: props.icon,
-        title: props.title,
-        hashtags: props.hashtags,
-        text: props.text,
-        ...photoData,
-      };
-
-      if (props.removePhoto && !data.newPhotoFilename && !data.newPhotoLink) {
-        data.removePhoto = true;
-      }
-
-      return api.editPost(postId, data);
-    };
-
     const request = props.photoData[0]?.length
-      ? (() => {
-          const formData = new FormData();
-          formData.append("images", props.photoData[0][0]);
-
-          return api.uploadPhoto(formData, "/posts/image").then((response) =>
-            updatePost({
-              newPhotoFilename: response.data[0].filename,
-            }),
-          );
-        })()
-      : updatePost();
+      ? uploadPostImage(props.photoData[0][0]).then((filename) =>
+          createPostUpdateRequest(postId, props, {
+            newPhotoFilename: filename,
+          }),
+        )
+      : createPostUpdateRequest(postId, props);
 
     request
       .then((updatedPost) => {
-        setAllPosts((prev) =>
-          prev.map((p) => (p._id === postId ? updatedPost : p)),
-        );
-
-        setPostsToRender((prev) =>
-          prev.map((p) => (p._id === postId ? updatedPost : p)),
-        );
+        replacePost(updatedPost);
 
         setPostVersion((v) => v + 1);
 
@@ -312,10 +278,7 @@ export default function usePosts({
     api
       .deletePost(post._id)
       .then(() => {
-        setPostsToRender((state) =>
-          state.filter((p) => p._id !== post._id && p),
-        );
-        setAllPosts((state) => state.filter((p) => p._id !== post._id && p));
+        removePost(post._id);
         if (redirectAfterDelete) {
           history.replace("/alina/posts");
         }
@@ -341,7 +304,7 @@ export default function usePosts({
     showMorePosts,
     handlePostHashtagClick,
     handlePostsSearch,
-    handleAddPost,
+    handleAddPost: handlePostUpload,
     handleEditPostPopupOpen,
     postToEdit,
     handleEditPost,
