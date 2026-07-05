@@ -112,9 +112,6 @@ function App() {
   const [isDeleteProjectModalOpen, setIsDeleteProjectModalOpen] =
     useState(false);
   const [query, setQuery] = useState("");
-  const [postToEdit, setPostToEdit] = useState({});
-  const [postToDelete, setPostToDelete] = useState({});
-  const [postVersion, setPostVersion] = useState(0);
   const [redirectAfterDelete, setRedirectAfterDelete] = useState(false);
 
   const [projectHashtags, setProjectHashtags] = useState([]);
@@ -190,7 +187,6 @@ function App() {
 
   const {
     allPosts,
-    setAllPosts,
     postsToRender,
     setPostsToRender,
     currentPostsNumber,
@@ -199,6 +195,14 @@ function App() {
     showMorePosts,
     handlePostHashtagClick,
     handlePostsSearch,
+    handleAddPost,
+    handleEditPostPopupOpen,
+    postToEdit,
+    handleEditPost,
+    handleDeletePostModalOpen,
+    handlePostDelete,
+    postToDelete,
+    postVersion,
   } = usePosts({
     screenWidth,
     isAlinaRoute,
@@ -206,6 +210,15 @@ function App() {
     setQuery,
     activePostHashtag,
     setActivePostHashtag,
+    startLoading,
+    stopLoading,
+    openModal,
+    closeAllBlogPopups,
+    setIsEditPostPopupOpen,
+    setIsDeletePostModalOpen,
+    setRedirectAfterDelete,
+    history,
+    redirectAfterDelete,
   });
 
   useEffect(() => {
@@ -443,11 +456,6 @@ function App() {
     setIsPostPopupOpen(true);
   }
 
-  function handleEditPostPopupOpen(post) {
-    setIsEditPostPopupOpen(true);
-    setPostToEdit(post);
-  }
-
   function handleNewProjectPopupOpen() {
     setIsNewProjectPopupOpen(true);
   }
@@ -494,161 +502,6 @@ function App() {
       );
     }
   }, [query, activePostHashtag]);
-
-  async function handleAddPost(props) {
-    startLoading();
-
-    try {
-      const addedPosts = [];
-
-      const createPost = async (photoData = {}) => {
-        const data = {
-          theme: props.theme,
-          icon: props.icon,
-          title: props.title,
-          hashtags: props.hashtags,
-          text: props.text,
-          ...photoData,
-        };
-
-        const newPost = await api.addPost(data);
-
-        addedPosts.push(newPost);
-      };
-
-      if (props.photoData[0]?.length) {
-        for (const file of props.photoData[0]) {
-          const formData = new FormData();
-          formData.append("images", file);
-
-          const response = await api.uploadPhoto(formData, "/posts/image");
-
-          const [{ filename }] = response.data;
-
-          await createPost({
-            photoFilename: filename,
-          });
-        }
-      } else {
-        await createPost();
-      }
-
-      setAllPosts((prev) => [...addedPosts, ...prev]);
-      setPostsToRender((prev) => [...addedPosts, ...prev]);
-
-      openModal({
-        status: "success",
-        message:
-          addedPosts.length === 1
-            ? messages.POST_ADDED_SUCCESSFULLY_MSG
-            : `${addedPosts.length} posts were added successfully`,
-      });
-
-      closeAllBlogPopups();
-    } catch (err) {
-      console.error(err);
-
-      openModal({
-        status: "error",
-        message: err.message || messages.POST_ADD_ERROR_MSG,
-      });
-    } finally {
-      stopLoading();
-    }
-  }
-
-  function handleEditPost(postId, props) {
-    startLoading();
-
-    const updatePost = (photoData = {}) => {
-      const data = {
-        theme: props.theme,
-        icon: props.icon,
-        title: props.title,
-        hashtags: props.hashtags,
-        text: props.text,
-        ...photoData,
-      };
-
-      if (props.removePhoto && !data.newPhotoFilename && !data.newPhotoLink) {
-        data.removePhoto = true;
-      }
-
-      return api.editPost(postId, data);
-    };
-
-    const request = props.photoData[0]?.length
-      ? (() => {
-          const formData = new FormData();
-          formData.append("images", props.photoData[0][0]);
-
-          return api.uploadPhoto(formData, "/posts/image").then((response) =>
-            updatePost({
-              newPhotoFilename: response.data[0].filename,
-            }),
-          );
-        })()
-      : updatePost();
-
-    request
-      .then((updatedPost) => {
-        setAllPosts((prev) =>
-          prev.map((p) => (p._id === postId ? updatedPost : p)),
-        );
-
-        setPostsToRender((prev) =>
-          prev.map((p) => (p._id === postId ? updatedPost : p)),
-        );
-
-        setPostVersion((v) => v + 1);
-
-        openModal({
-          status: "success",
-          message: messages.POST_EDITED_SUCCESSFULLY_MSG,
-        });
-      })
-      .catch((err) => {
-        console.error(err);
-
-        openModal({
-          status: "error",
-          message: err.message || messages.POST_EDIT_ERROR_MSG,
-        });
-      })
-      .finally(() => {
-        stopLoading();
-        closeAllBlogPopups();
-      });
-  }
-
-  function handleDeletePostModalOpen(post, shouldRedirect = false) {
-    setPostToDelete(post);
-    setRedirectAfterDelete(shouldRedirect);
-    setIsDeletePostModalOpen(true);
-  }
-
-  function handlePostDelete(post) {
-    api
-      .deletePost(post._id)
-      .then(() => {
-        setPostsToRender((state) =>
-          state.filter((p) => p._id !== post._id && p),
-        );
-        setAllPosts((state) => state.filter((p) => p._id !== post._id && p));
-        if (redirectAfterDelete) {
-          history.replace("/alina/posts");
-        }
-      })
-      .catch((err) => {
-        openModal({
-          status: "error",
-          message: err.message || messages.DEFAULT_ERROR_MSG,
-        });
-      })
-      .finally(() => {
-        closeAllBlogPopups();
-      });
-  }
 
   function handlePostClick(post) {
     history.push(`/alina/posts/${post._id}`);
