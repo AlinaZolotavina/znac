@@ -13,47 +13,61 @@ function BlogHeader({
     <div className="blog-header">
       <div className="blog-header__links">
         <NavLink
-          exact
-          className="blog-header__link"
-          activeClassName="blog-header__link_state_active"
           to="/alina"
+          end
           onClick={onHomeClick}
+          className={({ isActive }) =>
+            isActive
+              ? "blog-header__link blog-header__link_state_active"
+              : "blog-header__link"
+          }
         >
           Home
         </NavLink>
 
         <NavLink
-          className="blog-header__link"
-          activeClassName="blog-header__link_state_active"
           to="/alina/posts"
           onClick={onPostsClick}
+          className={({ isActive }) =>
+            isActive
+              ? "blog-header__link blog-header__link_state_active"
+              : "blog-header__link"
+          }
         >
           Posts
         </NavLink>
 
         <NavLink
-          className="blog-header__link"
-          activeClassName="blog-header__link_state_active"
           to="/alina/projects"
           onClick={onProjectsClick}
+          className={({ isActive }) =>
+            isActive
+              ? "blog-header__link blog-header__link_state_active"
+              : "blog-header__link"
+          }
         >
           Projects
         </NavLink>
 
         <NavLink
-          exact
-          className="blog-header__link"
-          activeClassName="blog-header__link_state_active"
           to="/"
+          className={({ isActive }) =>
+            isActive
+              ? "blog-header__link blog-header__link_state_active"
+              : "blog-header__link"
+          }
         >
           Photos
         </NavLink>
 
         <NavLink
-          className="blog-header__link"
-          activeClassName="blog-header__link_state_active"
           to="/alina/about"
           onClick={onAboutClick}
+          className={({ isActive }) =>
+            isActive
+              ? "blog-header__link blog-header__link_state_active"
+              : "blog-header__link"
+          }
         >
           About
         </NavLink>

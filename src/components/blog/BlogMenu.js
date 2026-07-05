@@ -16,49 +16,62 @@ function BlogMenu({
   return (
     <div className={`blog-menu ${isOpen && "blog-menu_visible"}`}>
       <NavLink
-        exact
-        className="blog-menu__link"
-        activeClassName="blog-menu__link_active"
         to="/alina"
+        end
         onClick={onHomeClick}
+        className={({ isActive }) =>
+          isActive
+            ? "blog-menu__link blog-menu__link_active"
+            : "blog-menu__link"
+        }
       >
         Home
       </NavLink>
 
       <NavLink
-        className="blog-menu__link"
-        activeClassName="blog-menu__link_active"
         to="/alina/posts"
         onClick={onPostsClick}
+        className={({ isActive }) =>
+          isActive
+            ? "blog-menu__link blog-menu__link_active"
+            : "blog-menu__link"
+        }
       >
         Posts
       </NavLink>
 
       <NavLink
-        className="blog-menu__link"
-        activeClassName="blog-menu__link_active"
         to="/alina/projects"
         onClick={onProjectsClick}
+        className={({ isActive }) =>
+          isActive
+            ? "blog-menu__link blog-menu__link_active"
+            : "blog-menu__link"
+        }
       >
         Projects
       </NavLink>
 
       <NavLink
-        exact
-        className="blog-menu__link"
-        activeClassName="blog-menu__link_active"
         to="/"
         onClick={handlePhotosClick}
+        className={({ isActive }) =>
+          isActive
+            ? "blog-menu__link blog-menu__link_active"
+            : "blog-menu__link"
+        }
       >
         Photos
       </NavLink>
 
       <NavLink
-        exact
-        className="blog-menu__link"
-        activeClassName="blog-menu__link_active"
         to="/alina/about"
         onClick={onAboutClick}
+        className={({ isActive }) =>
+          isActive
+            ? "blog-menu__link blog-menu__link_active"
+            : "blog-menu__link"
+        }
       >
         About
       </NavLink>

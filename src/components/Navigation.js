@@ -12,11 +12,12 @@ function Navigation({
   return (
     <div className="nav">
       <NavLink
-        exact
-        className="nav__link"
-        activeClassName="nav__link_active"
         to="/"
+        end
         onClick={onHomeClick}
+        className={({ isActive }) =>
+          isActive ? "nav__link nav__link_active" : "nav__link"
+        }
       >
         HOME
       </NavLink>
@@ -26,10 +27,11 @@ function Navigation({
         </button>
       )}
       <NavLink
-        className="nav__link"
-        activeClassName="nav__link_active"
         to="/alina"
         onClick={onBlogClick}
+        className={({ isActive }) =>
+          isActive ? "nav__link nav__link_active" : "nav__link"
+        }
       >
         BLOG
       </NavLink>
@@ -40,17 +42,20 @@ function Navigation({
       )}
       {loggedIn && (
         <NavLink
-          className="nav__link"
-          activeClassName="nav__link_active"
           to="/profile"
+          className={({ isActive }) =>
+            isActive ? "nav__link nav__link_active" : "nav__link"
+          }
         >
           PROFILE
         </NavLink>
       )}
       {loggedIn && (
         <NavLink
-          className={`nav__link ${location.pathname === "/addphoto" && "nav__link_active"}`}
           to="/addphoto"
+          className={({ isActive }) =>
+            isActive ? "nav__link nav__link_active" : "nav__link"
+          }
         >
           ADD PHOTO
         </NavLink>

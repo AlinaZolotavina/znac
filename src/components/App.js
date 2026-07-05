@@ -24,7 +24,7 @@ import api from "../utils/api";
 import scrollToRef from "../utils/scrollToRef";
 import * as auth from "../utils/auth.js";
 
-import { Switch, Route, useLocation, useHistory } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
 import * as messages from "../utils/messages";
 
@@ -79,7 +79,7 @@ function App() {
   };
 
   // history & location
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const isAlinaRoute = location.pathname.startsWith("/alina");
 
@@ -216,7 +216,6 @@ function App() {
     setIsEditPostPopupOpen,
     setIsDeletePostModalOpen,
     setRedirectAfterDelete,
-    history,
     redirectAfterDelete,
   });
 
@@ -252,7 +251,7 @@ function App() {
           message: messages.RESET_PASSWORD_EMAIL_SENT_MSG,
         });
       })
-      .then(() => history.push("/"))
+      .then(() => navigate("/"))
       .catch(() => {
         openModal({
           status: "error",
@@ -271,7 +270,7 @@ function App() {
     auth
       .resetPassword(newPassword, confirmPassword, resetPasswordLink)
       .then(() => {
-        history.push("/password-changed");
+        navigate("/password-changed");
       })
       .catch((err) => {
         openModal({
@@ -312,7 +311,7 @@ function App() {
       .updateEmail(updateEmailLink, newEmail)
       .then((data) => {
         setCurrentUser(data.user);
-        history.push("/profile");
+        navigate("/profile");
         openModal({
           status: "success",
           message: messages.EMAIL_UPDATED_SUCCESSFULLY_MSG,
@@ -332,7 +331,7 @@ function App() {
   const footerRef = useRef(null);
 
   function handleHomeClick() {
-    history.push("/");
+    navigate("/");
 
     requestAnimationFrame(() => {
       scrollToRef(homeRef);
@@ -349,12 +348,12 @@ function App() {
 
   function handleProfileClick() {
     closeMenu();
-    history.push("/profile");
+    navigate("/profile");
   }
 
   function handleAddPhotoClick() {
     closeMenu();
-    history.push("/addphoto");
+    navigate("/addphoto");
   }
 
   function handleEditPasswordBtnClick() {
@@ -436,7 +435,7 @@ function App() {
   ////////////////////////////  BLOG  ///////////////////////////////////////
 
   function viewAllPostsClick() {
-    history.push("./alina/posts");
+    navigate("./alina/posts");
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -444,7 +443,7 @@ function App() {
   }
 
   function viewAllProjectsClick() {
-    history.push("./alina/projects");
+    navigate("./alina/projects");
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -503,7 +502,7 @@ function App() {
   }, [query, activePostHashtag]);
 
   function handlePostClick(post) {
-    history.push(`/alina/posts/${post._id}`);
+    navigate(`/alina/posts/${post._id}`);
   }
 
   useEffect(() => {
@@ -516,7 +515,7 @@ function App() {
   }, [location.pathname]);
 
   function moveToHomePage() {
-    history.push("/alina");
+    navigate("/alina");
     closeBlogMenu();
   }
   function moveToPostsPage() {
@@ -530,7 +529,7 @@ function App() {
     closeBlogMenu();
   }
   function moveToPreviousPage() {
-    history.goBack();
+    navigate(-1);
   }
 
   function handleBlogClick() {
@@ -538,11 +537,11 @@ function App() {
     closeMenu();
   }
   function handleGamesClick() {
-    history.push("/alina/games");
+    navigate("/alina/games");
   }
 
   function moveToTicTacToePage() {
-    history.push("/alina/games/tic-tac-toe");
+    navigate("/alina/games/tic-tac-toe");
   }
 
   function handleMusicClick() {
@@ -585,8 +584,6 @@ function App() {
 
   const { currentUser, loggedIn, handleSignin, handleSignout, setCurrentUser } =
     useAuth({
-      history,
-      location,
       openModal,
       startLoading,
       stopLoading,
@@ -594,220 +591,258 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <Switch>
-        <Route exact path="/">
-          <Home
-            loggedIn={loggedIn}
-            ref={homeRef}
-            onHomeClick={handleHomeClick}
-            onBlogClick={handleBlogClick}
-            onGalleryClick={handleGalleryClick}
-            onContactClick={handleContactClick}
-            onMenuClick={handleMenuClick}
-            onSignout={handleSignout}
-            isSendingReq={isLoading}
-            email={currentUser.email}
-            onLogout={handleSignout}
-          />
-          <Main
-            photos={photosToRender}
-            loggedIn={loggedIn}
-            ref={mainRef}
-            onPhotoClick={handlePhotoOpen}
-            onDeleteBtnClick={handleDeletePhotoModalOpen}
-            onHomeClick={handleHomeClick}
-            onBlogClick={handleBlogClick}
-            onGalleryClick={handleGalleryClick}
-            onContactClick={handleContactClick}
-            onHashtagClick={handlePhotoHashtagClick}
-            hashtag={hashtag}
-            photoHashtags={lastHashtags || []}
-            hashtagSetter={setHashtag}
-            onSearch={handlePhotoSearch}
-            onClearSearch={handleClearPhotoSearch}
-            photosQuantity={currentPhotosNumber}
-            hasMorePhotos={hasMorePhotos}
-            onShowMore={showMorePhotos}
-            email={currentUser.email}
-            onLogout={handleSignout}
-            areHashtagsEditing={false}
-            onEditHashtags={handleEditHashtags}
-            isSendingReq={isLoading}
-            hashtagsNumber={10}
-          />
-          <Footer ref={footerRef} />
-        </Route>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <Home
+                loggedIn={loggedIn}
+                ref={homeRef}
+                onHomeClick={handleHomeClick}
+                onBlogClick={handleBlogClick}
+                onGalleryClick={handleGalleryClick}
+                onContactClick={handleContactClick}
+                onMenuClick={handleMenuClick}
+                onSignout={handleSignout}
+                isSendingReq={isLoading}
+                email={currentUser.email}
+                onLogout={handleSignout}
+              />
+              <Main
+                photos={photosToRender}
+                loggedIn={loggedIn}
+                ref={mainRef}
+                onPhotoClick={handlePhotoOpen}
+                onDeleteBtnClick={handleDeletePhotoModalOpen}
+                onHomeClick={handleHomeClick}
+                onBlogClick={handleBlogClick}
+                onGalleryClick={handleGalleryClick}
+                onContactClick={handleContactClick}
+                onHashtagClick={handlePhotoHashtagClick}
+                hashtag={hashtag}
+                photoHashtags={lastHashtags || []}
+                hashtagSetter={setHashtag}
+                onSearch={handlePhotoSearch}
+                onClearSearch={handleClearPhotoSearch}
+                photosQuantity={currentPhotosNumber}
+                hasMorePhotos={hasMorePhotos}
+                onShowMore={showMorePhotos}
+                email={currentUser.email}
+                onLogout={handleSignout}
+                areHashtagsEditing={false}
+                onEditHashtags={handleEditHashtags}
+                isSendingReq={isLoading}
+                hashtagsNumber={10}
+              />
+              <Footer ref={footerRef} />
+            </>
+          }
+        />
 
-        <Route exact path="/alina">
-          <BlogMainPage
-            loggedIn={loggedIn}
-            postsToRender={postsToRender}
-            projectsToRender={projectsToRender}
-            projectsQuantity={2}
-            onBlogMenuClick={handleBlogMenuClick}
-            onContactClick={handleBlogContactClick}
-            onNewPostClick={handleNewPostPopupOpen}
-            onNewProjectClick={handleNewProjectPopupOpen}
-            onViewAllPostsClick={viewAllPostsClick}
-            onViewAllProjectsClick={viewAllProjectsClick}
-            onPostClick={handlePostClick}
-            onEditPostButtonClick={handleEditPostPopupOpen}
-            onDeletePostButtonClick={handleDeletePostModalOpen}
-            onEditProjectButtonClick={handleEditProjectPopupOpen}
-            onDeleteProjectButtonClick={handleDeleteProjectModalOpen}
-            onHomeClick={moveToHomePage}
-            onPostsClick={moveToPostsPage}
-            onProjectsClick={moveToProjectsPage}
-            onAboutClick={moveToAboutPage}
-          />
-        </Route>
+        <Route
+          path="/alina"
+          element={
+            <BlogMainPage
+              loggedIn={loggedIn}
+              postsToRender={postsToRender}
+              projectsToRender={projectsToRender}
+              projectsQuantity={2}
+              onBlogMenuClick={handleBlogMenuClick}
+              onContactClick={handleBlogContactClick}
+              onNewPostClick={handleNewPostPopupOpen}
+              onNewProjectClick={handleNewProjectPopupOpen}
+              onViewAllPostsClick={viewAllPostsClick}
+              onViewAllProjectsClick={viewAllProjectsClick}
+              onPostClick={handlePostClick}
+              onEditPostButtonClick={handleEditPostPopupOpen}
+              onDeletePostButtonClick={handleDeletePostModalOpen}
+              onEditProjectButtonClick={handleEditProjectPopupOpen}
+              onDeleteProjectButtonClick={handleDeleteProjectModalOpen}
+              onHomeClick={moveToHomePage}
+              onPostsClick={moveToPostsPage}
+              onProjectsClick={moveToProjectsPage}
+              onAboutClick={moveToAboutPage}
+            />
+          }
+        />
 
-        <Route exact path="/alina/posts">
-          <PostsPage
-            loggedIn={loggedIn}
-            activePage={activeBlogPage}
-            postsToRender={postsToRender}
-            onNewPostClick={handleNewPostPopupOpen}
-            onEditPostButtonClick={handleEditPostPopupOpen}
-            onDeletePostButtonClick={handleDeletePostModalOpen}
-            onBlogMenuClick={handleBlogMenuClick}
-            onContactClick={handleBlogContactClick}
-            onPostsSearch={handlePostsSearch}
-            onPostClick={handlePostClick}
-            hasMorePosts={hasMorePosts}
-            postsQuantity={currentPostsNumber}
-            onShowMorePosts={showMorePosts}
-            isLoading={isLoading}
-            query={query}
-            querySetter={setQuery}
-            onPostHashtagClick={handlePostHashtagClick}
-            activeHashtag={activePostHashtag}
-          />
-        </Route>
+        <Route
+          path="/alina/posts"
+          element={
+            <PostsPage
+              loggedIn={loggedIn}
+              activePage={activeBlogPage}
+              postsToRender={postsToRender}
+              onNewPostClick={handleNewPostPopupOpen}
+              onEditPostButtonClick={handleEditPostPopupOpen}
+              onDeletePostButtonClick={handleDeletePostModalOpen}
+              onBlogMenuClick={handleBlogMenuClick}
+              onContactClick={handleBlogContactClick}
+              onPostsSearch={handlePostsSearch}
+              onPostClick={handlePostClick}
+              hasMorePosts={hasMorePosts}
+              postsQuantity={currentPostsNumber}
+              onShowMorePosts={showMorePosts}
+              isLoading={isLoading}
+              query={query}
+              querySetter={setQuery}
+              onPostHashtagClick={handlePostHashtagClick}
+              activeHashtag={activePostHashtag}
+            />
+          }
+        />
 
-        <Route exact path="/alina/posts/:id">
-          <CurrentPostPage
-            activePage="posts"
-            onBlogMenuClick={handleBlogMenuClick}
-            onContactClick={handleBlogContactClick}
-            onBackButtonClick={moveToPreviousPage}
-            onEditPostButtonClick={handleEditPostPopupOpen}
-            onDeletePostButtonClick={handleDeletePostModalOpen}
-            loggedIn={loggedIn}
-            postVersion={postVersion}
-            openModal={openModal}
-          />
-        </Route>
+        <Route
+          path="/alina/posts/:id"
+          element={
+            <CurrentPostPage
+              activePage="posts"
+              onBlogMenuClick={handleBlogMenuClick}
+              onContactClick={handleBlogContactClick}
+              onBackButtonClick={moveToPreviousPage}
+              onEditPostButtonClick={handleEditPostPopupOpen}
+              onDeletePostButtonClick={handleDeletePostModalOpen}
+              loggedIn={loggedIn}
+              postVersion={postVersion}
+              openModal={openModal}
+            />
+          }
+        />
 
-        <Route exact path="/alina/projects">
-          <ProjectsPage
-            loggedIn={loggedIn}
-            activePage={activeBlogPage}
-            hashtags={projectHashtags}
-            activeProjectHashtag={activeProjectHashtag}
-            projectsToRender={projectsToRender}
-            hasMoreProjects={hasMoreProjects}
-            onNewProjectClick={handleNewProjectPopupOpen}
-            onBlogMenuClick={handleBlogMenuClick}
-            onContactClick={handleBlogContactClick}
-            projectsQuantity={currentProjectsNumber}
-            onShowMoreProjects={showMoreProjects}
-            onEditProjectButtonClick={handleEditProjectPopupOpen}
-            onDeleteProjectButtonClick={handleDeleteProjectModalOpen}
-            onProjectHashtagClick={handleProjectHashtagClick}
-          />
-        </Route>
+        <Route
+          path="/alina/projects"
+          element={
+            <ProjectsPage
+              loggedIn={loggedIn}
+              activePage={activeBlogPage}
+              hashtags={projectHashtags}
+              activeProjectHashtag={activeProjectHashtag}
+              projectsToRender={projectsToRender}
+              hasMoreProjects={hasMoreProjects}
+              onNewProjectClick={handleNewProjectPopupOpen}
+              onBlogMenuClick={handleBlogMenuClick}
+              onContactClick={handleBlogContactClick}
+              projectsQuantity={currentProjectsNumber}
+              onShowMoreProjects={showMoreProjects}
+              onEditProjectButtonClick={handleEditProjectPopupOpen}
+              onDeleteProjectButtonClick={handleDeleteProjectModalOpen}
+              onProjectHashtagClick={handleProjectHashtagClick}
+            />
+          }
+        />
 
-        <Route exact path="/alina/about">
-          <AboutPage
-            loggedIn={loggedIn}
-            activePage={activeBlogPage}
-            projectsToRender={projectsToRender}
-            onBlogMenuClick={handleBlogMenuClick}
-            onContactClick={handleBlogContactClick}
-            onAddProjectClick={handleNewProjectPopupOpen}
-            onGamesClick={handleGamesClick}
-            onMusicClick={handleMusicClick}
-          />
-        </Route>
+        <Route
+          path="/alina/about"
+          element={
+            <AboutPage
+              loggedIn={loggedIn}
+              activePage={activeBlogPage}
+              projectsToRender={projectsToRender}
+              onBlogMenuClick={handleBlogMenuClick}
+              onContactClick={handleBlogContactClick}
+              onAddProjectClick={handleNewProjectPopupOpen}
+              onGamesClick={handleGamesClick}
+              onMusicClick={handleMusicClick}
+            />
+          }
+        />
 
-        <Route exact path="/alina/games">
-          <GamesPage onTicTacToeClick={moveToTicTacToePage} />
-        </Route>
+        <Route
+          path="/alina/games"
+          element={<GamesPage onTicTacToeClick={moveToTicTacToePage} />}
+        />
 
-        <Route exact path="/signin">
-          <SignIn onSignin={handleSignin} isSendingReq={isLoading} />
-        </Route>
+        <Route
+          path="/signin"
+          element={<SignIn onSignin={handleSignin} isSendingReq={isLoading} />}
+        />
 
         {/* New users registration is disabled*/}
-        {/* <Route path="/signup">
+        {/* <Route path="/signup" element={
           <SignUp onSignup={handleSignup} isSendingReq={isLoading} />
-        </Route> */}
+        } /> */}
 
-        <Route path="/signin/recovery">
-          <ForgotPassword
-            onReceiveEmail={handleReceiveResetPasswordLink}
-            isSendingReq={isLoading}
-          />
-        </Route>
+        <Route
+          path="/signin/recovery"
+          element={
+            <ForgotPassword
+              onReceiveEmail={handleReceiveResetPasswordLink}
+              isSendingReq={isLoading}
+            />
+          }
+        />
 
-        <Route path="/reset-password/:resetPasswordLink">
-          <ResetPassword
-            onResetPassword={handleResetPassword}
-            isSendingReq={isLoading}
-          />
-        </Route>
+        <Route
+          path="/reset-password/:resetPasswordLink"
+          element={
+            <ResetPassword
+              onResetPassword={handleResetPassword}
+              isSendingReq={isLoading}
+            />
+          }
+        />
 
-        <Route path="/password-changed">
-          <PasswordChanged />
-        </Route>
+        <Route path="/password-changed" element={<PasswordChanged />} />
 
-        <ProtectedRoute
-          component={Profile}
-          exact
+        <Route
           path="/profile"
-          loggedIn={loggedIn}
-          onHomeClick={handleHomeClick}
-          onBlogClick={handleBlogClick}
-          onGalleryClick={handleGalleryClick}
-          onContactClick={handleContactClick}
-          onEditEmailBtnClick={handleEditEmailBtnClick}
-          onEditPasswordBtnClick={handleEditPasswordBtnClick}
-          onMenuClick={handleMenuClick}
-          onSignout={handleSignout}
-          isSendingReq={isLoading}
-          email={currentUser.email}
-          onLogout={handleSignout}
+          element={
+            <ProtectedRoute loggedIn={loggedIn}>
+              <Profile
+                loggedIn={loggedIn}
+                onHomeClick={handleHomeClick}
+                onBlogClick={handleBlogClick}
+                onGalleryClick={handleGalleryClick}
+                onContactClick={handleContactClick}
+                onEditEmailBtnClick={handleEditEmailBtnClick}
+                onEditPasswordBtnClick={handleEditPasswordBtnClick}
+                onMenuClick={handleMenuClick}
+                onSignout={handleSignout}
+                isSendingReq={isLoading}
+                email={currentUser.email}
+                onLogout={handleSignout}
+              />
+            </ProtectedRoute>
+          }
         />
 
-        <ProtectedRoute
-          component={ConfirmEmailUpdate}
+        <Route
           path="/profile/update-email/:updateEmailLink"
-          loggedIn={loggedIn}
-          onUpdateEmail={handleUpdateEmail}
+          element={
+            <ProtectedRoute loggedIn={loggedIn}>
+              <ConfirmEmailUpdate
+                loggedIn={loggedIn}
+                onUpdateEmail={handleUpdateEmail}
+              />
+            </ProtectedRoute>
+          }
         />
 
-        <ProtectedRoute
-          component={AddPhoto}
+        <Route
           path="/addphoto"
-          loggedIn={loggedIn}
-          onHomeClick={handleHomeClick}
-          onBlogClick={handleBlogClick}
-          nGalleryClick={handleGalleryClick}
-          onContactClick={handleContactClick}
-          onMenuClick={handleMenuClick}
-          onSignout={handleSignout}
-          isSendingReq={isLoading}
-          onAddPhotoViaLink={handleAddPhotoViaLink}
-          onUploadPhotoToServer={handleAddPhotoFromPc}
-          email={currentUser.email}
-          onLogout={handleSignout}
+          element={
+            <ProtectedRoute loggedIn={loggedIn}>
+              <AddPhoto
+                loggedIn={loggedIn}
+                onHomeClick={handleHomeClick}
+                onBlogClick={handleBlogClick}
+                nGalleryClick={handleGalleryClick}
+                onContactClick={handleContactClick}
+                onMenuClick={handleMenuClick}
+                onSignout={handleSignout}
+                isSendingReq={isLoading}
+                onAddPhotoViaLink={handleAddPhotoViaLink}
+                onUploadPhotoToServer={handleAddPhotoFromPc}
+                email={currentUser.email}
+                onLogout={handleSignout}
+              />
+            </ProtectedRoute>
+          }
         />
 
-        <Route path="/*">
-          <NotFound />
-        </Route>
-      </Switch>
+        <Route path="/*" element={<NotFound />} />
+      </Routes>
 
       <PhotoPopup
         loggedIn={loggedIn}

@@ -1,14 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import * as auth from "../utils/auth";
 import * as messages from "../utils/messages";
+import { useNavigate, useLocation } from "react-router-dom";
 
-export default function useAuth({
-  history,
-  location,
-  openModal,
-  startLoading,
-  stopLoading,
-}) {
+export default function useAuth({ openModal, startLoading, stopLoading }) {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [currentUser, setCurrentUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -24,7 +21,7 @@ export default function useAuth({
           location.pathname === "/signin" ||
           location.pathname === "/signup"
         ) {
-          history.push("/");
+          navigate("/");
         }
       })
       .catch((err) => {
@@ -36,7 +33,7 @@ export default function useAuth({
 
         console.error(err);
       });
-  }, [history, location.pathname]);
+  }, [navigate, location.pathnamee]);
 
   useEffect(() => {
     checkToken();
@@ -49,7 +46,7 @@ export default function useAuth({
       const data = await auth.signin(email, password);
       setLoggedIn(true);
       setCurrentUser(data.user);
-      history.push("/");
+      navigate("/");
     } catch (err) {
       openModal({
         status: "error",
@@ -101,7 +98,7 @@ export default function useAuth({
     } finally {
       setLoggedIn(false);
       setCurrentUser({});
-      history.push("/");
+      navigate("/");
     }
   };
 

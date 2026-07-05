@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { useLocation } from "react-router-dom";
 import Social from "./Social";
 
 function BlogPromo() {

@@ -3,6 +3,7 @@ import api from "../utils/api";
 import * as messages from "../utils/messages";
 import postUploadActions from "../utils/postUploadActions";
 import { LARGE_SCREEN_WIDTH, MIDDLE_SCREEN_WIDTH } from "../utils/constants";
+import { useNavigate } from "react-router-dom";
 
 export default function usePosts({
   screenWidth,
@@ -18,9 +19,9 @@ export default function usePosts({
   setIsEditPostPopupOpen,
   setIsDeletePostModalOpen,
   setRedirectAfterDelete,
-  history,
   redirectAfterDelete,
 }) {
+  const navigate = useNavigate();
   const [allPosts, setAllPosts] = useState([]);
   const [loadedPosts, setLoadedPosts] = useState([]);
   const [postsToRender, setPostsToRender] = useState([]);
@@ -280,7 +281,7 @@ export default function usePosts({
       .then(() => {
         removePost(post._id);
         if (redirectAfterDelete) {
-          history.replace("/alina/posts");
+          navigate("/alina/posts");
         }
       })
       .catch((err) => {

@@ -27,20 +27,22 @@ function Menu({
   return (
     <div className={`menu ${isOpen && "menu_visible"}`}>
       <NavLink
-        exact
-        className="menu__link"
-        activeClassName="menu__link_active"
         to="/"
+        end
         onClick={onHomeClick}
+        className={({ isActive }) =>
+          isActive ? "menu__link menu__link_active" : "menu__link"
+        }
       >
         HOME
       </NavLink>
       {loggedIn ? (
         <NavLink
-          className="menu__link"
-          activeClassName="menu__link_active"
           to="/profile"
           onClick={onProfileClick}
+          className={({ isActive }) =>
+            isActive ? "menu__link menu__link_active" : "menu__link"
+          }
         >
           PROFILE
         </NavLink>
@@ -51,10 +53,11 @@ function Menu({
       )}
       {loggedIn ? (
         <NavLink
-          className="menu__link"
-          activeClassName="menu__link_active"
           to="/addphoto"
           onClick={onAddPhotoClick}
+          className={({ isActive }) =>
+            isActive ? "menu__link menu__link_active" : "menu__link"
+          }
         >
           ADD PHOTO
         </NavLink>
@@ -64,10 +67,11 @@ function Menu({
         </button>
       )}
       <NavLink
-        className="menu__link"
-        activeClassName="menu__link_active"
         to="/alina"
         onClick={onBlogClick}
+        className={({ isActive }) =>
+          isActive ? "menu__link menu__link_active" : "menu__link"
+        }
       >
         BLOG
       </NavLink>
