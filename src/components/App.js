@@ -126,9 +126,6 @@ function App() {
   const [postVersion, setPostVersion] = useState(0);
   const [redirectAfterDelete, setRedirectAfterDelete] = useState(false);
 
-  const [projectToEdit, setProjectToEdit] = useState({});
-  const [projectToDelete, setProjectToDelete] = useState({});
-
   const [projectHashtags, setProjectHashtags] = useState([]);
   const [activePostHashtag, setActivePostHashtag] = useState("All");
   const [activeProjectHashtag, setActiveProjectHashtag] = useState("All");
@@ -175,25 +172,31 @@ function App() {
   });
 
   const {
-    allProjects,
-    setAllProjects,
-    loadedProjects,
     projectsToRender,
-    setProjectsToRender,
     currentProjectsNumber,
-    setCurrentProjectsNumber,
-    visibleLoadedProjectsCount,
-    setVisibleLoadedProjectsCount,
-    projectsToAdd,
-    projectsPage,
-    setProjectsPage,
-    projectsPages,
-    setProjectsPages,
     hasMoreProjects,
-    getProjectsLayout,
     calculateProjectsCount,
-    loadProjects,
-  } = useProjects({ screenWidth, isAlinaRoute, openModal });
+    showMoreProjects,
+    handleProjectHashtagClick,
+    handleAddProject,
+    handleEditProject,
+    handleEditProjectPopupOpen,
+    projectToEdit,
+    handleProjectDelete,
+    handleDeleteProjectModalOpen,
+    projectToDelete,
+  } = useProjects({
+    screenWidth,
+    isAlinaRoute,
+    openModal,
+    activeProjectHashtag,
+    setActiveProjectHashtag,
+    startLoading,
+    stopLoading,
+    closeAllBlogPopups,
+    setIsEditProjectPopupOpen,
+    setIsDeleteProjectModalOpen,
+  });
 
   useEffect(() => {
     setPostsToRender(allPosts.slice(0, currentPostsNumber));
@@ -242,39 +245,6 @@ function App() {
     setPostsToAdd(nextPostsToAdd);
     setCurrentPostsNumber((current) => Math.max(current, initialPostsNumber));
   };
-
-  function showMoreProjects() {
-    const nextVisibleCount = currentProjectsNumber + projectsToAdd;
-
-    if (nextVisibleCount <= allProjects.length) {
-      setCurrentProjectsNumber(nextVisibleCount);
-      if (!activeProjectHashtag) {
-        setVisibleLoadedProjectsCount(nextVisibleCount);
-      }
-      return;
-    }
-
-    if (projectsPage >= projectsPages) {
-      setCurrentProjectsNumber(allProjects.length);
-      if (!activeProjectHashtag) {
-        setVisibleLoadedProjectsCount(allProjects.length);
-      }
-      return;
-    }
-
-    loadProjects({
-      page: projectsPage + 1,
-      append: true,
-      hashtag: activeProjectHashtag,
-    }).then(() => {
-      setCurrentProjectsNumber((current) =>
-        Math.min(current + projectsToAdd, allProjects.length),
-      );
-      if (!activeProjectHashtag) {
-        setVisibleLoadedProjectsCount(allProjects.length);
-      }
-    });
-  }
 
   function loadPosts({
     page = 1,
@@ -569,11 +539,6 @@ function App() {
     setIsNewProjectPopupOpen(true);
   }
 
-  function handleEditProjectPopupOpen(project) {
-    setIsEditProjectPopupOpen(true);
-    setProjectToEdit(project);
-  }
-
   function handleBlogContactClick() {
     setIsGetInTouchPopupOpen(true);
   }
@@ -647,37 +612,6 @@ function App() {
     });
   }
 
-  function handleProjectHashtagClick(hashtag) {
-    const isAll = hashtag === "All";
-    const isSameHashtag = activeProjectHashtag === hashtag;
-
-    const nextHashtag = isAll || isSameHashtag ? "" : hashtag;
-
-    setActiveProjectHashtag(nextHashtag);
-
-    if (!nextHashtag) {
-      const { initialProjectsNumber } = getProjectsLayout();
-
-      const restoredVisibleCount = Math.min(
-        visibleLoadedProjectsCount || initialProjectsNumber,
-        loadedProjects.length,
-      );
-
-      setAllProjects(loadedProjects);
-      setProjectsPage(1);
-      setProjectsPages(Math.max(1, Math.ceil(loadedProjects.length / 12)));
-      setCurrentProjectsNumber(restoredVisibleCount);
-
-      return;
-    }
-
-    loadProjects({
-      page: 1,
-      append: false,
-      hashtag: nextHashtag,
-    });
-  }
-
   function handlePostHashtagClick(theme) {
     setActivePostHashtag(theme);
     loadPosts({
@@ -685,64 +619,6 @@ function App() {
       search: query,
       theme,
     });
-  }
-
-  function handleAddProject(newProject) {
-    startLoading();
-    api
-      .addProject(newProject)
-      .then((createdProject) => {
-        openModal({
-          status: "success",
-          message: messages.PROJECT_ADDED_SUCCESSFULLY_MSG,
-        });
-        setAllProjects((prev) => [createdProject, ...prev]);
-        setProjectsToRender((prev) => [createdProject, ...prev]);
-      })
-      .catch((err) => {
-        openModal({
-          status: "error",
-          message: err.message || messages.PROJECT_ADD_ERROR_MSG,
-        });
-      })
-      .finally(() => {
-        stopLoading();
-        closeAllBlogPopups();
-      });
-  }
-
-  function handleEditProject(projectId, props) {
-    startLoading();
-    const data = {
-      title: props.title,
-      hashtags: props.hashtags,
-      text: props.text,
-      link: props.link,
-    };
-    api
-      .editProject(projectId, data)
-      .then((newProject) => {
-        openModal({
-          status: "success",
-          message: messages.PROJECT_EDITED_SUCCESSFULLY_MSG,
-        });
-        setAllProjects((state) =>
-          state.map((p) => (p._id === projectId ? newProject : p)),
-        );
-        setProjectsToRender((state) =>
-          state.map((p) => (p._id === projectId ? newProject : p)),
-        );
-      })
-      .catch((err) => {
-        openModal({
-          status: "error",
-          message: err.message || messages.PROJECT_EDIT_ERROR_MSG,
-        });
-      })
-      .finally(() => {
-        stopLoading();
-        closeAllBlogPopups();
-      });
   }
 
   async function handleAddPost(props) {
@@ -902,31 +778,6 @@ function App() {
 
   function handlePostClick(post) {
     history.push(`/alina/posts/${post._id}`);
-  }
-
-  function handleDeleteProjectModalOpen(project) {
-    setIsDeleteProjectModalOpen(!isDeleteProjectModalOpen);
-    setProjectToDelete(project);
-  }
-
-  function handleProjectDelete(project) {
-    api
-      .deleteProject(project._id)
-      .then(() => {
-        setProjectsToRender((state) =>
-          state.filter((p) => p._id !== project._id && p),
-        );
-        setAllProjects((projects) =>
-          projects.filter((p) => p._id !== project._id),
-        );
-      })
-      .catch((err) => {
-        openModal({
-          status: "error",
-          message: err.message || messages.DEFAULT_ERROR_MSG,
-        });
-      })
-      .finally(() => closeAllBlogPopups());
   }
 
   useEffect(() => {
