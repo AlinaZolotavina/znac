@@ -6,37 +6,20 @@ import usePhotos from "../hooks/usePhotos.js";
 
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import AppRoutes from "./AppRoutes.js";
-import Home from "./Home";
-import Main from "./Main";
-import Footer from "./Footer";
 import PhotoPopup from "./PhotoPopup";
 import DeletePhotoModal from "./DeletePhotoModal";
-import ProtectedRoute from "./ProtectedRoute";
-import SignIn from "./SignIn";
-import Profile from "./Profile";
-import ForgotPassword from "./ForgotPassword";
-import AddPhoto from "./AddPhoto";
 import EditEmailModal from "./EditEmailModal";
 import EditPasswordModal from "./EditPasswordModal";
 import Menu from "./Menu";
 import Modal from "./Modal";
-import ConfirmEmailUpdate from "./ConfirmEmailUpdate";
 import api from "../utils/api";
 import scrollToRef from "../utils/scrollToRef";
 import * as auth from "../utils/auth.js";
 
-import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import * as messages from "../utils/messages";
 
-import ResetPassword from "./ResetPassword";
-import PasswordChanged from "./PasswordChanged";
-import NotFound from "./NotFound";
-
-import BlogMainPage from "./blog/BlogMainPage.js";
-import PostsPage from "./blog/PostsPage.js";
-import ProjectsPage from "./blog/ProjectsPage.js";
-import AboutPage from "./blog/AboutPage.js";
 import BlogMenu from "./blog/BlogMenu.js";
 import GetInTouchPopup from "./blog/GetInTouchPopup.js";
 import NewProjectPopup from "./blog/NewProjectPopup.js";
@@ -48,8 +31,6 @@ import DeleteProjectModal from "./blog/DeleteProjectModal.js";
 
 import getCurrentActivePage from "../utils/getCurrentActivePage.js";
 
-import CurrentPostPage from "./blog/CurrentPostPage.js";
-import GamesPage from "./blog/GamesPage.js";
 import useProjects from "../hooks/useProjects.js";
 import usePosts from "../hooks/usePosts.js";
 

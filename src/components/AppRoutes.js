@@ -1,7 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./Home";
-import Main from "./Main";
-import Footer from "./Footer";
+import GalleryRoot from "./GalleryRoot.js";
 import BlogMainPage from "./blog/BlogMainPage.js";
 import PostsPage from "./blog/PostsPage.js";
 import ProjectsPage from "./blog/ProjectsPage.js";
@@ -10,12 +8,8 @@ import GamesPage from "./blog/GamesPage.js";
 import ResetPassword from "./ResetPassword";
 import PasswordChanged from "./PasswordChanged";
 import NotFound from "./NotFound";
-import ProtectedRoute from "./ProtectedRoute";
 import SignIn from "./SignIn";
-import Profile from "./Profile";
 import ForgotPassword from "./ForgotPassword";
-import AddPhoto from "./AddPhoto";
-import ConfirmEmailUpdate from "./ConfirmEmailUpdate";
 import CurrentPostPage from "./blog/CurrentPostPage.js";
 
 function AppRoutes({
@@ -94,53 +88,42 @@ function AppRoutes({
   return (
     <Routes>
       <Route
-        path="/"
+        path="/*"
         element={
-          <>
-            <Home
-              loggedIn={loggedIn}
-              ref={homeRef}
-              onHomeClick={handleHomeClick}
-              onBlogClick={handleBlogClick}
-              onGalleryClick={handleGalleryClick}
-              onContactClick={handleContactClick}
-              onMenuClick={handleMenuClick}
-              onSignout={handleSignout}
-              isSendingReq={isLoading}
-              email={currentUser.email}
-              onLogout={handleSignout}
-            />
-            <Main
-              photos={photosToRender}
-              loggedIn={loggedIn}
-              ref={mainRef}
-              onPhotoClick={handlePhotoOpen}
-              onDeleteBtnClick={handleDeletePhotoModalOpen}
-              onHomeClick={handleHomeClick}
-              onBlogClick={handleBlogClick}
-              onGalleryClick={handleGalleryClick}
-              onContactClick={handleContactClick}
-              onHashtagClick={handlePhotoHashtagClick}
-              hashtag={hashtag}
-              photoHashtags={lastHashtags || []}
-              hashtagSetter={setHashtag}
-              onSearch={handlePhotoSearch}
-              onClearSearch={handleClearPhotoSearch}
-              photosQuantity={currentPhotosNumber}
-              hasMorePhotos={hasMorePhotos}
-              onShowMore={showMorePhotos}
-              email={currentUser.email}
-              onLogout={handleSignout}
-              areHashtagsEditing={false}
-              onEditHashtags={handleEditHashtags}
-              isSendingReq={isLoading}
-              hashtagsNumber={10}
-            />
-            <Footer ref={footerRef} />
-          </>
+          <GalleryRoot
+            loggedIn={loggedIn}
+            currentUser={currentUser}
+            homeRef={homeRef}
+            mainRef={mainRef}
+            footerRef={footerRef}
+            handleSignout={handleSignout}
+            handleHomeClick={handleHomeClick}
+            handleBlogClick={handleBlogClick}
+            handleGalleryClick={handleGalleryClick}
+            handleContactClick={handleContactClick}
+            handleMenuClick={handleMenuClick}
+            isLoading={isLoading}
+            photosToRender={photosToRender}
+            handlePhotoOpen={handlePhotoOpen}
+            handleDeletePhotoModalOpen={handleDeletePhotoModalOpen}
+            handlePhotoHashtagClick={handlePhotoHashtagClick}
+            hashtag={hashtag}
+            lastHashtags={lastHashtags}
+            setHashtag={setHashtag}
+            handlePhotoSearch={handlePhotoSearch}
+            handleClearPhotoSearch={handleClearPhotoSearch}
+            currentPhotosNumber={currentPhotosNumber}
+            hasMorePhotos={hasMorePhotos}
+            showMorePhotos={showMorePhotos}
+            handleEditHashtags={handleEditHashtags}
+            handleEditEmailBtnClick={handleEditEmailBtnClick}
+            handleEditPasswordBtnClick={handleEditPasswordBtnClick}
+            handleUpdateEmail={handleUpdateEmail}
+            handleAddPhotoViaLink={handleAddPhotoViaLink}
+            handleAddPhotoFromPc={handleAddPhotoFromPc}
+          />
         }
       />
-
       <Route
         path="/alina"
         element={
@@ -285,62 +268,6 @@ function AppRoutes({
       />
 
       <Route path="/password-changed" element={<PasswordChanged />} />
-
-      <Route
-        path="/profile"
-        element={
-          <ProtectedRoute loggedIn={loggedIn}>
-            <Profile
-              loggedIn={loggedIn}
-              onHomeClick={handleHomeClick}
-              onBlogClick={handleBlogClick}
-              onGalleryClick={handleGalleryClick}
-              onContactClick={handleContactClick}
-              onEditEmailBtnClick={handleEditEmailBtnClick}
-              onEditPasswordBtnClick={handleEditPasswordBtnClick}
-              onMenuClick={handleMenuClick}
-              onSignout={handleSignout}
-              isSendingReq={isLoading}
-              email={currentUser.email}
-              onLogout={handleSignout}
-            />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/profile/update-email/:updateEmailLink"
-        element={
-          <ProtectedRoute loggedIn={loggedIn}>
-            <ConfirmEmailUpdate
-              loggedIn={loggedIn}
-              onUpdateEmail={handleUpdateEmail}
-            />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/addphoto"
-        element={
-          <ProtectedRoute loggedIn={loggedIn}>
-            <AddPhoto
-              loggedIn={loggedIn}
-              onHomeClick={handleHomeClick}
-              onBlogClick={handleBlogClick}
-              nGalleryClick={handleGalleryClick}
-              onContactClick={handleContactClick}
-              onMenuClick={handleMenuClick}
-              onSignout={handleSignout}
-              isSendingReq={isLoading}
-              onAddPhotoViaLink={handleAddPhotoViaLink}
-              onUploadPhotoToServer={handleAddPhotoFromPc}
-              email={currentUser.email}
-              onLogout={handleSignout}
-            />
-          </ProtectedRoute>
-        }
-      />
 
       <Route path="/*" element={<NotFound />} />
     </Routes>
