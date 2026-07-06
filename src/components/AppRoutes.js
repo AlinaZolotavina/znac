@@ -1,15 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 import GalleryRoot from "./GalleryRoot.js";
-import BlogMainPage from "./blog/BlogMainPage.js";
-import PostsPage from "./blog/PostsPage.js";
-import ProjectsPage from "./blog/ProjectsPage.js";
-import AboutPage from "./blog/AboutPage.js";
-import GamesPage from "./blog/GamesPage.js";
+import BlogRoot from "./BlogRoot.js";
 import ResetPassword from "./ResetPassword";
 import PasswordChanged from "./PasswordChanged";
 import SignIn from "./SignIn";
 import ForgotPassword from "./ForgotPassword";
-import CurrentPostPage from "./blog/CurrentPostPage.js";
 
 function AppRoutes({
   loggedIn,
@@ -104,117 +99,64 @@ function AppRoutes({
           />
         }
       />
-      <Route
-        path="/alina"
-        element={
-          <BlogMainPage
-            loggedIn={loggedIn}
-            postsToRender={postsToRender}
-            projectsToRender={projectsToRender}
-            projectsQuantity={2}
-            onBlogMenuClick={handleBlogMenuClick}
-            onContactClick={handleBlogContactClick}
-            onNewPostClick={handleNewPostPopupOpen}
-            onNewProjectClick={handleNewProjectPopupOpen}
-            onViewAllPostsClick={viewAllPostsClick}
-            onViewAllProjectsClick={viewAllProjectsClick}
-            onPostClick={handlePostClick}
-            onEditPostButtonClick={handleEditPostPopupOpen}
-            onDeletePostButtonClick={handleDeletePostModalOpen}
-            onEditProjectButtonClick={handleEditProjectPopupOpen}
-            onDeleteProjectButtonClick={handleDeleteProjectModalOpen}
-            onHomeClick={moveToHomePage}
-            onPostsClick={moveToPostsPage}
-            onProjectsClick={moveToProjectsPage}
-            onAboutClick={moveToAboutPage}
-          />
-        }
-      />
 
       <Route
-        path="/alina/posts"
+        path="/alina/*"
         element={
-          <PostsPage
+          <BlogRoot
             loggedIn={loggedIn}
-            activePage={activeBlogPage}
-            postsToRender={postsToRender}
-            onNewPostClick={handleNewPostPopupOpen}
-            onEditPostButtonClick={handleEditPostPopupOpen}
-            onDeletePostButtonClick={handleDeletePostModalOpen}
-            onBlogMenuClick={handleBlogMenuClick}
-            onContactClick={handleBlogContactClick}
-            onPostsSearch={handlePostsSearch}
-            onPostClick={handlePostClick}
-            hasMorePosts={hasMorePosts}
-            postsQuantity={currentPostsNumber}
-            onShowMorePosts={showMorePosts}
+            currentUser={currentUser}
             isLoading={isLoading}
-            query={query}
-            querySetter={setQuery}
-            onPostHashtagClick={handlePostHashtagClick}
-            activeHashtag={activePostHashtag}
-          />
-        }
-      />
-
-      <Route
-        path="/alina/posts/:id"
-        element={
-          <CurrentPostPage
-            activePage="posts"
-            onBlogMenuClick={handleBlogMenuClick}
-            onContactClick={handleBlogContactClick}
-            onBackButtonClick={moveToPreviousPage}
-            onEditPostButtonClick={handleEditPostPopupOpen}
-            onDeletePostButtonClick={handleDeletePostModalOpen}
-            loggedIn={loggedIn}
-            postVersion={postVersion}
+            postsToRender={postsToRender}
+            projectsToRender={projectsToRender}
+            handleBlogMenuClick={handleBlogMenuClick}
+            handleBlogContactClick={handleBlogContactClick}
+            handleNewPostPopupOpen={handleNewPostPopupOpen}
+            handleNewProjectPopupOpen={handleNewProjectPopupOpen}
+            viewAllPostsClick={viewAllPostsClick}
+            viewAllProjectsClick={viewAllProjectsClick}
+            handlePostClick={handlePostClick}
             openModal={openModal}
-          />
-        }
-      />
-
-      <Route
-        path="/alina/projects"
-        element={
-          <ProjectsPage
-            loggedIn={loggedIn}
-            activePage={activeBlogPage}
-            hashtags={projectHashtags}
+            handleEditPostPopupOpen={handleEditPostPopupOpen}
+            handleDeletePostModalOpen={handleDeletePostModalOpen}
+            handleEditProjectPopupOpen={handleEditProjectPopupOpen}
+            handleDeleteProjectModalOpen={handleDeleteProjectModalOpen}
+            moveToHomePage={moveToHomePage}
+            moveToPostsPage={moveToPostsPage}
+            moveToProjectsPage={moveToProjectsPage}
+            moveToAboutPage={moveToAboutPage}
+            activeBlogPage={activeBlogPage}
+            handlePostsSearch={handlePostsSearch}
+            hasMorePosts={hasMorePosts}
+            currentPostsNumber={currentPostsNumber}
+            showMorePosts={showMorePosts}
+            query={query}
+            setQuery={setQuery}
+            handlePostHashtagClick={handlePostHashtagClick}
+            activePostHashtag={activePostHashtag}
+            moveToPreviousPage={moveToPreviousPage}
+            postVersion={postVersion}
+            projectHashtags={projectHashtags}
             activeProjectHashtag={activeProjectHashtag}
-            projectsToRender={projectsToRender}
             hasMoreProjects={hasMoreProjects}
-            onNewProjectClick={handleNewProjectPopupOpen}
-            onBlogMenuClick={handleBlogMenuClick}
-            onContactClick={handleBlogContactClick}
-            projectsQuantity={currentProjectsNumber}
-            onShowMoreProjects={showMoreProjects}
-            onEditProjectButtonClick={handleEditProjectPopupOpen}
-            onDeleteProjectButtonClick={handleDeleteProjectModalOpen}
-            onProjectHashtagClick={handleProjectHashtagClick}
+            currentProjectsNumber={currentProjectsNumber}
+            showMoreProjects={showMoreProjects}
+            handleProjectHashtagClick={handleProjectHashtagClick}
+            handleGamesClick={handleGamesClick}
+            handleMusicClick={handleMusicClick}
+            moveToTicTacToePage={moveToTicTacToePage}
+            handleReceiveResetPasswordLink={handleReceiveResetPasswordLink}
+            handleResetPassword={handleResetPassword}
+            handleEditEmailBtnClick={handleEditEmailBtnClick}
+            handleEditPasswordBtnClick={handleEditPasswordBtnClick}
+            handleUpdateEmail={handleUpdateEmail}
+            startLoading={startLoading}
+            stopLoading={stopLoading}
+            screenWidth={screenWidth}
+            setScreenWidth={setScreenWidth}
+            location={location}
           />
         }
-      />
-
-      <Route
-        path="/alina/about"
-        element={
-          <AboutPage
-            loggedIn={loggedIn}
-            activePage={activeBlogPage}
-            projectsToRender={projectsToRender}
-            onBlogMenuClick={handleBlogMenuClick}
-            onContactClick={handleBlogContactClick}
-            onAddProjectClick={handleNewProjectPopupOpen}
-            onGamesClick={handleGamesClick}
-            onMusicClick={handleMusicClick}
-          />
-        }
-      />
-
-      <Route
-        path="/alina/games"
-        element={<GamesPage onTicTacToeClick={moveToTicTacToePage} />}
       />
 
       <Route
