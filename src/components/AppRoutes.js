@@ -7,7 +7,6 @@ import AboutPage from "./blog/AboutPage.js";
 import GamesPage from "./blog/GamesPage.js";
 import ResetPassword from "./ResetPassword";
 import PasswordChanged from "./PasswordChanged";
-import NotFound from "./NotFound";
 import SignIn from "./SignIn";
 import ForgotPassword from "./ForgotPassword";
 import CurrentPostPage from "./blog/CurrentPostPage.js";
@@ -26,19 +25,6 @@ function AppRoutes({
   handleContactClick,
   handleMenuClick,
   isLoading,
-  photosToRender,
-  handlePhotoOpen,
-  handleDeletePhotoModalOpen,
-  handlePhotoHashtagClick,
-  hashtag,
-  lastHashtags,
-  setHashtag,
-  handlePhotoSearch,
-  handleClearPhotoSearch,
-  currentPhotosNumber,
-  hasMorePhotos,
-  showMorePhotos,
-  handleEditHashtags,
   postsToRender,
   projectsToRender,
   handleBlogMenuClick,
@@ -82,8 +68,11 @@ function AppRoutes({
   handleEditEmailBtnClick,
   handleEditPasswordBtnClick,
   handleUpdateEmail,
-  handleAddPhotoViaLink,
-  handleAddPhotoFromPc,
+  startLoading,
+  stopLoading,
+  screenWidth,
+  setScreenWidth,
+  location,
 }) {
   return (
     <Routes>
@@ -103,24 +92,15 @@ function AppRoutes({
             handleContactClick={handleContactClick}
             handleMenuClick={handleMenuClick}
             isLoading={isLoading}
-            photosToRender={photosToRender}
-            handlePhotoOpen={handlePhotoOpen}
-            handleDeletePhotoModalOpen={handleDeletePhotoModalOpen}
-            handlePhotoHashtagClick={handlePhotoHashtagClick}
-            hashtag={hashtag}
-            lastHashtags={lastHashtags}
-            setHashtag={setHashtag}
-            handlePhotoSearch={handlePhotoSearch}
-            handleClearPhotoSearch={handleClearPhotoSearch}
-            currentPhotosNumber={currentPhotosNumber}
-            hasMorePhotos={hasMorePhotos}
-            showMorePhotos={showMorePhotos}
-            handleEditHashtags={handleEditHashtags}
             handleEditEmailBtnClick={handleEditEmailBtnClick}
             handleEditPasswordBtnClick={handleEditPasswordBtnClick}
             handleUpdateEmail={handleUpdateEmail}
-            handleAddPhotoViaLink={handleAddPhotoViaLink}
-            handleAddPhotoFromPc={handleAddPhotoFromPc}
+            openModal={openModal}
+            startLoading={startLoading}
+            stopLoading={stopLoading}
+            screenWidth={screenWidth}
+            setScreenWidth={setScreenWidth}
+            location={location}
           />
         }
       />
@@ -268,8 +248,6 @@ function AppRoutes({
       />
 
       <Route path="/password-changed" element={<PasswordChanged />} />
-
-      <Route path="/*" element={<NotFound />} />
     </Routes>
   );
 }

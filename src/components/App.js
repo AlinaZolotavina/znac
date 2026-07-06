@@ -1,13 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
 import useAuth from "../hooks/useAuth";
 import useRequestState from "../hooks/useRequestStatus";
-import usePhotos from "../hooks/usePhotos.js";
 
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import AppRoutes from "./AppRoutes.js";
-import PhotoPopup from "./PhotoPopup";
-import DeletePhotoModal from "./DeletePhotoModal";
 import EditEmailModal from "./EditEmailModal";
 import EditPasswordModal from "./EditPasswordModal";
 import Menu from "./Menu";
@@ -30,6 +26,8 @@ import DeletePostModal from "./blog/DeletePostModal.js";
 import DeleteProjectModal from "./blog/DeleteProjectModal.js";
 
 import getCurrentActivePage from "../utils/getCurrentActivePage.js";
+
+import AppRoutes from "./AppRoutes.js";
 
 import useProjects from "../hooks/useProjects.js";
 import usePosts from "../hooks/usePosts.js";
@@ -60,19 +58,16 @@ function App() {
     });
   };
 
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
   // history & location
   const navigate = useNavigate();
   const location = useLocation();
   const isAlinaRoute = location.pathname.startsWith("/alina");
 
-  // everything related to photos (including screen width, on which depends the photos to render count)
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-
   // popups & modals
-  const [isPhotoPopupOpen, setIsPhotoPopupOpen] = useState(false);
   const [isEditEmailModalOpen, setIsEditEmailModalOpen] = useState(false);
   const [isEditPasswordModalOpen, setIsEditPasswordModalOpen] = useState(false);
-  const [isDeletePhotoModalOpen, setIsDeletePhotoModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [modalState, setModalState] = useState({
     isOpen: false,
@@ -80,8 +75,6 @@ function App() {
     type: "default", // 'default' | 'email'
     message: "",
   });
-  const [hashtag, setHashtag] = useState(""); // search input
-  const [lastHashtags, setLastHashtags] = useState([]);
 
   const [isBlogMenuOpen, setIsBlogMenuOpen] = useState(false);
   const [isGetInTouchPopupOpen, setIsGetInTouchPopupOpen] = useState(false);
@@ -100,44 +93,29 @@ function App() {
   const [activeProjectHashtag, setActiveProjectHashtag] = useState("All");
   const [activeBlogPage, setActiveBlogPage] = useState("Home");
 
-  const {
-    selectedPhoto,
-    hashtagsOfSelectedPhoto,
-    viewsOfSelectedPhoto,
-    areHashtagsEditing,
-    handleEditHashtagsBtnClick,
-    handleEditHashtags,
-    isLeftFlipDisabled,
-    isRightFlipDisabled,
-    handlePhotoFlip,
-    handleAddPhotoFromPc,
-    handleAddPhotoViaLink,
-    handlePhotoDelete,
-    calculatePhotosCount,
-    photosToRender,
-    currentPhotosNumber,
-    hasMorePhotos,
-    showMorePhotos,
-    handlePhotoSearch,
-    handleClearPhotoSearch,
-    handlePhotoHashtagClick,
-    handlePhotoOpen,
-    handleDeletePhotoModalOpen,
-  } = usePhotos({
-    openModal,
-    startLoading,
-    stopLoading,
-    closeAllPopups,
-    screenWidth,
-    setScreenWidth,
-    hashtag,
-    setHashtag,
-    lastHashtags,
-    setLastHashtags,
-    location,
-    setIsPhotoPopupOpen,
-    setIsDeletePhotoModalOpen,
-  });
+  const closeAllBlogPopups = useCallback(() => {
+    setIsPostPopupOpen(false);
+    setIsEditPostPopupOpen(false);
+    setIsEditProjectPopupOpen(false);
+    setIsNewProjectPopupOpen(false);
+    setIsDeletePostModalOpen(false);
+    setIsDeleteProjectModalOpen(false);
+    setRedirectAfterDelete(false);
+  }, []);
+
+  const closeAllPopups = useCallback(() => {
+    setIsEditEmailModalOpen(false);
+    setIsEditPasswordModalOpen(false);
+    closeModal();
+  }, []);
+
+  const closeBlogMenu = useCallback(() => {
+    setIsBlogMenuOpen(false);
+  }, []);
+
+  const closeMenu = useCallback(() => {
+    setIsMenuOpen(false);
+  }, []);
 
   const {
     projectsToRender,
@@ -216,7 +194,6 @@ function App() {
   // calculate photos count depending on screen demensions
   // (including when changing the screen resolution)
   useEffect(() => {
-    calculatePhotosCount();
     calculatePostsCount();
     calculateProjectsCount();
   }, [screenWidth]);
@@ -350,69 +327,41 @@ function App() {
   // close popups and modals by close btn, ESC and overlay click;
   // flip photos by keyboard arrows;
   // close menu;
-  const handleKeyPress = (e) => {
-    const { keyCode } = e;
-    if (keyCode === 27) {
-      closeAllPopups();
-      closeAllBlogPopups();
-      closeMenu();
-      closeBlogMenu();
-    }
-    if (isPhotoPopupOpen) {
-      if (keyCode === 37 && !isLeftFlipDisabled) {
-        handlePhotoFlip("left");
-      }
-      if (keyCode === 39 && !isRightFlipDisabled) {
-        handlePhotoFlip("right");
-      }
-    }
-    if (keyCode === 13 && isDeletePhotoModalOpen) {
-      handlePhotoDelete(selectedPhoto);
-    }
-  };
-
-  const handleOverlayClickClose = (e) => {
-    if (
-      e.target.classList.contains("popup_is-opened") ||
-      e.target.classList.contains("popup__close-btn")
-    ) {
-      closeAllPopups();
-      closeAllBlogPopups();
-    }
-  };
-
-  useEffect(
+  const handleKeyPress = useCallback(
     (e) => {
-      window.addEventListener("keydown", handleKeyPress);
-      window.addEventListener("mousedown", handleOverlayClickClose);
-      return () => {
-        window.removeEventListener("keydown", handleKeyPress);
-        window.removeEventListener("mousedown", handleOverlayClickClose);
-      };
+      const { keyCode } = e;
+      if (keyCode === 27) {
+        closeAllPopups();
+        closeAllBlogPopups();
+        closeMenu();
+        closeBlogMenu();
+      }
     },
-    [
-      photosToRender,
-      selectedPhoto,
-      isLeftFlipDisabled,
-      isRightFlipDisabled,
-      isPhotoPopupOpen,
-      isDeletePhotoModalOpen,
-    ],
+    [closeAllPopups, closeAllBlogPopups, closeMenu, closeBlogMenu],
   );
 
-  function closeAllPopups() {
-    setIsPhotoPopupOpen(false);
-    setIsDeletePhotoModalOpen(false);
-    setIsEditEmailModalOpen(false);
-    setIsEditPasswordModalOpen(false);
-    // setIsModalOpen(false);
-    closeModal();
-    // setIsEmailSentModalOpen(false);
-  }
+  const handleOverlayClickClose = useCallback(
+    (e) => {
+      if (
+        e.target.classList.contains("popup_is-opened") ||
+        e.target.classList.contains("popup__close-btn")
+      ) {
+        closeAllPopups();
+        closeAllBlogPopups();
+      }
+    },
+    [closeAllPopups, closeAllBlogPopups],
+  );
 
-  function closeMenu() {
-    setIsMenuOpen(false);
-  }
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress);
+    window.addEventListener("mousedown", handleOverlayClickClose);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+      window.removeEventListener("mousedown", handleOverlayClickClose);
+    };
+  }, [handleKeyPress, handleOverlayClickClose]);
 
   ////////////////////////////  BLOG  ///////////////////////////////////////
 
@@ -444,16 +393,6 @@ function App() {
     setIsGetInTouchPopupOpen(true);
   }
 
-  function closeAllBlogPopups() {
-    setIsPostPopupOpen(false);
-    setIsEditPostPopupOpen(false);
-    setIsEditProjectPopupOpen(false);
-    setIsNewProjectPopupOpen(false);
-    setIsDeletePostModalOpen(false);
-    setIsDeleteProjectModalOpen(false);
-    setRedirectAfterDelete(false);
-  }
-
   const closeGetInTouchPopup = () => {
     setIsGetInTouchPopupOpen(false);
   };
@@ -461,10 +400,6 @@ function App() {
   function handleBlogMenuClick(e) {
     setIsBlogMenuOpen(!isBlogMenuOpen);
     e.target.blur();
-  }
-
-  function closeBlogMenu() {
-    setIsBlogMenuOpen(false);
   }
 
   useEffect(() => {
@@ -587,19 +522,6 @@ function App() {
         handleContactClick={handleContactClick}
         handleMenuClick={handleMenuClick}
         isLoading={isLoading}
-        photosToRender={photosToRender}
-        handlePhotoOpen={handlePhotoOpen}
-        handleDeletePhotoModalOpen={handleDeletePhotoModalOpen}
-        handlePhotoHashtagClick={handlePhotoHashtagClick}
-        hashtag={hashtag}
-        lastHashtags={lastHashtags}
-        setHashtag={setHashtag}
-        handlePhotoSearch={handlePhotoSearch}
-        handleClearPhotoSearch={handleClearPhotoSearch}
-        currentPhotosNumber={currentPhotosNumber}
-        hasMorePhotos={hasMorePhotos}
-        showMorePhotos={showMorePhotos}
-        handleEditHashtags={handleEditHashtags}
         postsToRender={postsToRender}
         projectsToRender={projectsToRender}
         handleBlogMenuClick={handleBlogMenuClick}
@@ -643,24 +565,11 @@ function App() {
         handleEditEmailBtnClick={handleEditEmailBtnClick}
         handleEditPasswordBtnClick={handleEditPasswordBtnClick}
         handleUpdateEmail={handleUpdateEmail}
-        handleAddPhotoViaLink={handleAddPhotoViaLink}
-        handleAddPhotoFromPc={handleAddPhotoFromPc}
-      />
-      <PhotoPopup
-        loggedIn={loggedIn}
-        isOpen={isPhotoPopupOpen}
-        photo={selectedPhoto}
-        photoHashtags={hashtagsOfSelectedPhoto || []}
-        views={viewsOfSelectedPhoto}
-        onClose={closeAllPopups}
-        onHashtagClick={handlePhotoHashtagClick}
-        areHashtagsEditing={areHashtagsEditing}
-        onEditHashtags={handleEditHashtags}
-        isSendingReq={isLoading}
-        onEditHashtagsBtnClick={handleEditHashtagsBtnClick}
-        onPhotoFlip={handlePhotoFlip}
-        isLeftFlipDisabled={isLeftFlipDisabled}
-        isRightFlipDisabled={isRightFlipDisabled}
+        startLoading={startLoading}
+        stopLoading={stopLoading}
+        screenWidth={screenWidth}
+        setScreenWidth={setScreenWidth}
+        location={location}
       />
 
       <EditEmailModal
@@ -673,13 +582,6 @@ function App() {
       <EditPasswordModal
         isOpen={isEditPasswordModalOpen}
         onClose={closeAllPopups}
-      />
-
-      <DeletePhotoModal
-        photo={selectedPhoto}
-        isOpen={isDeletePhotoModalOpen}
-        onClose={closeAllPopups}
-        onDeletePhoto={handlePhotoDelete}
       />
 
       <Menu

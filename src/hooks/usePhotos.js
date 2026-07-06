@@ -76,6 +76,10 @@ export default function usePhotos({
     setHashtag("");
   }, [location.pathname]);
 
+  useEffect(() => {
+    calculatePhotosCount();
+  }, [screenWidth]);
+
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const hashtagsOfSelectedPhoto = selectedPhoto?.hashtags || [];
   const viewsOfSelectedPhoto = selectedPhoto?.views || 0;
