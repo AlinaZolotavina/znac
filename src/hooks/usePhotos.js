@@ -472,7 +472,6 @@ export default function usePhotos({
     handleEditHashtagsBtnClick,
     handleAddPhotoFromPc,
     handleAddPhotoViaLink,
-    calculatePhotosCount,
     showMorePhotos,
   };
 }

@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import { Routes, Route } from "react-router-dom";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Home from "./Home";
 import Main from "./Main";
 import Footer from "./Footer";
@@ -8,23 +8,17 @@ import ConfirmEmailUpdate from "./ConfirmEmailUpdate";
 import AddPhoto from "./AddPhoto";
 import ProtectedRoute from "./ProtectedRoute";
 import NotFound from "./NotFound";
+import Menu from "./Menu";
 import PhotoPopup from "./PhotoPopup";
 import DeletePhotoModal from "./DeletePhotoModal";
 
 import usePhotos from "../hooks/usePhotos";
+import scrollToRef from "../utils/scrollToRef";
 
 function GalleryRoot({
   loggedIn,
   currentUser,
-  homeRef,
-  mainRef,
-  footerRef,
   handleSignout,
-  handleHomeClick,
-  handleBlogClick,
-  handleGalleryClick,
-  handleContactClick,
-  handleMenuClick,
   isLoading,
   handleEditEmailBtnClick,
   handleEditPasswordBtnClick,
@@ -34,41 +28,52 @@ function GalleryRoot({
   stopLoading,
   screenWidth,
   setScreenWidth,
-  location,
+  closeModal,
 }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPhotoPopupOpen, setIsPhotoPopupOpen] = useState(false);
   const [isDeletePhotoModalOpen, setIsDeletePhotoModalOpen] = useState(false);
   const [hashtag, setHashtag] = useState(""); // search input
   const [lastHashtags, setLastHashtags] = useState([]);
+  const homeRef = useRef(null);
+  const mainRef = useRef(null);
+  const footerRef = useRef(null);
 
   const closeGalleryPopups = useCallback(() => {
     setIsPhotoPopupOpen(false);
     setIsDeletePhotoModalOpen(false);
-  }, []);
+    closeModal();
+  }, [closeModal]);
 
   const {
+    // state
     selectedPhoto,
     hashtagsOfSelectedPhoto,
     viewsOfSelectedPhoto,
     areHashtagsEditing,
-    handleEditHashtagsBtnClick,
-    handleEditHashtags,
     isLeftFlipDisabled,
     isRightFlipDisabled,
-    handlePhotoFlip,
-    handleAddPhotoFromPc,
-    handleAddPhotoViaLink,
-    handlePhotoDelete,
-    calculatePhotosCount,
+
+    // gallery
     photosToRender,
     currentPhotosNumber,
     hasMorePhotos,
-    showMorePhotos,
+
+    // actions
+    handlePhotoOpen,
+    handlePhotoFlip,
+    handlePhotoDelete,
+    handleDeletePhotoModalOpen,
     handlePhotoSearch,
     handleClearPhotoSearch,
     handlePhotoHashtagClick,
-    handlePhotoOpen,
-    handleDeletePhotoModalOpen,
+    handleEditHashtags,
+    handleEditHashtagsBtnClick,
+    handleAddPhotoFromPc,
+    handleAddPhotoViaLink,
+    showMorePhotos,
   } = usePhotos({
     openModal,
     startLoading,
@@ -85,12 +90,53 @@ function GalleryRoot({
     setIsDeletePhotoModalOpen,
   });
 
+  function handleHomeClick() {
+    navigate("/");
+
+    requestAnimationFrame(() => {
+      scrollToRef(homeRef);
+    });
+  }
+
+  function handleGalleryClick() {
+    scrollToRef(mainRef);
+  }
+
+  function handleProfileClick() {
+    closeMenu();
+    navigate("/profile");
+  }
+
+  function handleAddPhotoClick() {
+    closeMenu();
+    navigate("/addphoto");
+  }
+
+  const closeMenu = useCallback(() => {
+    setIsMenuOpen(false);
+  }, []);
+
+  function handleContactClick() {
+    scrollToRef(footerRef);
+  }
+
+  function handleBlogClick() {
+    window.scrollTo(0, 0);
+    closeMenu();
+  }
+
+  function handleMenuClick(e) {
+    setIsMenuOpen(!isMenuOpen);
+    e.target.blur();
+  }
+
   const handleKeyPress = useCallback(
     (e) => {
       const { keyCode } = e;
 
       if (keyCode === 27) {
         closeGalleryPopups();
+        closeMenu();
       }
 
       if (isPhotoPopupOpen) {
@@ -109,6 +155,7 @@ function GalleryRoot({
     },
     [
       closeGalleryPopups,
+      closeMenu,
       isPhotoPopupOpen,
       isLeftFlipDisabled,
       isRightFlipDisabled,
@@ -250,6 +297,19 @@ function GalleryRoot({
 
         <Route path="*" element={<NotFound />} />
       </Routes>
+
+      <Menu
+        isOpen={isMenuOpen}
+        loggedIn={loggedIn}
+        onHomeClick={handleHomeClick}
+        onProfileClick={handleProfileClick}
+        onAddPhotoClick={handleAddPhotoClick}
+        onGalleryClick={handleGalleryClick}
+        onContactClick={handleContactClick}
+        onBlogClick={handleBlogClick}
+        onClose={closeMenu}
+        onLogout={handleSignout}
+      />
       <PhotoPopup
         loggedIn={loggedIn}
         isOpen={isPhotoPopupOpen}
