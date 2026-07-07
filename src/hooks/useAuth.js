@@ -8,6 +8,7 @@ export default function useAuth({ openModal, startLoading, stopLoading }) {
   const location = useLocation();
   const [currentUser, setCurrentUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
+  const [isAuthInitialized, setIsAuthInitialized] = useState(false);
 
   // проверка токена
   const checkToken = useCallback(() => {
@@ -32,8 +33,11 @@ export default function useAuth({ openModal, startLoading, stopLoading }) {
         }
 
         console.error(err);
+      })
+      .finally(() => {
+        setIsAuthInitialized(true);
       });
-  }, [navigate, location.pathnamee]);
+  }, [navigate, location.pathname]);
 
   useEffect(() => {
     checkToken();
@@ -105,6 +109,7 @@ export default function useAuth({ openModal, startLoading, stopLoading }) {
   return {
     currentUser,
     loggedIn,
+    isAuthInitialized,
     handleSignin,
     handleSignup,
     handleSignout,

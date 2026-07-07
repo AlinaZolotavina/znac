@@ -301,11 +301,13 @@ function AddPhoto({
             onGalleryClick={onGalleryClick}
             onContactClick={onContactClick}
           />
-          <LogoutButton
-            className="logout-btn"
-            email={email}
-            onLogout={onLogout}
-          />
+          {loggedIn && (
+            <LogoutButton
+              className="logout-btn logout-btn_position_nav"
+              email={email}
+              onLogout={onLogout}
+            />
+          )}
         </Header>
         <BurgerMenuBtn onMenuClick={onMenuClick} />
         <Form

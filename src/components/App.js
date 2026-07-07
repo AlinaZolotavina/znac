@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
@@ -9,20 +9,29 @@ import ResetPassword from "./ResetPassword";
 import PasswordChanged from "./PasswordChanged";
 import SignIn from "./SignIn";
 import ForgotPassword from "./ForgotPassword";
+import NotFound from "./NotFound";
 
-import EditEmailModal from "./EditEmailModal";
-import EditPasswordModal from "./EditPasswordModal";
+import Menu from "./Menu";
 import Modal from "./Modal";
 
-import useAuth from "../hooks/useAuth";
-import useRequestState from "../hooks/useRequestStatus";
-
-import api from "../utils/api";
 import * as auth from "../utils/auth.js";
 import * as messages from "../utils/messages";
 
+import useAuth from "../hooks/useAuth";
+import useRequestState from "../hooks/useRequestStatus";
+import ProfileRoot from "./ProfileRoot.js";
+
 function App() {
+  const navigate = useNavigate();
   const { isLoading, startLoading, stopLoading } = useRequestState();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    status: null, // 'success' | 'error' | null
+    type: "default", // 'default' | 'email'
+    message: "",
+  });
 
   const openModal = ({ status, message, type = "default" }) => {
     setModalState({
@@ -42,27 +51,20 @@ function App() {
     });
   };
 
-  function closeAppPopups() {
-    setIsEditEmailModalOpen(false);
-    setIsEditPasswordModalOpen(false);
+  function openMenu(e) {
+    setIsMenuOpen(true);
+    e.target.blur();
   }
 
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const closeMenu = useCallback(() => {
+    setIsMenuOpen(false);
+  }, []);
 
-  // history & location
-  const navigate = useNavigate();
+  const menuLinkClick = (linkName) => {
+    navigate(linkName);
+    closeMenu();
+  };
 
-  // popups & modals
-  const [isEditEmailModalOpen, setIsEditEmailModalOpen] = useState(false);
-  const [isEditPasswordModalOpen, setIsEditPasswordModalOpen] = useState(false);
-  const [modalState, setModalState] = useState({
-    isOpen: false,
-    status: null, // 'success' | 'error' | null
-    type: "default", // 'default' | 'email'
-    message: "",
-  });
-
-  // password reset
   function handleReceiveResetPasswordLink(email) {
     startLoading();
     auth
@@ -84,6 +86,7 @@ function App() {
       .finally(() => stopLoading());
   }
 
+  // password reset
   function handleResetPassword(
     newPassword,
     confirmPassword,
@@ -104,61 +107,18 @@ function App() {
       .finally(() => stopLoading());
   }
 
-  // e-mail change
-  function handleEditEmailBtnClick() {
-    setIsEditEmailModalOpen(!isEditEmailModalOpen);
-  }
-
-  function handleEmailChangeRequest(newEmail) {
-    startLoading();
-    localStorage.setItem("email", JSON.stringify(newEmail));
-    api
-      .requestEmailUpdate(newEmail.email, currentUser.email)
-      .then(() => {
-        openModal({
-          status: "success",
-          message: messages.UPDATE_EMAIL_EMAIL_SENT_MSG,
-        });
-      })
-      .catch((err) => {
-        openModal({
-          status: "error",
-          message: err.message || messages.EMAIL_UPDATE_REQUEST_ERROR_MSG,
-        });
-      })
-      .finally(() => stopLoading());
-  }
-
-  function handleUpdateEmail(updateEmailLink, newEmail) {
-    api
-      .updateEmail(updateEmailLink, newEmail)
-      .then((data) => {
-        setCurrentUser(data.user);
-        navigate("/profile");
-        openModal({
-          status: "success",
-          message: messages.EMAIL_UPDATED_SUCCESSFULLY_MSG,
-        });
-      })
-      .catch((err) => {
-        openModal({
-          status: "error",
-          message: err.message || messages.EMAIL_UPDATE_ERROR_MSG,
-        });
-      });
-  }
-
-  // handle app navigation & mark active navigation block / page
-  function handleEditPasswordBtnClick() {
-    setIsEditPasswordModalOpen(!isEditPasswordModalOpen);
-  }
-
-  const { currentUser, loggedIn, handleSignin, handleSignout, setCurrentUser } =
-    useAuth({
-      openModal,
-      startLoading,
-      stopLoading,
-    });
+  const {
+    currentUser,
+    loggedIn,
+    isAuthInitialized,
+    handleSignin,
+    handleSignout,
+    setCurrentUser,
+  } = useAuth({
+    openModal,
+    startLoading,
+    stopLoading,
+  });
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -168,18 +128,36 @@ function App() {
           element={
             <GalleryRoot
               loggedIn={loggedIn}
+              isAuthInitialized={isAuthInitialized}
               currentUser={currentUser}
               handleSignout={handleSignout}
               isLoading={isLoading}
-              handleEditEmailBtnClick={handleEditEmailBtnClick}
-              handleEditPasswordBtnClick={handleEditPasswordBtnClick}
-              handleUpdateEmail={handleUpdateEmail}
               openModal={openModal}
               startLoading={startLoading}
               stopLoading={stopLoading}
               screenWidth={screenWidth}
               setScreenWidth={setScreenWidth}
               closeModal={closeModal}
+              onMenuClick={openMenu}
+              onMenuClose={closeMenu}
+            />
+          }
+        />
+
+        <Route
+          path="/profile/*"
+          element={
+            <ProfileRoot
+              loggedIn={loggedIn}
+              isAuthInitialized={isAuthInitialized}
+              currentUser={currentUser}
+              setCurrentUser={setCurrentUser}
+              isLoading={isLoading}
+              startLoading={startLoading}
+              stopLoading={stopLoading}
+              openModal={openModal}
+              onMenuClick={openMenu}
+              handleSignout={handleSignout}
             />
           }
         />
@@ -233,18 +211,19 @@ function App() {
         />
 
         <Route path="/password-changed" element={<PasswordChanged />} />
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
-      <EditEmailModal
-        isOpen={isEditEmailModalOpen}
-        onClose={closeAppPopups}
-        isSendingReq={isLoading}
-        onRequestEmailChange={handleEmailChangeRequest}
-      />
-
-      <EditPasswordModal
-        isOpen={isEditPasswordModalOpen}
-        onClose={closeAppPopups}
+      <Menu
+        isOpen={isMenuOpen}
+        loggedIn={loggedIn}
+        onHomeClick={() => menuLinkClick("/")}
+        onProfileClick={() => menuLinkClick("profile")}
+        onAddPhotoClick={() => menuLinkClick("addphoto")}
+        onBlogClick={() => menuLinkClick("/alina")}
+        onClose={closeMenu}
+        onLogout={handleSignout}
       />
 
       <Modal

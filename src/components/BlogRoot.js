@@ -25,7 +25,7 @@ import useRequestState from "../hooks/useRequestStatus";
 
 import getCurrentActivePage from "../utils/getCurrentActivePage.js";
 
-function BlogRoot({
+function BlogLayout({
   loggedIn,
   currentUser,
   isLoading,
@@ -499,4 +499,4 @@ function BlogRoot({
   );
 }
 
-export default BlogRoot;
+export default BlogLayout;

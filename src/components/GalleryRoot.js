@@ -1,45 +1,41 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Home from "./Home";
 import Main from "./Main";
 import Footer from "./Footer";
-import Profile from "./Profile";
-import ConfirmEmailUpdate from "./ConfirmEmailUpdate";
 import AddPhoto from "./AddPhoto";
 import ProtectedRoute from "./ProtectedRoute";
-import NotFound from "./NotFound";
-import Menu from "./Menu";
 import PhotoPopup from "./PhotoPopup";
 import DeletePhotoModal from "./DeletePhotoModal";
 
 import usePhotos from "../hooks/usePhotos";
+
 import scrollToRef from "../utils/scrollToRef";
 
 function GalleryRoot({
   loggedIn,
+  isAuthInitialized,
   currentUser,
   handleSignout,
   isLoading,
-  handleEditEmailBtnClick,
-  handleEditPasswordBtnClick,
-  handleUpdateEmail,
   openModal,
   startLoading,
   stopLoading,
   screenWidth,
   setScreenWidth,
   closeModal,
+  onMenuClick,
+  onMenuClose,
 }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const homeRef = useRef(null);
+  const mainRef = useRef(null);
+  const footerRef = useRef(null);
   const [isPhotoPopupOpen, setIsPhotoPopupOpen] = useState(false);
   const [isDeletePhotoModalOpen, setIsDeletePhotoModalOpen] = useState(false);
   const [hashtag, setHashtag] = useState(""); // search input
   const [lastHashtags, setLastHashtags] = useState([]);
-  const homeRef = useRef(null);
-  const mainRef = useRef(null);
-  const footerRef = useRef(null);
 
   const closeGalleryPopups = useCallback(() => {
     setIsPhotoPopupOpen(false);
@@ -102,32 +98,13 @@ function GalleryRoot({
     scrollToRef(mainRef);
   }
 
-  function handleProfileClick() {
-    closeMenu();
-    navigate("/profile");
+  function handleBlogClick() {
+    window.scrollTo(0, 0);
+    onMenuClose();
   }
-
-  function handleAddPhotoClick() {
-    closeMenu();
-    navigate("/addphoto");
-  }
-
-  const closeMenu = useCallback(() => {
-    setIsMenuOpen(false);
-  }, []);
 
   function handleContactClick() {
     scrollToRef(footerRef);
-  }
-
-  function handleBlogClick() {
-    window.scrollTo(0, 0);
-    closeMenu();
-  }
-
-  function handleMenuClick(e) {
-    setIsMenuOpen(!isMenuOpen);
-    e.target.blur();
   }
 
   const handleKeyPress = useCallback(
@@ -136,7 +113,7 @@ function GalleryRoot({
 
       if (keyCode === 27) {
         closeGalleryPopups();
-        closeMenu();
+        onMenuClose();
       }
 
       if (isPhotoPopupOpen) {
@@ -155,7 +132,7 @@ function GalleryRoot({
     },
     [
       closeGalleryPopups,
-      closeMenu,
+      onMenuClose,
       isPhotoPopupOpen,
       isLeftFlipDisabled,
       isRightFlipDisabled,
@@ -192,17 +169,19 @@ function GalleryRoot({
     <>
       <Routes>
         <Route
-          path="/"
+          index
           element={
             <>
               <Home
                 loggedIn={loggedIn}
                 ref={homeRef}
                 onHomeClick={handleHomeClick}
-                onBlogClick={handleBlogClick}
                 onGalleryClick={handleGalleryClick}
+                onBlogClick={handleBlogClick}
                 onContactClick={handleContactClick}
-                onMenuClick={handleMenuClick}
+                onProfileClick={() => navigate("/profile")}
+                onAddPhotoClick={() => navigate("/addphoto")}
+                onMenuClick={onMenuClick}
                 onSignout={handleSignout}
                 isSendingReq={isLoading}
                 email={currentUser.email}
@@ -240,50 +219,19 @@ function GalleryRoot({
         />
 
         <Route
-          path="/profile"
+          path="addphoto"
           element={
-            <ProtectedRoute loggedIn={loggedIn}>
-              <Profile
-                loggedIn={loggedIn}
-                onHomeClick={handleHomeClick}
-                onBlogClick={handleBlogClick}
-                onGalleryClick={handleGalleryClick}
-                onContactClick={handleContactClick}
-                onEditEmailBtnClick={handleEditEmailBtnClick}
-                onEditPasswordBtnClick={handleEditPasswordBtnClick}
-                onMenuClick={handleMenuClick}
-                onSignout={handleSignout}
-                isSendingReq={isLoading}
-                email={currentUser.email}
-                onLogout={handleSignout}
-              />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/profile/update-email/:updateEmailLink"
-          element={
-            <ProtectedRoute loggedIn={loggedIn}>
-              <ConfirmEmailUpdate
-                loggedIn={loggedIn}
-                onUpdateEmail={handleUpdateEmail}
-              />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/addphoto"
-          element={
-            <ProtectedRoute loggedIn={loggedIn}>
+            <ProtectedRoute
+              loggedIn={loggedIn}
+              isAuthInitialized={isAuthInitialized}
+            >
               <AddPhoto
                 loggedIn={loggedIn}
                 onHomeClick={handleHomeClick}
                 onBlogClick={handleBlogClick}
                 onGalleryClick={handleGalleryClick}
                 onContactClick={handleContactClick}
-                onMenuClick={handleMenuClick}
+                onMenuClick={onMenuClick}
                 onSignout={handleSignout}
                 isSendingReq={isLoading}
                 onAddPhotoViaLink={handleAddPhotoViaLink}
@@ -294,22 +242,8 @@ function GalleryRoot({
             </ProtectedRoute>
           }
         />
-
-        <Route path="*" element={<NotFound />} />
       </Routes>
 
-      <Menu
-        isOpen={isMenuOpen}
-        loggedIn={loggedIn}
-        onHomeClick={handleHomeClick}
-        onProfileClick={handleProfileClick}
-        onAddPhotoClick={handleAddPhotoClick}
-        onGalleryClick={handleGalleryClick}
-        onContactClick={handleContactClick}
-        onBlogClick={handleBlogClick}
-        onClose={closeMenu}
-        onLogout={handleSignout}
-      />
       <PhotoPopup
         loggedIn={loggedIn}
         isOpen={isPhotoPopupOpen}
