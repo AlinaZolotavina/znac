@@ -1,4 +1,5 @@
 import { createRequest } from "./request";
+import { API_URL } from "../../config/index";
 class Api {
   constructor(data) {
     this._serverUrl = data.serverUrl;
@@ -339,7 +340,7 @@ class Api {
 }
 
 const api = new Api({
-  serverUrl: process.env.REACT_APP_API_URL,
+  serverUrl: API_URL,
 });
 
 export default api;
