@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import api from "../../../shared/utils/api";
 import * as messages from "../../../shared/utils/messages";
 import {
@@ -20,7 +20,6 @@ export default function useProjects({
 }) {
   const [allProjects, setAllProjects] = useState([]);
   const [loadedProjects, setLoadedProjects] = useState([]);
-  const [projectsToRender, setProjectsToRender] = useState([]);
   const [currentProjectsNumber, setCurrentProjectsNumber] = useState(2);
   const [visibleLoadedProjectsCount, setVisibleLoadedProjectsCount] =
     useState(0);
@@ -30,25 +29,15 @@ export default function useProjects({
   const [projectToEdit, setProjectToEdit] = useState({});
   const [projectToDelete, setProjectToDelete] = useState({});
 
+  const projectsToRender = useMemo(
+    () => allProjects.slice(0, currentProjectsNumber),
+    [allProjects, currentProjectsNumber],
+  );
+
   const hasMoreProjects =
     currentProjectsNumber < allProjects.length || projectsPage < projectsPages;
 
-  useEffect(() => {
-    setProjectsToRender(allProjects.slice(0, currentProjectsNumber));
-  }, [allProjects, currentProjectsNumber]);
-
-  useEffect(() => {
-    if (!isAlinaRoute || loadedProjects.length > 0) {
-      return;
-    }
-    loadProjects({
-      page: 1,
-      append: false,
-      hashtag: "",
-    });
-  }, [isAlinaRoute, loadedProjects.length]);
-
-  const getProjectsLayout = () => {
+  const getProjectsLayout = useCallback(() => {
     if (screenWidth >= LARGE_SCREEN_WIDTH) {
       return {
         initialProjectsNumber: 9,
@@ -67,66 +56,75 @@ export default function useProjects({
       initialProjectsNumber: 2,
       projectsToAdd: 2,
     };
-  };
+  }, [screenWidth]);
 
-  const calculateProjectsCount = () => {
+  const calculateProjectsCount = useCallback(() => {
     const { initialProjectsNumber, projectsToAdd } = getProjectsLayout();
+
     setProjectsToAdd(projectsToAdd);
     setCurrentProjectsNumber((current) =>
       Math.max(current, initialProjectsNumber),
     );
-  };
+  }, [getProjectsLayout]);
 
-  function loadProjects({ page = 1, append = false, hashtag = "" } = {}) {
-    const normalizedHashtag = hashtag === "All" ? "" : hashtag.trim();
-    const hasFilter = Boolean(normalizedHashtag);
-    return api
-      .getProjects(page, 12, {
-        hashtag: normalizedHashtag,
-      })
-      .then((response) => {
-        const { data, page: responsePage, pages } = response;
-        setAllProjects((previousProjects) =>
-          append ? [...previousProjects, ...data] : data,
-        );
-
-        if (!hasFilter) {
-          setLoadedProjects((previousProjects) =>
+  const loadProjects = useCallback(
+    ({ page = 1, append = false, hashtag = "" } = {}) => {
+      const normalizedHashtag = hashtag === "All" ? "" : hashtag.trim();
+      const hasFilter = Boolean(normalizedHashtag);
+      return api
+        .getProjects(page, 12, {
+          hashtag: normalizedHashtag,
+        })
+        .then((response) => {
+          const { data, page: responsePage, pages } = response;
+          setAllProjects((previousProjects) =>
             append ? [...previousProjects, ...data] : data,
           );
-        }
-        setProjectsPage(responsePage);
-        setProjectsPages(pages);
 
-        if (!append) {
-          const { initialProjectsNumber } = getProjectsLayout();
-          const visibleCount = Math.min(initialProjectsNumber, data.length);
-          setCurrentProjectsNumber(visibleCount);
           if (!hasFilter) {
-            setVisibleLoadedProjectsCount(visibleCount);
+            setLoadedProjects((previousProjects) =>
+              append ? [...previousProjects, ...data] : data,
+            );
           }
-        }
+          setProjectsPage(responsePage);
+          setProjectsPages(pages);
 
-        return response;
-      })
-      .catch((err) => {
-        openModal({
-          status: "error",
-          message: err.message || messages.DEFAULT_ERROR_MSG,
+          if (!append) {
+            const { initialProjectsNumber } = getProjectsLayout();
+            const visibleCount = Math.min(initialProjectsNumber, data.length);
+            setCurrentProjectsNumber(visibleCount);
+            if (!hasFilter) {
+              setVisibleLoadedProjectsCount(visibleCount);
+            }
+          }
+
+          return response;
+        })
+        .catch((err) => {
+          openModal({
+            status: "error",
+            message: err.message || messages.DEFAULT_ERROR_MSG,
+          });
+
+          throw err;
         });
+    },
+    [getProjectsLayout, openModal],
+  );
 
-        throw err;
-      });
-  }
+  useEffect(() => {
+    if (!isAlinaRoute || loadedProjects.length > 0) {
+      return;
+    }
+    loadProjects({
+      page: 1,
+      append: false,
+      hashtag: "",
+    });
+  }, [isAlinaRoute, loadedProjects.length, loadProjects]);
 
   function replaceProject(updatedProject) {
     setAllProjects((projects) =>
-      projects.map((project) =>
-        project._id === updatedProject._id ? updatedProject : project,
-      ),
-    );
-
-    setProjectsToRender((projects) =>
       projects.map((project) =>
         project._id === updatedProject._id ? updatedProject : project,
       ),
@@ -135,10 +133,6 @@ export default function useProjects({
 
   function removeProject(projectId) {
     setAllProjects((projects) =>
-      projects.filter((project) => project._id !== projectId),
-    );
-
-    setProjectsToRender((projects) =>
       projects.filter((project) => project._id !== projectId),
     );
   }
@@ -217,7 +211,6 @@ export default function useProjects({
           message: messages.PROJECT_ADDED_SUCCESSFULLY_MSG,
         });
         setAllProjects((prev) => [createdProject, ...prev]);
-        setProjectsToRender((prev) => [createdProject, ...prev]);
       })
       .catch((err) => {
         openModal({

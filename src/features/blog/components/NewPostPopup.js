@@ -386,6 +386,10 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
                     Uploading
                     <span className="blog-upload-file__dots" />
                   </li>
+                ) : uploadError ? (
+                  <li className="blog-upload-file__info_empty">
+                    {uploadError}
+                  </li>
                 ) : postPhotos.length === 0 ? (
                   <li className="blog-upload-file__info_empty">Not selected</li>
                 ) : (

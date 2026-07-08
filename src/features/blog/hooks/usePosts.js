@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import api from "../../../shared/utils/api";
 import * as messages from "../../../shared/utils/messages";
 import postUploadActions from "../utils/postUploadActions";
@@ -27,7 +27,6 @@ export default function usePosts({
   const navigate = useNavigate();
   const [allPosts, setAllPosts] = useState([]);
   const [loadedPosts, setLoadedPosts] = useState([]);
-  const [postsToRender, setPostsToRender] = useState([]);
   const [currentPostsNumber, setCurrentPostsNumber] = useState(3);
 
   const [postsToAdd, setPostsToAdd] = useState(0);
@@ -36,6 +35,11 @@ export default function usePosts({
   const [postToEdit, setPostToEdit] = useState({});
   const [postToDelete, setPostToDelete] = useState({});
   const [postVersion, setPostVersion] = useState(0);
+
+  const postsToRender = useMemo(
+    () => allPosts.slice(0, currentPostsNumber),
+    [allPosts, currentPostsNumber],
+  );
 
   const hasMorePosts =
     currentPostsNumber < allPosts.length || postsPage < postsPages;
@@ -48,20 +52,10 @@ export default function usePosts({
     closeAllBlogPopups,
   });
 
-  useEffect(() => {
-    setPostsToRender(allPosts.slice(0, currentPostsNumber));
-  }, [allPosts, currentPostsNumber]);
-
-  useEffect(() => {
-    if (!isAlinaRoute || allPosts.length > 0) {
-      return;
-    }
-    loadPosts();
-  }, [isAlinaRoute, loadedPosts.length]);
-
-  const calculatePostsCount = () => {
+  const calculatePostsCount = useCallback(() => {
     let initialPostsNumber;
     let nextPostsToAdd;
+
     if (screenWidth >= LARGE_SCREEN_WIDTH) {
       initialPostsNumber = 6;
       nextPostsToAdd = 4;
@@ -72,73 +66,71 @@ export default function usePosts({
       initialPostsNumber = 3;
       nextPostsToAdd = 2;
     }
+
     setPostsToAdd(nextPostsToAdd);
     setCurrentPostsNumber((current) => Math.max(current, initialPostsNumber));
-  };
+  }, [screenWidth]);
 
-  function loadPosts({
-    page = 1,
-    append = false,
-    search = "",
-    theme = "All",
-  } = {}) {
-    const normalizedSearch = search.trim();
-    const hasSearch = Boolean(normalizedSearch);
-    const hasThemeFilter = theme && theme !== "All";
-    const hasFilters = hasSearch || hasThemeFilter;
+  const loadPosts = useCallback(
+    ({ page = 1, append = false, search = "", theme = "All" } = {}) => {
+      const normalizedSearch = search.trim();
+      const hasSearch = Boolean(normalizedSearch);
+      const hasThemeFilter = theme && theme !== "All";
+      const hasFilters = hasSearch || hasThemeFilter;
 
-    return api
-      .getPosts(page, 8, {
-        search: normalizedSearch,
-        theme,
-      })
-      .then((response) => {
-        const { data, page: responsePage, pages } = response;
+      return api
+        .getPosts(page, 8, {
+          search: normalizedSearch,
+          theme,
+        })
+        .then((response) => {
+          const { data, page: responsePage, pages } = response;
 
-        // The current list is standard or filtering results
-        setAllPosts((previousPosts) =>
-          append ? [...previousPosts, ...data] : data,
-        );
-
-        // Update the source list cache only there are no filters
-        if (!hasFilters) {
-          setLoadedPosts((previousPosts) =>
+          // The current list is standard or filtering results
+          setAllPosts((previousPosts) =>
             append ? [...previousPosts, ...data] : data,
           );
-        }
 
-        setPostsPage(responsePage);
-        setPostsPages(pages);
+          // Update the source list cache only there are no filters
+          if (!hasFilters) {
+            setLoadedPosts((previousPosts) =>
+              append ? [...previousPosts, ...data] : data,
+            );
+          }
 
-        // For a new set of results (search / theme), use an adaptive initial quantity
-        if (!append) {
-          setCurrentPostsNumber((current) => Math.max(current, 3));
-        }
+          setPostsPage(responsePage);
+          setPostsPages(pages);
 
-        return response;
-      })
-      .catch(console.error);
-  }
+          // For a new set of results (search / theme), use an adaptive initial quantity
+          if (!append) {
+            setCurrentPostsNumber((current) => Math.max(current, 3));
+          }
+
+          return response;
+        })
+        .catch(console.error);
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (!isAlinaRoute) return;
+
+    loadPosts();
+  }, [isAlinaRoute, loadPosts]);
 
   function prependPosts(newPosts) {
     setAllPosts((posts) => [...newPosts, ...posts]);
-    setPostsToRender((posts) => [...newPosts, ...posts]);
   }
 
   function replacePost(updatedPost) {
     setAllPosts((posts) =>
       posts.map((post) => (post._id === updatedPost._id ? updatedPost : post)),
     );
-
-    setPostsToRender((posts) =>
-      posts.map((post) => (post._id === updatedPost._id ? updatedPost : post)),
-    );
   }
 
   function removePost(postId) {
     setAllPosts((posts) => posts.filter((post) => post._id !== postId));
-
-    setPostsToRender((posts) => posts.filter((post) => post._id !== postId));
   }
 
   function showMorePosts() {
@@ -301,7 +293,6 @@ export default function usePosts({
   return {
     allPosts,
     postsToRender,
-    setPostsToRender,
     currentPostsNumber,
     hasMorePosts,
     calculatePostsCount,

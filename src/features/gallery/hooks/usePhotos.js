@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import api from "../../../shared/utils/api";
 import * as messages from "../../../shared/utils/messages";
 import photoUploadActions from "../utils/photoUploadActions";
@@ -29,7 +29,6 @@ export default function usePhotos({
   setIsPhotoPopupOpen,
   setIsDeletePhotoModalOpen,
 }) {
-  const [photosToRender, setPhotosToRender] = useState([]);
   const [allPhotos, setAllPhotos] = useState([]);
   const [loadedPhotos, setLoadedPhotos] = useState([]);
   const [photosPage, setPhotosPage] = useState(1);
@@ -38,6 +37,12 @@ export default function usePhotos({
   const [photosToAdd, setPhotosToAdd] = useState(0);
   const [visibleLoadedPhotosCount, setVisibleLoadedPhotosCount] = useState(0);
   const resizeTimeoutRef = useRef(null);
+
+  const photosToRender = useMemo(
+    () => allPhotos.slice(0, currentPhotosNumber),
+    [allPhotos, currentPhotosNumber],
+  );
+
   const hasMorePhotos =
     currentPhotosNumber < allPhotos.length || photosPage < photosPages;
 
@@ -48,52 +53,29 @@ export default function usePhotos({
     openModal,
   });
 
-  useEffect(() => {
-    if (loadedPhotos.length > 0) {
-      return;
-    }
-    loadPhotos({
-      page: 1,
-      append: false,
-      hashtag: "",
-    });
-  }, [loadedPhotos.length]);
-
-  useEffect(() => {
-    if (lastHashtags.length > 0) {
-      return;
-    }
-    api
+  const loadHashtags = useCallback(() => {
+    return api
       .getHashtags(1, 10)
       .then((response) => {
         setLastHashtags(response.data);
       })
       .catch(console.error);
-  }, [lastHashtags.length]);
+  }, [setLastHashtags]);
 
-  // handle photo search (also by hashtag's click)
+  useEffect(() => {
+    loadHashtags();
+  }, [loadHashtags]);
+
   useEffect(() => {
     setHashtag("");
-  }, [location.pathname]);
-
-  useEffect(() => {
-    calculatePhotosCount();
-  }, [screenWidth]);
+  }, [location.pathname, setHashtag]);
 
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const hashtagsOfSelectedPhoto = selectedPhoto?.hashtags || [];
   const viewsOfSelectedPhoto = selectedPhoto?.views || 0;
   const [areHashtagsEditing, setAreHashtagsEditing] = useState(false);
 
-  useEffect(() => {
-    window.addEventListener("resize", updateDimensions);
-    return () => {
-      window.removeEventListener("resize", updateDimensions);
-      clearTimeout(resizeTimeoutRef.current);
-    };
-  }, []);
-
-  const getPhotosLayout = () => {
+  const getPhotosLayout = useCallback(() => {
     if (screenWidth >= LARGE_SCREEN_WIDTH) {
       return {
         initialPhotosNumber: LARGE_SCREEN_PHOTOS_NUMBER,
@@ -112,16 +94,20 @@ export default function usePhotos({
       initialPhotosNumber: SMALL_SCREEN_PHOTOS_NUMBER,
       photosToAdd: SMALL_SCREEN_PHOTOS_TO_ADD_NUMBER,
     };
-  };
+  }, [screenWidth]);
 
-  const calculatePhotosCount = () => {
+  const calculatePhotosCount = useCallback(() => {
     const { initialPhotosNumber, photosToAdd: nextPhotosToAdd } =
       getPhotosLayout();
     setPhotosToAdd(nextPhotosToAdd);
     setCurrentPhotosNumber((current) => Math.max(current, initialPhotosNumber));
-  };
+  }, [getPhotosLayout]);
 
-  const updateDimensions = () => {
+  useEffect(() => {
+    calculatePhotosCount();
+  }, [calculatePhotosCount]);
+
+  const updateDimensions = useCallback(() => {
     if (resizeTimeoutRef.current) {
       clearTimeout(resizeTimeoutRef.current);
     }
@@ -129,11 +115,16 @@ export default function usePhotos({
     resizeTimeoutRef.current = setTimeout(() => {
       setScreenWidth(window.innerWidth);
     }, 150);
-  };
+  }, [setScreenWidth]);
 
   useEffect(() => {
-    setPhotosToRender(allPhotos.slice(0, currentPhotosNumber));
-  }, [allPhotos, currentPhotosNumber]);
+    window.addEventListener("resize", updateDimensions);
+
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+      clearTimeout(resizeTimeoutRef.current);
+    };
+  }, [updateDimensions]);
 
   function showMorePhotos() {
     const nextVisibleCount = currentPhotosNumber + photosToAdd;
@@ -182,49 +173,60 @@ export default function usePhotos({
     );
   }
 
-  function loadPhotos({ page = 1, append = false, hashtag = "" } = {}) {
-    const normalizedHashtag = hashtag.trim().toLowerCase();
-    const hasFilter = Boolean(normalizedHashtag);
+  const loadPhotos = useCallback(
+    ({ page = 1, append = false, hashtag = "" } = {}) => {
+      const normalizedHashtag = hashtag.trim().toLowerCase();
+      const hasFilter = Boolean(normalizedHashtag);
 
-    const request = hasFilter
-      ? api.findPhoto(normalizedHashtag, page, 20)
-      : api.getPhotos(page, 20);
+      const request = hasFilter
+        ? api.findPhoto(normalizedHashtag, page, 20)
+        : api.getPhotos(page, 20);
 
-    return request
-      .then((response) => {
-        const { data, page: responsePage, pages } = response;
-        setAllPhotos((previousPhotos) =>
-          append ? [...previousPhotos, ...data] : data,
-        );
-        // Кэшируем только обычную галерею
-        if (!hasFilter) {
-          setLoadedPhotos((previousPhotos) =>
+      return request
+        .then((response) => {
+          const { data, page: responsePage, pages } = response;
+          setAllPhotos((previousPhotos) =>
             append ? [...previousPhotos, ...data] : data,
           );
-        }
-        setPhotosPage(responsePage);
-        setPhotosPages(pages);
-
-        if (!append) {
-          const { initialPhotosNumber } = getPhotosLayout();
-          const visibleCount = Math.min(initialPhotosNumber, data.length);
-          setCurrentPhotosNumber(visibleCount);
+          // Кэшируем только обычную галерею
           if (!hasFilter) {
-            setVisibleLoadedPhotosCount(visibleCount);
+            setLoadedPhotos((previousPhotos) =>
+              append ? [...previousPhotos, ...data] : data,
+            );
           }
-        }
+          setPhotosPage(responsePage);
+          setPhotosPages(pages);
 
-        return response;
-      })
-      .catch((err) => {
-        openModal({
-          status: "error",
-          message: err.message || messages.DEFAULT_ERROR_MSG,
+          if (!append) {
+            const { initialPhotosNumber } = getPhotosLayout();
+            const visibleCount = Math.min(initialPhotosNumber, data.length);
+            setCurrentPhotosNumber(visibleCount);
+            if (!hasFilter) {
+              setVisibleLoadedPhotosCount(visibleCount);
+            }
+          }
+
+          return response;
+        })
+        .catch((err) => {
+          openModal({
+            status: "error",
+            message: err.message || messages.DEFAULT_ERROR_MSG,
+          });
+
+          throw err;
         });
+    },
+    [getPhotosLayout, openModal],
+  );
 
-        throw err;
-      });
-  }
+  useEffect(() => {
+    loadPhotos({
+      page: 1,
+      append: false,
+      hashtag: "",
+    });
+  }, [loadPhotos]);
 
   // open photo popup
   const handlePhotoOpen = (photo) => {
@@ -359,7 +361,7 @@ export default function usePhotos({
           message: "Photo was added successfully",
         });
         setAllPhotos((prev) => [newPhoto, ...prev]);
-        setPhotosToRender((prev) => [newPhoto, ...prev]);
+        setLoadedPhotos((prev) => [newPhoto, ...prev]);
       })
       .catch((err) => {
         openModal({
@@ -372,7 +374,7 @@ export default function usePhotos({
 
   function addPhotosToGallery(newPhotos) {
     setAllPhotos((prev) => [...newPhotos, ...prev]);
-    setPhotosToRender((prev) => [...newPhotos, ...prev]);
+    setLoadedPhotos((prev) => [...newPhotos, ...prev]);
   }
 
   // delete photo
@@ -385,8 +387,8 @@ export default function usePhotos({
     api
       .deletePhoto(photo._id)
       .then(() => {
-        setPhotosToRender((state) => state.filter((p) => p._id !== photo._id));
         setAllPhotos((state) => state.filter((p) => p._id !== photo._id));
+        setLoadedPhotos((state) => state.filter((p) => p._id !== photo._id));
 
         openModal({
           status: "success",
@@ -410,9 +412,6 @@ export default function usePhotos({
         setAllPhotos((state) =>
           state.map((p) => (p._id === photoId ? newPhoto : p)),
         );
-        setPhotosToRender((state) =>
-          state.map((p) => (p._id === photoId ? newPhoto : p)),
-        );
         setSelectedPhoto(newPhoto);
       })
       .catch((err) => console.log(err));
@@ -428,9 +427,6 @@ export default function usePhotos({
       .editHashtags(photoId, hashtags)
       .then((newPhoto) => {
         setAllPhotos((state) =>
-          state.map((p) => (p._id === photoId ? newPhoto : p)),
-        );
-        setPhotosToRender((state) =>
           state.map((p) => (p._id === photoId ? newPhoto : p)),
         );
         setSelectedPhoto(newPhoto);

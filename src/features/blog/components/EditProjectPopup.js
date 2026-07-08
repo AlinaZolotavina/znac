@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import BlogForm from "./BlogForm";
 import BlogInput from "./BlogInput";
 import BlogCloseButton from "./BlogCloseButton";
@@ -15,12 +15,15 @@ function EditProjectPopup({
 }) {
   const [isEdited, setIsEdited] = useState(false);
   useEffect(() => {
-    if (Object.keys(project).length !== 0) {
-      setProjectTitle(project.title);
-      setProjectHashtags(hashtagsToInputValue(project.hashtags));
-      setTextarea(project.text);
-      setProjectLink(project.link);
+    if (!project || Object.keys(project).length === 0) {
+      return;
     }
+
+    setProjectTitle(project.title);
+    setProjectHashtags(hashtagsToInputValue(project.hashtags));
+    setTextarea(project.text);
+    setProjectLink(project.link);
+    setIsEdited(false);
   }, [project, isOpen]);
 
   const [projectTitle, setProjectTitle] = useState("");
@@ -86,33 +89,31 @@ function EditProjectPopup({
     setIsEdited(true);
   }
 
-  const [isFormValid, setIsFormValid] = useState(false);
-  useEffect(() => {
-    if (
-      projectTitle &&
-      projectHashtags &&
-      textarea &&
-      projectLink &&
-      !projectTitleError &&
-      !projectHashtagsError &&
-      !textareaError &&
-      !projectLinkError &&
-      isEdited
-    ) {
-      setIsFormValid(true);
-    } else {
-      setIsFormValid(false);
-    }
-  }, [
-    projectTitle,
-    projectHashtags,
-    textarea,
-    projectLink,
-    projectTitleError,
-    projectHashtagsError,
-    textareaError,
-    projectLinkError,
-  ]);
+  const isFormValid = useMemo(
+    () =>
+      Boolean(
+        projectTitle &&
+        projectHashtags &&
+        textarea &&
+        projectLink &&
+        !projectTitleError &&
+        !projectHashtagsError &&
+        !textareaError &&
+        !projectLinkError &&
+        isEdited,
+      ),
+    [
+      projectTitle,
+      projectHashtags,
+      textarea,
+      projectLink,
+      projectTitleError,
+      projectHashtagsError,
+      textareaError,
+      projectLinkError,
+      isEdited,
+    ],
+  );
 
   function handleSubmit(e) {
     e.preventDefault();

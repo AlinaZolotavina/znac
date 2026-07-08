@@ -32,23 +32,23 @@ function App() {
     message: "",
   });
 
-  const openModal = ({ status, message, type = "default" }) => {
+  const openModal = useCallback(({ status, message, type = "default" }) => {
     setModalState({
       isOpen: true,
       status,
       type,
       message,
     });
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setModalState({
       isOpen: false,
       status: null,
       type: "default",
       message: "",
     });
-  };
+  }, []);
 
   function openMenu(e) {
     setIsMenuOpen(true);

@@ -68,29 +68,16 @@ function BlogLayout({
       .then((hashtags) => {
         setProjectHashtags(hashtags);
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+      });
   }, [isAlinaRoute, projectHashtags.length]);
-
-  useEffect(() => {
-    calculatePostsCount();
-    calculateProjectsCount();
-  }, [screenWidth]);
 
   useEffect(() => {
     setQuery("");
     setActivePostHashtag("All");
     setActiveProjectHashtag("All");
   }, [location.pathname]);
-
-  useEffect(() => {
-    if ((query === "" || !query) && activePostHashtag === "All") {
-      setPostsToRender(allPosts);
-    } else if ((query === "" || !query) && activePostHashtag !== "All") {
-      setPostsToRender(
-        allPosts.filter((post) => post.theme === activePostHashtag),
-      );
-    }
-  }, [query, activePostHashtag]);
 
   useEffect(() => {
     const currentPage = getCurrentActivePage(location.pathname);
@@ -219,9 +206,7 @@ function BlogLayout({
   });
 
   const {
-    allPosts,
     postsToRender,
-    setPostsToRender,
     currentPostsNumber,
     hasMorePosts,
     calculatePostsCount,
@@ -290,6 +275,11 @@ function BlogLayout({
       window.removeEventListener("mousedown", handleOverlayClickClose);
     };
   }, [handleKeyPress, handleOverlayClickClose]);
+
+  useEffect(() => {
+    calculatePostsCount();
+    calculateProjectsCount();
+  }, [calculatePostsCount, calculateProjectsCount]);
 
   const handleSendContactMessage = ({ name, email, message }) => {
     startContactSending();

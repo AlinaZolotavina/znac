@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import api from "../../../shared/utils/api";
 import BlogHeader from "./BlogHeader";
 import CurrentPost from "./CurrentPost";
+import { useCallback } from "react";
 
 function CurrentPostPage({
   activePage,
@@ -23,20 +24,23 @@ function CurrentPostPage({
 
   const [post, setPost] = useState(null);
 
-  const loadPost = () =>
-    api
-      .getPost(id)
-      .then(setPost)
-      .catch((err) => {
-        openModal({
-          status: "error",
-          message: err.message,
-        });
-      });
+  const loadPost = useCallback(
+    () =>
+      api
+        .getPost(id)
+        .then(setPost)
+        .catch((err) => {
+          openModal({
+            status: "error",
+            message: err.message,
+          });
+        }),
+    [id, openModal],
+  );
 
   useEffect(() => {
     loadPost();
-  }, [id, postVersion]);
+  }, [loadPost, postVersion]);
 
   return (
     <div className="blog">
