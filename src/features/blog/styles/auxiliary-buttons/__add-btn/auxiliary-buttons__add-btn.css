@@ -1,0 +1,33 @@
+.auxiliary-buttons__add-btn {
+  width: 40px;
+  height: 40px;
+  background-color: #90abf1;
+  border-style: none;
+  border-radius: 59%;
+  background-image: url(../../../assets/plus-icon.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 45%;
+  margin: 0 20px 0 0;
+  padding: 0;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.auxiliary-buttons__add-btn:hover {
+  opacity: 0.7;
+}
+
+@media (max-width: 1280px) {
+  .auxiliary-buttons__add-btn {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (max-width: 960px) {
+  .auxiliary-buttons__add-btn {
+    width: 22px;
+    height: 22px;
+  }
+}

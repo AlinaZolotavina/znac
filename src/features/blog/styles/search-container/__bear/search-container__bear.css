@@ -1,0 +1,17 @@
+.search-container__bear {
+  background-image: url(../../../assets/bears/bear-magic.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 193px;
+  height: 260px;
+  position: absolute;
+  top: -21px;
+  left: 110px;
+}
+
+@media (max-width: 1250px) {
+  .search-container__bear {
+    display: none;
+  }
+}

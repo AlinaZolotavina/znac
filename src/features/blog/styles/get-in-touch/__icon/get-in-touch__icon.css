@@ -1,0 +1,21 @@
+.get-in-touch__icon {
+  background-image: url(../../../assets/get-in-touch-icon.svg);
+  width: 200px;
+  height: 200px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  margin: 0 0 30px;
+}
+
+@media (max-width: 1280px) {
+  .get-in-touch__icon {
+    width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .get-in-touch__icon {
+    display: none;
+  }
+}

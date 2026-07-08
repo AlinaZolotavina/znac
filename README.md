@@ -11,13 +11,13 @@ Live version: https://znac.org
 ## Screenshots
 
 <p>
-  <img src="./src/images/screenshots/screenshot-blog.png" width="48%" valign="top">
-  <img src="./src/images/screenshots/screenshot-gallery.png" width="48%" valign="top">
+  <img src="./docs/screenshots/screenshot-blog.png" width="48%" valign="top">
+  <img src="./docs/screenshots/screenshot-gallery.png" width="48%" valign="top">
 </p>
 
 <p>
-  <img src="./src/images/screenshots/screenshot-posts-page.png" width="48%" valign="top">
-  <img src="./src/images/screenshots/screenshot-new-post.png" width="48%" valign="top">
+  <img src="./docs/screenshots/screenshot-posts-page.png" width="48%" valign="top">
+  <img src="./docs/screenshots/screenshot-new-post.png" width="48%" valign="top">
 </p>
 
 ## Features

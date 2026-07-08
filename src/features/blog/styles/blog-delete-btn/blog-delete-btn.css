@@ -1,0 +1,18 @@
+.blog-delete-btn {
+  width: 13px;
+  height: 17px;
+  background-image: url(../../assets/blog-delete-btn.svg);
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-style: none;
+  padding: 0;
+  z-index: 1;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.blog-delete-btn {
+  opacity: 0.7;
+}
