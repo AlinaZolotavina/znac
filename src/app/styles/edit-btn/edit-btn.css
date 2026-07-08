@@ -1,0 +1,15 @@
+.edit-btn {
+  background-image: url(../../assets/edit-btn.svg);
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.edit-btn:hover {
+  opacity: 0.7;
+}

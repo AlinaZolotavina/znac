@@ -1,0 +1,20 @@
+.cv__icon {
+  width: 50px;
+  height: 70px;
+  background-image: url(../../../assets/cv-icon.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+@media screen and (max-width: 900px) {
+  .cv__icon {
+    width: 40px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .cv__icon {
+    display: none;
+  }
+}

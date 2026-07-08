@@ -1,0 +1,21 @@
+.new-post__input-label {
+  color: #948e8e;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 20px;
+  margin: 0 0 10px 15px;
+}
+
+@media (max-width: 900px) {
+  .new-post__input-label {
+    font-size: 12px;
+    line-height: 16px;
+  }
+}
+
+@media (max-width: 450px) {
+  .new-post__input-label {
+    font-size: 11px;
+    line-height: 14px;
+  }
+}

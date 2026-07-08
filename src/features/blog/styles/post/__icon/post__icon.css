@@ -1,0 +1,8 @@
+.post__icon {
+  background-size: 71% 71%;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 10px;
+  background-color: #fff;
+  grid-area: image;
+}

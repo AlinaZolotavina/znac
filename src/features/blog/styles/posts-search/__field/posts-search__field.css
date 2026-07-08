@@ -1,0 +1,16 @@
+.posts-search__field {
+  width: calc(100% - 90px);
+}
+
+@media (max-width: 768px) {
+  .posts-search__field {
+    width: calc(100% - 65px);
+  }
+}
+
+@media (max-width: 420px) {
+  .posts-search__field {
+    font-size: 12px;
+    line-height: 15px;
+  }
+}

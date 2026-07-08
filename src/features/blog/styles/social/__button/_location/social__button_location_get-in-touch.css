@@ -1,0 +1,10 @@
+.social__button_location_get-in-touch {
+  margin: 0;
+}
+
+@media screen and (max-width: 1280px) {
+  .social__button_location_get-in-touch {
+    width: 30px;
+    height: 30px;
+  }
+}

@@ -1,0 +1,20 @@
+.blog-footer__item {
+  font-size: 16px;
+  font-weight: 200;
+  line-height: 23px;
+  color: #0f1111;
+}
+
+@media (max-width: 900px) {
+  .blog-footer__item {
+    font-size: 14px;
+    line-height: 17px;
+  }
+}
+
+@media (max-width: 700px) {
+  .blog-footer__item {
+    font-size: 12px;
+    line-height: 16px;
+  }
+}

@@ -1,0 +1,31 @@
+.new-post {
+  position: relative;
+  display: flex;
+  max-height: -moz-fit-content;
+  max-height: fit-content;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: auto;
+  padding: 30px 70px 35px;
+  background-color: #f3f7ff;
+  border-radius: 10px;
+  color: #000;
+}
+
+@media (max-width: 1280px) {
+  .new-post {
+    padding: 10px 30px 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .new-post {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    padding: 15px 35px 29px;
+  }
+}

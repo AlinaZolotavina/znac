@@ -1,0 +1,12 @@
+.new-post__radio-btn {
+    background-color: #fff;
+    padding: 10px;
+    box-sizing: border-box;
+    transition: opacity .3s ease;
+    cursor: pointer;
+    margin: 0;
+}
+
+.new-post__radio-btn:hover {
+    opacity: .7;
+}

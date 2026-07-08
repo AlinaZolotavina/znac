@@ -1,0 +1,23 @@
+.blog-submit-btn {
+  border-style: none;
+  border-radius: 20px;
+  background-color: #90abf1;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 25px;
+  margin: 30px 0 0;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.blog-submit-btn:hover {
+  opacity: 0.7;
+}
+
+@media (max-width: 500px) {
+  .blog-submit-btn {
+    font-size: 16px;
+    line-height: 20px;
+  }
+}

@@ -1,0 +1,4 @@
+.popup__image-error {
+  min-width: 50vw;
+  background-image: linear-gradient(#1b4c5a, #282d33);
+}

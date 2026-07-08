@@ -1,0 +1,15 @@
+.content-not-found__add-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 40px;
+    background-color: #90ABF1;
+    border-style: none;
+    border-radius: 20px;
+    padding: 0;
+    transition: opacity .2s ease;
+    cursor: pointer;
+    color: #fff;
+    text-decoration: none;
+}

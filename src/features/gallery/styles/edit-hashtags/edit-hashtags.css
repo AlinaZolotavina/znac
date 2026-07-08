@@ -1,0 +1,5 @@
+.edit-hashtags {
+    display: flex;
+    width: inherit;
+    justify-content: space-between;
+}

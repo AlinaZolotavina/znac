@@ -1,0 +1,21 @@
+.projects__menu {
+  width: 100%;
+  display: flex;
+  margin: 60px 140px 30px;
+  justify-content: space-between;
+  padding: 0 40px 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1280px) {
+  .projects__menu {
+    margin: 30px 20px 30px;
+  }
+}
+
+@media (max-width: 500px) {
+  .projects__menu {
+    padding: 0;
+    width: 80%;
+  }
+}

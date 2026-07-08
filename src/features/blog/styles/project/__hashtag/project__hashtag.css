@@ -1,0 +1,13 @@
+.project__hashtag {
+    margin: 0 20px 0 0;
+    cursor: pointer;
+    transition: opacity .2s ease;
+}
+
+.project__hashtag:hover {
+    opacity: .7;
+}
+
+.project__hashtag:last-child {
+    margin: 0;
+}

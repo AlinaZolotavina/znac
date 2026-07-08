@@ -1,0 +1,5 @@
+.popup__right-flip {
+  grid-area: right-flip;
+  background-image: url(../../../../features/gallery/assets/right-flip.svg);
+  background-position: 30%;
+}

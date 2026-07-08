@@ -1,0 +1,11 @@
+.post__icon_location_posts {
+  min-width: 100%;
+  aspect-ratio: 1/1;
+  margin: 0;
+}
+
+@media screen and (max-width: 1150px) {
+  .post__icon_location_posts {
+    display: none;
+  }
+}

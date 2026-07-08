@@ -1,0 +1,16 @@
+.games-and-music {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+  justify-content: center;
+  width: 65vw;
+  align-items: center;
+  padding: 50px 0;
+}
+
+@media screen and (max-width: 700px) {
+  .games-and-music {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}

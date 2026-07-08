@@ -1,0 +1,5 @@
+.popup__left-flip {
+  grid-area: left-flip;
+  background-image: url(../../../../features/gallery/assets/left-flip.svg);
+  background-position: 70%;
+}

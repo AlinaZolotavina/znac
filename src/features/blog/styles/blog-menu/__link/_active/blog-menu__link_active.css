@@ -1,0 +1,5 @@
+.blog-menu__link_active {
+    width: 70px;
+    height: 25px;
+    background-color: #90ABF1;
+}

@@ -1,0 +1,8 @@
+.post_location_single-post {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 60vw;
+  margin: 120px auto 100px;
+  position: relative;
+}

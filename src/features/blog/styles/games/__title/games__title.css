@@ -1,0 +1,14 @@
+.games__title {
+  color: #0f1111;
+  font-size: 24px;
+  line-height: 27px;
+  font-weight: 200;
+  padding: 0;
+}
+
+@media (max-width: 400px) {
+  .games__title {
+    font-size: 20px;
+    line-height: 24px;
+  }
+}

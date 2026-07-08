@@ -1,0 +1,11 @@
+.post__date_location_posts {
+  font-size: 12px;
+  line-height: 15px;
+}
+
+@media (max-width: 1280px) {
+  .post__date_location_posts {
+    font-size: 12px;
+    line-height: 18px;
+  }
+}

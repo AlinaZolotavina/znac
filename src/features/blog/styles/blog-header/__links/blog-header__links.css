@@ -1,0 +1,9 @@
+.blog-header__links {
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 900px) {
+  .blog-header__links {
+    display: none;
+  }
+}

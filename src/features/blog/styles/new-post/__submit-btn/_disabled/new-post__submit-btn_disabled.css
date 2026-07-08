@@ -1,0 +1,4 @@
+.new-post__submit-btn_disabled {
+    background-color: #B6BFD1;
+    cursor: not-allowed;
+}

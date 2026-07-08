@@ -1,0 +1,8 @@
+.blog-promo__highlighted-text_type_link {
+    transition: opacity .3s ease;  
+    cursor: pointer;
+}
+
+.blog-promo__highlighted-text_type_link:hover {
+    opacity: .7;
+}

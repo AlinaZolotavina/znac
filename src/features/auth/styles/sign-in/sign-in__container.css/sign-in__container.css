@@ -1,0 +1,10 @@
+.sign-in__container {
+  align-self: center;
+}
+
+@media (max-width: 600px) {
+  .sign-in__container {
+    width: 80vw;
+    padding: 0 10vw;
+  }
+}

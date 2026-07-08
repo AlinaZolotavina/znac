@@ -1,0 +1,9 @@
+.post__theme {
+  font-weight: 400;
+  color: #0f1111;
+  background-color: #ffb4d6;
+  width: max-content;
+  padding: 4px;
+  margin: 0;
+  grid-area: theme;
+}

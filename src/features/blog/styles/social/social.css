@@ -1,0 +1,13 @@
+.social {
+  display: flex;
+  width: max-content;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+@media (max-width: 500px) {
+  .social {
+    width: 100%;
+    justify-content: center;
+  }
+}

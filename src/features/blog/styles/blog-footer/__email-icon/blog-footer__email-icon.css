@@ -1,0 +1,9 @@
+.blog-footer__email-icon {
+  width: 17px;
+  height: 17px;
+  background-image: url(../../../assets/black-email-icon.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  margin: 0 10px 0 0;
+}

@@ -1,0 +1,28 @@
+.project-hashtags__item {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 20px;
+  color: #0f1111;
+  text-align: center;
+  white-space: nowrap;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  background-color: #fff;
+  border-radius: 20px;
+  height: 40px;
+  min-width: fit-content;
+  margin: 0;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.project-hashtags__item:hover {
+  opacity: 0.7;
+}
+
+@media (max-width: 900px) {
+  .project-hashtags__item {
+    font-size: 12px;
+    line-height: 16px;
+  }
+}

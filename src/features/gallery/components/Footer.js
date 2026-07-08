@@ -1,0 +1,41 @@
+import { forwardRef } from "react";
+
+const Footer = forwardRef(function Footer(_, ref) {
+  return (
+    <footer className="footer section" id="footer" ref={ref}>
+      <div className="footer__column">
+        <p className="footer__paragraph">
+          © {new Date().getFullYear()} All rights reserved | ZNAC
+        </p>
+        <p className="footer__paragraph">
+          Website design & development by
+          <a
+            className="footer__link"
+            href="https://www.linkedin.com/in/alina-zolotavina-38a612259/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Alina Zolotavina
+          </a>
+        </p>
+      </div>
+      <div className="footer__column">
+        <a className="footer__link" href="mailto:znacompany@gmail.com">
+          <div className="footer__icon footer__icon_email" />
+          znacompany@gmail.com
+        </a>
+        <a
+          className="footer__link"
+          href="https://www.instagram.com/znac.photo/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <div className="footer__icon footer__icon_instagram" />
+          znac.photo
+        </a>
+      </div>
+    </footer>
+  );
+});
+
+export default Footer;

@@ -1,0 +1,15 @@
+.projects__container {
+  padding: 0;
+  width: calc(80vw + 80px);
+  max-width: 100%;
+  margin: 0 0 60px;
+  display: grid;
+}
+
+@media (max-width: 1280px) {
+  .projects__container {
+    width: calc(70vw + 80px);
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+}

@@ -1,0 +1,41 @@
+.blog-promo__text_location_about {
+  font-size: 20px;
+  line-height: 27px;
+  margin: 0 0 20px;
+  width: 500px;
+  text-wrap: wrap;
+}
+
+@media screen and (max-width: 1280px) {
+  .blog-promo__text_location_about {
+    width: 400px;
+    font-size: 16px;
+    line-height: 20px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .blog-promo__text_location_about {
+    width: 365px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .blog-promo__text_location_about {
+    width: 320px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .blog-promo__text_location_about {
+    width: 280px;
+    font-size: 14px;
+    line-height: 17px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .blog-promo__text_location_about {
+    width: 100%;
+  }
+}

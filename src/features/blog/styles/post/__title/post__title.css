@@ -1,0 +1,6 @@
+.post__title {
+  color: #0f1111;
+  font-weight: 500;
+  margin: 5px 0;
+  grid-area: title;
+}

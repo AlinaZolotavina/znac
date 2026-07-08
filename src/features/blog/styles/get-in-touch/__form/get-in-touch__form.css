@@ -1,0 +1,17 @@
+.get-in-touch__form {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 1280px) {
+  .get-in-touch__form {
+    width: calc(70% - 30px);
+  }
+}
+
+@media (max-width: 900px) {
+  .get-in-touch__form {
+    width: 100%;
+  }
+}

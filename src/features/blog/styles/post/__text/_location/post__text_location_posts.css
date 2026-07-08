@@ -1,0 +1,9 @@
+.post__text_location_posts {
+  font-size: 15px;
+  line-height: 20px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin: 0;
+  grid-area: text;
+}

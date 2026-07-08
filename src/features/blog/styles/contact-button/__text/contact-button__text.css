@@ -1,0 +1,8 @@
+.contact-button__text {
+  display: block;
+}
+@media screen and (max-width: 900px) {
+  .contact-button__text {
+    display: none;
+  }
+}

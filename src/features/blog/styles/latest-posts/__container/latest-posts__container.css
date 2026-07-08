@@ -1,0 +1,14 @@
+.latest-posts__container {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  width: 100%;
+  max-width: 1000px;
+  list-style: none;
+}
+
+@media (max-width: 500px) {
+  .latest-posts__container {
+    margin: 0;
+  }
+}

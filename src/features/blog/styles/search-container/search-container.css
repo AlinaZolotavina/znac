@@ -1,0 +1,30 @@
+.search-container {
+  background-color: #f3f7ff;
+  width: 70vw;
+  height: 215px;
+  border-radius: 20px;
+  margin: 100px 70px 50px;
+  position: relative;
+}
+
+@media (max-width: 1250px) {
+  .search-container {
+    height: 15vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 1000px) {
+  .search-container {
+    height: 15vw;
+    margin: 70px 70px 30px;
+  }
+}
+
+@media (max-width: 700px) {
+  .search-container {
+    height: 90px;
+  }
+}

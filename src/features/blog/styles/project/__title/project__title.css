@@ -1,0 +1,19 @@
+.project__title {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 31px;
+  color: #0f1111;
+  margin: 0;
+  width: calc(100% - 60px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  grid-area: title;
+}
+
+@media (max-width: 1150px) {
+  .project__title {
+    font-size: 16px;
+    line-height: 20px;
+  }
+}

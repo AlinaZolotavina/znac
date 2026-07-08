@@ -1,0 +1,13 @@
+@media screen and (min-width: 1281px) {
+  .post__date-and-tools_location_posts {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
+@media screen and (max-width: 1150px) {
+  .post__date-and-tools_location_posts {
+    justify-content: start;
+  }
+}

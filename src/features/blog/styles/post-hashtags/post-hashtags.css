@@ -1,0 +1,13 @@
+.post-hashtags {
+  display: flex;
+  width: 70vw;
+  justify-content: center;
+}
+
+@media (max-width: 1020px) {
+  .post-hashtags {
+    width: 60vw;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
