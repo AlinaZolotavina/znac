@@ -106,18 +106,6 @@ class Api {
     });
   };
 
-  // deleteHashtag = (hashtag) => {
-  //     return this._request("/hashtags", {
-  //         method: 'DELETE',
-  //         headers: {
-  //             'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({
-  //             hashtagName: hashtag,
-  //         })
-  //     })
-  // }
-
   updateHashtag = (hashtag) => {
     return this._request("/hashtags", {
       method: "PATCH",
@@ -176,9 +164,6 @@ class Api {
     });
   }
 
-  ////////////////////////
-  ///////   BLOG  ////////
-  ////////////////////////
   getPosts(page = 1, limit = 8, { search = "", theme = "All" } = {}) {
     const params = new URLSearchParams({
       page: String(page),

@@ -1,5 +1,9 @@
 import api from "../../../shared/utils/api";
-import * as messages from "../../../shared/utils/messages";
+import {
+  DEFAULT_ERROR_MSG,
+  PHOTO_ADDED_SUCCESSFULLY_MSG,
+  PHOTOS_ADDED_SUCCESSFULLY_MSG,
+} from "../../../shared/utils/messages";
 
 export default function photoUploadActions({
   startLoading,
@@ -34,8 +38,8 @@ export default function photoUploadActions({
       status: "success",
       message:
         addedPhotos.length === 1
-          ? messages.PHOTO_ADDED_SUCCESSFULLY_MSG
-          : messages.PHOTOS_ADDED_SUCCESSFULLY_MSG(addedPhotos.length),
+          ? PHOTO_ADDED_SUCCESSFULLY_MSG
+          : PHOTOS_ADDED_SUCCESSFULLY_MSG(addedPhotos.length),
     });
   }
 
@@ -62,7 +66,7 @@ export default function photoUploadActions({
 
       openModal({
         status: "error",
-        message: messages.DEFAULT_ERROR_MSG,
+        message: DEFAULT_ERROR_MSG,
       });
 
       throw err;

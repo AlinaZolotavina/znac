@@ -1,5 +1,5 @@
-// import { useEffect } from "react";
 import getDate from "../utils/getDate";
+
 function Post({
   post,
   onPostClick,

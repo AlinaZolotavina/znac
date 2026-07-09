@@ -1,6 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import * as auth from "../../../shared/utils/auth";
-import * as messages from "../../../shared/utils/messages";
+import {
+  AUTHORIZATION_FAILED_ERROR_MSG,
+  SIGNOUT_ERROR_MSG,
+  SIGNUP_ERROR_MSG,
+  SUCCESSFUL_SIGNOUT_MSG,
+  SUCCESSFUL_SIGNUP_MSG,
+} from "../../../shared/utils/messages";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export default function useAuth({ openModal, startLoading, stopLoading }) {
@@ -10,7 +16,6 @@ export default function useAuth({ openModal, startLoading, stopLoading }) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isAuthInitialized, setIsAuthInitialized] = useState(false);
 
-  // проверка токена
   const checkToken = useCallback(() => {
     auth
       .getContent()
@@ -43,7 +48,6 @@ export default function useAuth({ openModal, startLoading, stopLoading }) {
     checkToken();
   }, [checkToken]);
 
-  // login
   const handleSignin = async (email, password) => {
     startLoading();
     try {
@@ -54,14 +58,13 @@ export default function useAuth({ openModal, startLoading, stopLoading }) {
     } catch (err) {
       openModal({
         status: "error",
-        message: messages.AUTHORIZATION_FAILED_ERROR_MSG,
+        message: AUTHORIZATION_FAILED_ERROR_MSG,
       });
     } finally {
       stopLoading();
     }
   };
 
-  // signup
   const handleSignup = async (email, password) => {
     startLoading();
     try {
@@ -69,33 +72,32 @@ export default function useAuth({ openModal, startLoading, stopLoading }) {
 
       openModal({
         status: "success",
-        message: messages.SUCCESSFUL_SIGNUP_MSG,
+        message: SUCCESSFUL_SIGNUP_MSG,
       });
 
       await handleSignin(email, password);
     } catch (err) {
       openModal({
         status: "error",
-        message: messages.SIGNUP_ERROR_MSG,
+        message: SIGNUP_ERROR_MSG,
       });
     } finally {
       stopLoading();
     }
   };
 
-  // logout
   const handleSignout = async () => {
     try {
       await auth.signout();
 
       openModal({
         status: "success",
-        message: messages.SUCCESSFUL_SIGNOUT_MSG,
+        message: SUCCESSFUL_SIGNOUT_MSG,
       });
     } catch (err) {
       openModal({
         status: "error",
-        message: messages.SIGNOUT_ERROR_MSG,
+        message: SIGNOUT_ERROR_MSG,
       });
 
       console.error(err);

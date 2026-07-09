@@ -20,7 +20,10 @@ import DeletePostModal from "./components/DeletePostModal.js";
 import DeleteProjectModal from "./components/DeleteProjectModal.js";
 
 import api from "../../shared/utils/api.js";
-import * as messages from "../../shared/utils/messages.js";
+import {
+  CONTACT_MESSAGE_ERROR_MSG,
+  CONTACT_MESSAGE_SENT_MSG,
+} from "../../shared/utils/messages.js";
 
 import useProjects from "./hooks/useProjects.js";
 import usePosts from "./hooks/usePosts.js";
@@ -291,7 +294,7 @@ function BlogLayout({
           isOpen: true,
           status: "success",
           type: "default",
-          message: messages.CONTACT_MESSAGE_SENT_MSG,
+          message: CONTACT_MESSAGE_SENT_MSG,
         });
 
         return true;
@@ -301,7 +304,7 @@ function BlogLayout({
           isOpen: true,
           status: "error",
           type: "default",
-          message: err.message || messages.CONTACT_MESSAGE_ERROR_MSG,
+          message: err.message || CONTACT_MESSAGE_ERROR_MSG,
         });
 
         return false;

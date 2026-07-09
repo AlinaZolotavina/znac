@@ -34,11 +34,7 @@ function EditingHashtags({ editingHashtags, onSubmit, isSendingReq, photoId }) {
         />
         <span className="input__error">{hashtagsError}</span>
       </label>
-      <button
-        className="edit-hashtags__submit-btn"
-        type="submit"
-        // disabled={areHashtagsSame}
-      />
+      <button className="edit-hashtags__submit-btn" type="submit" />
     </form>
   );
 }

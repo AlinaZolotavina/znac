@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import api from "../../../shared/utils/api";
-import * as messages from "../../../shared/utils/messages";
+import {
+  DEFAULT_ERROR_MSG,
+  POST_EDIT_ERROR_MSG,
+  POST_EDITED_SUCCESSFULLY_MSG,
+} from "../../../shared/utils/messages";
 import postUploadActions from "../utils/postUploadActions";
 import {
   LARGE_SCREEN_WIDTH,
@@ -247,7 +251,7 @@ export default function usePosts({
 
         openModal({
           status: "success",
-          message: messages.POST_EDITED_SUCCESSFULLY_MSG,
+          message: POST_EDITED_SUCCESSFULLY_MSG,
         });
       })
       .catch((err) => {
@@ -255,7 +259,7 @@ export default function usePosts({
 
         openModal({
           status: "error",
-          message: err.message || messages.POST_EDIT_ERROR_MSG,
+          message: err.message || POST_EDIT_ERROR_MSG,
         });
       })
       .finally(() => {
@@ -282,7 +286,7 @@ export default function usePosts({
       .catch((err) => {
         openModal({
           status: "error",
-          message: err.message || messages.DEFAULT_ERROR_MSG,
+          message: err.message || DEFAULT_ERROR_MSG,
         });
       })
       .finally(() => {

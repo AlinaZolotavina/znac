@@ -15,7 +15,10 @@ import Menu from "./components/Menu.js";
 import Modal from "./components/Modal.js";
 
 import * as auth from "../shared/utils/auth.js";
-import * as messages from "../shared/utils/messages.js";
+import {
+  DEFAULT_ERROR_MSG,
+  RESET_PASSWORD_EMAIL_SENT_MSG,
+} from "../shared/utils/messages.js";
 
 import useAuth from "../features/auth/hooks/useAuth.js";
 import useRequestState from "../shared/useRequestStatus.js";
@@ -70,17 +73,18 @@ function App() {
     auth
       .forgotPassword(email)
       .then(() => {
+        // тут надо открыть свой модал или удалить его, если используется универсальный
         openModal({
           status: "success",
           type: "email",
-          message: messages.RESET_PASSWORD_EMAIL_SENT_MSG,
+          message: RESET_PASSWORD_EMAIL_SENT_MSG,
         });
       })
       .then(() => navigate("/"))
       .catch(() => {
         openModal({
           status: "error",
-          message: messages.DEFAULT_ERROR_MSG,
+          message: DEFAULT_ERROR_MSG,
         });
       })
       .finally(() => stopLoading());
@@ -100,7 +104,7 @@ function App() {
       .catch((err) => {
         openModal({
           status: "error",
-          message: err.message || messages.DEFAULT_ERROR_MSG,
+          message: err.message || DEFAULT_ERROR_MSG,
         });
       })
       .finally(() => stopLoading());

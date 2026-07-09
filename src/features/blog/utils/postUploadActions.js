@@ -1,5 +1,8 @@
 import api from "../../../shared/utils/api";
-import * as messages from "../../../shared/utils/messages";
+import {
+  POST_ADDED_SUCCESSFULLY_MSG,
+  POST_ADD_ERROR_MSG,
+} from "../../../shared/utils/messages";
 
 export default function postUploadActions({
   startLoading,
@@ -42,7 +45,7 @@ export default function postUploadActions({
       status: "success",
       message:
         addedPosts.length === 1
-          ? messages.POST_ADDED_SUCCESSFULLY_MSG
+          ? POST_ADDED_SUCCESSFULLY_MSG
           : `${addedPosts.length} posts were added successfully`,
     });
 
@@ -78,7 +81,7 @@ export default function postUploadActions({
 
       openModal({
         status: "error",
-        message: err.message || messages.POST_ADD_ERROR_MSG,
+        message: err.message || POST_ADD_ERROR_MSG,
       });
 
       throw err;

@@ -1,6 +1,12 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import api from "../../../shared/utils/api";
-import * as messages from "../../../shared/utils/messages";
+import {
+  DEFAULT_ERROR_MSG,
+  PROJECT_ADDED_SUCCESSFULLY_MSG,
+  PROJECT_ADD_ERROR_MSG,
+  PROJECT_EDITED_SUCCESSFULLY_MSG,
+  PROJECT_EDIT_ERROR_MSG,
+} from "../../../shared/utils/messages";
 import {
   LARGE_SCREEN_WIDTH,
   MIDDLE_SCREEN_WIDTH,
@@ -103,7 +109,7 @@ export default function useProjects({
         .catch((err) => {
           openModal({
             status: "error",
-            message: err.message || messages.DEFAULT_ERROR_MSG,
+            message: err.message || DEFAULT_ERROR_MSG,
           });
 
           throw err;
@@ -208,14 +214,14 @@ export default function useProjects({
       .then((createdProject) => {
         openModal({
           status: "success",
-          message: messages.PROJECT_ADDED_SUCCESSFULLY_MSG,
+          message: PROJECT_ADDED_SUCCESSFULLY_MSG,
         });
         setAllProjects((prev) => [createdProject, ...prev]);
       })
       .catch((err) => {
         openModal({
           status: "error",
-          message: err.message || messages.PROJECT_ADD_ERROR_MSG,
+          message: err.message || PROJECT_ADD_ERROR_MSG,
         });
       })
       .finally(() => {
@@ -237,14 +243,14 @@ export default function useProjects({
       .then((newProject) => {
         openModal({
           status: "success",
-          message: messages.PROJECT_EDITED_SUCCESSFULLY_MSG,
+          message: PROJECT_EDITED_SUCCESSFULLY_MSG,
         });
         replaceProject(newProject);
       })
       .catch((err) => {
         openModal({
           status: "error",
-          message: err.message || messages.PROJECT_EDIT_ERROR_MSG,
+          message: err.message || PROJECT_EDIT_ERROR_MSG,
         });
       })
       .finally(() => {
@@ -267,7 +273,7 @@ export default function useProjects({
       .catch((err) => {
         openModal({
           status: "error",
-          message: err.message || messages.DEFAULT_ERROR_MSG,
+          message: err.message || DEFAULT_ERROR_MSG,
         });
       })
       .finally(() => closeAllBlogPopups());

@@ -1,6 +1,11 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import api from "../../../shared/utils/api";
-import * as messages from "../../../shared/utils/messages";
+import {
+  DEFAULT_ERROR_MSG,
+  DELETE_PHOTO_ERROR_MSG,
+  EDIT_HASHTAGS_ERROR_MSG,
+  SUCCESSFUL_PHOTO_DELETE_MSG,
+} from "../../../shared/utils/messages";
 import photoUploadActions from "../utils/photoUploadActions";
 
 import {
@@ -188,7 +193,6 @@ export default function usePhotos({
           setAllPhotos((previousPhotos) =>
             append ? [...previousPhotos, ...data] : data,
           );
-          // Кэшируем только обычную галерею
           if (!hasFilter) {
             setLoadedPhotos((previousPhotos) =>
               append ? [...previousPhotos, ...data] : data,
@@ -211,7 +215,7 @@ export default function usePhotos({
         .catch((err) => {
           openModal({
             status: "error",
-            message: err.message || messages.DEFAULT_ERROR_MSG,
+            message: err.message || DEFAULT_ERROR_MSG,
           });
 
           throw err;
@@ -228,7 +232,6 @@ export default function usePhotos({
     });
   }, [loadPhotos]);
 
-  // open photo popup
   const handlePhotoOpen = (photo) => {
     handlePhotoClick(photo);
     setIsPhotoPopupOpen(true);
@@ -243,7 +246,6 @@ export default function usePhotos({
 
     setHashtag(nextValue);
 
-    // Поиск очищен: возвращаем нефильтрованный кэш без нового запроса.
     if (!normalizedHashtag) {
       const restoredVisibleCount = getRestoredVisibleCount();
 
@@ -310,7 +312,6 @@ export default function usePhotos({
     handlePhotoSearch(nextHashtag);
   }
 
-  // open photo popup, handle photo flip
   function handlePhotoClick(photo) {
     setSelectedPhoto(photo);
     increaseViewsNumber(photo._id);
@@ -342,7 +343,6 @@ export default function usePhotos({
     setAreHashtagsEditing(false);
   }
 
-  // add photo
   function handleAddPhotoFromPc(photoData, hashtags, views) {
     return handlePhotoUpload({
       photoData,
@@ -377,9 +377,8 @@ export default function usePhotos({
     setLoadedPhotos((prev) => [...newPhotos, ...prev]);
   }
 
-  // delete photo
   const handleDeletePhotoModalOpen = (photo) => {
-    setSelectedPhoto(photo); // или selectPhoto
+    setSelectedPhoto(photo);
     setIsDeletePhotoModalOpen(true);
   };
 
@@ -392,13 +391,13 @@ export default function usePhotos({
 
         openModal({
           status: "success",
-          message: messages.SUCCESSFUL_PHOTO_DELETE_MSG,
+          message: SUCCESSFUL_PHOTO_DELETE_MSG,
         });
       })
       .catch((err) => {
         openModal({
           status: "error",
-          message: err.message || messages.DELETE_PHOTO_ERROR_MSG,
+          message: err.message || DELETE_PHOTO_ERROR_MSG,
         });
       })
       .finally(() => closeAllPopups());
@@ -417,7 +416,6 @@ export default function usePhotos({
       .catch((err) => console.log(err));
   }
 
-  // edit photo hashtags
   function handleEditHashtagsBtnClick() {
     setAreHashtagsEditing((prev) => !prev);
   }
@@ -437,11 +435,10 @@ export default function usePhotos({
       .catch((err) => {
         openModal({
           status: "error",
-          message: err.message || messages.EDIT_HASHTAGS_ERROR_MSG,
+          message: err.message || EDIT_HASHTAGS_ERROR_MSG,
         });
       });
   }
-  // Public API
   return {
     // state
     selectedPhoto,

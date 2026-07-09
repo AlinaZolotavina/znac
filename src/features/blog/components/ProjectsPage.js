@@ -3,7 +3,6 @@ import BlogHeader from "./BlogHeader";
 import ProjectHashtags from "./ProjectHashtags.js";
 import ProjectsContainer from "./ProjectsContainer";
 import BlogFooter from "./BlogFooter";
-// import projectHashtags from "../../utils/projectHashtags";
 import ShowMoreButton from "./ShowMoreButton.js";
 import AddNewItemButton from "./AddNewItemButton.js";
 import ContentNotFound from "./ContentNotFound.js";

@@ -10,7 +10,14 @@ import EditEmailModal from "./components/EditEmailModal";
 import EditPasswordModal from "./components/EditPasswordModal";
 
 import api from "../../shared/utils/api";
-import * as messages from "../../shared/utils/messages";
+import {
+  EMAIL_UPDATED_SUCCESSFULLY_MSG,
+  EMAIL_UPDATE_ERROR_MSG,
+  EMAIL_UPDATE_REQUEST_ERROR_MSG,
+  PASSWORD_UPDATED_SUCCESSFULLY_MSG,
+  PASSWORD_UPDATE_ERROR_MSG,
+  UPDATE_EMAIL_EMAIL_SENT_MSG,
+} from "../../shared/utils/messages";
 
 function ProfileRoot({
   loggedIn,
@@ -45,13 +52,13 @@ function ProfileRoot({
       .then(() => {
         openModal({
           status: "success",
-          message: messages.UPDATE_EMAIL_EMAIL_SENT_MSG,
+          message: UPDATE_EMAIL_EMAIL_SENT_MSG,
         });
       })
       .catch((err) => {
         openModal({
           status: "error",
-          message: err.message || messages.EMAIL_UPDATE_REQUEST_ERROR_MSG,
+          message: err.message || EMAIL_UPDATE_REQUEST_ERROR_MSG,
         });
       })
       .finally(() => stopLoading());
@@ -66,13 +73,13 @@ function ProfileRoot({
         navigate("/profile");
         openModal({
           status: "success",
-          message: messages.EMAIL_UPDATED_SUCCESSFULLY_MSG,
+          message: EMAIL_UPDATED_SUCCESSFULLY_MSG,
         });
       })
       .catch((err) => {
         openModal({
           status: "error",
-          message: err.message || messages.EMAIL_UPDATE_ERROR_MSG,
+          message: err.message || EMAIL_UPDATE_ERROR_MSG,
         });
       });
   }
@@ -90,13 +97,13 @@ function ProfileRoot({
         closeProfilePopups();
         openModal({
           status: "success",
-          message: data.message || messages.PASSWORD_UPDATED_SUCCESSFULLY_MSG,
+          message: data.message || PASSWORD_UPDATED_SUCCESSFULLY_MSG,
         });
       })
       .catch((err) => {
         openModal({
           status: "error",
-          message: err.message || messages.PASSWORD_UPDATE_ERROR_MSG,
+          message: err.message || PASSWORD_UPDATE_ERROR_MSG,
         });
       })
       .finally(() => stopLoading());
