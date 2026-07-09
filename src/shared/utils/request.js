@@ -13,8 +13,23 @@ export const createRequest = (baseUrl) => {
       const error = new Error(data?.message || `HTTP ${res.status}`);
 
       error.status = res.status;
-      error.type =
-        res.status === 401 || res.status === 404 ? "AUTH_ERROR" : "API_ERROR";
+
+      switch (res.status) {
+        case 401:
+          error.type = "AUTH_ERROR";
+          break;
+
+        case 403:
+          error.type = "FORBIDDEN_ERROR";
+          break;
+
+        case 404:
+          error.type = "NOT_FOUND_ERROR";
+          break;
+
+        default:
+          error.type = "API_ERROR";
+      }
 
       throw error;
     });
