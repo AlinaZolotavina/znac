@@ -1,8 +1,10 @@
 # ZNAC
 
-Frontend application for ZNAC, a personal website that combines a portfolio, blog, photo gallery, and administration dashboard for content management.
+ZNAC is a personal website that combines a portfolio, blog, projects showcase, photo gallery, and administration dashboard.
 
-Designed and developed independently, including UI/UX design, frontend architecture, implementation, deployment coordination, and ongoing maintenance.
+The frontend was designed and developed independently, including UI/UX design, application architecture, implementation, deployment coordination, automated testing, and ongoing maintenance.
+
+This project is actively maintained and continuously improved.
 
 ## Demo
 
@@ -25,27 +27,23 @@ Live version: https://znac.org
 Content Management
 
 - Create, edit, and delete blog posts
-- Manage projects and portfolio entries
+- Manage projects
 - Upload and organize photos
-- Manage hashtags and categories
+- Manage hashtags
 
 Authentication
 
-- Secure login system
-- Protected administration routes
+- JWT authentication
+- Protected routes
+- Password recovery
+- Email update
 - Profile management
 
 Content Discovery
 
-- Search functionality
+- Search posts and photos
 - Category filtering
 - Hashtag-based navigation
-
-Responsive Experience
-
-- Desktop
-- Tablet
-- Mobile
 
 ## Design highlights:
 
@@ -65,28 +63,65 @@ The application is organized into reusable UI components and feature-based secti
 
 Main areas:
 
-- Portfolio
-- Blog
+- Authentication
+- Blog (posts)
 - Projects
 - Photo Gallery
-- Authentication
+- Portfolio
 - Profile Management
 - Administration Dashboard
 
-The application communicates with a custom REST API and uses protected routes for authenticated areas.
+The application communicates with a custom REST API through a centralized request layer and uses protected routes for authenticated areas.
 
 ## Technologies
 
-- React
-- React Router
+- React 18
+- React Router 6
 - JavaScript (ES6+)
 - HTML5
 - CSS3
 - REST API
+- Jest
+- React Testing Library
 
 ## Related Repository
 
 Backend API: [ZNAC API](https://github.com/AlinaZolotavina/znac-api)
+
+## Installation & Running the Application
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/AlinaZolotavina/znac.git
+cd znac
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Create a .env file based on .env.example.
+
+4. Start development server:
+
+```bash
+npm start
+```
+
+5. Create production build:
+
+```bash
+npm run build
+```
+
+6. Run tests:
+
+```bash
+npm test
+```
 
 ## Deployment
 
@@ -95,6 +130,7 @@ Hosted on AWS Lightsail.
 ## Future Improvements
 
 - Migration to TypeScript
+- Migration to Vite
 - Performance optimization
 - Accessibility improvements
-- Additional automated testing
+- Additional frontend test coverage
