@@ -7,7 +7,6 @@ import ProjectsPage from "./components/ProjectsPage.js";
 import AboutPage from "./components/AboutPage.js";
 import GamesPage from "./components/GamesPage.js";
 import CurrentPostPage from "./components/CurrentPostPage.js";
-import ComingSoon from "./components/ComingSoon.js";
 import NotFound from "../../app/components/NotFound.js";
 
 import BlogMenu from "./components/BlogMenu.js";
@@ -137,10 +136,6 @@ function BlogLayout({
 
   function handleGamesClick() {
     navigate("/alina/games");
-  }
-
-  function moveToTicTacToePage() {
-    navigate("/alina/games/tic-tac-toe");
   }
 
   function handleMusicClick() {
@@ -424,12 +419,7 @@ function BlogLayout({
           }
         />
 
-        <Route
-          path="games"
-          element={<GamesPage onTicTacToeClick={moveToTicTacToePage} />}
-        />
-
-        <Route path="games/tic-tac-toe" element={<ComingSoon />} />
+        <Route path="games" element={<GamesPage />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

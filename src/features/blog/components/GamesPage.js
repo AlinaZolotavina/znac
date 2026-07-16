@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function GamesPage({ onTicTacToeClick }) {
+function GamesPage() {
   const [ticTacToeActiveClassname, setTicTacToeActiveClassname] = useState("");
   const [findPairActiveClassname, setFindPairActiveClassname] = useState("");
 
@@ -23,15 +23,18 @@ function GamesPage({ onTicTacToeClick }) {
     <div className="games">
       <h2 className="games__title">Choose game to play ;)</h2>
       <div className="games__container">
-        <div
+        <a
           className={`games__tic-tac-toe ${ticTacToeActiveClassname}`}
-          onClick={onTicTacToeClick}
+          aria-label="tic-tac-toe game"
+          href="https://alinazolotavina.github.io/tic-tac-toe/"
+          target="_blanc"
+          rel="noreferrer"
           onMouseOver={() => handleMouseOver("tic-tac-toe")}
           onMouseOut={handleMouseOut}
         />
         <a
           className={`games__find-pair ${findPairActiveClassname}`}
-          aria-label="fin pair game"
+          aria-label="find pair game"
           href="https://alinazolotavina.github.io/find-pair/"
           target="_blank"
           rel="noreferrer"
