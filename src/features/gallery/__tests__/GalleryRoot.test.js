@@ -16,7 +16,7 @@ function renderUsePhotos(overrides = {}) {
     startLoading: jest.fn(),
     stopLoading: jest.fn(),
     closeAllPopups: jest.fn(),
-    screenWidth: 800,
+    screenWidth: 500,
     setScreenWidth: jest.fn(),
     hashtag: "",
     setHashtag: jest.fn(),

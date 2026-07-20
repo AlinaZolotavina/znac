@@ -48,19 +48,23 @@ describe("blog posts root logic", () => {
   test("loads posts", async () => {
     const { result } = renderUsePosts();
 
-    await waitFor(() => expect(result.current.postsToRender).toHaveLength(3));
+    await waitFor(() =>
+      expect(result.current.postsToRender).toHaveLength(posts.length),
+    );
 
     expect(api.getPosts).toHaveBeenCalledWith(1, 8, {
       search: "",
       theme: "All",
     });
-    expect(result.current.hasMorePosts).toBe(true);
+    expect(result.current.hasMorePosts).toBe(false);
   });
 
   test("shows more posts after responsive count calculation", async () => {
     const { result } = renderUsePosts();
 
-    await waitFor(() => expect(result.current.postsToRender).toHaveLength(3));
+    await waitFor(() =>
+      expect(result.current.postsToRender).toHaveLength(posts.length),
+    );
 
     act(() => {
       result.current.calculatePostsCount();

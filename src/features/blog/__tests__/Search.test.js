@@ -48,7 +48,9 @@ describe("blog posts search", () => {
   test("searches posts", async () => {
     const { result, props } = renderUsePosts();
 
-    await waitFor(() => expect(result.current.postsToRender).toHaveLength(3));
+    await waitFor(() =>
+      expect(result.current.postsToRender).toHaveLength(posts.length),
+    );
 
     act(() => {
       result.current.handlePostsSearch("hooks");
@@ -69,7 +71,9 @@ describe("blog posts search", () => {
       activePostHashtag: "React",
     });
 
-    await waitFor(() => expect(result.current.postsToRender).toHaveLength(3));
+    await waitFor(() =>
+      expect(result.current.postsToRender).toHaveLength(posts.length),
+    );
 
     act(() => {
       result.current.handlePostsSearch("state");
@@ -86,7 +90,9 @@ describe("blog posts search", () => {
   test("filters posts by theme", async () => {
     const { result, props } = renderUsePosts();
 
-    await waitFor(() => expect(result.current.postsToRender).toHaveLength(3));
+    await waitFor(() =>
+      expect(result.current.postsToRender).toHaveLength(posts.length),
+    );
 
     act(() => {
       result.current.handlePostHashtagClick("Design");

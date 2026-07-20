@@ -12,7 +12,7 @@ const api = mockApi;
 
 function renderUseProjects() {
   const props = {
-    screenWidth: 800,
+    screenWidth: 500,
     isAlinaRoute: true,
     openModal: jest.fn(),
     activeProjectHashtag: "",

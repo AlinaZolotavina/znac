@@ -50,7 +50,9 @@ describe("edit post", () => {
 
     const { result, props } = renderUsePosts();
 
-    await waitFor(() => expect(result.current.postsToRender).toHaveLength(3));
+    await waitFor(() =>
+      expect(result.current.postsToRender).toHaveLength(posts.length),
+    );
 
     act(() => {
       result.current.handleEditPostPopupOpen(posts[0]);

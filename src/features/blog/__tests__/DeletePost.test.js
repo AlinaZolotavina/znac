@@ -45,7 +45,9 @@ describe("delete post", () => {
   test("deletes post and removes it from list", async () => {
     const { result } = renderUsePosts();
 
-    await waitFor(() => expect(result.current.postsToRender).toHaveLength(3));
+    await waitFor(() =>
+      expect(result.current.postsToRender).toHaveLength(posts.length),
+    );
 
     await act(async () => {
       result.current.handlePostDelete(posts[0]);
