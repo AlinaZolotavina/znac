@@ -5,6 +5,7 @@ import ContentNotFound from "./ContentNotFound";
 function LatestPosts({
   loggedIn,
   posts,
+  isThereMoreContent,
   onPostClick,
   onEditPostButtonClick,
   onDeletePostButtonClick,
@@ -23,7 +24,7 @@ function LatestPosts({
               loggedIn={loggedIn}
               onViewAllClick={onViewAllClick}
               onAddButtonClick={onAddPostClick}
-              isThereMoreContent={posts.length > 3}
+              isThereMoreContent={isThereMoreContent}
             />
           )}
         </div>

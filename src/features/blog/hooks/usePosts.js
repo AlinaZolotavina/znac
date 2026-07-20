@@ -31,7 +31,7 @@ export default function usePosts({
   const navigate = useNavigate();
   const [allPosts, setAllPosts] = useState([]);
   const [loadedPosts, setLoadedPosts] = useState([]);
-  const [currentPostsNumber, setCurrentPostsNumber] = useState(3);
+  const [currentPostsNumber, setCurrentPostsNumber] = useState(6);
 
   const [postsToAdd, setPostsToAdd] = useState(0);
   const [postsPage, setPostsPage] = useState(1);
@@ -64,10 +64,10 @@ export default function usePosts({
       initialPostsNumber = 6;
       nextPostsToAdd = 4;
     } else if (screenWidth >= MIDDLE_SCREEN_WIDTH) {
-      initialPostsNumber = 3;
-      nextPostsToAdd = 3;
+      initialPostsNumber = 4;
+      nextPostsToAdd = 4;
     } else {
-      initialPostsNumber = 3;
+      initialPostsNumber = 2;
       nextPostsToAdd = 2;
     }
 
@@ -295,8 +295,8 @@ export default function usePosts({
   }
 
   return {
-    allPosts,
     postsToRender,
+    totalPosts: allPosts.length,
     currentPostsNumber,
     hasMorePosts,
     calculatePostsCount,

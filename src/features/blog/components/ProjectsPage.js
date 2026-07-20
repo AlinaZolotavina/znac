@@ -67,7 +67,7 @@ function ProjectsPage({
             loggedIn={loggedIn}
             projects={projectsToRender}
             projectsNumber={projectsQuantity}
-            classname="projects-page"
+            containerClassname="projects-page"
             onEditProjectButtonClick={onEditProjectButtonClick}
             onDeleteProjectButtonClick={onDeleteProjectButtonClick}
             onHashtagClick={onProjectHashtagClick}

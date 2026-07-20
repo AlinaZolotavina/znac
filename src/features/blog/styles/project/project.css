@@ -6,4 +6,5 @@
   position: relative;
   width: 100%;
   min-height: 225px;
+  max-height: fit-content;
 }

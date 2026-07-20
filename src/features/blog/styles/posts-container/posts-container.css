@@ -11,6 +11,12 @@
   max-height: fit-content;
 }
 
+@media (max-width: 1280px) {
+  .posts-container {
+    width: calc(70vw + 80px);
+  }
+}
+
 @media (max-width: 750px) {
   .posts-container {
     grid-template-columns: repeat(1, 1fr);

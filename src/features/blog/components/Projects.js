@@ -5,6 +5,7 @@ import ContentNotFound from "./ContentNotFound";
 function Projects({
   loggedIn,
   projects,
+  isThereMoreContent,
   onViewAllClick,
   projectsNumber,
   containerClassname,
@@ -21,7 +22,7 @@ function Projects({
             loggedIn={loggedIn}
             onViewAllClick={onViewAllClick}
             onAddButtonClick={onAddProjectClick}
-            isThereMoreContent={projects.length > 2}
+            isThereMoreContent={isThereMoreContent}
           />
         )}
       </div>
@@ -30,7 +31,7 @@ function Projects({
           loggedIn={loggedIn}
           projects={projects}
           projectsNumber={projectsNumber}
-          classname={containerClassname}
+          containerClassname={containerClassname}
           onEditProjectButtonClick={onEditProjectButtonClick}
           onDeleteProjectButtonClick={onDeleteProjectButtonClick}
         />

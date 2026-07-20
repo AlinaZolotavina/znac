@@ -9,6 +9,7 @@ import GamesAndMusic from "./GamesAndMusic.js";
 function AboutPage({
   loggedIn,
   projectsToRender,
+  totalProjects,
   onBlogMenuClick,
   onContactClick,
   onAddProjectClick,
@@ -18,6 +19,9 @@ function AboutPage({
   onPostsClick,
   onProjectsClick,
   onAboutClick,
+  onViewAllProjectsClick,
+  onEditProjectButtonClick,
+  onDeleteProjectButtonClick,
 }) {
   return (
     <div className="blog">
@@ -34,10 +38,13 @@ function AboutPage({
       <Projects
         loggedIn={loggedIn}
         projects={projectsToRender}
-        pathname="/alina/projects"
+        isThereMoreContent={totalProjects}
+        onViewAllClick={onViewAllProjectsClick}
         projectsNumber={2}
         containerClassname="about-page"
         onAddProjectClick={onAddProjectClick}
+        onEditProjectButtonClick={onEditProjectButtonClick}
+        onDeleteProjectButtonClick={onDeleteProjectButtonClick}
       />
       <CVs />
       <GamesAndMusic onGamesClick={onGamesClick} onMusicClick={onMusicClick} />

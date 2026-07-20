@@ -9,3 +9,15 @@
     display: none;
   }
 }
+
+@media screen and (max-width: 750px) {
+  .post__icon_location_posts {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .post__icon_location_posts {
+    display: none;
+  }
+}

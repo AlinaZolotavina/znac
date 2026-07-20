@@ -110,7 +110,7 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
         addedPhotos.push(webPFile);
       }
 
-      setPostPhotos([addedPhotos]);
+      setPostPhotos(addedPhotos);
       setPhotoNames(names);
     } finally {
       setIsUploadingPhoto(false);

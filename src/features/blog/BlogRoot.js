@@ -30,7 +30,7 @@ import useRequestState from "../../shared/useRequestStatus.js";
 
 import getCurrentActivePage from "./utils/getCurrentActivePage.js";
 
-function BlogLayout({
+function BlogRoot({
   loggedIn,
   currentUser,
   isLoading,
@@ -102,9 +102,9 @@ function BlogLayout({
     setIsGetInTouchPopupOpen(true);
   }
 
-  const closeGetInTouchPopup = () => {
+  const closeGetInTouchPopup = useCallback(() => {
     setIsGetInTouchPopupOpen(false);
-  };
+  }, []);
 
   function handleBlogMenuClick(e) {
     setIsBlogMenuOpen(!isBlogMenuOpen);
@@ -147,7 +147,7 @@ function BlogLayout({
   }
 
   function viewAllPostsClick() {
-    navigate("./alina/posts");
+    navigate("./posts");
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -155,7 +155,7 @@ function BlogLayout({
   }
 
   function viewAllProjectsClick() {
-    navigate("./alina/projects");
+    navigate("./projects");
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -178,6 +178,7 @@ function BlogLayout({
 
   const {
     projectsToRender,
+    totalProjects,
     currentProjectsNumber,
     hasMoreProjects,
     calculateProjectsCount,
@@ -205,6 +206,7 @@ function BlogLayout({
 
   const {
     postsToRender,
+    totalPosts,
     currentPostsNumber,
     hasMorePosts,
     calculatePostsCount,
@@ -247,9 +249,11 @@ function BlogLayout({
       const { keyCode } = e;
       if (keyCode === 27) {
         closeAllBlogPopups();
+        closeBlogMenu();
+        closeGetInTouchPopup();
       }
     },
-    [closeAllBlogPopups],
+    [closeAllBlogPopups, closeBlogMenu, closeGetInTouchPopup],
   );
 
   const handleOverlayClickClose = useCallback(
@@ -316,8 +320,11 @@ function BlogLayout({
           element={
             <BlogMainPage
               loggedIn={loggedIn}
+              totalPosts={totalPosts}
+              postsQuantity={3}
               postsToRender={postsToRender}
               projectsToRender={projectsToRender}
+              totalProjects={totalProjects}
               projectsQuantity={2}
               onBlogMenuClick={handleBlogMenuClick}
               onContactClick={handleBlogContactClick}
@@ -410,11 +417,15 @@ function BlogLayout({
               loggedIn={loggedIn}
               activePage={activeBlogPage}
               projectsToRender={projectsToRender}
+              totalProjects={totalProjects}
               onBlogMenuClick={handleBlogMenuClick}
               onContactClick={handleBlogContactClick}
               onAddProjectClick={handleNewProjectPopupOpen}
               onGamesClick={handleGamesClick}
               onMusicClick={handleMusicClick}
+              onViewAllProjectsClick={viewAllProjectsClick}
+              onEditProjectButtonClick={handleEditProjectPopupOpen}
+              onDeleteProjectButtonClick={handleDeleteProjectModalOpen}
             />
           }
         />
@@ -487,4 +498,4 @@ function BlogLayout({
   );
 }
 
-export default BlogLayout;
+export default BlogRoot;

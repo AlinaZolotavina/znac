@@ -1,6 +1,6 @@
 // screen width
 export const LARGE_SCREEN_WIDTH = 1240;
-export const MIDDLE_SCREEN_WIDTH = 1141;
+export const MIDDLE_SCREEN_WIDTH = 768;
 
 // photos constants
 export const LARGE_SCREEN_PHOTOS_NUMBER = 12;

@@ -1,0 +1,13 @@
+.projects__column {
+  padding-left: 20px;
+  background-clip: padding-box;
+  box-sizing: border-box;
+}
+
+.projects__column:first-of-type {
+  padding: 0;
+}
+
+.projects__column > .project {
+  margin-bottom: 20px;
+}

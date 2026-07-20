@@ -1,17 +1,11 @@
 .projects__container_location_projects-page {
-  grid-template-columns: repeat(3, calc((100% - 60px) / 3));
-  max-width: 1140px;
-  gap: 30px;
+  display: flex;
+  width: 80vw;
+  gap: 20px 0;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 500px) {
   .projects__container_location_projects-page {
-    grid-template-columns: repeat(2, calc((100% - 30px) / 2));
-  }
-}
-
-@media (max-width: 600px) {
-  .projects__container_location_projects-page {
-    grid-template-columns: repeat(1, 100%);
+    width: 90vw;
   }
 }

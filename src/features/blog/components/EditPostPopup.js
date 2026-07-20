@@ -133,7 +133,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
       addedPhotos.push(webPFile);
       setPhotoNames(names);
     }
-    setPostPhotos([addedPhotos, ...postPhotos]);
+    setPostPhotos(addedPhotos, ...postPhotos);
     setIsUploadingPhoto(false);
     setIsEdited(true);
   }

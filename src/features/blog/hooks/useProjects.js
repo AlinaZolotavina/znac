@@ -26,7 +26,7 @@ export default function useProjects({
 }) {
   const [allProjects, setAllProjects] = useState([]);
   const [loadedProjects, setLoadedProjects] = useState([]);
-  const [currentProjectsNumber, setCurrentProjectsNumber] = useState(2);
+  const [currentProjectsNumber, setCurrentProjectsNumber] = useState(3);
   const [visibleLoadedProjectsCount, setVisibleLoadedProjectsCount] =
     useState(0);
   const [projectsToAdd, setProjectsToAdd] = useState(0);
@@ -53,8 +53,8 @@ export default function useProjects({
 
     if (screenWidth >= MIDDLE_SCREEN_WIDTH) {
       return {
-        initialProjectsNumber: 4,
-        projectsToAdd: 2,
+        initialProjectsNumber: 3,
+        projectsToAdd: 3,
       };
     }
 
@@ -286,6 +286,7 @@ export default function useProjects({
 
   return {
     projectsToRender,
+    totalProjects: allProjects.length,
     currentProjectsNumber,
     hasMoreProjects,
     calculateProjectsCount,

@@ -9,6 +9,7 @@
 
 @media (max-width: 1250px) {
   .search-container {
+    width: calc(70vw + 80px);
     height: 15vw;
     display: flex;
     align-items: center;

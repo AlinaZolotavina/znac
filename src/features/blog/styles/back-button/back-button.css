@@ -17,6 +17,11 @@
   text-decoration: none;
   cursor: pointer;
   background-color: transparent;
+  transition: opacity 0.2s ease;
+}
+
+.back-button:hover {
+  opacity: 0.6;
 }
 
 @media (max-width: 1280px) {

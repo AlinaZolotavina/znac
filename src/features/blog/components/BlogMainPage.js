@@ -8,7 +8,9 @@ function BlogMainPage({
   loggedIn,
   activePage,
   postsToRender,
+  totalPosts,
   projectsToRender,
+  totalProjects,
   projectsQuantity,
   onBlogMenuClick,
   onHomeClick,
@@ -41,6 +43,7 @@ function BlogMainPage({
       <LatestPosts
         loggedIn={loggedIn}
         posts={postsToRender}
+        isThereMoreContent={totalPosts > 3}
         onPostClick={onPostClick}
         onEditPostButtonClick={onEditPostButtonClick}
         onDeletePostButtonClick={onDeletePostButtonClick}
@@ -50,6 +53,7 @@ function BlogMainPage({
       <Projects
         loggedIn={loggedIn}
         projects={projectsToRender}
+        isThereMoreContent={totalProjects}
         onViewAllClick={onViewAllProjectsClick}
         projectsNumber={projectsQuantity}
         containerClassname="main-page"
