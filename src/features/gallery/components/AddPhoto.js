@@ -261,6 +261,11 @@ function AddPhoto({
     });
   };
 
+  function handleRemoveSelectedPhoto(index) {
+    setPhotoFiles((prev) => prev.filter((_, i) => i !== index));
+    setFileNames((prev) => prev.filter((_, i) => i !== index));
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -374,7 +379,13 @@ function AddPhoto({
                 ) : photoFiles.length === 0 ? (
                   <li className="upload-file__info_empty">{fileInfo}</li>
                 ) : (
-                  fileNames.map((n) => <UploadFileInfo key={n} fileName={n} />)
+                  fileNames.map((name, index) => (
+                    <UploadFileInfo
+                      key={`${name}-${index}`}
+                      fileName={name}
+                      onRemove={() => handleRemoveSelectedPhoto(index)}
+                    />
+                  ))
                 )}
               </ul>
             </div>

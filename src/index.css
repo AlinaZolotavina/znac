@@ -174,6 +174,7 @@
 @import url(./features/gallery/styles/upload-file/__info/_empty/upload-file__info_empty.css);
 @import url(./features/gallery/styles/upload-file/__input/upload-file__input.css);
 @import url(./features/gallery/styles/upload-file/__item/upload-file__item.css);
+@import url(./features/gallery/styles/upload-file/__remove-btn/upload-file__remove-btn.css);
 
 /* menu */
 @import url(./app/styles/menu/menu.css);
@@ -313,6 +314,7 @@
 @import url(./features/blog/styles/projects/projects.css);
 @import url(./features/blog/styles/projects/__menu/projects__menu.css);
 @import url(./features/blog/styles/projects/__container/projects__container.css);
+@import url(./features/blog/styles/projects/__column/projects__column.css);
 @import url(./features/blog/styles/projects/__container/_location/projects__container_location_main-page.css);
 @import url(./features/blog/styles/projects/__container/_location/projects__container_location_projects-page.css);
 @import url(./features/blog/styles/projects/__container/_location/projects__container_location_about-page.css);
@@ -440,6 +442,7 @@
 @import url(./features/blog/styles/blog-upload-file/__image-icon/blog-upload-file__image-icon.css);
 @import url(./features/blog/styles/blog-upload-file/__status/blog-upload-file__status.css);
 @import url(./features/blog/styles/blog-upload-file/__dots/blog-upload-file__dots.css);
+@import url(./features/blog/styles/blog-upload-file/__remove-btn/blog-upload-file__remove-btn.css);
 @import url(./features/blog/styles/new-post/__submit-btn/new-post__submit-btn.css);
 @import url(./features/blog/styles/new-post/__submit-btn/_disabled/new-post__submit-btn_disabled.css);
 @import url(./features/blog/styles/delete-post-submit-btn/delete-post-submit-btn.css);

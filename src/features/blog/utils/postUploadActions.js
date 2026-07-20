@@ -58,8 +58,8 @@ export default function postUploadActions({
     try {
       const addedPosts = [];
 
-      if (props.photoData[0]?.length) {
-        for (const file of props.photoData[0]) {
+      if (props.photoData.length) {
+        for (const file of props.photoData) {
           const filename = await uploadSingleImage(file);
 
           const newPost = await createPost(props, {
