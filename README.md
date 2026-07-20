@@ -10,6 +10,10 @@ This project is actively maintained and continuously improved.
 
 Live version: https://znac.org
 
+## Related Repository
+
+Backend API: https://github.com/AlinaZolotavina/znac-api
+
 ## Screenshots
 
 <p>
@@ -45,18 +49,6 @@ Content Discovery
 - Category filtering
 - Hashtag-based navigation
 
-## Design highlights:
-
-- Custom UI/UX design
-- Responsive layouts
-- Mobile-first approach
-- Reusable components and modal system
-- Consistent visual identity across all sections
-
-Click here to see [Photo Gallery Design](https://www.figma.com/design/9Ope6gJMSxNlTgW2xmiadI/ZNAC-Photo-Gallery?node-id=0-1&t=LaVz5AllRF0P5ARz-1).
-
-And here is [Blog & Portfolio Design](https://www.figma.com/design/nr7iR1eT478g28M8Mrc6BX/BLOG?node-id=0-1&t=F0lEJgBEDi8ssd8K-1).
-
 ## Architecture
 
 The application is organized into reusable UI components and feature-based sections.
@@ -73,22 +65,45 @@ Main areas:
 
 The application communicates with a custom REST API through a centralized request layer and uses protected routes for authenticated areas.
 
+## Deployment Architecture
+
+```
+Browser
+    │
+    ▼
+ Nginx
+ |-- React build
+ `-- /api
+       │
+       ▼
+ Express API
+       │
+       ▼
+    MongoDB (external)
+```
+
 ## Technologies
+
+Frontend:
 
 - React 18
 - React Router 6
 - JavaScript (ES6+)
 - HTML5
 - CSS3
-- REST API
+
+Testing:
+
 - Jest
 - React Testing Library
 
-## Related Repository
+Deployment:
 
-Backend API: [ZNAC API](https://github.com/AlinaZolotavina/znac-api)
+- Docker
+- Docker Compose
+- Nginx
 
-## Installation & Running the Application
+## Development
 
 1. Clone the repository:
 
@@ -111,21 +126,55 @@ npm install
 npm start
 ```
 
-5. Create production build:
+## Production Build & Running tests
+
+Create production build:
 
 ```bash
 npm run build
 ```
 
-6. Run tests:
+The build output is generated in the `build/` directory.
+
+Run tests:
 
 ```bash
 npm test
 ```
 
+## Docker
+
+This frontend is intended to run as part of the complete ZNAC application stack. From the root directory of the Docker Compose project:
+
+```bash
+docker compose up --build
+```
+
+This starts:
+
+- Nginx (serves the React production build)
+- Express API
+
+Open the application:
+
+- Frontend: http://localhost
+- API: http://localhost/api
+
 ## Deployment
 
-Hosted on AWS Lightsail.
+The production application is deployed on AWS Lightsail using Docker, Nginx and a separate Express API.
+
+## Design highlights:
+
+- Custom UI/UX design
+- Responsive layouts
+- Mobile-first approach
+- Reusable components and modal system
+- Consistent visual identity across all sections
+
+Click here to see [Photo Gallery Design](https://www.figma.com/design/9Ope6gJMSxNlTgW2xmiadI/ZNAC-Photo-Gallery?node-id=0-1&t=LaVz5AllRF0P5ARz-1).
+
+And here is [Blog & Portfolio Design](https://www.figma.com/design/nr7iR1eT478g28M8Mrc6BX/BLOG?node-id=0-1&t=F0lEJgBEDi8ssd8K-1).
 
 ## Future Improvements
 
