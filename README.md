@@ -1,140 +1,126 @@
-# ZNAC
+# ZNAC Frontend
 
-ZNAC is a personal website that combines a portfolio, blog, projects showcase, photo gallery, and administration dashboard.
+[Russian version](README.ru.md)
 
-The frontend was designed and developed independently, including UI/UX design, application architecture, implementation, deployment coordination, automated testing, and ongoing maintenance.
+React frontend for ZNAC, a personal website that combines a portfolio, blog, projects showcase, photo gallery, and administration dashboard.
 
-This project is actively maintained and continuously improved.
+Live site: https://znac.org
 
-## Demo
+## Related Repositories
 
-Live version: https://znac.org
+- Infrastructure and deployment: https://github.com/AlinaZolotavina/znac-project
+- Backend API: https://github.com/AlinaZolotavina/znac-api
 
-## Related Repository
+## Responsibilities
 
-Backend API: https://github.com/AlinaZolotavina/znac-api
-
-## Screenshots
-
-<p>
-  <img src="./docs/screenshots/screenshot-blog.png" width="48%" valign="top">
-  <img src="./docs/screenshots/screenshot-gallery.png" width="48%" valign="top">
-</p>
-
-<p>
-  <img src="./docs/screenshots/screenshot-posts-page.png" width="48%" valign="top">
-  <img src="./docs/screenshots/screenshot-new-post.png" width="48%" valign="top">
-</p>
+- Render the public website, blog, projects, and photo gallery.
+- Provide authenticated administration screens.
+- Communicate with the Express API through a centralized request layer.
+- Handle protected routes, forms, modals, search, filters, and upload UI.
+- Handle the contact form flow through shared API utilities.
+- Run frontend CI and trigger production deployment after successful checks.
 
 ## Features
 
-Content Management
-
-- Create, edit, and delete blog posts
-- Manage projects
-- Upload and organize photos
-- Manage hashtags
-
-Authentication
-
-- JWT authentication
-- Protected routes
-- Password recovery
-- Email update
-- Profile management
-
-Content Discovery
-
-- Search posts and photos
-- Category filtering
-- Hashtag-based navigation
+- Blog post listing, search, topic filtering, details, create, edit, and delete flows.
+- Project listing, filtering, create, edit, and delete flows.
+- Photo gallery with search, hashtags, load more, preview modal, upload, and delete flows.
+- Authentication, logout, profile, password recovery, and protected routes.
+- Contact form.
+- Responsive layout.
 
 ## Architecture
 
-The application is organized into reusable UI components and feature-based sections.
-
-Main areas:
-
-- Authentication
-- Blog (posts)
-- Projects
-- Photo Gallery
-- Portfolio
-- Profile Management
-- Administration Dashboard
-
-The application communicates with a custom REST API through a centralized request layer and uses protected routes for authenticated areas.
-
-## Deployment Architecture
-
+```text
+React application
+  |
+  v
+Feature modules
+  |-- auth
+  |-- blog
+  |-- gallery
+  |-- projects
+  |-- profile
+  |
+  v
+Shared layer
+  |-- API clients
+  |-- request helpers
+  |-- validation helpers
+  |-- reusable UI patterns
+  |-- contact form API flow
+  |
+  v
+Express API through /api
 ```
+
+Production architecture:
+
+```text
 Browser
-    │
-    ▼
- Nginx
- |-- React build
- `-- /api
-       │
-       ▼
- Express API
-       │
-       ▼
-    MongoDB (external)
+  |
+  v
+Nginx container from znac-project
+  |-- serves React build
+  |-- proxies /api/* to znac-api
 ```
 
-## Technologies
+## Repository Layout
 
-Frontend:
+```text
+znac/
+  .github/workflows/ci.yml
+  public/
+  src/
+    app/
+    features/
+      auth/
+      blog/
+      gallery/
+      profile/
+      projects/
+      contact/  # contact tests only; implementation is shared/blog-driven
+    shared/
+    test/
+```
 
-- React 18
-- React Router 6
-- JavaScript (ES6+)
-- HTML5
-- CSS3
+## Environment
 
-Testing:
+Local environment variables are stored in `.env` files.
 
-- Jest
-- React Testing Library
+Important variable:
 
-Deployment:
+```text
+REACT_APP_API_URL
+```
 
-- Docker
-- Docker Compose
-- Nginx
+For production Docker builds, `znac-project/nginx/Dockerfile` passes:
+
+```text
+REACT_APP_API_URL=/api
+```
 
 ## Development
 
-1. Clone the repository:
-
-```bash
-git clone https://github.com/AlinaZolotavina/znac.git
-cd znac
-```
-
-2. Install dependencies:
+Install dependencies:
 
 ```bash
 npm install
 ```
 
-3. Create a .env file based on .env.example.
-
-4. Start development server:
+Start local development server:
 
 ```bash
 npm start
 ```
 
-## Production Build & Running tests
-
-Create production build:
+Build production bundle:
 
 ```bash
 npm run build
 ```
 
-The build output is generated in the `build/` directory.
+## Testing
 
 Run tests:
 
@@ -142,44 +128,79 @@ Run tests:
 npm test
 ```
 
-## Docker
-
-This frontend is intended to run as part of the complete ZNAC application stack. From the root directory of the Docker Compose project:
+Run tests once for CI-style verification:
 
 ```bash
-docker compose up --build
+npm test -- --watchAll=false
 ```
 
-This starts:
+## Docker
 
-- Nginx (serves the React production build)
-- Express API
+The frontend does not have its own standalone production Dockerfile.
 
-Open the application:
+In production, the React build is created inside `znac-project/nginx/Dockerfile` and then served by Nginx.
 
-- Frontend: http://localhost
-- API: http://localhost/api
+Run the full production-like stack from `znac-project`:
 
-## Deployment
+```bash
+docker compose up -d --build
+```
 
-The production application is deployed on AWS Lightsail using Docker, Nginx and a separate Express API.
+## CI/CD
 
-## Design highlights:
+GitHub Actions workflow:
 
-- Custom UI/UX design
-- Responsive layouts
-- Mobile-first approach
-- Reusable components and modal system
-- Consistent visual identity across all sections
+```text
+.github/workflows/ci.yml
+```
 
-Click here to see [Photo Gallery Design](https://www.figma.com/design/9Ope6gJMSxNlTgW2xmiadI/ZNAC-Photo-Gallery?node-id=0-1&t=LaVz5AllRF0P5ARz-1).
+On push or pull request to `main`, CI runs:
 
-And here is [Blog & Portfolio Design](https://www.figma.com/design/nr7iR1eT478g28M8Mrc6BX/BLOG?node-id=0-1&t=F0lEJgBEDi8ssd8K-1).
+```text
+npm ci
+npm test -- --watchAll=false
+npm run build
+```
+
+On successful push to `main`, the workflow triggers production deployment in `znac-project`.
+
+Deployment flow:
+
+```text
+Push to znac/main
+  |
+  v
+Frontend CI
+  |
+  v
+Trigger znac-project Deploy
+  |
+  v
+AWS Lightsail docker compose up -d --build
+```
+
+Required GitHub secret in this repository:
+
+```text
+ZNAC_PROJECT_DEPLOY_TOKEN
+```
+
+## Design
+
+- Custom UI/UX design.
+- Responsive layouts.
+- Reusable modal system.
+- Consistent visual identity across public and admin screens.
+
+Design references:
+
+- Photo Gallery: https://www.figma.com/design/9Ope6gJMSxNlTgW2xmiadI/ZNAC-Photo-Gallery?node-id=0-1&t=LaVz5AllRF0P5ARz-1
+- Blog and Portfolio: https://www.figma.com/design/nr7iR1eT478g28M8Mrc6BX/BLOG?node-id=0-1&t=F0lEJgBEDi8ssd8K-1
 
 ## Future Improvements
 
-- Migration to TypeScript
-- Migration to Vite
-- Performance optimization
-- Accessibility improvements
-- Additional frontend test coverage
+- Migration to TypeScript.
+- Migration from Create React App to Vite.
+- Accessibility improvements.
+- Performance optimization.
+- Broader component and integration test coverage.
