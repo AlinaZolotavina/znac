@@ -12,7 +12,7 @@
   cursor: pointer;
   position: relative;
   grid-template-columns: 20% 1fr 150px;
-  grid-template-rows: 28% 25% 1fr;
+  grid-template-rows: auto auto auto;
   /* animation: anim 2s ease; */
 }
 
@@ -24,7 +24,7 @@
 @media (max-width: 1150px) {
   .post_location_posts {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-rows: repeat(4, auto);
     grid-template-areas:
       "theme"
       "title"
@@ -38,7 +38,7 @@
 @media (max-width: 750px) {
   .post_location_posts {
     grid-template-columns: 20% 1fr 150px;
-    grid-template-rows: 28% 25% 1fr;
+    grid-template-rows: auto auto auto;
     grid-template-areas:
       "image theme date-and-tools"
       "image title title"
@@ -50,7 +50,7 @@
 @media (max-width: 500px) {
   .post_location_posts {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-rows: repeat(4, auto);
     grid-template-areas:
       "theme"
       "title"
