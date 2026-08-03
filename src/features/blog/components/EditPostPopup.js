@@ -26,14 +26,12 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
       setIconCheckValue(post.icon);
 
       const currentIconNumber = getCurrentIconNumber(post.icon);
+      const visibleIconsCount = 6;
+      const lastSlideStart = Math.max(iconButtons.length - visibleIconsCount, 0);
+      const nextSlideStart = Math.min(currentIconNumber || 0, lastSlideStart);
 
-      if (currentIconNumber < 11) {
-        setSlideStart(currentIconNumber);
-        setSlideEnd(currentIconNumber + 6);
-      } else {
-        setSlideStart(10);
-        setSlideEnd(16);
-      }
+      setSlideStart(nextSlideStart);
+      setSlideEnd(nextSlideStart + visibleIconsCount);
 
       setTitle(post.title);
       setHashtags(hashtagsToInputValue(post.hashtags));
@@ -44,15 +42,15 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
 
   const [themeCheckValue, setThemeCheckValue] = useState("");
   const [themeError, setThemeError] = useState("");
-  function handleThemeClick(e) {
-    setThemeCheckValue(e.target.getAttribute("radiovalue"));
+  function handleThemeClick(value) {
+    setThemeCheckValue(value);
     setIsEdited(true);
   }
 
   const [iconCheckValue, setIconCheckValue] = useState("");
   const [iconError, setIconError] = useState("");
-  function handleIconClick(e) {
-    setIconCheckValue(e.target.getAttribute("radiovalue"));
+  function handleIconClick(value) {
+    setIconCheckValue(value);
     setIsEdited(true);
   }
 
