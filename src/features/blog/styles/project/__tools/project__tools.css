@@ -2,18 +2,23 @@
   position: absolute;
   display: flex;
   align-items: center;
+  gap: 10px;
+  right: 25px;
+  bottom: 18px;
 }
 
-@media (min-width: 601px) {
-  .project__tools {
-    top: 20px;
-    right: 20px;
-  }
+.project__tools .blog-edit-btn,
+.project__tools .blog-delete-btn {
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  border: 1px solid #9A7BD9;
+  border-radius: 10px;
+  background-size: 16px 16px;
+  opacity: 1;
 }
 
-@media (max-width: 600px) {
-  .project__tools {
-    bottom: 20px;
-    right: 20px;
-  }
+.project__tools .blog-delete-btn {
+  border-color: #c24462;
+  background-size: 14px 14px;
 }

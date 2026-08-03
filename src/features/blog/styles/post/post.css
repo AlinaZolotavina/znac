@@ -1,12 +1,88 @@
 .post {
   list-style: none;
   display: grid;
-  grid-template-areas:
-    "image theme date-and-tools"
-    "image title title"
-    "image text text";
-  gap: 2px 15px;
+  grid-template-columns: 92px minmax(0, 1fr);
+  grid-template-areas: "image content";
+  column-gap: 18px;
+  align-items: start;
+  border-radius: 15px;
+  padding: 22px 25px 72px;
+  box-sizing: border-box;
+  position: relative;
+  min-height: 250px;
+  height: 100%;
+  background-color: #fff;
+  cursor: pointer;
+  transition:
+    opacity 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.post__content {
+  grid-area: content;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  min-width: 0;
+}
+
+.post:focus-visible {
+  outline: 2px solid #9A7BD9;
+  outline-offset: 4px;
+}
+
+.post__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
+.post__tools {
+  position: absolute;
+  right: 25px;
+  bottom: 18px;
+  display: flex;
   align-items: center;
+  gap: 10px;
+}
+
+.post__tools .blog-edit-btn,
+.post__tools .blog-delete-btn {
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  border: 1px solid #9A7BD9;
   border-radius: 10px;
-  padding: 15px;
+  background-size: 16px 16px;
+  opacity: 1;
+}
+
+.post__tools .blog-delete-btn {
+  border-color: #c24462;
+  background-size: 14px 14px;
+}
+
+@media (max-width: 900px) {
+  .post {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 650px) {
+  .post {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "image"
+      "content";
+    row-gap: 16px;
+    min-height: 300px;
+  }
+
+  .post__icon {
+    width: 150px;
+    height: 150px;
+  }
 }

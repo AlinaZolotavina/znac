@@ -1,0 +1,15 @@
+.page-hero__subtitle {
+  margin: 0 0 35px;
+  max-width: 410px;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.45;
+  color: #0f1111;
+}
+
+@media (max-width: 500px) {
+  .page-hero__subtitle {
+    margin-bottom: 28px;
+    font-size: 14px;
+  }
+}

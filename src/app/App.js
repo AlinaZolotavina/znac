@@ -171,6 +171,7 @@ function App() {
             <BlogRoot
               loggedIn={loggedIn}
               currentUser={currentUser}
+              handleSignout={handleSignout}
               isLoading={isLoading}
               openModal={openModal}
               startLoading={startLoading}

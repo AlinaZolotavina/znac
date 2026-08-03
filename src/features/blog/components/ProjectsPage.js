@@ -1,14 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import BlogHeader from "./BlogHeader";
+import ProjectsHero from "./ProjectsHero.js";
 import ProjectHashtags from "./ProjectHashtags.js";
 import ProjectsContainer from "./ProjectsContainer";
+import ProjectDetailsPopup from "./ProjectDetailsPopup.js";
 import BlogFooter from "./BlogFooter";
 import ShowMoreButton from "./ShowMoreButton.js";
-import AddNewItemButton from "./AddNewItemButton.js";
 import ContentNotFound from "./ContentNotFound.js";
 
 function ProjectsPage({
   loggedIn,
+  currentUser,
+  onLogout,
   hashtags,
   activeProjectHashtag,
   projectsToRender,
@@ -26,6 +29,8 @@ function ProjectsPage({
   onProjectsClick,
   onAboutClick,
 }) {
+  const [selectedProject, setSelectedProject] = useState(null);
+
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -46,16 +51,28 @@ function ProjectsPage({
 
   const hashtagsToRender = getMostUsedHashtags(hashtags || []);
 
+  function handleProjectDetailsOpen(project) {
+    setSelectedProject(project);
+  }
+
+  function handleProjectDetailsClose() {
+    setSelectedProject(null);
+  }
+
   return (
     <div className="blog">
       <BlogHeader
+        loggedIn={loggedIn}
+        currentUser={currentUser}
+        onLogout={onLogout}
         onBlogMenuClick={onBlogMenuClick}
         onContactClick={onContactClick}
         onHomeClick={onHomeClick}
         onPostsClick={onPostsClick}
-        onProjectsClic={onProjectsClick}
+        onProjectsClick={onProjectsClick}
         onAboutClick={onAboutClick}
       />
+      <ProjectsHero loggedIn={loggedIn} onNewProjectClick={onNewProjectClick} />
       <ProjectHashtags
         hashtags={hashtagsToRender || []}
         activeHashtag={activeProjectHashtag}
@@ -71,17 +88,12 @@ function ProjectsPage({
             onEditProjectButtonClick={onEditProjectButtonClick}
             onDeleteProjectButtonClick={onDeleteProjectButtonClick}
             onHashtagClick={onProjectHashtagClick}
+            onSeeMoreProjectClick={handleProjectDetailsOpen}
           />
           {hasMoreProjects && (
             <ShowMoreButton
               onShowMoreButtonClick={onShowMoreProjects}
               buttonText="Show more projects"
-            />
-          )}
-          {loggedIn && (
-            <AddNewItemButton
-              buttonText="New project"
-              onAddNewItem={onNewProjectClick}
             />
           )}
         </>
@@ -94,6 +106,12 @@ function ProjectsPage({
           onClick={onNewProjectClick}
         />
       )}
+      <ProjectDetailsPopup
+        project={selectedProject}
+        isOpen={!!selectedProject}
+        onClose={handleProjectDetailsClose}
+        onHashtagClick={onProjectHashtagClick}
+      />
       <BlogFooter />
     </div>
   );

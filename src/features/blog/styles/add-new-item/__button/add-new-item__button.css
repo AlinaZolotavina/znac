@@ -18,3 +18,35 @@
     top: calc(100vh - 45vh);
   }
 }
+
+.add-new-item_location_projects-hero .add-new-item__button {
+  width: auto;
+  height: auto;
+  margin: 0;
+  background: none;
+}
+
+.add-new-item_location_posts-hero .add-new-item__button {
+  width: auto;
+  height: auto;
+  margin: 0;
+  background: none;
+}
+
+.add-new-item_location_posts-hero .add-new-item__button::before {
+  content: "+";
+  display: block;
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 1;
+  color: #fff;
+}
+
+.add-new-item_location_projects-hero .add-new-item__button::before {
+  content: "+";
+  display: block;
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 1;
+  color: #fff;
+}

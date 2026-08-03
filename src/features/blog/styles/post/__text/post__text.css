@@ -1,4 +1,27 @@
 .post__text {
   font-weight: 300;
   color: #0f1111;
+  margin: 0;
+}
+
+.post__text-content {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+}
+
+.post__read-more {
+  width: max-content;
+  margin: 0;
+  color: #9A7BD9;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 22px;
+}
+
+@media (max-width: 960px) {
+  .post__text-content {
+    -webkit-line-clamp: 6;
+  }
 }

@@ -4,7 +4,7 @@
   right: 0;
   display: flex;
   align-items: center;
-  background-color: #90abf1;
+  background-color: #9A7BD9;
   border-radius: 35px 0 0 35px;
   transition: opacity 0.2s ease;
   cursor: pointer;
@@ -13,4 +13,22 @@
 
 .add-new-item:hover {
   opacity: 0.7;
+}
+
+.add-new-item_location_projects-hero {
+  position: static;
+  height: 42px;
+  padding: 0 22px;
+  gap: 8px;
+  border-radius: 9px;
+  box-shadow: 0 10px 25px rgba(154, 123, 217, 0.2);
+}
+
+.add-new-item_location_posts-hero {
+  position: static;
+  height: 42px;
+  padding: 0 22px;
+  gap: 8px;
+  border-radius: 9px;
+  box-shadow: 0 10px 25px rgba(154, 123, 217, 0.2);
 }

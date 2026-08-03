@@ -1,15 +1,17 @@
 .posts-search__field {
-  width: calc(100% - 90px);
-}
-
-@media (max-width: 768px) {
-  .posts-search__field {
-    width: calc(100% - 65px);
-  }
+  width: 100%;
+  height: 100%;
+  padding: 0 0 0 18px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  border-radius: inherit;
+  border-style: none;
 }
 
 @media (max-width: 420px) {
   .posts-search__field {
+    padding-left: 15px;
     font-size: 12px;
     line-height: 15px;
   }

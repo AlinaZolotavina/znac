@@ -1,23 +1,25 @@
 .cv__item {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  padding: 30px 55px;
+  gap: 32px;
+  min-height: 165px;
+  padding: 32px 40px;
+  box-sizing: border-box;
+  border: 1px solid rgba(154, 123, 217, 0.22);
   border-radius: 15px;
   background-color: #fff;
 }
 
 @media screen and (max-width: 1280px) {
   .cv__item {
-    padding: 10% 15%;
+    padding: 28px 32px;
   }
 }
 
 @media screen and (max-width: 600px) {
   .cv__item {
-    flex-direction: row;
-    padding: 5% 10%;
-    justify-content: space-between;
-    gap: 8px;
+    gap: 20px;
+    min-height: 145px;
+    padding: 24px;
   }
 }

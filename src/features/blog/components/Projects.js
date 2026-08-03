@@ -1,6 +1,8 @@
+import { useState } from "react";
 import AuxiliaryButtons from "./AuxiliaryButtons";
 import ProjectsContainer from "./ProjectsContainer";
 import ContentNotFound from "./ContentNotFound";
+import ProjectDetailsPopup from "./ProjectDetailsPopup";
 
 function Projects({
   loggedIn,
@@ -13,6 +15,16 @@ function Projects({
   onEditProjectButtonClick,
   onDeleteProjectButtonClick,
 }) {
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  function handleProjectDetailsOpen(project) {
+    setSelectedProject(project);
+  }
+
+  function handleProjectDetailsClose() {
+    setSelectedProject(null);
+  }
+
   return (
     <div className="projects">
       <div className="projects__menu">
@@ -34,6 +46,7 @@ function Projects({
           containerClassname={containerClassname}
           onEditProjectButtonClick={onEditProjectButtonClick}
           onDeleteProjectButtonClick={onDeleteProjectButtonClick}
+          onSeeMoreProjectClick={handleProjectDetailsOpen}
         />
       ) : (
         <ContentNotFound
@@ -44,6 +57,11 @@ function Projects({
           onClick={onAddProjectClick}
         />
       )}
+      <ProjectDetailsPopup
+        project={selectedProject}
+        isOpen={!!selectedProject}
+        onClose={handleProjectDetailsClose}
+      />
     </div>
   );
 }

@@ -1,0 +1,5 @@
+.page-hero__content {
+  max-width: 430px;
+  position: relative;
+  z-index: 1;
+}

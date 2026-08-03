@@ -1,0 +1,23 @@
+.react-playground-card__link {
+  width: fit-content;
+  min-width: 82px;
+  height: 30px;
+  margin-top: auto;
+  padding: 5px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: 1px solid #9A7BD9;
+  border-radius: 10px;
+  color: #9A7BD9;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 15px;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.react-playground-card__link:hover {
+  opacity: 0.7;
+}

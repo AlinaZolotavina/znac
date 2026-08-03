@@ -1,7 +1,11 @@
 import ContactButton from "./ContactButton";
+import LogoutButton from "../../../app/components/LogoutButton";
 import { NavLink } from "react-router-dom";
 
 function BlogHeader({
+  loggedIn,
+  currentUser,
+  onLogout,
   onContactClick,
   onBlogMenuClick,
   onHomeClick,
@@ -74,6 +78,13 @@ function BlogHeader({
       </div>
       <button className="blog-burger-menu" onClick={onBlogMenuClick} />
       <ContactButton onClick={onContactClick} />
+      {loggedIn && (
+        <LogoutButton
+          className="blog-logout-btn blog-logout-btn_location_header"
+          email={currentUser?.email}
+          onLogout={onLogout}
+        />
+      )}
     </div>
   );
 }

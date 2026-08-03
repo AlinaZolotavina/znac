@@ -2,12 +2,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 65vw;
-  max-width: 1000px;
+  width: min(80vw, 1200px);
+  max-width: 1200px;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 900px) {
   .projects {
     width: 85vw;
+  }
+}
+
+@media (max-width: 650px) {
+  .projects {
+    width: 90vw;
   }
 }

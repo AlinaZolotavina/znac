@@ -1,0 +1,22 @@
+.project-hashtags__dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 5;
+  min-width: 180px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid rgba(154, 123, 217, 0.22);
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 16px 40px rgba(154, 123, 217, 0.22);
+}
+
+@media (max-width: 650px) {
+  .project-hashtags__dropdown {
+    right: auto;
+    left: 0;
+  }
+}

@@ -4,19 +4,19 @@
   align-items: center;
   width: 150px;
   height: 40px;
-  background-color: transparent;
+  background-color: #fff;
   border-style: none;
-  border: 1px solid #90abf1;
-  border-radius: 20px;
+  border: 1px solid #9A7BD9;
+  border-radius: 10px;
   padding: 0;
   transition: opacity 0.2s ease;
   cursor: pointer;
-  color: #90abf1;
+  color: #9A7BD9;
   text-decoration: none;
 }
 
 .auxiliary-buttons__view-all-btn:hover {
-  background-color: #90abf1;
+  background-color: #9A7BD9;
   color: #fff;
 }
 
@@ -29,7 +29,6 @@
 
 @media (max-width: 960px) {
   .auxiliary-buttons__view-all-btn {
-    height: 25px;
     width: fit-content;
     padding: 0 15px;
   }

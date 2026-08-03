@@ -1,0 +1,18 @@
+.react-playground-card {
+  min-height: 220px;
+  padding: 28px 30px;
+  display: flex;
+  gap: 26px;
+  box-sizing: border-box;
+  border: 1px solid rgba(154, 123, 217, 0.22);
+  border-radius: 15px;
+  background-color: #fff;
+}
+
+@media (max-width: 1000px) {
+  .react-playground-card {
+    flex-direction: column;
+    padding: 24px;
+    gap: 20px;
+  }
+}

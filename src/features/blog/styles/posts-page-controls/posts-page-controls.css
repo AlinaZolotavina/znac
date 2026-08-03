@@ -1,0 +1,20 @@
+.posts-page-controls {
+  width: min(80vw, 1200px);
+  margin: 0 0 32px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+@media (max-width: 900px) {
+  .posts-page-controls {
+    width: 85vw;
+  }
+}
+
+@media (max-width: 600px) {
+  .posts-page-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

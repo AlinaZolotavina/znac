@@ -1,9 +1,9 @@
 .auxiliary-buttons__add-btn {
   width: 40px;
   height: 40px;
-  background-color: #90abf1;
+  background-color: #9A7BD9;
   border-style: none;
-  border-radius: 59%;
+  border-radius: 10px;
   background-image: url(../../../assets/plus-icon.svg);
   background-position: center;
   background-repeat: no-repeat;
@@ -22,12 +22,5 @@
   .auxiliary-buttons__add-btn {
     width: 32px;
     height: 32px;
-  }
-}
-
-@media (max-width: 960px) {
-  .auxiliary-buttons__add-btn {
-    width: 22px;
-    height: 22px;
   }
 }

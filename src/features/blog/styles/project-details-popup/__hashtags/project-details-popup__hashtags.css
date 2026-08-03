@@ -1,0 +1,12 @@
+.project-details-popup__hashtags {
+  margin: 0 0 22px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  list-style: none;
+  color: #e072a4;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 19px;
+}

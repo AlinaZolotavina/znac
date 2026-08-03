@@ -1,0 +1,14 @@
+.project__see-more {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: linear-gradient(90deg, rgba(243, 247, 255, 0), #fff 18px);
+  color: #9A7BD9;
+  font: inherit;
+  font-weight: 400;
+  padding-left: 20px;
+  cursor: pointer;
+}

@@ -1,0 +1,14 @@
+.react-playground-card__description {
+  margin: 0 0 20px;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 23px;
+  color: #0f1111;
+}
+
+@media (max-width: 900px) {
+  .react-playground-card__description {
+    font-size: 14px;
+    line-height: 20px;
+  }
+}

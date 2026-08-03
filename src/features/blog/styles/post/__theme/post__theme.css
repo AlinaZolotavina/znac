@@ -1,9 +1,10 @@
 .post__theme {
+  font-size: 12px;
   font-weight: 400;
+  line-height: 16px;
   color: #0f1111;
   background-color: #ffb4d6;
   width: max-content;
   padding: 4px;
   margin: 0;
-  grid-area: theme;
 }

@@ -1,0 +1,7 @@
+.about-hero__content {
+  width: min(350px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 350px;
+}

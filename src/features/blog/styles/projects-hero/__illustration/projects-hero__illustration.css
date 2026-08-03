@@ -1,0 +1,5 @@
+.projects-hero__illustration {
+  width: 500px;
+  flex: 0 1 500px;
+  background-image: url(../../../assets/bears/bear-projects.svg);
+}

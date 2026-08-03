@@ -1,3 +1,15 @@
 .cv {
-  width: 65vw;
+  width: min(80vw, 1200px);
+}
+
+@media (max-width: 900px) {
+  .cv {
+    width: 85vw;
+  }
+}
+
+@media (max-width: 650px) {
+  .cv {
+    width: 90vw;
+  }
 }

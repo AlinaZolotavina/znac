@@ -1,0 +1,57 @@
+.blog-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background-color: #9a7bd9;
+  color: #f4ffff;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 17px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.blog-logout-btn:hover {
+  opacity: 0.7;
+}
+
+@media screen and (max-width: 1300px) {
+  .blog-logout-btn {
+    width: 130px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .blog-logout-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 0;
+    line-height: 0;
+    background-image: url(../../assets/logout-icon.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 18px 18px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .blog-logout-btn_location_header {
+    display: none;
+  }
+
+  .blog-logout-btn_location_menu {
+    display: flex;
+    width: 150px;
+    height: 40px;
+    margin: 28px 0 0;
+    font-size: 14px;
+    line-height: 17px;
+    background-image: none;
+  }
+}

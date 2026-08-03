@@ -7,6 +7,9 @@ import { useCallback } from "react";
 
 function CurrentPostPage({
   activePage,
+  loggedIn,
+  currentUser,
+  onLogout,
   onBlogMenuClick,
   onHomeClick,
   onPostsClick,
@@ -16,7 +19,6 @@ function CurrentPostPage({
   onBackButtonClick,
   onEditPostButtonClick,
   onDeletePostButtonClick,
-  loggedIn,
   postVersion,
   openModal,
 }) {
@@ -45,6 +47,9 @@ function CurrentPostPage({
   return (
     <div className="blog">
       <BlogHeader
+        loggedIn={loggedIn}
+        currentUser={currentUser}
+        onLogout={onLogout}
         activePage={activePage}
         onBlogMenuClick={onBlogMenuClick}
         onHomeClick={onHomeClick}

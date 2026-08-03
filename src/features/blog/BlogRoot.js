@@ -5,7 +5,6 @@ import BlogMainPage from "./components/BlogMainPage.js";
 import PostsPage from "./components/PostsPage.js";
 import ProjectsPage from "./components/ProjectsPage.js";
 import AboutPage from "./components/AboutPage.js";
-import GamesPage from "./components/GamesPage.js";
 import CurrentPostPage from "./components/CurrentPostPage.js";
 import NotFound from "../../app/components/NotFound.js";
 
@@ -33,6 +32,7 @@ import getCurrentActivePage from "./utils/getCurrentActivePage.js";
 function BlogRoot({
   loggedIn,
   currentUser,
+  handleSignout,
   isLoading,
   openModal,
   startLoading,
@@ -134,18 +134,6 @@ function BlogRoot({
     navigate(-1);
   }
 
-  function handleGamesClick() {
-    navigate("/alina/games");
-  }
-
-  function handleMusicClick() {
-    window.open(
-      "https://open.spotify.com/playlist/6jhUvEAvi9laleDSaEenSK?si=m-_cgJDpRH-buMRqXpS6WA&pi=e-5IWoIJ-1TL-8",
-      "_blank",
-      "noopener,noreferrer",
-    );
-  }
-
   function viewAllPostsClick() {
     navigate("./posts");
     window.scrollTo({
@@ -244,6 +232,8 @@ function BlogRoot({
     stopLoading: stopContactSending,
   } = useRequestState();
 
+  const previewProjectsQuantity = screenWidth > 1200 ? 3 : 2;
+
   const handleKeyPress = useCallback(
     (e) => {
       const { keyCode } = e;
@@ -320,12 +310,13 @@ function BlogRoot({
           element={
             <BlogMainPage
               loggedIn={loggedIn}
+              currentUser={currentUser}
+              onLogout={handleSignout}
               totalPosts={totalPosts}
-              postsQuantity={3}
               postsToRender={postsToRender}
               projectsToRender={projectsToRender}
               totalProjects={totalProjects}
-              projectsQuantity={2}
+              projectsQuantity={previewProjectsQuantity}
               onBlogMenuClick={handleBlogMenuClick}
               onContactClick={handleBlogContactClick}
               onNewPostClick={handleNewPostPopupOpen}
@@ -350,6 +341,8 @@ function BlogRoot({
           element={
             <PostsPage
               loggedIn={loggedIn}
+              currentUser={currentUser}
+              onLogout={handleSignout}
               activePage={activeBlogPage}
               postsToRender={postsToRender}
               onNewPostClick={handleNewPostPopupOpen}
@@ -376,12 +369,14 @@ function BlogRoot({
           element={
             <CurrentPostPage
               activePage="posts"
+              loggedIn={loggedIn}
+              currentUser={currentUser}
+              onLogout={handleSignout}
               onBlogMenuClick={handleBlogMenuClick}
               onContactClick={handleBlogContactClick}
               onBackButtonClick={moveToPreviousPage}
               onEditPostButtonClick={handleEditPostPopupOpen}
               onDeletePostButtonClick={handleDeletePostModalOpen}
-              loggedIn={loggedIn}
               postVersion={postVersion}
               openModal={openModal}
             />
@@ -393,6 +388,8 @@ function BlogRoot({
           element={
             <ProjectsPage
               loggedIn={loggedIn}
+              currentUser={currentUser}
+              onLogout={handleSignout}
               activePage={activeBlogPage}
               hashtags={projectHashtags}
               activeProjectHashtag={activeProjectHashtag}
@@ -415,22 +412,21 @@ function BlogRoot({
           element={
             <AboutPage
               loggedIn={loggedIn}
+              currentUser={currentUser}
+              onLogout={handleSignout}
               activePage={activeBlogPage}
               projectsToRender={projectsToRender}
               totalProjects={totalProjects}
               onBlogMenuClick={handleBlogMenuClick}
               onContactClick={handleBlogContactClick}
               onAddProjectClick={handleNewProjectPopupOpen}
-              onGamesClick={handleGamesClick}
-              onMusicClick={handleMusicClick}
               onViewAllProjectsClick={viewAllProjectsClick}
               onEditProjectButtonClick={handleEditProjectPopupOpen}
               onDeleteProjectButtonClick={handleDeleteProjectModalOpen}
+              projectsNumber={previewProjectsQuantity}
             />
           }
         />
-
-        <Route path="games" element={<GamesPage />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
@@ -438,6 +434,9 @@ function BlogRoot({
       <BlogMenu
         isOpen={isBlogMenuOpen}
         activeBlogPage={activeBlogPage}
+        loggedIn={loggedIn}
+        currentUser={currentUser}
+        onLogout={handleSignout}
         onHomeClick={moveToHomePage}
         onPostsClick={moveToPostsPage}
         onProjectsClick={moveToProjectsPage}

@@ -1,14 +1,26 @@
 .project__description {
+  position: relative;
   font-size: 16px;
   font-weight: 300;
   line-height: 23px;
   color: #0f1111;
-  margin: 0 0 15px;
+  margin: 0 0 16px;
+}
+
+.project__description-text {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
 }
 
 @media (max-width: 1150px) {
   .project__description {
     font-size: 14px;
     line-height: 17px;
+  }
+
+  .project__description-text {
+    -webkit-line-clamp: 6;
   }
 }

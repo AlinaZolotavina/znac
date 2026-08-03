@@ -1,0 +1,18 @@
+.posts-hero__subtitle {
+  max-width: 330px;
+  line-height: 1.35;
+}
+
+@media (max-width: 900px) {
+  .posts-hero__subtitle {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 500px) {
+  .posts-hero__subtitle {
+    max-width: 250px;
+    margin-bottom: 25px;
+    font-size: 16px;
+  }
+}

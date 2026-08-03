@@ -58,7 +58,7 @@ describe("blog posts search", () => {
 
     expect(props.setQuery).toHaveBeenCalledWith("hooks");
     await waitFor(() =>
-      expect(api.getPosts).toHaveBeenLastCalledWith(1, 8, {
+      expect(api.getPosts).toHaveBeenLastCalledWith(1, 9, {
         search: "hooks",
         theme: "All",
       }),
@@ -80,7 +80,7 @@ describe("blog posts search", () => {
     });
 
     await waitFor(() =>
-      expect(api.getPosts).toHaveBeenLastCalledWith(1, 8, {
+      expect(api.getPosts).toHaveBeenLastCalledWith(1, 9, {
         search: "state",
         theme: "React",
       }),
@@ -100,7 +100,7 @@ describe("blog posts search", () => {
 
     expect(props.setActivePostHashtag).toHaveBeenCalledWith("Design");
     await waitFor(() =>
-      expect(api.getPosts).toHaveBeenLastCalledWith(1, 8, {
+      expect(api.getPosts).toHaveBeenLastCalledWith(1, 9, {
         search: "",
         theme: "Design",
       }),

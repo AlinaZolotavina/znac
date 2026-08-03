@@ -1,21 +1,26 @@
 .more-details-link {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 95px;
-    height: 30px;
-    font-size: 12px;
-    font-weight: 300;
-    line-height: 19px;
-    border-radius: 15px;
-    border: 1px solid #90ABF1;
-    background-color: transparent;
-    transition: opacity .2s ease;
-    padding: 0;
-    cursor: pointer;
-    text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 95px;
+  height: 30px;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 19px;
+  border-radius: 10px;
+  border: 1px solid #9A7BD9;
+  background-color: transparent;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    opacity 0.2s ease;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: none;
+  color: #9A7BD9;
 }
 
 .more-details-link:hover {
-    opacity: .7;
+  background-color: #9A7BD9;
+  color: #fff;
 }

@@ -1,26 +1,30 @@
 .blog-promo {
   display: flex;
+  gap: 70px;
   align-items: center;
-  justify-content: center;
-  padding: 90px 20px 85px;
-  width: 65vw;
+  justify-content: space-around;
+  padding: 85px 0 90px;
+  width: min(80vw, 1200px);
+  box-sizing: border-box;
 }
 
 @media (max-width: 900px) {
   .blog-promo {
-    padding: 90px 40px 75px;
+    width: 85vw;
+    gap: 40px;
+    padding: 70px 0 75px;
   }
 }
 
 @media screen and (max-width: 768px) {
   .blog-promo {
-    padding: 85px 50px 65px;
+    flex-direction: column-reverse;
+    padding: 60px 0 65px;
   }
 }
+
 @media screen and (max-width: 500px) {
   .blog-promo {
-    width: 85vw;
-    flex-direction: column;
-    padding: 50px 0;
+    padding: 45px 0 55px;
   }
 }

@@ -6,6 +6,8 @@ import BlogFooter from "./BlogFooter";
 
 function BlogMainPage({
   loggedIn,
+  currentUser,
+  onLogout,
   activePage,
   postsToRender,
   totalPosts,
@@ -31,6 +33,9 @@ function BlogMainPage({
   return (
     <div className="blog">
       <BlogHeader
+        loggedIn={loggedIn}
+        currentUser={currentUser}
+        onLogout={onLogout}
         activePage={activePage}
         onBlogMenuClick={onBlogMenuClick}
         onHomeClick={onHomeClick}
@@ -43,7 +48,8 @@ function BlogMainPage({
       <LatestPosts
         loggedIn={loggedIn}
         posts={postsToRender}
-        isThereMoreContent={totalPosts > 3}
+        postsQuantity={4}
+        isThereMoreContent={totalPosts > 4}
         onPostClick={onPostClick}
         onEditPostButtonClick={onEditPostButtonClick}
         onDeletePostButtonClick={onDeletePostButtonClick}

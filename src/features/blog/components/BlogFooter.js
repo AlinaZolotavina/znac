@@ -6,10 +6,10 @@ function BlogFooter() {
       </p>
       <a
         className="blog-footer__item blog-footer__link"
-        href="mailto:abekmetova@yandex.ru"
+        href="mailto:albekmerus@gmail.com"
       >
         <div className="blog-footer__email-icon" />
-        abekmetova@yandex.ru
+        albekmerus@gmail.com
       </a>
     </footer>
   );

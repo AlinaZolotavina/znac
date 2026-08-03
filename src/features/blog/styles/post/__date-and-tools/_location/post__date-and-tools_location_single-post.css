@@ -1,0 +1,25 @@
+.post__date-and-tools_location_single-post {
+  width: 100%;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.post__date-and-tools_location_single-post .post__date {
+  margin-right: auto;
+}
+
+.post__date-and-tools_location_single-post .blog-edit-btn,
+.post__date-and-tools_location_single-post .blog-delete-btn {
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  border: 1px solid #9A7BD9;
+  border-radius: 10px;
+  background-size: 16px 16px;
+  opacity: 1;
+}
+
+.post__date-and-tools_location_single-post .blog-delete-btn {
+  border-color: #c24462;
+  background-size: 14px 14px;
+}

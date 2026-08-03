@@ -1,12 +1,11 @@
 .blog-promo__highlighted-text {
-    background-color: #FFB4D6;
-    padding-left: 2px;
-    text-decoration: none;
-    cursor: pointer;
-    transition: opacity .2s ease;
-    color: inherit;
+  color: #9a7bd9;
+  font-weight: 400;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
 .blog-promo__highlighted-text:hover {
-    opacity: .7;
+  opacity: 0.7;
 }

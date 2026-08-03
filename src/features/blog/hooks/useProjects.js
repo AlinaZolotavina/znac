@@ -8,9 +8,10 @@ import {
   PROJECT_EDIT_ERROR_MSG,
 } from "../../../shared/utils/messages";
 import {
-  LARGE_SCREEN_WIDTH,
   MIDDLE_SCREEN_WIDTH,
 } from "../../../shared/utils/constants";
+
+const DESKTOP_SCREEN_WIDTH = 1200;
 
 export default function useProjects({
   screenWidth,
@@ -44,7 +45,7 @@ export default function useProjects({
     currentProjectsNumber < allProjects.length || projectsPage < projectsPages;
 
   const getProjectsLayout = useCallback(() => {
-    if (screenWidth >= LARGE_SCREEN_WIDTH) {
+    if (screenWidth >= DESKTOP_SCREEN_WIDTH) {
       return {
         initialProjectsNumber: 9,
         projectsToAdd: 3,
@@ -53,8 +54,8 @@ export default function useProjects({
 
     if (screenWidth >= MIDDLE_SCREEN_WIDTH) {
       return {
-        initialProjectsNumber: 3,
-        projectsToAdd: 3,
+        initialProjectsNumber: 6,
+        projectsToAdd: 2,
       };
     }
 

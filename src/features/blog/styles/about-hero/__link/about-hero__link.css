@@ -1,0 +1,9 @@
+.about-hero__link {
+  color: #e072a4;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.about-hero__link:hover {
+  opacity: 0.7;
+}

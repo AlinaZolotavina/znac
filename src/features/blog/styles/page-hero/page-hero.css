@@ -1,0 +1,29 @@
+.page-hero {
+  width: min(80vw, 1200px);
+  min-height: 250px;
+  margin: 35px 0 30px;
+  padding: 45px 65px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 45px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 15px;
+}
+
+@media (max-width: 900px) {
+  .page-hero {
+    width: 85vw;
+    min-height: 220px;
+    padding: 40px;
+  }
+}
+
+@media (max-width: 650px) {
+  .page-hero {
+    min-height: auto;
+    margin: 25px 0;
+    padding: 35px 28px;
+  }
+}

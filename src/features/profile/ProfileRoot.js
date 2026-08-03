@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
 import Profile from "./components/Profile";
@@ -35,10 +35,26 @@ function ProfileRoot({
   const [isEditPasswordModalOpen, setIsEditPasswordModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  function closeProfilePopups() {
+  const closeProfilePopups = useCallback(() => {
     setIsEditEmailModalOpen(false);
     setIsEditPasswordModalOpen(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    if (!isEditEmailModalOpen && !isEditPasswordModalOpen) {
+      return undefined;
+    }
+
+    function handleEscClose(e) {
+      if (e.key === "Escape") {
+        closeProfilePopups();
+      }
+    }
+
+    window.addEventListener("keydown", handleEscClose);
+
+    return () => window.removeEventListener("keydown", handleEscClose);
+  }, [closeProfilePopups, isEditEmailModalOpen, isEditPasswordModalOpen]);
 
   function handleEditEmailBtnClick() {
     setIsEditEmailModalOpen(!isEditEmailModalOpen);

@@ -1,11 +1,18 @@
 .skills {
-  width: 65vw;
-  display: grid;
-  justify-content: center;
+  width: min(80vw, 1200px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
-/* @media (max-width: 1280px) {
+@media (max-width: 900px) {
   .skills {
-    width: 70vw;
+    width: 85vw;
   }
-} */
+}
+
+@media (max-width: 650px) {
+  .skills {
+    width: 90vw;
+  }
+}

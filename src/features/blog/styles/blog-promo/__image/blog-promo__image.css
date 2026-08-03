@@ -1,15 +1,32 @@
 .blog-promo__image {
-  background-image: url(../../../assets/bears/bear-hi.svg);
-  width: 27vw;
-  height: 26vw;
+  width: min(42vw, 560px);
+  height: 380px;
+  flex: 0 1 560px;
+  border-radius: 50% 50% 0 0;
+  background-image: url(../../../assets/bears/bear-main.svg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
   margin: 0;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 900px) {
+  .blog-promo__image {
+    width: 40vw;
+    max-height: 250px;
+    flex-basis: 420px;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .blog-promo__image {
+    max-height: 180px;
+  }
 }
 
 @media screen and (max-width: 500px) {
   .blog-promo__image {
-    margin: 0 0 20px;
+    width: 100%;
   }
 }

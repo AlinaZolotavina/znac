@@ -7,10 +7,12 @@ import {
 } from "../../../shared/utils/messages";
 import postUploadActions from "../utils/postUploadActions";
 import {
-  LARGE_SCREEN_WIDTH,
   MIDDLE_SCREEN_WIDTH,
 } from "../../../shared/utils/constants";
 import { useNavigate } from "react-router-dom";
+
+const POSTS_PAGE_SIZE = 9;
+const DESKTOP_SCREEN_WIDTH = 1200;
 
 export default function usePosts({
   screenWidth,
@@ -60,12 +62,12 @@ export default function usePosts({
     let initialPostsNumber;
     let nextPostsToAdd;
 
-    if (screenWidth >= LARGE_SCREEN_WIDTH) {
-      initialPostsNumber = 6;
-      nextPostsToAdd = 4;
+    if (screenWidth >= DESKTOP_SCREEN_WIDTH) {
+      initialPostsNumber = 9;
+      nextPostsToAdd = 3;
     } else if (screenWidth >= MIDDLE_SCREEN_WIDTH) {
-      initialPostsNumber = 4;
-      nextPostsToAdd = 4;
+      initialPostsNumber = 6;
+      nextPostsToAdd = 2;
     } else {
       initialPostsNumber = 2;
       nextPostsToAdd = 2;
@@ -83,7 +85,7 @@ export default function usePosts({
       const hasFilters = hasSearch || hasThemeFilter;
 
       return api
-        .getPosts(page, 8, {
+        .getPosts(page, POSTS_PAGE_SIZE, {
           search: normalizedSearch,
           theme,
         })
@@ -181,7 +183,7 @@ export default function usePosts({
       if (loadedPosts.length > 0) {
         setAllPosts(loadedPosts);
         setPostsPage(1);
-        setPostsPages(Math.ceil(loadedPosts.length / 8));
+        setPostsPages(Math.ceil(loadedPosts.length / POSTS_PAGE_SIZE));
         setCurrentPostsNumber(loadedPosts.length);
       } else {
         loadPosts({

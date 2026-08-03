@@ -5,6 +5,7 @@ import ContentNotFound from "./ContentNotFound";
 function LatestPosts({
   loggedIn,
   posts,
+  postsQuantity = 4,
   isThereMoreContent,
   onPostClick,
   onEditPostButtonClick,
@@ -30,7 +31,7 @@ function LatestPosts({
         </div>
         {posts.length !== 0 ? (
           <ul className="latest-posts__container">
-            {posts.slice(0, 3).map((post) => (
+            {posts.slice(0, postsQuantity).map((post) => (
               <Post
                 key={`${post._id}${date}`}
                 post={post}

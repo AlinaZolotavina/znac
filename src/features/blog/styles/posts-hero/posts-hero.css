@@ -1,0 +1,16 @@
+.posts-hero {
+  padding: 55px 65px;
+  background: linear-gradient(135deg, #f3f7ff 0%, #f8faff 52%, #eef4ff 100%);
+}
+
+@media (max-width: 900px) {
+  .posts-hero {
+    padding: 40px;
+  }
+}
+
+@media (max-width: 650px) {
+  .posts-hero {
+    padding: 35px 28px;
+  }
+}

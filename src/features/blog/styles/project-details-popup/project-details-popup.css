@@ -1,0 +1,19 @@
+.project-details-popup {
+  width: min(680px, 90vw);
+  max-height: 85vh;
+  margin: auto;
+  padding: 42px 48px 36px;
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  border-radius: 18px;
+  background-color: #fff;
+}
+
+@media (max-width: 600px) {
+  .project-details-popup {
+    padding: 36px 28px 30px;
+  }
+}

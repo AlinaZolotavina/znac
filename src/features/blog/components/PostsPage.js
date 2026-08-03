@@ -1,15 +1,17 @@
 import { useEffect } from "react";
 import BlogHeader from "./BlogHeader";
+import PostsHero from "./PostsHero";
 import PostsSearch from "./PostsSearch";
 import PostHashtags from "./PostHashtags";
 import Posts from "./Posts";
 import BlogFooter from "./BlogFooter";
 import ShowMoreButton from "./ShowMoreButton.js";
-import AddNewItemButton from "./AddNewItemButton.js";
 import ContentNotFound from "./ContentNotFound.js";
 
 function PostsPage({
   loggedIn,
+  currentUser,
+  onLogout,
   postsToRender,
   onNewPostClick,
   onEditPostButtonClick,
@@ -41,20 +43,26 @@ function PostsPage({
   return (
     <div className="blog">
       <BlogHeader
+        loggedIn={loggedIn}
+        currentUser={currentUser}
+        onLogout={onLogout}
         onBlogMenuClick={onBlogMenuClick}
         onContactClick={onContactClick}
         onHomeClick={onHomeClick}
         onPostsClick={onPostsClick}
-        onProjectsClic={onProjectsClick}
+        onProjectsClick={onProjectsClick}
         onAboutClick={onAboutClick}
       />
-      <PostsSearch
-        onSubmit={onPostsSearch}
-        isLoading={isLoading}
-        query={query}
-        querySetter={querySetter}
-        activeHashtag={activeHashtag}
-      />
+      <PostsHero loggedIn={loggedIn} onNewPostClick={onNewPostClick} />
+      <div className="posts-page-controls">
+        <PostsSearch
+          onSubmit={onPostsSearch}
+          isLoading={isLoading}
+          query={query}
+          querySetter={querySetter}
+          activeHashtag={activeHashtag}
+        />
+      </div>
       <PostHashtags
         onClick={onPostHashtagClick}
         activeHashtag={activeHashtag}
@@ -74,12 +82,6 @@ function PostsPage({
             <ShowMoreButton
               onShowMoreButtonClick={onShowMorePosts}
               buttonText="Show more posts"
-            />
-          )}
-          {loggedIn && (
-            <AddNewItemButton
-              buttonText="New post"
-              onAddNewItem={onNewPostClick}
             />
           )}
         </>

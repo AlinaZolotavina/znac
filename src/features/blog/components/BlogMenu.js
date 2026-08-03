@@ -1,9 +1,13 @@
 import CloseButton from "../../../app/components/CloseButton";
+import LogoutButton from "../../../app/components/LogoutButton";
 import { NavLink } from "react-router-dom";
 
 function BlogMenu({
   isOpen,
   activeBlogPage,
+  loggedIn,
+  currentUser,
+  onLogout,
   onHomeClick,
   onPostsClick,
   onProjectsClick,
@@ -13,6 +17,12 @@ function BlogMenu({
   function handlePhotosClick() {
     onClose();
   }
+
+  function handleLogout(email) {
+    onLogout(email);
+    onClose();
+  }
+
   return (
     <div className={`blog-menu ${isOpen && "blog-menu_visible"}`}>
       <NavLink
@@ -75,6 +85,14 @@ function BlogMenu({
       >
         About
       </NavLink>
+
+      {loggedIn && (
+        <LogoutButton
+          className="blog-logout-btn blog-logout-btn_location_menu"
+          email={currentUser?.email}
+          onLogout={handleLogout}
+        />
+      )}
 
       <CloseButton
         classname="close-btn blog-menu__close-btn"

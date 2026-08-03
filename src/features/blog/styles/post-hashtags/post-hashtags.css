@@ -1,13 +1,15 @@
 .post-hashtags {
   display: flex;
-  width: 70vw;
-  justify-content: center;
+  flex-wrap: wrap;
+  width: min(80vw, 1200px);
+  justify-content: flex-start;
+  gap: 12px;
+  margin: 0 0 30px;
+  box-sizing: border-box;
 }
 
-@media (max-width: 1020px) {
+@media (max-width: 900px) {
   .post-hashtags {
-    width: 60vw;
-    flex-wrap: wrap;
-    gap: 12px;
+    width: 85vw;
   }
 }

@@ -1,0 +1,29 @@
+.project-hashtags__dropdown-item {
+  width: 100%;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 8px;
+  background-color: transparent;
+  color: #0f1111;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 18px;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.project-hashtags__dropdown-item:hover {
+  background-color: #f3f7ff;
+}
+
+.project-hashtags__dropdown-item_active {
+  color: #fff;
+  background-color: #9A7BD9;
+}
+
+.project-hashtags__dropdown-item_active:hover {
+  background-color: #9A7BD9;
+}

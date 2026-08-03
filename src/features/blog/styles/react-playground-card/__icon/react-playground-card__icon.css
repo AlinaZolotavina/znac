@@ -1,0 +1,18 @@
+.react-playground-card__icon {
+  width: 88px;
+  height: 88px;
+  flex: 0 0 88px;
+  border-radius: 18px;
+  background-color: #f3f7ff;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60px 60px;
+}
+
+.react-playground-card__icon_type_find-pair {
+  background-image: url(../../../assets/game-logos/find-pair-logo.svg);
+}
+
+.react-playground-card__icon_type_tic-tac-toe {
+  background-image: url(../../../assets/game-logos/tic-tac-toe-logo.svg);
+}

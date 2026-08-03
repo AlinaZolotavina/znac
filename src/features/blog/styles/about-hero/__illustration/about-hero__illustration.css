@@ -1,0 +1,12 @@
+.about-hero__illustration {
+  width: min(58%, 640px);
+  height: 260px;
+  border-radius: 20px;
+  background-image: url(../../../assets/bears/bear-about.svg);
+}
+
+@media (max-width: 900px) {
+  .about-hero__illustration {
+    max-height: 220px;
+  }
+}

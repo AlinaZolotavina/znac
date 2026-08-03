@@ -1,3 +1,5 @@
 .post-hashtags__item_state_active {
-  border: 2px solid #90abf1;
+  color: #fff;
+  background-color: #9A7BD9;
+  border-color: #9A7BD9;
 }

@@ -5,24 +5,26 @@
   color: #0f1111;
   text-align: center;
   white-space: nowrap;
-  padding: 12px 20px;
+  padding: 10px 22px;
   box-sizing: border-box;
   background-color: #fff;
-  border-radius: 20px;
+  border: 1px solid rgba(154, 123, 217, 0.22);
+  border-radius: 9px;
   height: 40px;
   min-width: fit-content;
   margin: 0;
-  transition: opacity 0.2s ease;
+  transition: box-shadow 0.2s ease;
   cursor: pointer;
 }
 
 .project-hashtags__item:hover {
-  opacity: 0.7;
+  box-shadow: 0 10px 24px rgba(154, 123, 217, 0.14);
 }
 
 @media (max-width: 900px) {
   .project-hashtags__item {
     font-size: 12px;
     line-height: 16px;
+    padding: 10px 18px;
   }
 }

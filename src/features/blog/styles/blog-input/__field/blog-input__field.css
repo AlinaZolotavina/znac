@@ -12,7 +12,7 @@
 
 .blog-input__field:focus {
   outline: none;
-  border: 1px solid #90abf1;
+  border: 1px solid #9A7BD9;
 }
 
 .blog-input__field::placeholder {

@@ -1,0 +1,22 @@
+.page-hero__illustration {
+  width: 520px;
+  height: 220px;
+  flex: 0 1 520px;
+  border-radius: 18px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 900px) {
+  .page-hero__illustration {
+    width: 360px;
+    height: 150px;
+    flex-basis: 360px;
+  }
+}
+
+@media (max-width: 650px) {
+  .page-hero__illustration {
+    display: none;
+  }
+}

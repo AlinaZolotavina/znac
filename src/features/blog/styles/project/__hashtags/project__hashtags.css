@@ -1,12 +1,13 @@
 .project__hashtags {
-    display: flex;
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 19px;
-    color: #E072A4;
-    list-style: none;
-    padding: 0;
-    margin: 5px 0 15px;
-    max-width: 100%;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  max-width: 100%;
+  margin: 5px 0 15px;
+  padding: 0;
+  color: #e072a4;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 19px;
+  list-style: none;
 }

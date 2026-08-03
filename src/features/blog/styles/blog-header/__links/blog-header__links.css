@@ -1,5 +1,7 @@
 .blog-header__links {
-  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  margin: 0 auto 0 0;
 }
 
 @media screen and (max-width: 900px) {

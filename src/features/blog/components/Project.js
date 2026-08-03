@@ -1,4 +1,7 @@
 import BlogHashtag from "./BlogHashtag";
+import BlogActionButtons from "./BlogActionButtons";
+import useOverflow from "../hooks/useOverflow";
+import normalizeHashtags from "../utils/normalizeHashtags";
 
 function Project({
   loggedIn,
@@ -6,19 +9,21 @@ function Project({
   onDeleteProjectButtonClick,
   onHashtagClick,
   onEditProjectButtonClick,
+  onSeeMoreProjectClick,
 }) {
-  function handleClick(e) {
-    if (e.target.id === "project-delete-btn") {
-      onDeleteProjectButtonClick(project);
-    } else if (e.target.id === "project-edit-btn") {
-      onEditProjectButtonClick(project);
-    }
-  }
+  const {
+    ref: descriptionRef,
+    isOverflowing: isDescriptionOverflowing,
+  } = useOverflow(project.text);
+
+  const shouldShowMore = onSeeMoreProjectClick && isDescriptionOverflowing;
+  const projectHashtags = normalizeHashtags(project.hashtags);
+
   return (
-    <div className="project" onClick={handleClick}>
+    <li className="project">
       <h3 className="project__title">{project.title}</h3>
       <ul className="project__hashtags">
-        {project.hashtags.map((hashtag, index) => (
+        {projectHashtags.map((hashtag, index) => (
           <BlogHashtag
             key={`${project._id}-${hashtag}-${index}`}
             hashtag={hashtag}
@@ -28,30 +33,43 @@ function Project({
           />
         ))}
       </ul>
-      <p className="project__description">{project.text}</p>
-      <a
-        className="more-details-link"
-        href={`${project.link}`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        More details
-      </a>
+      <p className="project__description">
+        <span className="project__description-text" ref={descriptionRef}>
+          {project.text}
+        </span>
+        {shouldShowMore && (
+          <button
+            className="project__see-more"
+            type="button"
+            onClick={() => onSeeMoreProjectClick(project)}
+          >
+            ... see more →
+          </button>
+        )}
+      </p>
+      <div className="project__actions">
+        <a
+          className="more-details-link"
+          href={`${project.link}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          More details
+        </a>
+      </div>
       {loggedIn && (
         <div className="project__tools">
-          <button
-            id="project-edit-btn"
-            className="blog-edit-btn"
-            onClick={onEditProjectButtonClick}
-          />
-          <button
-            id="project-delete-btn"
-            className="blog-delete-btn"
-            onClick={onDeleteProjectButtonClick}
+          <BlogActionButtons
+            editId="project-edit-btn"
+            deleteId="project-delete-btn"
+            editLabel="Edit project"
+            deleteLabel="Delete project"
+            onEdit={() => onEditProjectButtonClick(project)}
+            onDelete={() => onDeleteProjectButtonClick(project)}
           />
         </div>
       )}
-    </div>
+    </li>
   );
 }
 

@@ -1,13 +1,12 @@
 .project__hashtag {
-    margin: 0 20px 0 0;
-    cursor: pointer;
-    transition: opacity .2s ease;
+  display: inline-flex;
+  flex: 0 0 auto;
+  margin: 0;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
 .project__hashtag:hover {
-    opacity: .7;
-}
-
-.project__hashtag:last-child {
-    margin: 0;
+  opacity: 0.7;
 }

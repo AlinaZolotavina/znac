@@ -5,6 +5,7 @@ import BackButton from "./BackButton";
 import getDate from "../utils/getDate";
 import fixShortWords from "../utils/fixShortWords";
 import isValidUrl from "../../../shared/utils/isValidUrl";
+import BlogActionButtons from "./BlogActionButtons";
 
 function CurrentPost({
   post,
@@ -61,7 +62,7 @@ function CurrentPost({
       <h3 className={`post__title post__title_location_${location}`}>
         {post.title}
       </h3>
-      <div className="post__hashtags">
+      <ul className="post__hashtags">
         {postHashtags.map((value, key) => (
           <BlogHashtag
             key={`${key}${date}`}
@@ -70,7 +71,7 @@ function CurrentPost({
             classname="post__hashtag"
           />
         ))}
-      </div>
+      </ul>
       {post.photoLink && (
         <img
           className={`post__image ${isPortrait ? "post__image_orientation_portrait" : ""}`}
@@ -87,11 +88,15 @@ function CurrentPost({
           {value}
         </p>
       ))}
-      <div className="post__date-and-tools">
+      <div className="post__date-and-tools post__date-and-tools_location_single-post">
         <p className="post__date post__date_location_single-post">{postDate}</p>
-        {loggedIn && <button id="blog-edit-btn" className="blog-edit-btn" />}
         {loggedIn && (
-          <button id="blog-delete-btn" className="blog-delete-btn" />
+          <BlogActionButtons
+            editId="blog-edit-btn"
+            deleteId="blog-delete-btn"
+            editLabel="Edit post"
+            deleteLabel="Delete post"
+          />
         )}
       </div>
       <BackButton onBackButtonClick={onBackButtonClick} />

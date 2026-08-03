@@ -52,7 +52,7 @@ describe("blog posts root logic", () => {
       expect(result.current.postsToRender).toHaveLength(posts.length),
     );
 
-    expect(api.getPosts).toHaveBeenCalledWith(1, 8, {
+    expect(api.getPosts).toHaveBeenCalledWith(1, 9, {
       search: "",
       theme: "All",
     });

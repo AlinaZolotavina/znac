@@ -5,3 +5,13 @@
     color: #fff;
     margin: 0 10px 0 0;
 }
+
+.add-new-item_location_projects-hero .add-button__text {
+    margin: 0;
+    white-space: nowrap;
+}
+
+.add-new-item_location_posts-hero .add-button__text {
+    margin: 0;
+    white-space: nowrap;
+}

@@ -1,0 +1,11 @@
+.project-details-popup__description {
+  margin: 0 0 24px;
+  padding-right: 8px;
+  max-height: 45vh;
+  overflow-y: auto;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 24px;
+  color: #0f1111;
+  white-space: pre-line;
+}

@@ -1,20 +1,20 @@
 import BlogHeader from "./BlogHeader";
-import BlogPromo from "./BlogPromo";
+import AboutHero from "./AboutHero";
 import Skills from "./Skills";
 import Projects from "./Projects";
 import CVs from "./CVs.js";
 import BlogFooter from "./BlogFooter";
-import GamesAndMusic from "./GamesAndMusic.js";
+import ReactPlayground from "./ReactPlayground.js";
 
 function AboutPage({
   loggedIn,
+  currentUser,
+  onLogout,
   projectsToRender,
   totalProjects,
   onBlogMenuClick,
   onContactClick,
   onAddProjectClick,
-  onGamesClick,
-  onMusicClick,
   onHomeClick,
   onPostsClick,
   onProjectsClick,
@@ -22,32 +22,36 @@ function AboutPage({
   onViewAllProjectsClick,
   onEditProjectButtonClick,
   onDeleteProjectButtonClick,
+  projectsNumber,
 }) {
   return (
     <div className="blog">
       <BlogHeader
+        loggedIn={loggedIn}
+        currentUser={currentUser}
+        onLogout={onLogout}
         onBlogMenuClick={onBlogMenuClick}
         onContactClick={onContactClick}
         onHomeClick={onHomeClick}
         onPostsClick={onPostsClick}
-        onProjectsClic={onProjectsClick}
+        onProjectsClick={onProjectsClick}
         onAboutClick={onAboutClick}
       />
-      <BlogPromo />
+      <AboutHero />
       <Skills />
       <Projects
         loggedIn={loggedIn}
         projects={projectsToRender}
         isThereMoreContent={totalProjects}
         onViewAllClick={onViewAllProjectsClick}
-        projectsNumber={2}
+        projectsNumber={projectsNumber}
         containerClassname="about-page"
         onAddProjectClick={onAddProjectClick}
         onEditProjectButtonClick={onEditProjectButtonClick}
         onDeleteProjectButtonClick={onDeleteProjectButtonClick}
       />
       <CVs />
-      <GamesAndMusic onGamesClick={onGamesClick} onMusicClick={onMusicClick} />
+      <ReactPlayground />
       <BlogFooter />
     </div>
   );
