@@ -286,7 +286,6 @@
 @import url(./features/blog/styles/post/__icon/_type/post__icon_type_tests.css);
 @import url(./features/blog/styles/post/__icon/_type/post__icon_type_list.css);
 @import url(./features/blog/styles/post/__icon/_type/post__icon_type_music.css);
-@import url(./features/blog/styles/post/__icon/_type/post__icon_type_audiobook.css);
 @import url(./features/blog/styles/post/__icon/_type/post__icon_type_book.css);
 @import url(./features/blog/styles/post/__icon/_type/post__icon_type_photo.css);
 @import url(./features/blog/styles/post/__icon/_type/post__icon_type_photobook.css);
@@ -294,8 +293,6 @@
 @import url(./features/blog/styles/post/__icon/_type/post__icon_type_mappin.css);
 @import url(./features/blog/styles/post/__icon/_type/post__icon_type_layout.css);
 @import url(./features/blog/styles/post/__icon/_type/post__icon_type_cat.css);
-@import url(./features/blog/styles/post/__icon/_type/post__icon_type_game.css);
-@import url(./features/blog/styles/post/__icon/_type/post__icon_type_food.css);
 @import url(./features/blog/styles/post/__icon/_type/post__icon_type_journey.css);
 @import url(./features/blog/styles/post/__icon/_location/post__icon_location_main-page.css);
 @import url(./features/blog/styles/post/__icon/_location/post__icon_location_posts.css);
@@ -311,6 +308,7 @@
 @import url(./features/blog/styles/post/__theme/_location/post__theme_location_main-page.css);
 @import url(./features/blog/styles/post/__theme/_location/post__theme_location_posts.css);
 @import url(./features/blog/styles/post/__theme/_location/post__theme_location_single-post.css);
+@import url(./features/blog/styles/post/__preview/post__preview.css);
 @import url(./features/blog/styles/post/__image/post__image.css);
 @import url(./features/blog/styles/post/__image/_orientation/post__image_orientation_portrait.css);
 @import url(./features/blog/styles/post/__image-placeholder/post__image-placeholder.css);

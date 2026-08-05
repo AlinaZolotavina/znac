@@ -8,6 +8,15 @@
     background-color: #fff;
 }
 
+.blog .popup__close-btn {
+    background-image: url(../../assets/blog-close-btn.svg);
+}
+
+.popup_type_delete-post .popup__close-btn,
+.popup_type_project-details .popup__close-btn {
+    background-image: url(../../assets/blog-close-btn.svg);
+}
+
 @media screen and (max-width: 1280px) {
     .blog {
         

@@ -22,8 +22,12 @@
 
 @media (max-width: 650px) {
   .page-hero {
+    flex-direction: column;
     min-height: auto;
     margin: 25px 0;
     padding: 35px 28px;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 28px;
   }
 }

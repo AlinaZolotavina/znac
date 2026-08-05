@@ -1,12 +1,19 @@
 .post__icon {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  background-size: 71% 71%;
-  background-position: center;
+  width: 120px;
+  height: 120px;
+  background-size: contain;
+  background-position: left center;
   background-repeat: no-repeat;
   border-radius: 10px;
-  background-color: #fff;
-  border: 1px solid rgba(154, 123, 217, 0.22);
+  background-color: transparent;
+  border: 1px solid transparent;
   grid-area: image;
   align-self: start;
+}
+
+@media (max-width: 650px) {
+  .post__icon {
+    width: 120px;
+    height: 120px;
+  }
 }

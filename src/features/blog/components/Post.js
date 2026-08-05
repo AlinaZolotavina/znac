@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import getDate from "../utils/getDate";
 import useOverflow from "../hooks/useOverflow";
 import BlogActionButtons from "./BlogActionButtons";
@@ -11,9 +12,15 @@ function Post({
   location,
 }) {
   const date = getDate(post.createdAt);
+  const [isPhotoBroken, setIsPhotoBroken] = useState(false);
   const { ref: textRef, isOverflowing: isTextOverflowing } = useOverflow(
     post.text,
   );
+  const shouldShowPhoto = post.photoLink && !isPhotoBroken;
+
+  useEffect(() => {
+    setIsPhotoBroken(false);
+  }, [post.photoLink]);
 
   function handlePostClick() {
     onPostClick(post);
@@ -48,9 +55,19 @@ function Post({
       role="button"
       tabIndex="0"
     >
-      <div
-        className={`post__icon post__icon_location_${location} post__icon_type_${post.icon}`}
-      />
+      {shouldShowPhoto ? (
+        <img
+          className={`post__preview post__preview_location_${location}`}
+          src={post.photoLink}
+          alt={`Illustration for post "${post.title}"`}
+          loading="lazy"
+          onError={() => setIsPhotoBroken(true)}
+        />
+      ) : (
+        <div
+          className={`post__icon post__icon_location_${location} post__icon_type_${post.icon}`}
+        />
+      )}
       <div className="post__content">
         <div className="post__meta">
           <p className={`post__theme post__theme_location_${location}`}>

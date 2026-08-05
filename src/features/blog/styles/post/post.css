@@ -1,9 +1,11 @@
 .post {
   list-style: none;
   display: grid;
-  grid-template-columns: 92px minmax(0, 1fr);
-  grid-template-areas: "image content";
-  column-gap: 18px;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "image"
+    "content";
+  row-gap: 16px;
   align-items: start;
   border-radius: 15px;
   padding: 22px 25px 72px;
@@ -73,16 +75,6 @@
 
 @media (max-width: 650px) {
   .post {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "image"
-      "content";
-    row-gap: 16px;
     min-height: 300px;
-  }
-
-  .post__icon {
-    width: 150px;
-    height: 150px;
   }
 }

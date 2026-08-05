@@ -8,3 +8,17 @@
   min-height: auto;
   cursor: default;
 }
+
+@media (max-width: 900px) {
+  .post_location_single-post {
+    width: 85vw;
+    margin: 45px auto 80px;
+  }
+}
+
+@media (max-width: 650px) {
+  .post_location_single-post {
+    width: 90vw;
+    margin: 35px auto 70px;
+  }
+}

@@ -10,7 +10,7 @@ const iconButtons = [
   {
     class:
       "new-post__radio-btn_type_icon post__icon post__icon_type_js post__icon_location_new-post-popup",
-    buttonValue: "",
+    buttonValue: "javascript",
     name: "icon",
     labelText: "",
     _id: "ib1",
@@ -48,7 +48,7 @@ const iconButtons = [
   {
     class:
       "new-post__radio-btn_type_icon post__icon post__icon_type_illustrations post__icon_location_new-post-popup",
-    buttonValue: "illustrations",
+    buttonValue: "illustration",
     labelText: "",
     _id: "ib6",
   },
@@ -75,80 +75,60 @@ const iconButtons = [
   },
   {
     class:
-      "new-post__radio-btn_type_icon post__icon post__icon_type_audiobook post__icon_location_new-post-popup",
-    buttonValue: "audiobook",
-    labelText: "",
-    _id: "ib10",
-  },
-  {
-    class:
       "new-post__radio-btn_type_icon post__icon post__icon_type_book post__icon_location_new-post-popup",
     buttonValue: "book",
     labelText: "",
-    _id: "ib11",
+    _id: "ib10",
   },
   {
     class:
       "new-post__radio-btn_type_icon post__icon post__icon_type_photo post__icon_location_new-post-popup",
     buttonValue: "photo",
     labelText: "",
-    _id: "ib12",
+    _id: "ib11",
   },
   {
     class:
       "new-post__radio-btn_type_icon post__icon post__icon_type_photobook post__icon_location_new-post-popup",
     buttonValue: "photobook",
     labelText: "",
-    _id: "ib13",
+    _id: "ib12",
   },
   {
     class:
       "new-post__radio-btn_type_icon post__icon post__icon_type_mappin post__icon_location_new-post-popup",
     buttonValue: "mappin",
     labelText: "",
-    _id: "ib14",
+    _id: "ib13",
   },
   {
     class:
       "new-post__radio-btn_type_icon post__icon post__icon_type_layout post__icon_location_new-post-popup",
     buttonValue: "layout",
     labelText: "",
-    _id: "ib15",
+    _id: "ib14",
   },
-  {
-    class:
-      "new-post__radio-btn_type_icon post__icon post__icon_type_food post__icon_location_new-post-popup",
-    buttonValue: "food",
-    labelText: "",
-    _id: "ib16",
-  },
+
   {
     class:
       "new-post__radio-btn_type_icon post__icon post__icon_type_journey post__icon_location_new-post-popup",
     buttonValue: "journey",
     labelText: "",
-    _id: "ib17",
+    _id: "ib15",
   },
   {
     class:
       "new-post__radio-btn_type_icon post__icon post__icon_type_backpack post__icon_location_new-post-popup",
     buttonValue: "backpack",
     labelText: "",
-    _id: "ib18",
+    _id: "ib16",
   },
   {
     class:
       "new-post__radio-btn_type_icon post__icon post__icon_type_cat post__icon_location_new-post-popup",
     buttonValue: "cat",
     labelText: "",
-    _id: "ib19",
-  },
-  {
-    class:
-      "new-post__radio-btn_type_icon post__icon post__icon_type_game post__icon_location_new-post-popup",
-    buttonValue: "game",
-    labelText: "",
-    _id: "ib20",
+    _id: "ib17",
   },
 ];
 

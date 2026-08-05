@@ -5,3 +5,9 @@
   align-items: flex-start;
   max-width: 350px;
 }
+
+@media (max-width: 800px) {
+  .about-hero__content {
+    order: 2;
+  }
+}

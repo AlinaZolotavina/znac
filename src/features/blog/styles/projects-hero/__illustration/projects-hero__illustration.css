@@ -3,3 +3,12 @@
   flex: 0 1 500px;
   background-image: url(../../../assets/bears/bear-projects.svg);
 }
+
+@media (max-width: 650px) {
+  .projects-hero__illustration {
+    width: 100%;
+    max-width: 320px;
+    height: 145px;
+    flex: 0 0 auto;
+  }
+}

@@ -17,6 +17,13 @@
 
 @media (max-width: 650px) {
   .page-hero__illustration {
-    display: none;
+    order: 1;
+    display: block;
+    width: 100%;
+    max-width: 320px;
+    height: 145px;
+    flex: 0 0 auto;
+    align-self: center;
+    background-size: contain;
   }
 }

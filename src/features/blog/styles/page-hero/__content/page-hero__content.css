@@ -3,3 +3,11 @@
   position: relative;
   z-index: 1;
 }
+
+@media (max-width: 650px) {
+  .page-hero__content {
+    order: 2;
+    width: 100%;
+    max-width: none;
+  }
+}
