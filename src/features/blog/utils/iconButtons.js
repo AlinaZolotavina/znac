@@ -10,7 +10,7 @@ const iconButtons = [
   {
     class:
       "new-post__radio-btn_type_icon post__icon post__icon_type_js post__icon_location_new-post-popup",
-    buttonValue: "javascript",
+    buttonValue: "js",
     name: "icon",
     labelText: "",
     _id: "ib1",

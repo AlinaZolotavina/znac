@@ -23,9 +23,16 @@
     position: fixed;
     top: 0;
     left: 0;
+    bottom: 0;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
+    min-height: 100vh;
+    min-height: 100dvh;
+    max-height: none;
     border-radius: 0;
     padding: 15px 35px 29px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }

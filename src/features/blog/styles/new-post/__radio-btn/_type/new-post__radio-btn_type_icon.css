@@ -1,6 +1,7 @@
 .new-post__radio-btn_type_icon {
   width: 85px;
   height: 85px;
+  flex: 0 0 85px;
   padding: 0;
   border-radius: 10px;
   overflow: hidden;
@@ -10,5 +11,6 @@
   .new-post__radio-btn_type_icon {
     width: 75px;
     height: 75px;
+    flex-basis: 75px;
   }
 }

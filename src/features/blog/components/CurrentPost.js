@@ -23,6 +23,7 @@ function CurrentPost({
   const [currentImage, setCurrentImage] = useState(errorImage);
   const paragraps = post.text
     .split("\n")
+    .filter((paragraph) => paragraph.trim())
     .map((paragraph) => fixShortWords(paragraph));
 
   const [isPortrait, setIsPortrait] = useState(false);

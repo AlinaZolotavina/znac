@@ -20,13 +20,20 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
     return currentIconNumber;
   };
 
+  function getVisibleCount(width) {
+    if (width <= 450) return 2;
+    if (width <= 550) return 3;
+    if (width <= 1024) return 4;
+    return 6;
+  }
+
   useEffect(() => {
     if (Object.keys(post).length !== 0) {
       setThemeCheckValue(post.theme);
       setIconCheckValue(post.icon);
 
       const currentIconNumber = getCurrentIconNumber(post.icon);
-      const visibleIconsCount = 6;
+      const visibleIconsCount = getVisibleCount(window.innerWidth);
       const lastSlideStart = Math.max(iconButtons.length - visibleIconsCount, 0);
       const nextSlideStart = Math.min(currentIconNumber || 0, lastSlideStart);
 
@@ -57,6 +64,23 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
   const [slideStart, setSlideStart] = useState(0);
   const [slideEnd, setSlideEnd] = useState(6);
   const [isLeftFlipDisabled, setIsLeftFlipDisabled] = useState(true);
+
+  useEffect(() => {
+    function handleResize() {
+      const visibleIconsCount = getVisibleCount(window.innerWidth);
+      const lastSlideStart = Math.max(iconButtons.length - visibleIconsCount, 0);
+      const nextSlideStart = Math.min(slideStart, lastSlideStart);
+
+      setSlideStart(nextSlideStart);
+      setSlideEnd(nextSlideStart + visibleIconsCount);
+    }
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [slideStart]);
+
   function handleLeftFlip(e) {
     e.preventDefault();
     if (slideStart > 0) {
@@ -80,7 +104,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
     } else {
       setIsLeftFlipDisabled(false);
     }
-    if (slideEnd === iconButtons.length) {
+    if (slideEnd >= iconButtons.length) {
       setIsRightFlipDisabled(true);
     } else {
       setIsRightFlipDisabled(false);

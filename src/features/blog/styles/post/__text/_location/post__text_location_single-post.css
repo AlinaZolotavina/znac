@@ -1,6 +1,6 @@
 .post__text_location_single-post {
   font-size: 24px;
-  margin: 15px 0 0;
+  margin: 8px 0 0;
   line-height: 1.38;
   text-wrap: pretty;
   overflow-wrap: break-word;
@@ -8,7 +8,7 @@
 }
 
 .post__text_location_single-post:last-of-type {
-  margin: 15px 0 20px;
+  margin-bottom: 20px;
 }
 
 @media (max-width: 1280px) {
