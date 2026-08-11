@@ -1,7 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Form from "../../../app/components/Form";
 import Input from "../../../app/components/Input";
 import CloseButton from "../../../app/components/CloseButton";
+import useInitialFocus from "../../../shared/hooks/useInitialFocus";
+import useFocusTrap from "../../../shared/hooks/useFocusTrap";
+import useReturnFocus from "../../../shared/hooks/useReturnFocus";
+import useCloseOnEsc from "../../../shared/hooks/useCloseOnEsc";
+import useLockBodyScroll from "../../../shared/hooks/useLockBodyScroll";
+import useOverlayClickClose from "../../../shared/hooks/useOverlayClickClose";
 
 function EditPasswordModal({
   isOpen,
@@ -64,13 +70,36 @@ function EditPasswordModal({
     onClose();
   }
 
+  const modalRef = useRef(null);
+
+  useReturnFocus(isOpen);
+  useInitialFocus(isOpen, modalRef);
+  useFocusTrap(isOpen, modalRef);
+  useCloseOnEsc(isOpen, handleClose);
+  useLockBodyScroll(isOpen);
+
+  const handleOverlayClickClose = useOverlayClickClose(isOpen, handleClose);
+
+  if (!isOpen) return null;
+
   return (
-    <div className={`popup popup_type_photo ${isOpen && "popup_is-opened"}`}>
-      <div className="popup__container">
+    <div
+      className="popup popup_type_photo popup_is-opened"
+      onMouseDown={handleOverlayClickClose}
+    >
+      <div
+        ref={modalRef}
+        className="popup__container"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="edit-password-title"
+        tabIndex={-1}
+      >
         <Form
           formName="request-password-change"
           formClassname="popup__form"
           titleClassname="popup__title"
+          titleId="edit-password-title"
           title="Edit password"
           buttonClassname="popup__submit-btn"
           buttonText="Change password"
@@ -106,6 +135,7 @@ function EditPasswordModal({
         <CloseButton
           classname="close-btn popup__close-btn"
           onClick={handleClose}
+          ariaLabel="Close dialog"
         />
       </div>
     </div>

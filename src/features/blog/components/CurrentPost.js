@@ -52,7 +52,6 @@ function CurrentPost({
     } else if (e.target.id === "blog-edit-btn") {
       onEditPostButtonClick(post);
     }
-    e.target.blur();
   }
 
   return (

@@ -1,6 +1,6 @@
-function BlogCloseButton({ classname, onClick }) {
+function BlogCloseButton({ classname, onClick, ariaLabel }) {
     return (
-        <button className={classname} onClick={onClick} />
+        <button className={classname} onClick={onClick} aria-label={ariaLabel} />
     );
 }
 

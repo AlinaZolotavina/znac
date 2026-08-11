@@ -7,18 +7,21 @@
   white-space: nowrap;
   padding: 10px 22px;
   box-sizing: border-box;
-  background-color: #fff;
+  background-color: #f3f7ff;
   border: 1px solid rgba(154, 123, 217, 0.22);
   border-radius: 9px;
   height: 40px;
   min-width: fit-content;
   margin: 0;
-  transition: box-shadow 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
   cursor: pointer;
 }
 
 .project-hashtags__item:hover {
-  box-shadow: 0 10px 24px rgba(154, 123, 217, 0.14);
+  opacity: 0.7;
 }
 
 @media (max-width: 900px) {

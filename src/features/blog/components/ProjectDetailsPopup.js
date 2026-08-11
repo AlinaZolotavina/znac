@@ -1,44 +1,45 @@
-import { useEffect } from "react";
+import { useRef } from "react";
 import BlogHashtag from "./BlogHashtag";
 import CloseButton from "./BlogCloseButton";
 import normalizeHashtags from "../utils/normalizeHashtags";
+import useInitialFocus from "../../../shared/hooks/useInitialFocus";
+import useFocusTrap from "../../../shared/hooks/useFocusTrap";
+import useReturnFocus from "../../../shared/hooks/useReturnFocus";
+import useCloseOnEsc from "../../../shared/hooks/useCloseOnEsc";
+import useLockBodyScroll from "../../../shared/hooks/useLockBodyScroll";
+import useOverlayClickClose from "../../../shared/hooks/useOverlayClickClose";
 
 function ProjectDetailsPopup({ project, isOpen, onClose, onHashtagClick }) {
-  useEffect(() => {
-    if (!isOpen) {
-      return undefined;
-    }
+  const popupRef = useRef(null);
 
-    function handleEscClose(e) {
-      if (e.key === "Escape") {
-        onClose();
-      }
-    }
+  useReturnFocus(isOpen);
+  useInitialFocus(isOpen, popupRef);
+  useFocusTrap(isOpen, popupRef);
+  useCloseOnEsc(isOpen, onClose);
+  useLockBodyScroll(isOpen);
 
-    window.addEventListener("keydown", handleEscClose);
+  const handleOverlayClickClose = useOverlayClickClose(isOpen, onClose);
 
-    return () => window.removeEventListener("keydown", handleEscClose);
-  }, [isOpen, onClose]);
-
-  if (!project) {
+  if (!isOpen || !project) {
     return null;
   }
 
   const projectHashtags = normalizeHashtags(project.hashtags);
 
-  function handleOverlayMouseDown(e) {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  }
-
   return (
     <div
-      className={`popup popup_type_project-details ${isOpen ? "popup_is-opened" : ""}`}
-      onMouseDown={handleOverlayMouseDown}
+      className="popup popup_type_project-details popup_is-opened"
+      onMouseDown={handleOverlayClickClose}
     >
-      <article className="project-details-popup">
-        <h2 className="project-details-popup__title">{project.title}</h2>
+      <article
+        ref={popupRef}
+        className="project-details-popup"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="project-details-title"
+        tabIndex={-1}
+      >
+        <h2 className="project-details-popup__title" id="project-details-title">{project.title}</h2>
         <ul className="project-details-popup__hashtags">
           {projectHashtags.map((hashtag, index) => (
             <BlogHashtag
@@ -59,7 +60,7 @@ function ProjectDetailsPopup({ project, isOpen, onClose, onHashtagClick }) {
         >
           More details
         </a>
-        <CloseButton classname="close-btn popup__close-btn" onClick={onClose} />
+        <CloseButton classname="close-btn popup__close-btn" onClick={onClose} ariaLabel="Close dialog" />
       </article>
     </div>
   );

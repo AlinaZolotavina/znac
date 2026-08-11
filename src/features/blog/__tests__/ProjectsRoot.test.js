@@ -1,5 +1,5 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
-import useProjects from "../../blog/hooks/useProjects";
+import useProjects from "../hooks/useProjects";
 import { mockApi } from "../../../test/mockApi";
 import { projects } from "../../../test/fixtures/project";
 

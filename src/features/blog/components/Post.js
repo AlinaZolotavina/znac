@@ -12,6 +12,11 @@ function Post({
   location,
 }) {
   const date = getDate(post.createdAt);
+  const iconAliases = {
+    javascript: "js",
+    illustration: "illustrations",
+  };
+  const postIcon = iconAliases[post.icon] || post.icon;
   const [isPhotoBroken, setIsPhotoBroken] = useState(false);
   const { ref: textRef, isOverflowing: isTextOverflowing } = useOverflow(
     post.text,
@@ -65,7 +70,7 @@ function Post({
         />
       ) : (
         <div
-          className={`post__icon post__icon_location_${location} post__icon_type_${post.icon}`}
+          className={`post__icon post__icon_location_${location} post__icon_type_${postIcon}`}
         />
       )}
       <div className="post__content">

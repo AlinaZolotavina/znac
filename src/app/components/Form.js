@@ -1,7 +1,7 @@
-function Form({ formName, formClassname, titleClassname, title, buttonClassname, buttonText, isFormValid, isSendingReq, onSubmit, children }) {
+function Form({ formName, formClassname, titleClassname, titleId, title, buttonClassname, buttonText, isFormValid, isSendingReq, onSubmit, children }) {
     return (
         <section className={formClassname}>
-            <h2 className={titleClassname}>{title}</h2>
+            <h2 className={titleClassname} id={titleId}>{title}</h2>
             <form
                 name={formName}
                 className='form__container'

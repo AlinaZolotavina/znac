@@ -11,6 +11,7 @@ import PhotoPopup from "../../features/gallery/components/PhotoPopup";
 import DeletePhotoModal from "../../features/gallery/components/DeletePhotoModal";
 
 import usePhotos from "./hooks/usePhotos";
+import useCloseOnEsc from "../../shared/hooks/useCloseOnEsc";
 
 import scrollToRef from "./utils/scrollToRef";
 
@@ -109,14 +110,14 @@ function GalleryRoot({
     scrollToRef(footerRef);
   }
 
+  const closeGalleryLayers = useCallback(() => {
+    closeGalleryPopups();
+    onMenuClose();
+  }, [closeGalleryPopups, onMenuClose]);
+
   const handleKeyPress = useCallback(
     (e) => {
       const { keyCode } = e;
-
-      if (keyCode === 27) {
-        closeGalleryPopups();
-        onMenuClose();
-      }
 
       if (isPhotoPopupOpen) {
         if (keyCode === 37 && !isLeftFlipDisabled) {
@@ -133,8 +134,6 @@ function GalleryRoot({
       }
     },
     [
-      closeGalleryPopups,
-      onMenuClose,
       isPhotoPopupOpen,
       isLeftFlipDisabled,
       isRightFlipDisabled,
@@ -145,27 +144,15 @@ function GalleryRoot({
     ],
   );
 
-  const handleOverlayClickClose = useCallback(
-    (e) => {
-      if (
-        e.target.classList.contains("popup_is-opened") ||
-        e.target.classList.contains("popup__close-btn")
-      ) {
-        closeGalleryPopups();
-      }
-    },
-    [closeGalleryPopups],
-  );
+  useCloseOnEsc(true, closeGalleryLayers);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyPress);
-    window.addEventListener("mousedown", handleOverlayClickClose);
 
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
-      window.removeEventListener("mousedown", handleOverlayClickClose);
     };
-  }, [handleKeyPress, handleOverlayClickClose]);
+  }, [handleKeyPress]);
 
   return (
     <>

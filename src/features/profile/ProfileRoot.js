@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
 import Profile from "./components/Profile";
@@ -10,6 +10,7 @@ import EditEmailModal from "./components/EditEmailModal";
 import EditPasswordModal from "./components/EditPasswordModal";
 
 import api from "../../shared/utils/api";
+import useCloseOnEsc from "../../shared/hooks/useCloseOnEsc";
 import {
   EMAIL_UPDATED_SUCCESSFULLY_MSG,
   EMAIL_UPDATE_ERROR_MSG,
@@ -40,21 +41,9 @@ function ProfileRoot({
     setIsEditPasswordModalOpen(false);
   }, []);
 
-  useEffect(() => {
-    if (!isEditEmailModalOpen && !isEditPasswordModalOpen) {
-      return undefined;
-    }
+  const isAnyProfilePopupOpen = isEditEmailModalOpen || isEditPasswordModalOpen;
 
-    function handleEscClose(e) {
-      if (e.key === "Escape") {
-        closeProfilePopups();
-      }
-    }
-
-    window.addEventListener("keydown", handleEscClose);
-
-    return () => window.removeEventListener("keydown", handleEscClose);
-  }, [closeProfilePopups, isEditEmailModalOpen, isEditPasswordModalOpen]);
+  useCloseOnEsc(isAnyProfilePopupOpen, closeProfilePopups);
 
   function handleEditEmailBtnClick() {
     setIsEditEmailModalOpen(!isEditEmailModalOpen);

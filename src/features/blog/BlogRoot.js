@@ -25,7 +25,8 @@ import {
 
 import useProjects from "./hooks/useProjects.js";
 import usePosts from "./hooks/usePosts.js";
-import useRequestState from "../../shared/useRequestStatus.js";
+import useRequestState from "../../shared/hooks/useRequestStatus.js";
+import useCloseOnEsc from "../../shared/hooks/useCloseOnEsc.js";
 
 import getCurrentActivePage from "./utils/getCurrentActivePage.js";
 
@@ -106,9 +107,8 @@ function BlogRoot({
     setIsGetInTouchPopupOpen(false);
   }, []);
 
-  function handleBlogMenuClick(e) {
+  function handleBlogMenuClick() {
     setIsBlogMenuOpen(!isBlogMenuOpen);
-    e.target.blur();
   }
 
   function moveToHomePage() {
@@ -234,39 +234,23 @@ function BlogRoot({
 
   const previewProjectsQuantity = screenWidth > 1200 ? 3 : 2;
 
-  const handleKeyPress = useCallback(
-    (e) => {
-      const { keyCode } = e;
-      if (keyCode === 27) {
-        closeAllBlogPopups();
-        closeBlogMenu();
-        closeGetInTouchPopup();
-      }
-    },
-    [closeAllBlogPopups, closeBlogMenu, closeGetInTouchPopup],
-  );
+  const isAnyBlogPopupOpen =
+    isBlogMenuOpen ||
+    isGetInTouchPopupOpen ||
+    isPostPopupOpen ||
+    isEditPostPopupOpen ||
+    isEditProjectPopupOpen ||
+    isNewProjectPopupOpen ||
+    isDeletePostModalOpen ||
+    isDeleteProjectModalOpen;
 
-  const handleOverlayClickClose = useCallback(
-    (e) => {
-      if (
-        e.target.classList.contains("popup_is-opened") ||
-        e.target.classList.contains("popup__close-btn")
-      ) {
-        closeAllBlogPopups();
-      }
-    },
-    [closeAllBlogPopups],
-  );
+  const closeBlogLayers = useCallback(() => {
+    closeAllBlogPopups();
+    closeBlogMenu();
+    closeGetInTouchPopup();
+  }, [closeAllBlogPopups, closeBlogMenu, closeGetInTouchPopup]);
 
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyPress);
-    window.addEventListener("mousedown", handleOverlayClickClose);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyPress);
-      window.removeEventListener("mousedown", handleOverlayClickClose);
-    };
-  }, [handleKeyPress, handleOverlayClickClose]);
+  useCloseOnEsc(isAnyBlogPopupOpen, closeBlogLayers);
 
   useEffect(() => {
     calculatePostsCount();

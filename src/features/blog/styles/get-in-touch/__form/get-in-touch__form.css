@@ -1,4 +1,5 @@
 .get-in-touch__form {
+  order: 2;
   width: 400px;
   display: flex;
   flex-direction: column;
@@ -12,6 +13,7 @@
 
 @media (max-width: 900px) {
   .get-in-touch__form {
+    order: 1;
     width: 100%;
   }
 }

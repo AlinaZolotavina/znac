@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  order: 1;
   width: 200px;
   margin: 0 100px 0 0;
 }
@@ -15,6 +16,7 @@
 
 @media (max-width: 900px) {
   .get-in-touch__icons {
+    order: 2;
     width: 45%;
   }
 }

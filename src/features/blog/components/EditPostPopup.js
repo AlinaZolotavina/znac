@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import BlogForm from "./BlogForm.js";
 import BlogInput from "./BlogInput.js";
 import BlogCloseButton from "./BlogCloseButton.js";
@@ -7,38 +7,55 @@ import BlogUploadFileInfo from "./BlogUploadFileInfo.js";
 import BlogTextArea from "./BlogTextArea.js";
 import iconButtons from "../utils/iconButtons.js";
 import hashtagsToInputValue from "../utils/hashtagsToInputValue.js";
+import useInitialFocus from "../../../shared/hooks/useInitialFocus.js";
+import useFocusTrap from "../../../shared/hooks/useFocusTrap.js";
+import useReturnFocus from "../../../shared/hooks/useReturnFocus.js";
+import useCloseOnEsc from "../../../shared/hooks/useCloseOnEsc.js";
+import useLockBodyScroll from "../../../shared/hooks/useLockBodyScroll.js";
+import useOverlayClickClose from "../../../shared/hooks/useOverlayClickClose.js";
+
+function getVisibleCount(width) {
+  if (width <= 768) return 2;
+  if (width <= 1024) return 4;
+  return 6;
+}
+
+function normalizeIconValue(icon) {
+  const aliases = {
+    javascript: "js",
+    illustration: "illustrations",
+  };
+
+  return aliases[icon] || icon;
+}
+
+function getCurrentIconNumber(icon) {
+  return iconButtons.findIndex(
+    (iconButton) => iconButton.buttonValue === normalizeIconValue(icon),
+  );
+}
 
 function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
   const [isEdited, setIsEdited] = useState(false);
-  const getCurrentIconNumber = (icon) => {
-    let currentIconNumber;
-    iconButtons.forEach((iconButton) => {
-      if (iconButton.buttonValue === icon) {
-        currentIconNumber = Number(iconButton._id.substring(2));
-      }
-    });
-    return currentIconNumber;
-  };
-
-  function getVisibleCount(width) {
-    if (width <= 450) return 2;
-    if (width <= 550) return 3;
-    if (width <= 1024) return 4;
-    return 6;
-  }
 
   useEffect(() => {
     if (Object.keys(post).length !== 0) {
-      setThemeCheckValue(post.theme);
-      setIconCheckValue(post.icon);
+      const normalizedIcon = normalizeIconValue(post.icon);
 
-      const currentIconNumber = getCurrentIconNumber(post.icon);
+      setThemeCheckValue(post.theme);
+      setIconCheckValue(normalizedIcon);
+
+      const currentIconNumber = getCurrentIconNumber(normalizedIcon);
       const visibleIconsCount = getVisibleCount(window.innerWidth);
       const lastSlideStart = Math.max(iconButtons.length - visibleIconsCount, 0);
-      const nextSlideStart = Math.min(currentIconNumber || 0, lastSlideStart);
+      const centeredSlideStart = Math.max(
+        currentIconNumber - Math.floor(visibleIconsCount / 2),
+        0,
+      );
+      const nextSlideStart = Math.min(centeredSlideStart, lastSlideStart);
 
+      setVisibleIconsCount(visibleIconsCount);
       setSlideStart(nextSlideStart);
-      setSlideEnd(nextSlideStart + visibleIconsCount);
 
       setTitle(post.title);
       setHashtags(hashtagsToInputValue(post.hashtags));
@@ -62,17 +79,21 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
   }
 
   const [slideStart, setSlideStart] = useState(0);
-  const [slideEnd, setSlideEnd] = useState(6);
+  const iconButtonsRef = useRef(null);
+  const iconFocusAfterSlideRef = useRef("");
+  const [visibleIconsCount, setVisibleIconsCount] = useState(() =>
+    getVisibleCount(window.innerWidth),
+  );
+  const slideEnd = Math.min(slideStart + visibleIconsCount, iconButtons.length);
   const [isLeftFlipDisabled, setIsLeftFlipDisabled] = useState(true);
 
   useEffect(() => {
     function handleResize() {
       const visibleIconsCount = getVisibleCount(window.innerWidth);
       const lastSlideStart = Math.max(iconButtons.length - visibleIconsCount, 0);
-      const nextSlideStart = Math.min(slideStart, lastSlideStart);
 
-      setSlideStart(nextSlideStart);
-      setSlideEnd(nextSlideStart + visibleIconsCount);
+      setVisibleIconsCount(visibleIconsCount);
+      setSlideStart((prev) => Math.min(prev, lastSlideStart));
     }
 
     handleResize();
@@ -81,20 +102,86 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
     return () => window.removeEventListener("resize", handleResize);
   }, [slideStart]);
 
-  function handleLeftFlip(e) {
+  function focusIcon(iconValue) {
+    const iconInput = iconButtonsRef.current?.querySelector(
+      `input[type="radio"][value="${iconValue}"]`,
+    );
+
+    if (iconInput) {
+      iconInput.focus();
+    }
+  }
+
+  function handleIconArrowNavigate(e, currentValue, direction) {
+    e.preventDefault();
+
+    const currentIndex = iconButtons.findIndex(
+      (iconButton) => iconButton.buttonValue === currentValue,
+    );
+
+    if (currentIndex === -1) {
+      return;
+    }
+
+    if (
+      (direction === "right" && currentIndex === iconButtons.length - 1) ||
+      (direction === "left" && currentIndex === 0)
+    ) {
+      return;
+    }
+
+    const nextIndex =
+      direction === "right" ? currentIndex + 1 : currentIndex - 1;
+    const nextIcon = iconButtons[nextIndex];
+
+    if (nextIndex >= slideStart && nextIndex < slideEnd) {
+      focusIcon(nextIcon.buttonValue);
+      return;
+    }
+
+    const lastSlideStart = Math.max(iconButtons.length - visibleIconsCount, 0);
+    const nextSlideStart =
+      direction === "right"
+        ? Math.min(nextIndex, lastSlideStart)
+        : Math.max(nextIndex - visibleIconsCount + 1, 0);
+
+    iconFocusAfterSlideRef.current = nextIcon.buttonValue;
+    setSlideStart(nextSlideStart);
+  }
+
+  function handleLeftFlip(e, shouldKeepIconFocus = false) {
     e.preventDefault();
     if (slideStart > 0) {
-      setSlideStart((prev) => prev - 1);
-      setSlideEnd((prev) => prev - 1);
+      const nextSlideStart = slideStart - 1;
+
+      if (shouldKeepIconFocus) {
+        iconFocusAfterSlideRef.current = iconButtons[nextSlideStart].buttonValue;
+      }
+
+      setSlideStart(nextSlideStart);
     }
   }
 
   const [isRightFlipDisabled, setIsRightFlipDisabled] = useState(false);
-  function handleRightFlip(e) {
+  function handleRightFlip(e, shouldKeepIconFocus = false) {
     e.preventDefault();
     if (slideEnd < iconButtons.length) {
-      setSlideStart((prev) => prev + 1);
-      setSlideEnd((prev) => prev + 1);
+      const lastSlideStart = Math.max(
+        iconButtons.length - visibleIconsCount,
+        0,
+      );
+      const nextSlideStart = Math.min(slideStart + 1, lastSlideStart);
+
+      if (shouldKeepIconFocus) {
+        const nextFocusIndex = Math.min(
+          nextSlideStart + visibleIconsCount - 1,
+          iconButtons.length - 1,
+        );
+
+        iconFocusAfterSlideRef.current = iconButtons[nextFocusIndex].buttonValue;
+      }
+
+      setSlideStart(nextSlideStart);
     }
   }
 
@@ -110,6 +197,15 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
       setIsRightFlipDisabled(false);
     }
   }, [slideStart, slideEnd]);
+
+  useEffect(() => {
+    if (!iconFocusAfterSlideRef.current) {
+      return;
+    }
+
+    focusIcon(iconFocusAfterSlideRef.current);
+    iconFocusAfterSlideRef.current = "";
+  }, [slideStart]);
 
   const [title, setTitle] = useState("");
   const [titleError, setTitleError] = useState("");
@@ -207,7 +303,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
   const [hashtags, setHashtags] = useState("");
   const [hashtagsError, setHashtagsError] = useState("");
   function handleHashtagsChange(e) {
-    const regex = /^[A-Za-zА-Яа-я0-9 _]*$/;
+    const regex = /^[\p{L}0-9 _]*$/u;
     if (e.target.value.length === 0) {
       setHashtagsError("You must add at least one hashtag");
     } else if (!regex.test(e.target.value)) {
@@ -283,13 +379,23 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
     clearInputs();
   }
 
+  const popupRef = useRef(null);
+
+  useReturnFocus(isOpen);
+  useInitialFocus(isOpen, popupRef);
+  useFocusTrap(isOpen, popupRef);
+  useCloseOnEsc(isOpen, handleClose);
+  useLockBodyScroll(isOpen);
+
+  const handleOverlayClickClose = useOverlayClickClose(isOpen, handleClose);
+
   function clearInputs() {
     setThemeCheckValue("");
     setThemeError("");
     setIconCheckValue("");
     setIconError("");
     setSlideStart(0);
-    setSlideEnd(6);
+    setVisibleIconsCount(getVisibleCount(window.innerWidth));
     setIsLeftFlipDisabled(true);
     setIsRightFlipDisabled(false);
     setTitle("");
@@ -305,15 +411,26 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
     setIsEdited(false);
   }
 
+  if (!isOpen) return null;
+
   return (
     <div
-      className={`popup popup_type_get-in-touch ${isOpen && "popup_is-opened"}`}
+      className="popup popup_type_get-in-touch popup_is-opened"
+      onMouseDown={handleOverlayClickClose}
     >
-      <div className="new-post">
+      <div
+        ref={popupRef}
+        className="new-post"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="edit-post-title"
+        tabIndex={-1}
+      >
         <BlogForm
           formName="new-post"
           formClassname="new-post__form"
           titleClassname="new-post__title"
+          titleId="edit-post-title"
           title="Edit post"
           buttonClassname="new-post__submit-btn"
           buttonText="Save post"
@@ -328,6 +445,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
                 classname="new-post__radio-btn_type_theme"
                 radioBtnValue="Web development"
                 radioBtnName="theme"
+                idPrefix="edit-post"
                 checkValue={themeCheckValue}
                 onClick={handleThemeClick}
                 labelText="Web development"
@@ -336,6 +454,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
                 classname="new-post__radio-btn_type_theme"
                 radioBtnValue="Web design"
                 radioBtnName="theme"
+                idPrefix="edit-post"
                 checkValue={themeCheckValue}
                 onClick={handleThemeClick}
                 labelText="Web design"
@@ -344,6 +463,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
                 classname="new-post__radio-btn_type_theme"
                 radioBtnValue="Travel"
                 radioBtnName="theme"
+                idPrefix="edit-post"
                 checkValue={themeCheckValue}
                 onClick={handleThemeClick}
                 labelText="Travel"
@@ -352,6 +472,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
                 classname="new-post__radio-btn_type_theme"
                 radioBtnValue="Books"
                 radioBtnName="theme"
+                idPrefix="edit-post"
                 checkValue={themeCheckValue}
                 onClick={handleThemeClick}
                 labelText="Books"
@@ -360,6 +481,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
                 classname="new-post__radio-btn_type_theme"
                 radioBtnValue="Daily life"
                 radioBtnName="theme"
+                idPrefix="edit-post"
                 checkValue={themeCheckValue}
                 onClick={handleThemeClick}
                 labelText="Daily life"
@@ -372,26 +494,33 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
             <span className="new-post__input-label">Icon</span>
             <div className="new-post__icon-selection">
               <button
+                type="button"
                 className={`new-post__flip-btn new-post__flip-btn_left ${isLeftFlipDisabled && "new-post__flip-btn_disabled"}`}
-                onClick={handleLeftFlip}
+                onClick={(e) => handleLeftFlip(e, true)}
                 disabled={isLeftFlipDisabled}
               />
-              <div className="new-post__radio-buttons new-post__radio-buttons_type_icon">
+              <div
+                ref={iconButtonsRef}
+                className="new-post__radio-buttons new-post__radio-buttons_type_icon"
+              >
                 {iconButtons.slice(slideStart, slideEnd).map((iconButton) => (
                   <NewPostRadioButton
                     key={iconButton._id}
                     classname={iconButton.class}
                     radioBtnValue={iconButton.buttonValue}
                     radioBtnName={iconButton.name}
+                    idPrefix="edit-post"
                     checkValue={iconCheckValue}
                     onClick={handleIconClick}
+                    onArrowNavigate={handleIconArrowNavigate}
                     labelText={iconButton.labelText}
                   />
                 ))}
               </div>
               <button
+                type="button"
                 className={`new-post__flip-btn new-post__flip-btn_right ${isRightFlipDisabled && "new-post__flip-btn_disabled"}`}
-                onClick={handleRightFlip}
+                onClick={(e) => handleRightFlip(e, true)}
                 disabled={isRightFlipDisabled}
               />
             </div>
@@ -492,6 +621,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
         <BlogCloseButton
           classname="blog-close-btn blog-close-btn_location_new-post-popup"
           onClick={handleClose}
+          ariaLabel="Close dialog"
         />
       </div>
     </div>

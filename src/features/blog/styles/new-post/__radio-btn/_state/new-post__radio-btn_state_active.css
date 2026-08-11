@@ -1,5 +1,9 @@
 .new-post__radio-btn_state_active {
-    /* background-color: #9A7BD9;
-    color: #fff; */
-    border: 2px solid #9A7BD9;
+    background-color: #9A7BD9;
+    color: #fff;
+}
+
+.new-post__radio-btn_type_icon.new-post__radio-btn_state_active {
+    background-color: #f8f4ff;
+    box-shadow: none;
 }

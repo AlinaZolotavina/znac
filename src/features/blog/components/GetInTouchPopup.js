@@ -1,14 +1,20 @@
 import Social from "./Social";
 import BlogForm from "./BlogForm";
 import BlogInput from "./BlogInput";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import BlogCloseButton from "./BlogCloseButton";
+import useInitialFocus from "../../../shared/hooks/useInitialFocus";
+import useFocusTrap from "../../../shared/hooks/useFocusTrap";
+import useReturnFocus from "../../../shared/hooks/useReturnFocus";
+import useCloseOnEsc from "../../../shared/hooks/useCloseOnEsc";
+import useLockBodyScroll from "../../../shared/hooks/useLockBodyScroll";
+import useOverlayClickClose from "../../../shared/hooks/useOverlayClickClose";
 
 function GetInTouchPopup({ isOpen, isSendingReq, onClose, onSubmit }) {
   const [visitorName, setVisitorName] = useState("");
   const [visitorNameError, setVisitorNameError] = useState("");
   function handleVisitorNameChange(e) {
-    const regex = /^[A-Za-zА-Яа-яЁё -]*$/;
+    const regex = /^[\p{L} -]*$/u;
     if (e.target.value.length === 0) {
       setVisitorNameError("Name is required");
     } else if (!regex.test(e.target.value)) {
@@ -100,19 +106,36 @@ function GetInTouchPopup({ isOpen, isSendingReq, onClose, onSubmit }) {
     onClose();
   }
 
+  const popupRef = useRef(null);
+
+  useReturnFocus(isOpen);
+  useInitialFocus(isOpen, popupRef);
+  useFocusTrap(isOpen, popupRef);
+  useCloseOnEsc(isOpen, handleClose);
+  useLockBodyScroll(isOpen);
+
+  const handleOverlayClickClose = useOverlayClickClose(isOpen, handleClose);
+
+  if (!isOpen) return null;
+
   return (
     <div
-      className={`popup popup_type_get-in-touch ${isOpen && "popup_is-opened"}`}
+      className="popup popup_type_get-in-touch popup_is-opened"
+      onMouseDown={handleOverlayClickClose}
     >
-      <div className="get-in-touch">
-        <div className="get-in-touch__icons">
-          <div className="get-in-touch__icon" />
-          <Social classname="get-in-touch" />
-        </div>
+      <div
+        ref={popupRef}
+        className="get-in-touch"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="get-in-touch-title"
+        tabIndex={-1}
+      >
         <BlogForm
           formName="get-in-touch"
           formClassname="get-in-touch__form"
           titleClassname="get-in-touch__title"
+          titleId="get-in-touch-title"
           title="Get in touch"
           buttonClassname="get-in-touch__submit-btn"
           buttonText="Send"
@@ -156,7 +179,15 @@ function GetInTouchPopup({ isOpen, isSendingReq, onClose, onSubmit }) {
             <span className="blog-input__error">{textareaError}</span>
           </label>
         </BlogForm>
-        <BlogCloseButton classname="blog-close-btn" onClick={handleClose} />
+        <div className="get-in-touch__icons">
+          <div className="get-in-touch__icon" />
+          <Social classname="get-in-touch" />
+        </div>
+        <BlogCloseButton
+          classname="blog-close-btn"
+          onClick={handleClose}
+          ariaLabel="Close dialog"
+        />
       </div>
     </div>
   );

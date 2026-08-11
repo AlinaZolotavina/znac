@@ -1,0 +1,67 @@
+:where(
+  a,
+  button,
+  input:not(.radio-btn__input):not(.blog-upload-file__input),
+  select,
+  textarea,
+  [tabindex]:not([tabindex="-1"])
+):focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px #fff;
+}
+
+.new-post__radio-btn:focus-within {
+  outline: none;
+  box-shadow: none;
+}
+
+.new-post__radio-btn:has(.radio-btn__input:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+.new-post__radio-btn:has(.radio-btn__input:focus-visible)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border: 2px solid #000;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 2px #fff;
+  pointer-events: none;
+}
+
+.radio-btn:has(.radio-btn__input:focus-visible) {
+  outline: 2px solid #000;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px #fff;
+}
+
+.posts-search__field:has(.posts-search__input:focus-visible) {
+  outline: 2px solid #000;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px #fff;
+}
+
+.posts-search__input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.blog-input__field:focus {
+  outline: none;
+}
+
+.blog-input__field:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px #fff;
+}
+
+.blog-upload-file:has(.blog-upload-file__input:focus-visible)
+  .blog-upload-file__btn {
+  outline: 2px solid #000;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px #fff;
+}

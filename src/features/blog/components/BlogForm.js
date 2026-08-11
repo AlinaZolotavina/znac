@@ -2,6 +2,7 @@ function BlogForm ({
     formName,
     formClassname,
     titleClassname,
+    titleId,
     title,
     buttonClassname,
     buttonText,
@@ -12,7 +13,7 @@ function BlogForm ({
 }) {
     return (
         <section className={formClassname}>
-            <h2 className={titleClassname}>{title}</h2>
+            <h2 className={titleClassname} id={titleId}>{title}</h2>
             <form
                 name={formName}
                 className='blog-form'

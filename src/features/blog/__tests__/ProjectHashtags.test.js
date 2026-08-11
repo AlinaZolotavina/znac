@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import ProjectHashtags from "../../blog/components/ProjectHashtags";
+import ProjectHashtags from "../components/ProjectHashtags";
 
 describe("project hashtags dropdown", () => {
   const originalClientWidth = Object.getOwnPropertyDescriptor(

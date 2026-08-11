@@ -12,6 +12,24 @@
   color: #000;
 }
 
+.popup_type_get-in-touch {
+  box-sizing: border-box;
+  padding: 56px;
+}
+
+.new-post .blog-input {
+  margin-bottom: 6px;
+}
+
+.new-post .blog-input__field_type_text-area {
+  min-height: 130px;
+  resize: none;
+}
+
+.new-post .blog-submit-btn {
+  margin-top: 18px;
+}
+
 @media (max-width: 1280px) {
   .new-post {
     padding: 10px 30px 15px;
@@ -19,6 +37,10 @@
 }
 
 @media (max-width: 768px) {
+  .popup_type_get-in-touch {
+    padding: 0;
+  }
+
   .new-post {
     position: fixed;
     top: 0;

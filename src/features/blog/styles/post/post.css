@@ -15,9 +15,7 @@
   height: 100%;
   background-color: #fff;
   cursor: pointer;
-  transition:
-    opacity 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: box-shadow 0.2s ease;
 }
 
 .post__content {
@@ -27,11 +25,6 @@
   align-items: stretch;
   gap: 8px;
   min-width: 0;
-}
-
-.post:focus-visible {
-  outline: 2px solid #9A7BD9;
-  outline-offset: 4px;
 }
 
 .post__meta {

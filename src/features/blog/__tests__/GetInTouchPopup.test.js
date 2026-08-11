@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import GetInTouchPopup from "../../blog/components/GetInTouchPopup";
+import GetInTouchPopup from "../components/GetInTouchPopup";
 
 function fillForm() {
   fireEvent.change(screen.getByPlaceholderText("Name"), {

@@ -1,6 +1,13 @@
+import { useRef } from "react";
 import CloseButton from "./CloseButton";
 import LogoutButton from "./LogoutButton";
 import { NavLink } from "react-router-dom";
+import useInitialFocus from "../../shared/hooks/useInitialFocus";
+import useFocusTrap from "../../shared/hooks/useFocusTrap";
+import useReturnFocus from "../../shared/hooks/useReturnFocus";
+import useCloseOnEsc from "../../shared/hooks/useCloseOnEsc";
+import useOverlayClickClose from "../../shared/hooks/useOverlayClickClose";
+import useLockBodyScroll from "../../shared/hooks/useLockBodyScroll";
 
 function Menu({
   isOpen,
@@ -14,6 +21,16 @@ function Menu({
   onClose,
   onLogout,
 }) {
+  const menuRef = useRef(null);
+
+  useReturnFocus(isOpen);
+  useInitialFocus(isOpen, menuRef);
+  useFocusTrap(isOpen, menuRef);
+  useCloseOnEsc(isOpen, onClose);
+  useLockBodyScroll(isOpen);
+
+  const handleOverlayClickClose = useOverlayClickClose(isOpen, onClose);
+
   function handleGalleryClick() {
     onClose();
     onGalleryClick();
@@ -24,8 +41,16 @@ function Menu({
     onContactClick();
   }
 
+  if (!isOpen) return null;
+
   return (
-    <div className={`menu ${isOpen && "menu_visible"}`}>
+    <nav
+      ref={menuRef}
+      className="menu menu_visible"
+      aria-label="Main navigation"
+      tabIndex={-1}
+      onMouseDown={handleOverlayClickClose}
+    >
       <NavLink
         to="/"
         end
@@ -81,8 +106,12 @@ function Menu({
           onLogout={onLogout}
         />
       )}
-      <CloseButton classname="close-btn menu__close-btn" onClick={onClose} />
-    </div>
+      <CloseButton
+        classname="close-btn menu__close-btn"
+        onClick={onClose}
+        ariaLabel="Close menu"
+      />
+    </nav>
   );
 }
 

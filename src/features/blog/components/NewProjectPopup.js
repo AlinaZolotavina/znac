@@ -1,9 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import BlogForm from "./BlogForm";
 import BlogInput from "./BlogInput";
 import BlogCloseButton from "./BlogCloseButton";
 import BlogTextArea from "./BlogTextArea";
 import isValidUrl from "../../../shared/utils/isValidUrl";
+import useInitialFocus from "../../../shared/hooks/useInitialFocus";
+import useFocusTrap from "../../../shared/hooks/useFocusTrap";
+import useReturnFocus from "../../../shared/hooks/useReturnFocus";
+import useCloseOnEsc from "../../../shared/hooks/useCloseOnEsc";
+import useLockBodyScroll from "../../../shared/hooks/useLockBodyScroll";
+import useOverlayClickClose from "../../../shared/hooks/useOverlayClickClose";
 
 function NewProjectPopup({ isOpen, onClose, onAddProject, isSendingReq }) {
   const [projectTitle, setProjectTitle] = useState("");
@@ -25,7 +31,7 @@ function NewProjectPopup({ isOpen, onClose, onAddProject, isSendingReq }) {
   const [projectHashtags, setProjectHashtags] = useState("");
   const [projectHashtagsError, setProjectHashtagsError] = useState("");
   function handleProjectHashtagsChange(e) {
-    const regex = /^[A-Za-zА-Яа-я0-9 _.]*$/;
+    const regex = /^[\p{L}0-9 _.]*$/u;
     if (e.target.value.length === 0) {
       setProjectHashtagsError("You must add at least one hashtag");
     } else if (!regex.test(e.target.value)) {
@@ -120,15 +126,36 @@ function NewProjectPopup({ isOpen, onClose, onAddProject, isSendingReq }) {
     onClose();
   }
 
+  const popupRef = useRef(null);
+
+  useReturnFocus(isOpen);
+  useInitialFocus(isOpen, popupRef);
+  useFocusTrap(isOpen, popupRef);
+  useCloseOnEsc(isOpen, handleClose);
+  useLockBodyScroll(isOpen);
+
+  const handleOverlayClickClose = useOverlayClickClose(isOpen, handleClose);
+
+  if (!isOpen) return null;
+
   return (
     <div
-      className={`popup popup_type_get-in-touch ${isOpen && "popup_is-opened"}`}
+      className="popup popup_type_get-in-touch popup_is-opened"
+      onMouseDown={handleOverlayClickClose}
     >
-      <div className="new-project">
+      <div
+        ref={popupRef}
+        className="new-project"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="new-project-title"
+        tabIndex={-1}
+      >
         <BlogForm
           formName="new-project"
           formClassname="new-project__form"
           titleClassname="new-project__title"
+          titleId="new-project-title"
           title="New project"
           buttonClassname="new-project__submit-btn"
           buttonText="Add project"
@@ -178,6 +205,7 @@ function NewProjectPopup({ isOpen, onClose, onAddProject, isSendingReq }) {
         <BlogCloseButton
           classname="blog-close-btn blog-close-btn_location_new-project-popup"
           onClick={handleClose}
+          ariaLabel="Close dialog"
         />
       </div>
     </div>

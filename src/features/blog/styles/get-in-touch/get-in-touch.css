@@ -24,7 +24,7 @@
 @media (max-width: 900px) {
   .get-in-touch {
     width: 60%;
-    flex-direction: column-reverse;
+    flex-direction: column;
   }
 }
 
@@ -37,6 +37,6 @@
 @media (max-width: 450px) {
   .get-in-touch {
     width: 80%;
-    flex-direction: column-reverse;
+    flex-direction: column;
   }
 }

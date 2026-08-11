@@ -1,7 +1,6 @@
 function ContactButton ({ onClick }) {
-    function handleClick(e) {
+    function handleClick() {
         onClick();
-        e.target.blur();
     }
     return (
         <button className='contact-button' onClick={handleClick}>

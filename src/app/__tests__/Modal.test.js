@@ -1,6 +1,23 @@
+import { useState } from "react";
 import { fireEvent, screen } from "@testing-library/react";
 import Modal from "../components/Modal";
 import { renderWithProviders } from "../../test/renderWithProviders";
+
+function ModalController() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>Open modal</button>
+      <Modal
+        isOpen={isOpen}
+        status="success"
+        message="Saved successfully"
+        onClose={() => setIsOpen(false)}
+      />
+    </>
+  );
+}
 
 describe("Modal", () => {
   test("does not render when closed", () => {
@@ -33,5 +50,67 @@ describe("Modal", () => {
     fireEvent.click(screen.getByRole("button"));
 
     expect(onClose).toHaveBeenCalled();
+  });
+
+  test("moves focus inside and returns it to trigger after close", () => {
+    renderWithProviders(<ModalController />);
+
+    const trigger = screen.getByRole("button", { name: "Open modal" });
+    trigger.focus();
+    fireEvent.click(trigger);
+
+    const closeButton = screen.getByRole("button", { name: "Close dialog" });
+
+    expect(closeButton).toHaveFocus();
+
+    fireEvent.click(closeButton);
+
+    expect(trigger).toHaveFocus();
+  });
+
+  test("keeps Tab focus inside the modal", () => {
+    renderWithProviders(<ModalController />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Open modal" }));
+
+    const closeButton = screen.getByRole("button", { name: "Close dialog" });
+    closeButton.focus();
+    fireEvent.keyDown(document, { key: "Tab" });
+
+    expect(closeButton).toHaveFocus();
+  });
+
+  test("closes by Escape", () => {
+    renderWithProviders(<ModalController />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Open modal" }));
+    fireEvent.keyDown(window, { key: "Escape" });
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  test("closes by overlay click", () => {
+    renderWithProviders(<ModalController />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Open modal" }));
+
+    const overlay = screen.getByRole("dialog").parentElement;
+    fireEvent.mouseDown(overlay);
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  test("locks page scroll while open and restores it after close", () => {
+    renderWithProviders(<ModalController />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Open modal" }));
+
+    expect(document.body).toHaveStyle({ overflow: "hidden" });
+    expect(document.documentElement).toHaveStyle({ overflow: "hidden" });
+
+    fireEvent.click(screen.getByRole("button", { name: "Close dialog" }));
+
+    expect(document.body.style.overflow).toBe("");
+    expect(document.documentElement.style.overflow).toBe("");
   });
 });

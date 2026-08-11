@@ -21,7 +21,7 @@ import {
 } from "../shared/utils/messages.js";
 
 import useAuth from "../features/auth/hooks/useAuth.js";
-import useRequestState from "../shared/useRequestStatus.js";
+import useRequestState from "../shared/hooks/useRequestStatus.js";
 
 function App() {
   const navigate = useNavigate();
@@ -53,9 +53,8 @@ function App() {
     });
   }, []);
 
-  function openMenu(e) {
+  function openMenu() {
     setIsMenuOpen(true);
-    e.target.blur();
   }
 
   const closeMenu = useCallback(() => {

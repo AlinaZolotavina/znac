@@ -1,6 +1,6 @@
-function CloseButton({ classname, onClick }) {
+function CloseButton({ classname, onClick, ariaLabel }) {
     return (
-        <button className={classname} onClick={onClick} />
+        <button className={classname} onClick={onClick} aria-label={ariaLabel} />
     );
 }
 

@@ -484,4 +484,7 @@
 @import url(./features/blog/styles/content-not-found/_screen/content-not-found_screen_full.css);
 @import url(./features/blog/styles/content-not-found/_screen/content-not-found_screen_not-full.css);
 
+/* shared accessibility states */
+@import url(./shared/styles/focus-visible.css);
+
 /* не добавила блоки для страница не найдена и попапа */

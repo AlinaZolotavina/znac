@@ -1,9 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import errorImage from "../../../app/assets/image-error.svg";
 
 import EditButton from "../../../app/components/EditButton";
 import PhotoHashtags from "./PhotoHashtags";
 import CloseButton from "../../../app/components/CloseButton";
+import useInitialFocus from "../../../shared/hooks/useInitialFocus";
+import useFocusTrap from "../../../shared/hooks/useFocusTrap";
+import useReturnFocus from "../../../shared/hooks/useReturnFocus";
+import useCloseOnEsc from "../../../shared/hooks/useCloseOnEsc";
+import useLockBodyScroll from "../../../shared/hooks/useLockBodyScroll";
+import useOverlayClickClose from "../../../shared/hooks/useOverlayClickClose";
 
 function PhotoPopup({
   loggedIn,
@@ -43,9 +49,31 @@ function PhotoPopup({
     onPhotoFlip("left");
   }
 
+  const popupRef = useRef(null);
+
+  useReturnFocus(isOpen);
+  useInitialFocus(isOpen, popupRef);
+  useFocusTrap(isOpen, popupRef);
+  useCloseOnEsc(isOpen, onClose);
+  useLockBodyScroll(isOpen);
+
+  const handleOverlayClickClose = useOverlayClickClose(isOpen, onClose);
+
+  if (!isOpen) return null;
+
   return (
-    <div className={`popup popup_type_photo ${isOpen && "popup_is-opened"}`}>
-      <div className="popup__wrapper">
+    <div
+      className="popup popup_type_photo popup_is-opened"
+      onMouseDown={handleOverlayClickClose}
+    >
+      <div
+        ref={popupRef}
+        className="popup__wrapper"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Photo preview"
+        tabIndex={-1}
+      >
         <div className="popup__photo-container">
           <button
             className={`popup__left-flip flip-btn ${
@@ -70,6 +98,7 @@ function PhotoPopup({
             <CloseButton
               classname="close-btn popup__close-btn"
               onClick={onClose}
+              ariaLabel="Close dialog"
             />
           </div>
 

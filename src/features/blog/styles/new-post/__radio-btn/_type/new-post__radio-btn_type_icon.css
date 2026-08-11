@@ -7,6 +7,22 @@
   overflow: hidden;
 }
 
+.new-post__radio-btn_type_icon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(154, 123, 217, 0.55);
+  mix-blend-mode: multiply;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.new-post__radio-btn_type_icon.new-post__radio-btn_state_active::after {
+  opacity: 1;
+}
+
 @media (max-width: 1280px) {
   .new-post__radio-btn_type_icon {
     width: 75px;

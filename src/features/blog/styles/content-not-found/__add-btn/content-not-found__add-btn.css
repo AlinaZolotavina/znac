@@ -13,3 +13,7 @@
     color: #fff;
     text-decoration: none;
 }
+
+.content-not-found__add-btn:hover {
+    opacity: .7;
+}
