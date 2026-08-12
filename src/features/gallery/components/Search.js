@@ -35,6 +35,11 @@ function Search({
 
   function handleSearch(e) {
     e.preventDefault();
+
+    if (!isFormValid || isLoading) {
+      return;
+    }
+
     onSubmit(hashtag);
   }
 
@@ -53,9 +58,10 @@ function Search({
           />
         </label>
         <button
-          className={`search__submit-btn ${isFormValid ? "" : "search__submit-btn_disabled"}`}
+          className={`search__submit-btn ${isFormValid && !isLoading ? "" : "search__submit-btn_disabled"}`}
           type="submit"
           disabled={!isFormValid || isLoading}
+          aria-label="Search photos"
         />
       </form>
       <span className="search__error">{hashtagError}</span>

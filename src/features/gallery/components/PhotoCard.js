@@ -18,23 +18,31 @@ function PhotoCard({ photo, loggedIn, onPhotoClick, onDeleteBtnClick }) {
 
   return (
     <li className="photo-card">
-      <img
-        className="photo-card__image"
-        src={imageSrc}
-        alt={photo.hashtags}
-        loading="lazy"
-        onError={(e) => {
-          if (e.currentTarget.src !== errorImage) {
-            setImageSrc(errorImage);
-          }
-        }}
+      <button
+        type="button"
+        className="photo-card__button"
         onClick={handlePhotoClick}
-      />
+        aria-label={`Open photo ${photo.hashtags}`}
+      >
+        <img
+          className="photo-card__image"
+          src={imageSrc}
+          alt={photo.hashtags}
+          loading="lazy"
+          onError={(e) => {
+            if (e.currentTarget.src !== errorImage) {
+              setImageSrc(errorImage);
+            }
+          }}
+        />
+      </button>
 
       {loggedIn && (
         <button
           className="photo-card__delete-btn"
+          type="button"
           onClick={handlePhotoDelete}
+          aria-label={`Delete photo ${photo.hashtags}`}
         />
       )}
     </li>

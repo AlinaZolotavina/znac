@@ -4,15 +4,31 @@ import LogoutButton from "../../../app/components/LogoutButton";
 import Form from "../../../app/components/Form";
 import Input from "../../../app/components/Input";
 import Modal from "../../../app/components/Modal";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BurgerMenuBtn from "../../../app/components/BurgerMenuBtn";
 import UploadFileInfo from "./UploadFileInfo";
-import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import isValidUrl from "../../../shared/utils/isValidUrl";
 
 const MAX_FILES_COUNT = 10;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+const PHOTO_UPLOAD_TYPES = [
+  {
+    value: "pc",
+    labelClassName: "radio-btn__label radio-btn__label_type_pc",
+    tooltip: "Upload photo from PC",
+  },
+  {
+    value: "google-drive",
+    labelClassName: "radio-btn__label radio-btn__label_type_google-drive",
+    tooltip: "Add photo via its Google Drive link",
+  },
+  {
+    value: "link",
+    labelClassName: "radio-btn__label radio-btn__label_type_link",
+    tooltip: "Add photo via link",
+  },
+];
 
 function AddPhoto({
   loggedIn,
@@ -42,6 +58,7 @@ function AddPhoto({
   const views = 0;
   const [fileNames, setFileNames] = useState([]);
   const [isUploadingPhotos, setIsUploadingPhotos] = useState(false);
+  const uploadTypeRefs = useRef([]);
   const [modalData, setModalData] = useState({
     isOpen: false,
     status: "",
@@ -151,6 +168,35 @@ function AddPhoto({
     setPcDownloadCheck(false);
     setGoogleDownloadCheck(true);
     setLinkDownloadCheck(false);
+  }
+
+  function activateUploadType(type) {
+    if (type === "pc") {
+      handlePcDownloadClick();
+    } else if (type === "google-drive") {
+      handleGoogleDownloadClick();
+    } else {
+      handleLinkDownloadClick();
+    }
+  }
+
+  function handleUploadTypeKeyDown(e, currentIndex) {
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      e.preventDefault();
+
+      const direction = e.key === "ArrowRight" ? 1 : -1;
+      const nextIndex =
+        (currentIndex + direction + PHOTO_UPLOAD_TYPES.length) %
+        PHOTO_UPLOAD_TYPES.length;
+
+      uploadTypeRefs.current[nextIndex]?.focus();
+      return;
+    }
+
+    if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+      e.preventDefault();
+      activateUploadType(PHOTO_UPLOAD_TYPES[currentIndex].value);
+    }
   }
 
   async function handleUploadFromPc(e) {
@@ -326,82 +372,84 @@ function AddPhoto({
           isSendingReq={isSendingReq}
           onSubmit={handleSubmit}
         >
-          <div className="radio-buttons-container">
-            <div
-              className={`radio-btn ${pcDownloadCheck ? "radio-btn_state_active" : "radio-btn_state_inactive"}`}
-              onClick={handlePcDownloadClick}
-            >
-              <input type="radio" className="radio-btn__input" />
-              <label className="radio-btn__label radio-btn__label_type_pc" />
-              <span className="radio-btn__tooltip">Upload photo from PC</span>
-            </div>
-            <div
-              className={`radio-btn ${googleDownloadCheck ? "radio-btn_state_active" : "radio-btn_state_inactive"}`}
-              onClick={handleGoogleDownloadClick}
-            >
-              <input type="radio" className="radio-btn__input" />
-              <label className="radio-btn__label radio-btn__label_type_google-drive" />
-              <span className="radio-btn__tooltip">
-                Add photo via its Google Drive link
-              </span>
-            </div>
-            <div
-              className={`radio-btn ${linkDownloadCheck ? "radio-btn_state_active" : "radio-btn_state_inactive"}`}
-              onClick={handleLinkDownloadClick}
-            >
-              <input type="radio" className="radio-btn__input" />
-              <label className="radio-btn__label radio-btn__label_type_link" />
-              <span className="radio-btn__tooltip">Add photo via link</span>
-            </div>
+          <div className="radio-buttons-container" role="tablist" aria-label="Photo upload method">
+            {PHOTO_UPLOAD_TYPES.map((type, index) => {
+              const isActive =
+                (type.value === "pc" && pcDownloadCheck) ||
+                (type.value === "google-drive" && googleDownloadCheck) ||
+                (type.value === "link" && linkDownloadCheck);
+
+              return (
+                <button
+                  key={type.value}
+                  ref={(node) => {
+                    uploadTypeRefs.current[index] = node;
+                  }}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  tabIndex={isActive ? 0 : -1}
+                  className={`radio-btn ${isActive ? "radio-btn_state_active" : "radio-btn_state_inactive"}`}
+                  onClick={() => activateUploadType(type.value)}
+                  onKeyDown={(e) => handleUploadTypeKeyDown(e, index)}
+                >
+                  <span className={type.labelClassName} aria-hidden="true" />
+                  <span className="radio-btn__tooltip">{type.tooltip}</span>
+                </button>
+              );
+            })}
           </div>
-          {pcDownloadCheck ? (
-            <div className="upload-container">
-              <label className="upload-file">
-                <input
-                  name="photoFile"
-                  className="upload-file__input"
-                  type="file"
-                  multiple
-                  accept=".jpg,.jpeg,.png,.webp"
-                  onChange={handleUploadFromPc}
-                />
-                <span className="upload-file__btn">
-                  <div className="upload-file__icon" />
-                  Select photo
-                </span>
-              </label>
-              <ul className="upload-file__info">
-                {isUploadingPhotos ? (
-                  <li className="upload-file__status">
-                    Uploading
-                    <span className="upload-file__dots" />
-                  </li>
-                ) : photoFiles.length === 0 ? (
-                  <li className="upload-file__info_empty">{fileInfo}</li>
-                ) : (
-                  fileNames.map((name, index) => (
-                    <UploadFileInfo
-                      key={`${name}-${index}`}
-                      fileName={name}
-                      onRemove={() => handleRemoveSelectedPhoto(index)}
-                    />
-                  ))
-                )}
-              </ul>
-            </div>
-          ) : (
-            <Input
-              labelClassname=""
-              inputLabel="Photo"
-              classname="input__field"
-              placeholder="Paste image link"
-              inputType="url"
-              inputValue={photoLink}
-              onChange={handlePhotoLinkChange}
-              isSendingReq={isSendingReq}
-              error={photoLinkError}
-            />
-          )}
+          <div className="add-photo__upload-section">
+            {pcDownloadCheck ? (
+              <div className="upload-container">
+                <label className="upload-file">
+                  <input
+                    id="photo-file-upload"
+                    name="photoFile"
+                    className="upload-file__input"
+                    type="file"
+                    multiple
+                    accept=".jpg,.jpeg,.png,.webp"
+                    onChange={handleUploadFromPc}
+                  />
+                  <span className="upload-file__btn">
+                    <div className="upload-file__icon" />
+                    Select photo
+                  </span>
+                </label>
+                <ul className="upload-file__info">
+                  {isUploadingPhotos ? (
+                    <li className="upload-file__status">
+                      Uploading
+                      <span className="upload-file__dots" />
+                    </li>
+                  ) : photoFiles.length === 0 ? (
+                    <li className="upload-file__info_empty">{fileInfo}</li>
+                  ) : (
+                    fileNames.map((name, index) => (
+                      <UploadFileInfo
+                        key={`${name}-${index}`}
+                        fileName={name}
+                        onRemove={() => handleRemoveSelectedPhoto(index)}
+                      />
+                    ))
+                  )}
+                </ul>
+              </div>
+            ) : (
+              <Input
+                labelClassname=""
+                inputLabel="Photo"
+                classname="input__field"
+                placeholder="Paste image link"
+                inputType="url"
+                inputValue={photoLink}
+                onChange={handlePhotoLinkChange}
+                isSendingReq={isSendingReq}
+                error={photoLinkError}
+              />
+            )}
+          </div>
           <Input
             inputLabel="Hashtags"
             placeholder="Enter hashtags separated by spaces"

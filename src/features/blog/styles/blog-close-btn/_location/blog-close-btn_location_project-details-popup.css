@@ -1,0 +1,14 @@
+.blog-close-btn_location_project-details-popup {
+  top: -30px;
+  right: -30px;
+}
+
+@media (max-width: 600px) {
+  .blog-close-btn_location_project-details-popup {
+    top: 14px;
+    right: 14px;
+    width: 24px;
+    height: 24px;
+    z-index: 2;
+  }
+}

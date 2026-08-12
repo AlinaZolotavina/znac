@@ -60,7 +60,11 @@ function ProjectDetailsPopup({ project, isOpen, onClose, onHashtagClick }) {
         >
           More details
         </a>
-        <CloseButton classname="close-btn popup__close-btn" onClick={onClose} ariaLabel="Close dialog" />
+        <CloseButton
+          classname="blog-close-btn blog-close-btn_location_project-details-popup"
+          onClick={onClose}
+          ariaLabel="Close dialog"
+        />
       </article>
     </div>
   );

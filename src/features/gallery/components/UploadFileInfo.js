@@ -11,7 +11,7 @@ function UploadFileInfo({ fileName, onRemove }) {
         onClick={onRemove}
         aria-label={`Remove ${fileName}`}
       >
-        ✕
+        x
       </button>
     </li>
   );

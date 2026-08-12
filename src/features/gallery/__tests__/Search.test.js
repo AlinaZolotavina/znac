@@ -28,9 +28,12 @@ function renderUsePhotos(overrides = {}) {
     ...overrides,
   };
 
-  return renderHook((hookProps) => usePhotos(hookProps), {
+  return {
+    props,
+    ...renderHook((hookProps) => usePhotos(hookProps), {
     initialProps: props,
-  });
+    }),
+  };
 }
 
 describe("gallery search", () => {
@@ -70,5 +73,25 @@ describe("gallery search", () => {
     });
 
     expect(result.current.photosToRender).toHaveLength(6);
+  });
+
+  test("resets filtered photos when leaving gallery page", async () => {
+    const { props, result, rerender } = renderUsePhotos();
+
+    await waitFor(() => expect(result.current.photosToRender).toHaveLength(6));
+
+    await act(async () => {
+      result.current.handlePhotoSearch("portrait");
+    });
+
+    await waitFor(() => expect(result.current.photosToRender).toEqual([photos[2]]));
+
+    rerender({
+      ...props,
+      location: { pathname: "/addphoto" },
+    });
+
+    await waitFor(() => expect(result.current.photosToRender).toHaveLength(6));
+    expect(props.setHashtag).toHaveBeenCalledWith("");
   });
 });

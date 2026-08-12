@@ -4,12 +4,13 @@ function Hashtag({ hashtag, onClick }) {
     }
 
     return (
-        <p
+        <button
+            type="button"
             className="hashtag"
             onClick={handleClick}
         >
             # {hashtag}
-        </p>
+        </button>
     );
 }
 

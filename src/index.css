@@ -143,6 +143,7 @@
 /* input */
 @import url(./app/styles/input/input.css);
 @import url(./app/styles/input/__field/input__field.css);
+@import url(./app/styles/input/__field/_type/input__field_type_password.css);
 @import url(./app/styles/input/__error/input__error.css);
 @import url(./features/auth/styles/password-field/password-field.css);
 
@@ -166,6 +167,7 @@
 /* add photo */
 @import url(./features/gallery/styles/add-photo/add-photo.css);
 @import url(./features/gallery/styles/add-photo/__form/add-photo__form.css);
+@import url(./features/gallery/styles/add-photo/__upload-section/add-photo__upload-section.css);
 @import url(./features/gallery/styles/upload-file/upload-file.css);
 @import url(./features/gallery/styles/upload-file/__btn/upload-file__btn.css);
 @import url(./features/gallery/styles/upload-file/__icon/upload-file__icon.css);
@@ -433,6 +435,7 @@
 @import url(./features/blog/styles/blog-close-btn/blog-close-btn.css);
 @import url(./features/blog/styles/blog-close-btn/_location/blog-close-btn_location_new-post-popup.css);
 @import url(./features/blog/styles/blog-close-btn/_location/blog-close-btn_location_new-project-popup.css);
+@import url(./features/blog/styles/blog-close-btn/_location/blog-close-btn_location_project-details-popup.css);
 @import url(./features/blog/styles/blog-edit-btn/blog-edit-btn.css);
 @import url(./features/blog/styles/blog-delete-btn/blog-delete-btn.css);
 

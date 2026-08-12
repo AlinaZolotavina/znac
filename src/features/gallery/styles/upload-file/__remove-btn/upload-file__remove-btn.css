@@ -1,14 +1,15 @@
 .upload-file__remove-btn {
   display: flex;
   border-radius: 5px;
-  border-style: none;
+  border: 1px solid #5d92bb;
+  background-color: #5d92bb;
+  color: #fff;
   width: 20px;
   height: 20px;
   justify-content: center;
   align-items: center;
   margin-left: 15px;
   cursor: pointer;
-  outline: none;
   box-sizing: border-box;
   transition: opacity 0.2s ease;
 }

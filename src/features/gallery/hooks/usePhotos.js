@@ -71,10 +71,6 @@ export default function usePhotos({
     loadHashtags();
   }, [loadHashtags]);
 
-  useEffect(() => {
-    setHashtag("");
-  }, [location.pathname, setHashtag]);
-
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const hashtagsOfSelectedPhoto = selectedPhoto?.hashtags || [];
   const viewsOfSelectedPhoto = selectedPhoto?.views || 0;
@@ -169,14 +165,14 @@ export default function usePhotos({
       .catch(console.error);
   }
 
-  function getRestoredVisibleCount() {
+  const getRestoredVisibleCount = useCallback(() => {
     const { initialPhotosNumber } = getPhotosLayout();
 
     return Math.min(
       visibleLoadedPhotosCount || initialPhotosNumber,
       loadedPhotos.length,
     );
-  }
+  }, [getPhotosLayout, loadedPhotos.length, visibleLoadedPhotosCount]);
 
   const loadPhotos = useCallback(
     ({ page = 1, append = false, hashtag = "" } = {}) => {
@@ -297,7 +293,7 @@ export default function usePhotos({
       .catch(console.error);
   }
 
-  function handleClearPhotoSearch() {
+  const handleClearPhotoSearch = useCallback(() => {
     const restoredVisibleCount = getRestoredVisibleCount();
 
     setHashtag("");
@@ -305,7 +301,13 @@ export default function usePhotos({
     setPhotosPage(1);
     setPhotosPages(Math.max(1, Math.ceil(loadedPhotos.length / 20)));
     setCurrentPhotosNumber(restoredVisibleCount);
-  }
+  }, [getRestoredVisibleCount, loadedPhotos, setHashtag]);
+
+  useEffect(() => {
+    if (location.pathname !== "/") {
+      handleClearPhotoSearch();
+    }
+  }, [handleClearPhotoSearch, location.pathname]);
 
   function handlePhotoHashtagClick(nextHashtag) {
     closeAllPopups();
