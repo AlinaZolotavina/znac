@@ -1,6 +1,7 @@
 import Social from "./Social";
 import BlogForm from "./BlogForm";
 import BlogInput from "./BlogInput";
+import BlogTextArea from "./BlogTextArea";
 import { useState, useEffect, useRef } from "react";
 import BlogCloseButton from "./BlogCloseButton";
 import useInitialFocus from "../../../shared/hooks/useInitialFocus";
@@ -165,19 +166,15 @@ function GetInTouchPopup({ isOpen, isSendingReq, onClose, onSubmit }) {
             inputName="get-in-touch email"
             maxLength={254}
           />
-          <label className="blog-input">
-            <textarea
-              className="blog-input__field blog-input__field_type_text-area"
-              placeholder="Your message"
-              value={textarea}
-              onChange={handleTextareaChange}
-              required
-              disabled={isSendingReq}
-              name="get-in-touch text"
-              maxLength="3000"
-            />
-            <span className="blog-input__error">{textareaError}</span>
-          </label>
+          <BlogTextArea
+            placeholder="Your message"
+            value={textarea}
+            onChange={handleTextareaChange}
+            isSendingReq={isSendingReq}
+            error={textareaError}
+            inputName="get-in-touch text"
+            maxLength="3000"
+          />
         </BlogForm>
         <div className="get-in-touch__icons">
           <div className="get-in-touch__icon" />

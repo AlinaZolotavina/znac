@@ -9,6 +9,9 @@ function Search({
 }) {
   const [hashtagError, setHashtagError] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
+  const hasError = Boolean(hashtagError);
+  const errorId = "gallery-search-error";
+
   function handleHashtagChange(e) {
     const nextValue = e.target.value;
     const regex = /^[A-Za-zА-Яа-я0-9_]*$/;
@@ -48,6 +51,7 @@ function Search({
       <form className="search__form" onSubmit={handleSearch}>
         <label className="search__field">
           <input
+            id="gallery-search"
             className="search__input"
             placeholder="enter hashtag"
             type="text"
@@ -55,6 +59,8 @@ function Search({
             onChange={handleHashtagChange}
             required
             name="search"
+            aria-invalid={hasError ? "true" : undefined}
+            aria-describedby={hasError ? errorId : undefined}
           />
         </label>
         <button
@@ -64,7 +70,9 @@ function Search({
           aria-label="Search photos"
         />
       </form>
-      <span className="search__error">{hashtagError}</span>
+      <span className="search__error" id={errorId}>
+        {hashtagError}
+      </span>
     </section>
   );
 }

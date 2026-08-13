@@ -395,8 +395,16 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
           onSubmit={handleSubmit}
         >
           <div className="new-post__radio-buttons-container">
-            <span className="new-post__input-label">Theme</span>
-            <div className="new-post__radio-buttons new-post__radio-buttons_type_theme">
+            <span className="new-post__input-label" id="new-post-theme-label">
+              Theme
+            </span>
+            <div
+              className="new-post__radio-buttons new-post__radio-buttons_type_theme"
+              role="radiogroup"
+              aria-labelledby="new-post-theme-label"
+              aria-invalid={themeError ? "true" : undefined}
+              aria-describedby={themeError ? "new-post-theme-error" : undefined}
+            >
               <NewPostRadioButton
                 classname="new-post__radio-btn_type_theme"
                 radioBtnValue="Web development"
@@ -443,21 +451,30 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
                 labelText="Daily life"
               />
             </div>
-            <span className="new-post__input-error">{themeError}</span>
+            <span className="new-post__input-error" id="new-post-theme-error">
+              {themeError}
+            </span>
           </div>
 
           <div className="new-post__radio-buttons-container">
-            <span className="new-post__input-label">Icon</span>
+            <span className="new-post__input-label" id="new-post-icon-label">
+              Icon
+            </span>
             <div className="new-post__icon-selection">
               <button
                 type="button"
                 className={`new-post__flip-btn new-post__flip-btn_left ${isLeftFlipDisabled && "new-post__flip-btn_disabled"}`}
                 onClick={(e) => handleLeftFlip(e, true)}
                 disabled={isLeftFlipDisabled}
+                aria-label="Previous post icon"
               />
               <div
                 ref={iconButtonsRef}
                 className="new-post__radio-buttons new-post__radio-buttons_type_icon"
+                role="radiogroup"
+                aria-labelledby="new-post-icon-label"
+                aria-invalid={iconError ? "true" : undefined}
+                aria-describedby={iconError ? "new-post-icon-error" : undefined}
               >
                 {iconButtons.slice(slideStart, slideEnd).map((iconButton) => (
                   <NewPostRadioButton
@@ -478,10 +495,13 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
                 className={`new-post__flip-btn new-post__flip-btn_right ${isRightFlipDisabled && "new-post__flip-btn_disabled"}`}
                 onClick={(e) => handleRightFlip(e, true)}
                 disabled={isRightFlipDisabled}
+                aria-label="Next post icon"
               />
             </div>
 
-            <span className="new-post__input-error">{iconError}</span>
+            <span className="new-post__input-error" id="new-post-icon-error">
+              {iconError}
+            </span>
           </div>
 
           <div className="new-post__form-section">
