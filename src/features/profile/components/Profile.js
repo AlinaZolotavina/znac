@@ -46,6 +46,7 @@ function Profile({
       </Header>
       <BurgerMenuBtn onMenuClick={onMenuClick} />
       <div className="profile__container">
+        <h1 className="profile__title">Profile</h1>
         <div className="profile__email">
           <Input
             inputLabel="E-mail"

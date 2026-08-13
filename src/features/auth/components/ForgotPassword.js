@@ -48,6 +48,7 @@ function ForgotPassword({ onReceiveEmail, isSendingReq }) {
           formClassname="form"
           titleClassname="form__title forgot-password__title"
           title="Forgot password?"
+          titleTag="h1"
           buttonClassname="form__submit-btn"
           buttonText="Receive e-mail"
           isFormValid={isFormValid}

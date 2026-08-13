@@ -59,9 +59,9 @@ function CurrentPost({
       <p className={`post__theme post__theme_location_${location}`}>
         {post.theme}
       </p>
-      <h3 className={`post__title post__title_location_${location}`}>
+      <h1 className={`post__title post__title_location_${location}`}>
         {post.title}
-      </h3>
+      </h1>
       <ul className="post__hashtags">
         {postHashtags.map((value, key) => (
           <BlogHashtag

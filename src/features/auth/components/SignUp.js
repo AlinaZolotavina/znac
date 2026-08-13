@@ -59,6 +59,7 @@ function SignUp({ onSignup, isSendingReq }) {
           formClassname="form"
           titleClassname="form__title"
           title="Create account"
+          titleTag="h1"
           buttonClassname="form__submit-btn"
           buttonText="Sign up"
           isFormValid={isFormValid}

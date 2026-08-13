@@ -16,9 +16,9 @@ function ConfirmEmailUpdate({ onUpdateEmail }) {
           src={updateEmailIcon}
           alt="Icon"
         />
-        <p className="confirm-email-update__text">
+        <h1 className="confirm-email-update__title">
           Do you really want to change your e-mail?
-        </p>
+        </h1>
         <button
           className="confirm-email-update__btn"
           onClick={handleEmailUpdate}

@@ -59,6 +59,7 @@ function SignIn({ onSignin, isSendingReq }) {
           formClassname="form"
           titleClassname="form__title"
           title="Glad to see you again!"
+          titleTag="h1"
           buttonClassname="form__submit-btn"
           buttonText="Sign in"
           isFormValid={isFormValid}

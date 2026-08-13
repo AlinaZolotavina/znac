@@ -10,7 +10,7 @@ function NotFound() {
           src={notFoundIcon}
           alt="Not found icon"
         />
-        <p className="not-found__text">Nothing was found!</p>
+        <h1 className="not-found__text">Nothing was found!</h1>
         <p className="not-found__text">Сheck your request and try again.</p>
         <Link className="not-found__link" to="/">
           Back to Home

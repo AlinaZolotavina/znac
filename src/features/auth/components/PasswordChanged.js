@@ -10,9 +10,9 @@ function PasswordChanged() {
           src={passwordChangedIcon}
           alt="Icon"
         />
-        <p className="password-changed__text">
+        <h1 className="password-changed__text">
           Password was successfully changed!
-        </p>
+        </h1>
         <Link className="password-changed__link" to="/">
           Back to Home
         </Link>

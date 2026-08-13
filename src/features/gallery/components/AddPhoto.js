@@ -366,13 +366,18 @@ function AddPhoto({
           formClassname="form add-photo__form"
           titleClassname="form__title"
           title="Add new photo"
+          titleTag="h1"
           buttonClassname="form__submit-btn"
           buttonText="Add photo"
           isFormValid={isFormValid}
           isSendingReq={isSendingReq}
           onSubmit={handleSubmit}
         >
-          <div className="radio-buttons-container" role="tablist" aria-label="Photo upload method">
+          <div
+            className="radio-buttons-container"
+            role="tablist"
+            aria-label="Photo upload method"
+          >
             {PHOTO_UPLOAD_TYPES.map((type, index) => {
               const isActive =
                 (type.value === "pc" && pcDownloadCheck) ||

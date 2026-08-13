@@ -61,6 +61,7 @@ function ResetPassword({ onResetPassword, isSendingReq }) {
           formClassname="form"
           titleClassname="form__title forgot-password__title"
           title="Create new password"
+          titleTag="h1"
           buttonClassname="form__submit-btn"
           buttonText="Reset password"
           isFormValid={isFormValid}

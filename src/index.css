@@ -154,6 +154,7 @@
 
 /* profile */
 @import url(./features/profile/styles/profile/profile.css);
+@import url(./features/profile/styles/profile/__title/profile__title.css);
 @import url(./features/profile/styles/profile/__container/profile__container.css);
 @import url(./features/profile/styles/profile/__email/profile__email.css);
 @import url(./features/profile/styles/profile/__password/profile__password.css);
@@ -214,8 +215,8 @@
 /* update password */
 @import url(./features/profile/styles/confirm-email-update/confirm-email-update.css);
 @import url(./features/profile/styles/confirm-email-update/__container/confirm-email-update__container.css);
+@import url(./features/profile/styles/confirm-email-update/__title/confirm-email-update__title.css);
 @import url(./features/profile/styles/confirm-email-update/__icon/confirm-email-update__icon.css);
-@import url(./features/profile/styles/confirm-email-update/__text/confirm-email-update__text.css);
 @import url(./features/profile/styles/confirm-email-update/__btn/confirm-email-update__btn.css);
 @import url(./features/profile/styles/confirm-email-update/__link/confirm-email-update__link.css);
 
