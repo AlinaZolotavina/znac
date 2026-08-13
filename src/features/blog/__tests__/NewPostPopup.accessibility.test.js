@@ -117,7 +117,7 @@ describe("NewPostPopup accessibility", () => {
     expect(firstThemeRadio).toBeChecked();
   });
 
-  test("selects icon by clicking its visual wrapper", () => {
+  test("selects icon by clicking its native radio control", () => {
     renderWithProviders(<NewPostPopupController />);
 
     const trigger = screen.getByRole("button", { name: "Create Post" });
@@ -129,7 +129,7 @@ describe("NewPostPopup accessibility", () => {
 
     expect(cssIcon).not.toBeChecked();
 
-    fireEvent.click(cssIcon.closest(".new-post__radio-btn"));
+    fireEvent.click(cssIcon);
 
     expect(cssIcon).toBeChecked();
   });
@@ -187,20 +187,15 @@ describe("NewPostPopup accessibility", () => {
     fireEvent.click(trigger);
 
     expect(screen.getByRole("radio", { name: /css icon/i })).toBeInTheDocument();
-    expect(screen.queryByRole("radio", { name: /react icon/i })).toBeNull();
+    expect(screen.getByRole("radio", { name: /react icon/i })).toBeInTheDocument();
 
-    fireEvent.click(
-      screen
-        .getAllByRole("button")
-        .find((button) =>
-          button.className.includes("new-post__flip-btn_right"),
-        ),
-    );
+    fireEvent.click(screen.getByRole("button", { name: "Next post icon" }));
 
+    expect(screen.queryByRole("radio", { name: /css icon/i })).toBeNull();
     expect(
-      screen.getByRole("radio", { name: /react icon/i }),
+      screen.getByRole("radio", { name: /illustrations icon/i }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("radio", { name: /react icon/i })).toHaveFocus();
+    expect(screen.getByRole("radio", { name: /illustrations icon/i })).toHaveFocus();
   });
 
   test("moves icon focus through the full carousel with arrow keys without selecting icon", () => {
@@ -221,7 +216,7 @@ describe("NewPostPopup accessibility", () => {
 
     expect(arrowRightEvent.defaultPrevented).toBe(true);
     expect(screen.getByRole("radio", { name: /js icon/i })).toHaveFocus();
-    expect(screen.queryByRole("radio", { name: /react icon/i })).toBeNull();
+    expect(screen.getByRole("radio", { name: /react icon/i })).toBeInTheDocument();
     expect(cssIcon).not.toBeChecked();
 
     const markupIcon = screen.getByRole("radio", { name: /markup icon/i });

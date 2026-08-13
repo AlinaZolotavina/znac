@@ -8,13 +8,12 @@
   font-weight: 300;
   line-height: 19px;
   border-radius: 10px;
-  border: 1px solid #9A7BD9;
-  background-color: transparent;
+  background-color: #9a7bd9;
   transition: opacity 0.2s ease;
   padding: 0;
   cursor: pointer;
   text-decoration: none;
-  color: #9A7BD9;
+  color: #fff;
 }
 
 .more-details-link:hover {

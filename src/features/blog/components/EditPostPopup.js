@@ -14,9 +14,19 @@ import useCloseOnEsc from "../../../shared/hooks/useCloseOnEsc.js";
 import useLockBodyScroll from "../../../shared/hooks/useLockBodyScroll.js";
 import useOverlayClickClose from "../../../shared/hooks/useOverlayClickClose.js";
 
-function getVisibleCount(width) {
-  if (width <= 768) return 2;
-  if (width <= 1024) return 4;
+function getVisibleCount(width, containerWidth) {
+  if (containerWidth) {
+    const iconWidth = width <= 1280 ? 75 : 85;
+    const gap = 10;
+
+    return Math.min(
+      Math.max(Math.floor((containerWidth + gap) / (iconWidth + gap)), 1),
+      6,
+    );
+  }
+
+  if (width <= 480) return 2;
+  if (width <= 768) return 4;
   return 6;
 }
 
@@ -46,7 +56,10 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
       setIconCheckValue(normalizedIcon);
 
       const currentIconNumber = getCurrentIconNumber(normalizedIcon);
-      const visibleIconsCount = getVisibleCount(window.innerWidth);
+      const visibleIconsCount = getVisibleCount(
+        window.innerWidth,
+        iconButtonsRef.current?.clientWidth,
+      );
       const lastSlideStart = Math.max(iconButtons.length - visibleIconsCount, 0);
       const centeredSlideStart = Math.max(
         currentIconNumber - Math.floor(visibleIconsCount / 2),
@@ -89,7 +102,10 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
 
   useEffect(() => {
     function handleResize() {
-      const visibleIconsCount = getVisibleCount(window.innerWidth);
+      const visibleIconsCount = getVisibleCount(
+        window.innerWidth,
+        iconButtonsRef.current?.clientWidth,
+      );
       const lastSlideStart = Math.max(iconButtons.length - visibleIconsCount, 0);
 
       setVisibleIconsCount(visibleIconsCount);

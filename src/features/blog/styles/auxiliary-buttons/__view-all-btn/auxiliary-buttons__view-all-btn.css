@@ -4,14 +4,13 @@
   align-items: center;
   width: 150px;
   height: 40px;
-  background-color: #fff;
+  background-color: #9a7bd9;
   border-style: none;
-  border: 1px solid #9A7BD9;
   border-radius: 10px;
   padding: 0;
   transition: opacity 0.2s ease;
   cursor: pointer;
-  color: #9A7BD9;
+  color: #fff;
   text-decoration: none;
 }
 
