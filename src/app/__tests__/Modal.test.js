@@ -52,6 +52,28 @@ describe("Modal", () => {
     expect(onClose).toHaveBeenCalled();
   });
 
+  test("has dialog semantics connected to its heading", () => {
+    renderWithProviders(
+      <Modal
+        isOpen
+        status="success"
+        message="Saved successfully"
+        onClose={jest.fn()}
+      />,
+    );
+
+    const dialog = screen.getByRole("dialog", {
+      name: "Saved successfully",
+    });
+    const labelledBy = dialog.getAttribute("aria-labelledby");
+    const heading = document.getElementById(labelledBy);
+
+    expect(dialog).toHaveAttribute("aria-modal", "true");
+    expect(heading).toBeInTheDocument();
+    expect(heading).toHaveTextContent("Saved successfully");
+    expect(heading.tagName).toBe("H2");
+  });
+
   test("moves focus inside and returns it to trigger after close", () => {
     renderWithProviders(<ModalController />);
 
