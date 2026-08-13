@@ -1,6 +1,6 @@
-import Form from "./Form";
-import Input from "./Input";
-import ToggleVisibilityBtn from "./ToggleVisibilityBtn";
+import Form from "../../../app/components/Form";
+import Input from "../../../app/components/Input";
+import ToggleVisibilityBtn from "../../../app/components/ToggleVisibilityBtn";
 
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -75,6 +75,7 @@ function SignUp({ onSignup, isSendingReq }) {
             onChange={handleEmailChange}
             isSendingReq={isSendingReq}
             error={emailError}
+            inputName="signup email"
           />
           <div className="password-field">
             <Input
@@ -86,6 +87,7 @@ function SignUp({ onSignup, isSendingReq }) {
               onChange={handlePasswordChange}
               isSendingReq={isSendingReq}
               error={passwordError}
+              inputName="signup password"
             />
             <ToggleVisibilityBtn
               isPasswordVisible={isPasswordVisible}
