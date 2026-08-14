@@ -6,6 +6,7 @@ function LogoutButton({ className, email, onLogout }) {
         <button
             className={className}
             onClick={handleLogout}
+            aria-label="Log out"
         >
             LOG OUT
         </button>

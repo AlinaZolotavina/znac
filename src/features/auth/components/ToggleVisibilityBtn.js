@@ -8,6 +8,7 @@ function ToggleVisibilityBtn({
             type='button'
             onClick={onVisibilityBtnClick}
             title={isPasswordVisible ? 'Hide password' : 'Show password'}
+            aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
         />
     );
 }

@@ -81,6 +81,7 @@ function PhotoPopup({
             }`}
             onClick={handleLeftFlip}
             disabled={isLeftFlipDisabled}
+            aria-label="Previous photo"
           />
 
           <div className="popup__photo">
@@ -108,6 +109,7 @@ function PhotoPopup({
             }`}
             onClick={handleRightFlip}
             disabled={isRightFlipDisabled}
+            aria-label="Next photo"
           />
 
           <div className="popup__caption">
@@ -116,6 +118,7 @@ function PhotoPopup({
                 <EditButton
                   classname="edit-btn edit-hashtags-btn"
                   onClick={onEditHashtagsBtnClick}
+                  ariaLabel="Edit photo hashtags"
                 />
               )}
 

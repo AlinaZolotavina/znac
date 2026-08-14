@@ -120,7 +120,7 @@ describe("BlogMenu", () => {
       onLogout,
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "LOG OUT" }));
+    fireEvent.click(screen.getByRole("button", { name: "Log out" }));
 
     expect(onLogout).toHaveBeenCalledWith("test@test.com");
     expect(onClose).toHaveBeenCalledTimes(1);

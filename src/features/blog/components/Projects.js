@@ -34,6 +34,7 @@ function Projects({
             loggedIn={loggedIn}
             onViewAllClick={onViewAllClick}
             onAddButtonClick={onAddProjectClick}
+            addButtonLabel="Add project"
             isThereMoreContent={isThereMoreContent}
           />
         )}

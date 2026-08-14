@@ -51,4 +51,10 @@ test("PhotoPopup has dialog semantics with aria-label because it has no visible 
   expect(dialog).toHaveAttribute("aria-modal", "true");
   expect(dialog).toHaveAttribute("aria-label", "Photo preview");
   expect(dialog).not.toHaveAttribute("aria-labelledby");
+  expect(
+    screen.getByRole("button", { name: "Previous photo" }),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByRole("button", { name: "Next photo" }),
+  ).toBeInTheDocument();
 });

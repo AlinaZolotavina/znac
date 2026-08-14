@@ -59,6 +59,7 @@ function Profile({
           <EditButton
             classname="edit-btn edit-profile-btn"
             onClick={onEditEmailBtnClick}
+            ariaLabel="Edit email"
           />
         </div>
         <div className="profile__password">
@@ -73,6 +74,7 @@ function Profile({
           <EditButton
             classname="edit-btn edit-profile-btn"
             onClick={onEditPasswordBtnClick}
+            ariaLabel="Edit password"
           />
         </div>
       </div>

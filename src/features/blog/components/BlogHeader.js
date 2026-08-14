@@ -76,7 +76,11 @@ function BlogHeader({
           About
         </NavLink>
       </div>
-      <button className="blog-burger-menu" onClick={onBlogMenuClick} />
+      <button
+        className="blog-burger-menu"
+        onClick={onBlogMenuClick}
+        aria-label="Open blog menu"
+      />
       <ContactButton onClick={onContactClick} />
       {loggedIn && (
         <LogoutButton

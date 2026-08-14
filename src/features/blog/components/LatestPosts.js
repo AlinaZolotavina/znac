@@ -25,6 +25,7 @@ function LatestPosts({
               loggedIn={loggedIn}
               onViewAllClick={onViewAllClick}
               onAddButtonClick={onAddPostClick}
+              addButtonLabel="Add post"
               isThereMoreContent={isThereMoreContent}
             />
           )}

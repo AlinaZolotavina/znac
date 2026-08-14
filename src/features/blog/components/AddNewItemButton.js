@@ -11,6 +11,7 @@ function AddNewItemButton({
       className={`add-new-item ${className}`.trim()}
       onClick={onAddNewItem}
       type="button"
+      aria-label={buttonText}
     >
       <span className="add-new-item__button" aria-hidden="true" />
       {(alwaysShowText || !isSmall) && (
