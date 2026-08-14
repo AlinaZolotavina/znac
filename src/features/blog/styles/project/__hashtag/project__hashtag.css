@@ -3,7 +3,6 @@
   flex: 0 0 auto;
   margin: 0;
   white-space: nowrap;
-  cursor: pointer;
   transition: opacity 0.2s ease;
 }
 

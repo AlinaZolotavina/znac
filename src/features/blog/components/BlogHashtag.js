@@ -8,14 +8,19 @@ function BlogHashtag({ hashtag, isSymbolActive, classname, onHashtagClick }) {
     }
   };
 
+  if (!onHashtagClick) {
+    return <li className={classname}>{displayedHashtag}</li>;
+  }
+
   return (
-    <li
-      className={classname}
-      onClick={handleClick}
-      role={onHashtagClick ? "button" : undefined}
-      tabIndex={onHashtagClick ? "0" : undefined}
-    >
-      {displayedHashtag}
+    <li className={classname}>
+      <button
+        className="blog-hashtag__button"
+        type="button"
+        onClick={handleClick}
+      >
+        {displayedHashtag}
+      </button>
     </li>
   );
 }

@@ -46,16 +46,8 @@ function CurrentPost({
     checkImageUrl(post.photoLink);
   }, [post.photoLink]);
 
-  function handleClick(e) {
-    if (e.target.id === "blog-delete-btn") {
-      onDeletePostButtonClick(post, true);
-    } else if (e.target.id === "blog-edit-btn") {
-      onEditPostButtonClick(post);
-    }
-  }
-
   return (
-    <section className={`post post_location_${location}`} onClick={handleClick}>
+    <section className={`post post_location_${location}`}>
       <p className={`post__theme post__theme_location_${location}`}>
         {post.theme}
       </p>
@@ -96,6 +88,8 @@ function CurrentPost({
             deleteId="blog-delete-btn"
             editLabel="Edit post"
             deleteLabel="Delete post"
+            onEdit={() => onEditPostButtonClick(post)}
+            onDelete={() => onDeletePostButtonClick(post, true)}
           />
         )}
       </div>

@@ -41,59 +41,49 @@ function Post({
     onDeletePostButtonClick(post);
   }
 
-  function handleKeyDown(e) {
-    if (e.target !== e.currentTarget) {
-      return;
-    }
-
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      onPostClick(post);
-    }
-  }
-
   return (
-    <li
-      className={`post post_location_${location}`}
-      onClick={handlePostClick}
-      onKeyDown={handleKeyDown}
-      role="button"
-      tabIndex="0"
-    >
-      {shouldShowPhoto ? (
-        <img
-          className={`post__preview post__preview_location_${location}`}
-          src={post.photoLink}
-          alt={`Illustration for post "${post.title}"`}
-          loading="lazy"
-          onError={() => setIsPhotoBroken(true)}
-        />
-      ) : (
-        <div
-          className={`post__icon post__icon_location_${location} post__icon_type_${postIcon}`}
-        />
-      )}
-      <div className="post__content">
-        <div className="post__meta">
-          <p className={`post__theme post__theme_location_${location}`}>
-            {post.theme}
-          </p>
-          <p className={`post__date post__date_location_${location}`}>
-            {date}
-          </p>
-        </div>
-        <h3 className={`post__title post__title_location_${location}`}>
-          {post.title}
-        </h3>
-        <p className={`post__text post__text_location_${location}`}>
-          <span className="post__text-content" ref={textRef}>
-            {post.text}
-          </span>
-        </p>
-        {isTextOverflowing && (
-          <span className="post__read-more">Read more →</span>
+    <li className={`post post_location_${location}`}>
+      <button
+        className="post__open-btn"
+        type="button"
+        onClick={handlePostClick}
+        aria-label={`Open post ${post.title}`}
+      >
+        {shouldShowPhoto ? (
+          <img
+            className={`post__preview post__preview_location_${location}`}
+            src={post.photoLink}
+            alt={`Illustration for post "${post.title}"`}
+            loading="lazy"
+            onError={() => setIsPhotoBroken(true)}
+          />
+        ) : (
+          <div
+            className={`post__icon post__icon_location_${location} post__icon_type_${postIcon}`}
+          />
         )}
-      </div>
+        <div className="post__content">
+          <div className="post__meta">
+            <p className={`post__theme post__theme_location_${location}`}>
+              {post.theme}
+            </p>
+            <p className={`post__date post__date_location_${location}`}>
+              {date}
+            </p>
+          </div>
+          <h3 className={`post__title post__title_location_${location}`}>
+            {post.title}
+          </h3>
+          <p className={`post__text post__text_location_${location}`}>
+            <span className="post__text-content" ref={textRef}>
+              {post.text}
+            </span>
+          </p>
+          {isTextOverflowing && (
+            <span className="post__read-more">Read more →</span>
+          )}
+        </div>
+      </button>
       {loggedIn && (
         <div className="post__tools">
           <BlogActionButtons

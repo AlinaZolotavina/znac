@@ -14,8 +14,24 @@
   min-height: 250px;
   height: 100%;
   background-color: #fff;
-  cursor: pointer;
   transition: box-shadow 0.2s ease;
+}
+
+.post__open-btn {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "image"
+    "content";
+  row-gap: 16px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
 .post__content {

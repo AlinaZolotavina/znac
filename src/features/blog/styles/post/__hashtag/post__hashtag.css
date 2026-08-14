@@ -8,6 +8,14 @@
   margin: 0;
   white-space: nowrap;
   transition: opacity 0.2s ease;
+}
+
+.blog-hashtag__button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
   cursor: pointer;
 }
 

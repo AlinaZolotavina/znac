@@ -56,7 +56,6 @@ function NewPostRadioButton({
           ? "new-post__radio-btn_state_active"
           : "new-post__radio-btn_state_inactive"
       }`}
-      onClick={() => onClick(radioBtnValue)}
     >
       <input
         type="radio"
