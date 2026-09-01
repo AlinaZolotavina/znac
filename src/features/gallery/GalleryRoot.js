@@ -11,7 +11,6 @@ import PhotoPopup from "../../features/gallery/components/PhotoPopup";
 import DeletePhotoModal from "../../features/gallery/components/DeletePhotoModal";
 
 import usePhotos from "./hooks/usePhotos";
-import useCloseOnEsc from "../../shared/hooks/useCloseOnEsc";
 
 import scrollToRef from "./utils/scrollToRef";
 
@@ -110,11 +109,6 @@ function GalleryRoot({
     scrollToRef(footerRef);
   }
 
-  const closeGalleryLayers = useCallback(() => {
-    closeGalleryPopups();
-    onMenuClose();
-  }, [closeGalleryPopups, onMenuClose]);
-
   const handleKeyPress = useCallback(
     (e) => {
       const { keyCode } = e;
@@ -143,8 +137,6 @@ function GalleryRoot({
       selectedPhoto,
     ],
   );
-
-  useCloseOnEsc(true, closeGalleryLayers);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyPress);

@@ -10,7 +10,6 @@ import EditEmailModal from "./components/EditEmailModal";
 import EditPasswordModal from "./components/EditPasswordModal";
 
 import api from "../../shared/utils/api";
-import useCloseOnEsc from "../../shared/hooks/useCloseOnEsc";
 import {
   EMAIL_UPDATED_SUCCESSFULLY_MSG,
   EMAIL_UPDATE_ERROR_MSG,
@@ -40,10 +39,6 @@ function ProfileRoot({
     setIsEditEmailModalOpen(false);
     setIsEditPasswordModalOpen(false);
   }, []);
-
-  const isAnyProfilePopupOpen = isEditEmailModalOpen || isEditPasswordModalOpen;
-
-  useCloseOnEsc(isAnyProfilePopupOpen, closeProfilePopups);
 
   function handleEditEmailBtnClick() {
     setIsEditEmailModalOpen(!isEditEmailModalOpen);

@@ -26,7 +26,6 @@ import {
 import useProjects from "./hooks/useProjects.js";
 import usePosts from "./hooks/usePosts.js";
 import useRequestState from "../../shared/hooks/useRequestStatus.js";
-import useCloseOnEsc from "../../shared/hooks/useCloseOnEsc.js";
 
 import getCurrentActivePage from "./utils/getCurrentActivePage.js";
 
@@ -233,24 +232,6 @@ function BlogRoot({
   } = useRequestState();
 
   const previewProjectsQuantity = screenWidth > 1200 ? 3 : 2;
-
-  const isAnyBlogPopupOpen =
-    isBlogMenuOpen ||
-    isGetInTouchPopupOpen ||
-    isPostPopupOpen ||
-    isEditPostPopupOpen ||
-    isEditProjectPopupOpen ||
-    isNewProjectPopupOpen ||
-    isDeletePostModalOpen ||
-    isDeleteProjectModalOpen;
-
-  const closeBlogLayers = useCallback(() => {
-    closeAllBlogPopups();
-    closeBlogMenu();
-    closeGetInTouchPopup();
-  }, [closeAllBlogPopups, closeBlogMenu, closeGetInTouchPopup]);
-
-  useCloseOnEsc(isAnyBlogPopupOpen, closeBlogLayers);
 
   useEffect(() => {
     calculatePostsCount();
