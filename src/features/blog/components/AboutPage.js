@@ -37,21 +37,23 @@ function AboutPage({
         onProjectsClick={onProjectsClick}
         onAboutClick={onAboutClick}
       />
-      <AboutHero />
-      <Skills />
-      <Projects
-        loggedIn={loggedIn}
-        projects={projectsToRender}
-        isThereMoreContent={totalProjects}
-        onViewAllClick={onViewAllProjectsClick}
-        projectsNumber={projectsNumber}
-        containerClassname="about-page"
-        onAddProjectClick={onAddProjectClick}
-        onEditProjectButtonClick={onEditProjectButtonClick}
-        onDeleteProjectButtonClick={onDeleteProjectButtonClick}
-      />
-      <CVs />
-      <ReactPlayground />
+      <main>
+        <AboutHero />
+        <Skills />
+        <Projects
+          loggedIn={loggedIn}
+          projects={projectsToRender}
+          isThereMoreContent={totalProjects}
+          onViewAllClick={onViewAllProjectsClick}
+          projectsNumber={projectsNumber}
+          containerClassname="about-page"
+          onAddProjectClick={onAddProjectClick}
+          onEditProjectButtonClick={onEditProjectButtonClick}
+          onDeleteProjectButtonClick={onDeleteProjectButtonClick}
+        />
+        <CVs />
+        <ReactPlayground />
+      </main>
       <BlogFooter />
     </div>
   );

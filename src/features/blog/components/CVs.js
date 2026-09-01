@@ -24,14 +24,14 @@ function CVs() {
 
   return (
     <div className="background_color_blue">
-      <div className="cv">
+      <section className="cv">
         <h2 className="section-title cv__title">CV</h2>
         <ul className="cv__container">
           <CV cvVerssion="Resume - English" onCvClick={downloadEnglishCV} />
           <CV cvVerssion="Lebenslauf - Deutsch" onCvClick={downloadGermanCV} />
           <CV cvVerssion="Резюме - русский" onCvClick={downloadRussianCV} />
         </ul>
-      </div>
+      </section>
     </div>
   );
 }

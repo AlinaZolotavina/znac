@@ -3,7 +3,7 @@ import passwordChangedIcon from "../assets/password-changed-icon.svg";
 
 function PasswordChanged() {
   return (
-    <div className="password-changed">
+    <main className="password-changed">
       <div className="password-changed__container">
         <img
           className="password-changed__image"
@@ -17,7 +17,7 @@ function PasswordChanged() {
           Back to Home
         </Link>
       </div>
-    </div>
+    </main>
   );
 }
 

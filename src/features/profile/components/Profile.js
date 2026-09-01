@@ -29,7 +29,7 @@ function Profile({
   const [password, setPassword] = useState("");
 
   return (
-    <section className="profile">
+    <div className="profile">
       <Header className="header admin-header">
         <Navigation
           loggedIn={loggedIn}
@@ -45,7 +45,7 @@ function Profile({
         )}
       </Header>
       <BurgerMenuBtn onMenuClick={onMenuClick} />
-      <div className="profile__container">
+      <main className="profile__container">
         <h1 className="profile__title">Profile</h1>
         <div className="profile__email">
           <Input
@@ -77,8 +77,8 @@ function Profile({
             ariaLabel="Edit password"
           />
         </div>
-      </div>
-    </section>
+      </main>
+    </div>
   );
 }
 

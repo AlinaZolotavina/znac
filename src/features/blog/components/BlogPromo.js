@@ -2,7 +2,7 @@ import Social from "./Social";
 
 function BlogPromo() {
   return (
-    <div className="blog-promo">
+    <section className="blog-promo">
       <div className="blog-promo__info">
         <>
           <h1 className="blog-promo__text blog-promo__text_location_main-page">
@@ -27,7 +27,7 @@ function BlogPromo() {
         <Social />
       </div>
       <div className="blog-promo__image" />
-    </div>
+    </section>
   );
 }
 

@@ -9,7 +9,7 @@ function ConfirmEmailUpdate({ onUpdateEmail }) {
     onUpdateEmail(updateEmailLink, JSON.parse(email).email);
   }
   return (
-    <div className="confirm-email-update">
+    <main className="confirm-email-update">
       <div className="confirm-email-update__container">
         <img
           className="confirm-email-update__icon"
@@ -29,7 +29,7 @@ function ConfirmEmailUpdate({ onUpdateEmail }) {
           Back to Home
         </Link>
       </div>
-    </div>
+    </main>
   );
 }
 

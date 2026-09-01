@@ -52,7 +52,7 @@ function SignIn({ onSignin, isSendingReq }) {
   }
 
   return (
-    <section className="sign-in">
+    <main className="sign-in">
       <div className="sign-in__container">
         <Form
           formName="signin"
@@ -100,7 +100,7 @@ function SignIn({ onSignin, isSendingReq }) {
           </Link>
         </div>
       </div>
-    </section>
+    </main>
   );
 }
 

@@ -3,7 +3,7 @@ import notFoundIcon from "../assets/not-found-icon.svg";
 
 function NotFound() {
   return (
-    <div className="not-found">
+    <main className="not-found">
       <div className="not-found__container">
         <img
           className="not-found__image"
@@ -16,7 +16,7 @@ function NotFound() {
           Back to Home
         </Link>
       </div>
-    </div>
+    </main>
   );
 }
 

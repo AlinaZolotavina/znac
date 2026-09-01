@@ -14,8 +14,8 @@ function BlogHeader({
   onAboutClick,
 }) {
   return (
-    <div className="blog-header">
-      <div className="blog-header__links">
+    <header className="blog-header">
+      <nav className="blog-header__links" aria-label="Blog navigation">
         <NavLink
           to="/alina"
           end
@@ -75,7 +75,7 @@ function BlogHeader({
         >
           About
         </NavLink>
-      </div>
+      </nav>
       <button
         className="blog-burger-menu"
         onClick={onBlogMenuClick}
@@ -89,7 +89,7 @@ function BlogHeader({
           onLogout={onLogout}
         />
       )}
-    </div>
+    </header>
   );
 }
 

@@ -26,7 +26,7 @@ function Projects({
   }
 
   return (
-    <div className="projects">
+    <section className="projects">
       <div className="projects__menu">
         <h2 className="section-title projects__title">Projects</h2>
         {projects.length !== 0 && (
@@ -63,7 +63,7 @@ function Projects({
         isOpen={!!selectedProject}
         onClose={handleProjectDetailsClose}
       />
-    </div>
+    </section>
   );
 }
 

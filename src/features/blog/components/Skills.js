@@ -1,7 +1,7 @@
 function Skills() {
   return (
     <div className="background_color_blue">
-      <div className="skills">
+      <section className="skills">
         <h2 className="section-title skills__title">Skills</h2>
         <ul className="skills__container">
           <li className="skills__item">HTML5</li>
@@ -22,7 +22,7 @@ function Skills() {
           <li className="skills__item">German</li>
           <li className="skills__item">Russian</li>
         </ul>
-      </div>
+      </section>
     </div>
   );
 }

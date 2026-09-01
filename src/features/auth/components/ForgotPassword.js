@@ -36,7 +36,7 @@ function ForgotPassword({ onReceiveEmail, isSendingReq }) {
   }
 
   return (
-    <section className="forgot-password">
+    <main className="forgot-password">
       <div className="forgot-password__container">
         <img
           className="forgot-password__image"
@@ -71,7 +71,7 @@ function ForgotPassword({ onReceiveEmail, isSendingReq }) {
           />
         </Form>
       </div>
-    </section>
+    </main>
   );
 }
 

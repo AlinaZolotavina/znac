@@ -8,6 +8,13 @@
     background-color: #fff;
 }
 
+.blog > main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
 .blog .popup__close-btn {
     background-image: url(../../assets/blog-close-btn.svg);
 }

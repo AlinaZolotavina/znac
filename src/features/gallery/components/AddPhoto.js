@@ -345,7 +345,7 @@ function AddPhoto({
 
   return (
     <>
-      <section className="add-photo">
+      <div className="add-photo">
         <Header className="header admin-header">
           <Navigation
             loggedIn={loggedIn}
@@ -362,18 +362,19 @@ function AddPhoto({
           )}
         </Header>
         <BurgerMenuBtn onMenuClick={onMenuClick} />
-        <Form
-          formName="add-photo"
-          formClassname="form add-photo__form"
-          titleClassname="form__title"
-          title="Add new photo"
-          titleTag="h1"
-          buttonClassname="form__submit-btn"
-          buttonText="Add photo"
-          isFormValid={isFormValid}
-          isSendingReq={isSendingReq}
-          onSubmit={handleSubmit}
-        >
+        <main>
+          <Form
+            formName="add-photo"
+            formClassname="form add-photo__form"
+            titleClassname="form__title"
+            title="Add new photo"
+            titleTag="h1"
+            buttonClassname="form__submit-btn"
+            buttonText="Add photo"
+            isFormValid={isFormValid}
+            isSendingReq={isSendingReq}
+            onSubmit={handleSubmit}
+          >
           <div
             className="radio-buttons-container"
             role="tablist"
@@ -469,8 +470,9 @@ function AddPhoto({
             isSendingReq={isSendingReq}
             error={hashtagsError}
           />
-        </Form>
-      </section>
+          </Form>
+        </main>
+      </div>
       <Modal
         isOpen={modalData.isOpen}
         status={modalData.status}

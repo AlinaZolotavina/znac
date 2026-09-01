@@ -10,7 +10,7 @@ function Navigation({
   const location = useLocation();
 
   return (
-    <div className="nav">
+    <nav className="nav">
       <NavLink
         to="/"
         end
@@ -60,7 +60,7 @@ function Navigation({
           ADD PHOTO
         </NavLink>
       )}
-    </div>
+    </nav>
   );
 }
 

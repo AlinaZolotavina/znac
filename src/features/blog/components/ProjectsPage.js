@@ -72,40 +72,42 @@ function ProjectsPage({
         onProjectsClick={onProjectsClick}
         onAboutClick={onAboutClick}
       />
-      <ProjectsHero loggedIn={loggedIn} onNewProjectClick={onNewProjectClick} />
-      <ProjectHashtags
-        hashtags={hashtagsToRender || []}
-        activeHashtag={activeProjectHashtag}
-        onHashtagClick={onProjectHashtagClick}
-      />
-      {projectsToRender.length !== 0 ? (
-        <>
-          <ProjectsContainer
-            loggedIn={loggedIn}
-            projects={projectsToRender}
-            projectsNumber={projectsQuantity}
-            containerClassname="projects-page"
-            onEditProjectButtonClick={onEditProjectButtonClick}
-            onDeleteProjectButtonClick={onDeleteProjectButtonClick}
-            onHashtagClick={onProjectHashtagClick}
-            onSeeMoreProjectClick={handleProjectDetailsOpen}
-          />
-          {hasMoreProjects && (
-            <ShowMoreButton
-              onShowMoreButtonClick={onShowMoreProjects}
-              buttonText="Show more projects"
-            />
-          )}
-        </>
-      ) : (
-        <ContentNotFound
-          loggedIn={loggedIn}
-          altText="projects not found icon"
-          text="Sorry, there are no projects yet"
-          buttonText="Add project"
-          onClick={onNewProjectClick}
+      <main>
+        <ProjectsHero loggedIn={loggedIn} onNewProjectClick={onNewProjectClick} />
+        <ProjectHashtags
+          hashtags={hashtagsToRender || []}
+          activeHashtag={activeProjectHashtag}
+          onHashtagClick={onProjectHashtagClick}
         />
-      )}
+        {projectsToRender.length !== 0 ? (
+          <>
+            <ProjectsContainer
+              loggedIn={loggedIn}
+              projects={projectsToRender}
+              projectsNumber={projectsQuantity}
+              containerClassname="projects-page"
+              onEditProjectButtonClick={onEditProjectButtonClick}
+              onDeleteProjectButtonClick={onDeleteProjectButtonClick}
+              onHashtagClick={onProjectHashtagClick}
+              onSeeMoreProjectClick={handleProjectDetailsOpen}
+            />
+            {hasMoreProjects && (
+              <ShowMoreButton
+                onShowMoreButtonClick={onShowMoreProjects}
+                buttonText="Show more projects"
+              />
+            )}
+          </>
+        ) : (
+          <ContentNotFound
+            loggedIn={loggedIn}
+            altText="projects not found icon"
+            text="Sorry, there are no projects yet"
+            buttonText="Add project"
+            onClick={onNewProjectClick}
+          />
+        )}
+      </main>
       <ProjectDetailsPopup
         project={selectedProject}
         isOpen={!!selectedProject}

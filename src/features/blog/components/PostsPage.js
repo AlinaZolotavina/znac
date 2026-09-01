@@ -53,47 +53,49 @@ function PostsPage({
         onProjectsClick={onProjectsClick}
         onAboutClick={onAboutClick}
       />
-      <PostsHero loggedIn={loggedIn} onNewPostClick={onNewPostClick} />
-      <div className="posts-page-controls">
-        <PostsSearch
-          onSubmit={onPostsSearch}
-          isLoading={isLoading}
-          query={query}
-          querySetter={querySetter}
-          activeHashtag={activeHashtag}
-        />
-      </div>
-      <PostHashtags
-        onClick={onPostHashtagClick}
-        activeHashtag={activeHashtag}
-        query={query}
-      />
-      {postsToRender.length !== 0 ? (
-        <>
-          <Posts
-            posts={postsToRender}
-            postsQuantity={postsQuantity}
-            onPostClick={onPostClick}
-            onEditPostButtonClick={onEditPostButtonClick}
-            onDeletePostButtonClick={onDeletePostButtonClick}
-            loggedIn={loggedIn}
+      <main>
+        <PostsHero loggedIn={loggedIn} onNewPostClick={onNewPostClick} />
+        <div className="posts-page-controls">
+          <PostsSearch
+            onSubmit={onPostsSearch}
+            isLoading={isLoading}
+            query={query}
+            querySetter={querySetter}
+            activeHashtag={activeHashtag}
           />
-          {hasMorePosts && (
-            <ShowMoreButton
-              onShowMoreButtonClick={onShowMorePosts}
-              buttonText="Show more posts"
-            />
-          )}
-        </>
-      ) : (
-        <ContentNotFound
-          loggedIn={loggedIn}
-          altText="posts not found icon"
-          text="Sorry, there are no posts yet"
-          buttonText="Add post"
-          onClick={onNewPostClick}
+        </div>
+        <PostHashtags
+          onClick={onPostHashtagClick}
+          activeHashtag={activeHashtag}
+          query={query}
         />
-      )}
+        {postsToRender.length !== 0 ? (
+          <>
+            <Posts
+              posts={postsToRender}
+              postsQuantity={postsQuantity}
+              onPostClick={onPostClick}
+              onEditPostButtonClick={onEditPostButtonClick}
+              onDeletePostButtonClick={onDeletePostButtonClick}
+              loggedIn={loggedIn}
+            />
+            {hasMorePosts && (
+              <ShowMoreButton
+                onShowMoreButtonClick={onShowMorePosts}
+                buttonText="Show more posts"
+              />
+            )}
+          </>
+        ) : (
+          <ContentNotFound
+            loggedIn={loggedIn}
+            altText="posts not found icon"
+            text="Sorry, there are no posts yet"
+            buttonText="Add post"
+            onClick={onNewPostClick}
+          />
+        )}
+      </main>
       <BlogFooter />
     </div>
   );

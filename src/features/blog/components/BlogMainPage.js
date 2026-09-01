@@ -44,29 +44,31 @@ function BlogMainPage({
         onAboutClick={onAboutClick}
         onContactClick={onContactClick}
       />
-      <BlogPromo />
-      <LatestPosts
-        loggedIn={loggedIn}
-        posts={postsToRender}
-        postsQuantity={4}
-        isThereMoreContent={totalPosts > 4}
-        onPostClick={onPostClick}
-        onEditPostButtonClick={onEditPostButtonClick}
-        onDeletePostButtonClick={onDeletePostButtonClick}
-        onAddPostClick={onNewPostClick}
-        onViewAllClick={onViewAllPostsClick}
-      />
-      <Projects
-        loggedIn={loggedIn}
-        projects={projectsToRender}
-        isThereMoreContent={totalProjects}
-        onViewAllClick={onViewAllProjectsClick}
-        projectsNumber={projectsQuantity}
-        containerClassname="main-page"
-        onAddProjectClick={onNewProjectClick}
-        onEditProjectButtonClick={onEditProjectButtonClick}
-        onDeleteProjectButtonClick={onDeleteProjectButtonClick}
-      />
+      <main>
+        <BlogPromo />
+        <LatestPosts
+          loggedIn={loggedIn}
+          posts={postsToRender}
+          postsQuantity={4}
+          isThereMoreContent={totalPosts > 4}
+          onPostClick={onPostClick}
+          onEditPostButtonClick={onEditPostButtonClick}
+          onDeletePostButtonClick={onDeletePostButtonClick}
+          onAddPostClick={onNewPostClick}
+          onViewAllClick={onViewAllPostsClick}
+        />
+        <Projects
+          loggedIn={loggedIn}
+          projects={projectsToRender}
+          isThereMoreContent={totalProjects}
+          onViewAllClick={onViewAllProjectsClick}
+          projectsNumber={projectsQuantity}
+          containerClassname="main-page"
+          onAddProjectClick={onNewProjectClick}
+          onEditProjectButtonClick={onEditProjectButtonClick}
+          onDeleteProjectButtonClick={onDeleteProjectButtonClick}
+        />
+      </main>
       <BlogFooter />
     </div>
   );

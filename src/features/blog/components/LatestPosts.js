@@ -17,7 +17,7 @@ function LatestPosts({
 
   return (
     <div className="background_color_blue">
-      <div className="latest-posts">
+      <section className="latest-posts">
         <div className="latest-posts__menu">
           <h2 className="section-title latest-posts__title">Latest Posts</h2>
           {posts.length !== 0 && (
@@ -53,7 +53,7 @@ function LatestPosts({
             onClick={onAddPostClick}
           />
         )}
-      </div>
+      </section>
     </div>
   );
 }

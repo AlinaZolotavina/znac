@@ -58,17 +58,18 @@ function CurrentPostPage({
         onAboutClick={onAboutClick}
         onContactClick={onContactClick}
       />
-
-      {post && (
-        <CurrentPost
-          post={post}
-          location="single-post"
-          onBackButtonClick={onBackButtonClick}
-          onEditPostButtonClick={onEditPostButtonClick}
-          onDeletePostButtonClick={onDeletePostButtonClick}
-          loggedIn={loggedIn}
-        />
-      )}
+      <main>
+        {post && (
+          <CurrentPost
+            post={post}
+            location="single-post"
+            onBackButtonClick={onBackButtonClick}
+            onEditPostButtonClick={onEditPostButtonClick}
+            onDeletePostButtonClick={onDeletePostButtonClick}
+            loggedIn={loggedIn}
+          />
+        )}
+      </main>
     </div>
   );
 }

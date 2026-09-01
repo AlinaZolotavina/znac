@@ -49,7 +49,7 @@ function ResetPassword({ onResetPassword, isSendingReq }) {
   }
 
   return (
-    <section className="forgot-password">
+    <main className="forgot-password">
       <div className="forgot-password__container">
         <img
           className="forgot-password__image"
@@ -93,7 +93,7 @@ function ResetPassword({ onResetPassword, isSendingReq }) {
           />
         </Form>
       </div>
-    </section>
+    </main>
   );
 }
 
