@@ -193,6 +193,7 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
   const fileInputRef = useRef(null);
   const [uploadError, setUploadError] = useState("");
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const uploadStatusMessage = isUploadingPhoto ? "Uploading" : "";
 
   async function handlePreuploadPhoto(e) {
     setUploadError("");
@@ -529,6 +530,12 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
               inputName="post title"
             />
             <div className="new-post__upload-container">
+              <div className="visually-hidden" role="status">
+                {uploadStatusMessage}
+              </div>
+              <div className="visually-hidden" role="alert">
+                {uploadError}
+              </div>
               {postPhotos.length > 0 ? (
                 <button
                   type="button"

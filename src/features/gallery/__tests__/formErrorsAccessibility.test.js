@@ -26,6 +26,7 @@ describe("gallery form errors accessibility", () => {
     expect(input).toHaveAttribute("aria-invalid", "true");
     expect(input).toHaveAttribute("aria-describedby", "gallery-search-error");
     expect(error).toHaveAttribute("id", "gallery-search-error");
+    expect(error).not.toHaveAttribute("role");
   });
 
   test("does not expose empty search error", () => {
@@ -68,5 +69,6 @@ describe("gallery form errors accessibility", () => {
       "edit-photo-hashtags-photo-1-error",
     );
     expect(error).toHaveAttribute("id", "edit-photo-hashtags-photo-1-error");
+    expect(error).not.toHaveAttribute("role");
   });
 });

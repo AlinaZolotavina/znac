@@ -22,6 +22,10 @@ function Modal({ isOpen, status, type, message, onClose }) {
 
   if (!isOpen) return null;
 
+  const isError = status === "error";
+  const announcementTitle = isError ? "Error message" : "Status message";
+  const announcementRole = isError ? "alert" : "status";
+
   const icons = {
     success: {
       default: successIcon,
@@ -47,6 +51,10 @@ function Modal({ isOpen, status, type, message, onClose }) {
         aria-labelledby="modal-title"
         tabIndex={-1}
       >
+        <h2 id="modal-title" className="visually-hidden">
+          {announcementTitle}
+        </h2>
+
         {status && icon && (
           <img
             className="modal__icon"
@@ -55,9 +63,9 @@ function Modal({ isOpen, status, type, message, onClose }) {
           />
         )}
 
-        <h2 id="modal-title" className="modal__message">
+        <p className="modal__message" role={announcementRole}>
           {message}
-        </h2>
+        </p>
 
         <button
           className="close-btn popup__close-btn"

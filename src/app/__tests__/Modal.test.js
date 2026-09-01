@@ -63,15 +63,45 @@ describe("Modal", () => {
     );
 
     const dialog = screen.getByRole("dialog", {
-      name: "Saved successfully",
+      name: "Status message",
     });
     const labelledBy = dialog.getAttribute("aria-labelledby");
     const heading = document.getElementById(labelledBy);
 
     expect(dialog).toHaveAttribute("aria-modal", "true");
     expect(heading).toBeInTheDocument();
-    expect(heading).toHaveTextContent("Saved successfully");
+    expect(heading).toHaveTextContent("Status message");
     expect(heading.tagName).toBe("H2");
+  });
+
+  test("announces success messages with status semantics", () => {
+    renderWithProviders(
+      <Modal
+        isOpen
+        status="success"
+        message="Saved successfully"
+        onClose={jest.fn()}
+      />,
+    );
+
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Saved successfully",
+    );
+  });
+
+  test("announces error messages with alert semantics", () => {
+    renderWithProviders(
+      <Modal
+        isOpen
+        status="error"
+        message="Failed to save changes"
+        onClose={jest.fn()}
+      />,
+    );
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Failed to save changes",
+    );
   });
 
   test("moves focus inside and returns it to trigger after close", () => {

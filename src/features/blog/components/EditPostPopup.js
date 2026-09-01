@@ -244,6 +244,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
     !isPhotoDeleted && (Boolean(post.photoLink) || postPhotos.length > 0);
   const [photoInfo, setPhotoInfo] = useState("Not selected");
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const uploadStatusMessage = isUploadingPhoto ? "Uploading" : "";
   let fileName;
   const [photoNames, setPhotoNames] = useState([]);
 
@@ -576,6 +577,9 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
             />
             {hasPhoto ? (
               <div className="new-post__upload-container">
+                <div className="visually-hidden" role="status">
+                  {uploadStatusMessage}
+                </div>
                 <button
                   className="new-post__delete-post-photo-btn"
                   onClick={handlePhotoDelete}
@@ -602,6 +606,9 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
               </div>
             ) : (
               <div className="new-post__upload-container">
+                <div className="visually-hidden" role="status">
+                  {uploadStatusMessage}
+                </div>
                 <label className="blog-upload-file">
                   <input
                     name="photoFile"

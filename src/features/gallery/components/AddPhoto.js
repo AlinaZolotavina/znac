@@ -64,6 +64,7 @@ function AddPhoto({
     status: "",
     message: "",
   });
+  const uploadStatusMessage = isUploadingPhotos ? "Uploading" : "";
 
   useEffect(() => {
     clearInputs();
@@ -407,6 +408,9 @@ function AddPhoto({
           <div className="add-photo__upload-section">
             {pcDownloadCheck ? (
               <div className="upload-container">
+                <div className="visually-hidden" role="status">
+                  {uploadStatusMessage}
+                </div>
                 <label className="upload-file">
                   <input
                     id="photo-file-upload"

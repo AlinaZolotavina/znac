@@ -24,6 +24,7 @@ describe("blog form errors accessibility", () => {
     expect(input).toHaveAttribute("aria-invalid", "true");
     expect(input).toHaveAttribute("aria-describedby", "post-title-error");
     expect(error).toHaveAttribute("id", "post-title-error");
+    expect(error).not.toHaveAttribute("role");
   });
 
   test("keeps BlogInput error node but does not expose empty error", () => {
@@ -65,5 +66,6 @@ describe("blog form errors accessibility", () => {
     expect(textarea).toHaveAttribute("aria-invalid", "true");
     expect(textarea).toHaveAttribute("aria-describedby", "post-text-error");
     expect(error).toHaveAttribute("id", "post-text-error");
+    expect(error).not.toHaveAttribute("role");
   });
 });
