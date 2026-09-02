@@ -1,7 +1,7 @@
 .auxiliary-buttons__add-btn {
   width: 40px;
   height: 40px;
-  background-color: #9A7BD9;
+  background-color: var(--blog-accent-contrast);
   border-style: none;
   border-radius: 10px;
   background-image: url(../../../assets/plus-icon.svg);

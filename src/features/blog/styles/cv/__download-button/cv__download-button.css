@@ -1,12 +1,12 @@
 .cv__download-button {
   width: fit-content;
   height: 30px;
-  border: 1px solid #9A7BD9;
+  border: 1px solid var(--blog-accent-text);
   border-radius: 10px;
   background-color: transparent;
   padding: 5px 22px;
   box-sizing: border-box;
-  color: #9A7BD9;
+  color: var(--blog-accent-text);
   font-size: 12px;
   font-weight: 300;
   line-height: 15px;

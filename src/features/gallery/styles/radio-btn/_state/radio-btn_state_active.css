@@ -1,7 +1,6 @@
 .radio-btn_state_active {
-    border-top: 1px solid #D9D9D9;
-    border-left: 1px solid #D9D9D9;
-    border-right: 1px solid #D9D9D9;
-    border-radius: 5px 5px 0 0;
-    background: linear-gradient(180deg, #5d92bb 0%, #0f1111 100%);
+  border-top: 1px solid #d9d9d9;
+  border-left: 1px solid #d9d9d9;
+  border-right: 1px solid #d9d9d9;
+  border-radius: 5px 5px 0 0;
 }

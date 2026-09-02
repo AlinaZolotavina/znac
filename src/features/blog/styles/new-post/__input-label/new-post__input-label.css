@@ -1,5 +1,5 @@
 .new-post__input-label {
-  color: #948e8e;
+  color: var(--blog-muted-text);
   font-size: 14px;
   font-weight: 300;
   line-height: 20px;

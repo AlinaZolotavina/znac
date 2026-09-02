@@ -3,7 +3,7 @@
   height: 50px;
   border-style: none;
   border-radius: 10px;
-  background-color: #9A7BD9;
+  background-color: var(--blog-accent-contrast);
   color: #f4ffff;
   font-size: 16px;
   font-weight: 500;

@@ -4,7 +4,7 @@
   align-items: center;
   width: 150px;
   height: 40px;
-  background-color: #9a7bd9;
+  background-color: var(--blog-accent-contrast);
   border-style: none;
   border-radius: 10px;
   padding: 0;

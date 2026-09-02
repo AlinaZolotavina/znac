@@ -8,9 +8,9 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  border: 1px solid #9A7BD9;
+  border: 1px solid var(--blog-accent-text);
   border-radius: 10px;
-  color: #9A7BD9;
+  color: var(--blog-accent-text);
   font-size: 12px;
   font-weight: 300;
   line-height: 15px;

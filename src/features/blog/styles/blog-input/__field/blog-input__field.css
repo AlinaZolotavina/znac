@@ -11,7 +11,7 @@
 }
 
 .blog-input__field::placeholder {
-  color: #d9d9d9;
+  color: var(--blog-muted-text);
 }
 
 @media (max-width: 1280px) {

@@ -1,5 +1,5 @@
 .new-post__radio-btn_state_active {
-    background-color: #9A7BD9;
+    background-color: var(--blog-accent-contrast);
     color: #fff;
 }
 

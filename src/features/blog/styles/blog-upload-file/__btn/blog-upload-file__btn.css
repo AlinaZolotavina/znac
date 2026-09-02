@@ -13,7 +13,7 @@
   vertical-align: middle;
   color: #fff;
   text-align: center;
-  background-color: #9A7BD9;
+  background-color: var(--blog-accent-contrast);
   box-sizing: border-box;
   border-style: none;
   border-radius: 5px;

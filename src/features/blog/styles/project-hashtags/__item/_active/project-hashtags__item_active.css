@@ -1,5 +1,5 @@
 .project-hashtags__item_active {
   color: #fff;
-  background-color: #9A7BD9;
-  border-color: #9A7BD9;
+  background-color: var(--blog-accent-contrast);
+  border-color: var(--blog-accent-contrast);
 }

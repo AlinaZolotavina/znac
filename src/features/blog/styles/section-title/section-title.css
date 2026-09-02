@@ -2,7 +2,7 @@
     font-size: 32px;
     font-weight: 500;
     line-height: 40px;
-    color: #9A7BD9;
+    color: var(--blog-accent-text);
     margin: 0;
     padding: 0;
 }

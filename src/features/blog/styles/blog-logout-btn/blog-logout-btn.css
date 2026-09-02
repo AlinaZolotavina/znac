@@ -8,7 +8,7 @@
   padding: 0;
   border: 0;
   border-radius: 10px;
-  background-color: #9a7bd9;
+  background-color: var(--blog-accent-contrast);
   color: #f4ffff;
   font-size: 14px;
   font-weight: 400;

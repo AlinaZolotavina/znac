@@ -8,7 +8,7 @@
   align-items: center;
   margin-left: 15px;
   cursor: pointer;
-  background-color: #9A7BD9;
+  background-color: var(--blog-accent-contrast);
   color: #fff;
   box-sizing: border-box;
   transition: opacity 0.2s ease;

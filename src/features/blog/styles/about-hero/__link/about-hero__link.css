@@ -1,5 +1,5 @@
 .about-hero__link {
-  color: #e072a4;
+  color: var(--blog-accent-text);
   text-decoration: none;
   transition: opacity 0.2s ease;
 }

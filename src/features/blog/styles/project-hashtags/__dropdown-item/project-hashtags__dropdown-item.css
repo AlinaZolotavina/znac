@@ -22,5 +22,5 @@
 
 .project-hashtags__dropdown-item_active {
   color: #fff;
-  background-color: #9A7BD9;
+  background-color: var(--blog-accent-contrast);
 }

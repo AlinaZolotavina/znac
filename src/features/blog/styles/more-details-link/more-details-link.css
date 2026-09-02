@@ -8,7 +8,7 @@
   font-weight: 300;
   line-height: 19px;
   border-radius: 10px;
-  background-color: #9a7bd9;
+  background-color: var(--blog-accent-contrast);
   transition: opacity 0.2s ease;
   padding: 0;
   cursor: pointer;

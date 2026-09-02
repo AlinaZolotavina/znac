@@ -1,7 +1,7 @@
 .blog-submit-btn {
   border-style: none;
   border-radius: 10px;
-  background-color: #9a7bd9;
+  background-color: var(--blog-accent-contrast);
   color: #fff;
   font-size: 18px;
   font-weight: 500;

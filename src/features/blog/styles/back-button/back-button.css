@@ -6,11 +6,11 @@
   right: 0;
   width: min-content;
   height: 40px;
-  color: #9A7BD9;
+    color: var(--blog-accent-text);
   font-size: 16px;
   font-weight: 500;
   text-wrap: nowrap;
-  border: 1px solid #9A7BD9;
+    border: 1px solid var(--blog-accent-text);
   padding: 10px 24px;
   box-sizing: border-box;
   border-radius: 20px;

@@ -1,31 +1,34 @@
 .blog {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: inherit;
-    min-height: inherit;
-    background-color: #fff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: inherit;
+  min-height: inherit;
+  background-color: #fff;
+  --blog-accent-contrast: #835fc9;
+  --blog-accent-text: #7f59c7;
+  --blog-accent-danger: #c24462;
+  --blog-muted-text: #707070;
 }
 
 .blog > main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 .blog .popup__close-btn {
-    background-image: url(../../assets/blog-close-btn.svg);
+  background-image: url(../../assets/blog-close-btn.svg);
 }
 
 .popup_type_delete-post .popup__close-btn,
 .popup_type_project-details .popup__close-btn {
-    background-image: url(../../assets/blog-close-btn.svg);
+  background-image: url(../../assets/blog-close-btn.svg);
 }
 
 @media screen and (max-width: 1280px) {
-    .blog {
-        
-    }
+  .blog {
+  }
 }

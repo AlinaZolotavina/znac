@@ -6,7 +6,7 @@
   padding: 0;
   border: 0;
   background: linear-gradient(90deg, rgba(243, 247, 255, 0), #fff 18px);
-  color: #9A7BD9;
+  color: var(--blog-accent-text);
   font: inherit;
   font-weight: 400;
   padding-left: 20px;
