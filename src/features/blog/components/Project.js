@@ -44,7 +44,7 @@ function Project({
               type="button"
               onClick={() => onSeeMoreProjectClick(project)}
             >
-              ... see more в†’
+              ... see more →
             </button>
           )}
         </p>

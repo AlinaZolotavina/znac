@@ -15,6 +15,16 @@ function Skills() {
           <li className="skills__item">Node.js</li>
           <li className="skills__item">Express</li>
           <li className="skills__item">MongoDB</li>
+          <li className="skills__item">REST API</li>
+          <li className="skills__item">ESLint</li>
+          <li className="skills__item">Postman</li>
+          <li className="skills__item">Git</li>
+          <li className="skills__item">GitHub</li>
+          <li className="skills__item">GitHub Actions</li>
+          <li className="skills__item">Docker</li>
+          <li className="skills__item">Nginx</li>
+          <li className="skills__item">AWS</li>
+          <li className="skills__item">Vite</li>
           <li className="skills__item">Adobe Illustrator</li>
           <li className="skills__item">Adobe Photoshop</li>
           <li className="skills__item">Figma</li>

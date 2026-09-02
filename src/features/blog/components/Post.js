@@ -81,7 +81,7 @@ function Post({
               </span>
             </p>
             {isTextOverflowing && (
-              <span className="post__read-more">Read more в†’</span>
+              <span className="post__read-more">Read more →</span>
             )}
           </div>
         </button>
