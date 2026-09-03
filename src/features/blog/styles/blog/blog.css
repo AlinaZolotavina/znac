@@ -1,3 +1,10 @@
+.page {
+  --blog-accent-contrast: #835fc9;
+  --blog-accent-text: #7f59c7;
+  --blog-accent-danger: #c24462;
+  --blog-muted-text: #707070;
+}
+
 .blog {
   position: relative;
   display: flex;

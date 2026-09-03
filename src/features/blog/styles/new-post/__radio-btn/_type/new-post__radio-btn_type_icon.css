@@ -5,6 +5,7 @@
   padding: 0;
   border-radius: 10px;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .new-post__radio-btn_type_icon::after {

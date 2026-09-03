@@ -8,6 +8,29 @@ function NewPostRadioButton({
   onArrowNavigate,
   labelText,
 }) {
+  function handleSelect() {
+    onClick(radioBtnValue);
+    const input = document.getElementById(inputId);
+
+    if (input) {
+      input.focus();
+    }
+  }
+
+  function handleWrapperClick(e) {
+    if (e.target !== e.currentTarget) {
+      return;
+    }
+
+    e.preventDefault();
+    handleSelect();
+  }
+
+  function handleLabelClick(e) {
+    e.preventDefault();
+    handleSelect();
+  }
+
   const inputId = `${idPrefix}-${radioBtnName}-${String(radioBtnValue)
     .toLowerCase()
     .replace(/\s+/g, "-")}`;
@@ -56,6 +79,7 @@ function NewPostRadioButton({
           ? "new-post__radio-btn_state_active"
           : "new-post__radio-btn_state_inactive"
       }`}
+      onClick={handleWrapperClick}
     >
       <input
         type="radio"
@@ -64,11 +88,13 @@ function NewPostRadioButton({
         value={radioBtnValue}
         name={inputName}
         id={inputId}
-        onChange={() => onClick(radioBtnValue)}
+        onChange={handleSelect}
         onKeyDown={handleKeyDown}
         aria-label={!labelText ? `${radioBtnValue} icon` : undefined}
       />
-      <label htmlFor={inputId}>{labelText}</label>
+      <label htmlFor={inputId} onClick={handleLabelClick}>
+        {labelText}
+      </label>
     </div>
   );
 }

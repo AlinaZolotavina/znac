@@ -3,6 +3,17 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 const GAP = 12;
 const MOBILE_BREAKPOINT = 650;
 
+function isActiveProjectHashtag(activeHashtag, hashtag) {
+  if (hashtag === "All") {
+    return !activeHashtag || String(activeHashtag).toLowerCase() === "all";
+  }
+
+  return (
+    typeof activeHashtag === "string" &&
+    activeHashtag.toLowerCase() === hashtag.toLowerCase()
+  );
+}
+
 function ProjectHashtags({ hashtags, activeHashtag, onHashtagClick }) {
   const containerRef = useRef(null);
   const itemMeasureRefs = useRef([]);
@@ -106,7 +117,9 @@ function ProjectHashtags({ hashtags, activeHashtag, onHashtagClick }) {
           <button
             key={hashtag}
             className={`project-hashtags__item ${
-              activeHashtag === hashtag ? "project-hashtags__item_active" : ""
+              isActiveProjectHashtag(activeHashtag, hashtag)
+                ? "project-hashtags__item_active"
+                : ""
             }`}
             type="button"
             onClick={() => handleHashtagClick(hashtag)}
@@ -136,13 +149,13 @@ function ProjectHashtags({ hashtags, activeHashtag, onHashtagClick }) {
                   <button
                     key={hashtag}
                     className={`project-hashtags__dropdown-item ${
-                      activeHashtag === hashtag
+                      isActiveProjectHashtag(activeHashtag, hashtag)
                         ? "project-hashtags__dropdown-item_active"
                         : ""
                     }`}
                     type="button"
                     role="option"
-                    aria-selected={activeHashtag === hashtag}
+                    aria-selected={isActiveProjectHashtag(activeHashtag, hashtag)}
                     onClick={() => handleHashtagClick(hashtag)}
                   >
                     {hashtag}

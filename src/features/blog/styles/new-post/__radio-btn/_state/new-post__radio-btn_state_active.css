@@ -1,9 +1,10 @@
 .new-post__radio-btn_state_active {
-    background-color: var(--blog-accent-contrast);
-    color: #fff;
+  background-color: var(--blog-accent-contrast);
+  color: #fff;
 }
 
 .new-post__radio-btn_type_icon.new-post__radio-btn_state_active {
-    background-color: #f8f4ff;
-    box-shadow: none;
+  background-color: #f8f4ff;
+  border: 3px solid var(--blog-accent-contrast);
+  box-shadow: none;
 }
