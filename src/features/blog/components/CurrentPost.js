@@ -19,7 +19,6 @@ function CurrentPost({
   const postHashtags = Array.isArray(post.hashtags)
     ? post.hashtags
     : post.hashtags?.split(" ") || [];
-  const date = Date.now();
   const [currentImage, setCurrentImage] = useState(errorImage);
   const paragraps = post.text
     .split("\n")
@@ -57,7 +56,7 @@ function CurrentPost({
       <ul className="post__hashtags">
         {postHashtags.map((value, key) => (
           <BlogHashtag
-            key={`${key}${date}`}
+            key={`${post._id}-hashtag-${key}`}
             hashtag={value}
             isSymbolActive={true}
             classname="post__hashtag"
@@ -74,7 +73,7 @@ function CurrentPost({
       )}
       {paragraps.map((value, key) => (
         <p
-          key={`${key}${date}`}
+          key={`${post._id}-paragraph-${key}`}
           className={`post__text post__text_location_${location}`}
         >
           {value}

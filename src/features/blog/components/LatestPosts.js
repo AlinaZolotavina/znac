@@ -13,8 +13,6 @@ function LatestPosts({
   onAddPostClick,
   onViewAllClick,
 }) {
-  const date = Date.now();
-
   return (
     <div className="background_color_blue">
       <section className="latest-posts">
@@ -34,7 +32,7 @@ function LatestPosts({
           <ul className="latest-posts__container">
             {posts.slice(0, postsQuantity).map((post) => (
               <Post
-                key={`${post._id}${date}`}
+                key={post._id}
                 post={post}
                 onPostClick={onPostClick}
                 onEditPostButtonClick={onEditPostButtonClick}

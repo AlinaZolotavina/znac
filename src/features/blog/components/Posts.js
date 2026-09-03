@@ -9,7 +9,6 @@ function Posts({
   onEditPostButtonClick,
   onDeletePostButtonClick,
 }) {
-  const date = Date.now();
   return (
     <>
       {posts.length === 0 ? (
@@ -27,7 +26,7 @@ function Posts({
         <ul className="posts-container">
           {posts.slice(0, postsQuantity).map((post) => (
             <Post
-              key={`${post._id}${date}`}
+              key={post._id}
               post={post}
               onPostClick={onPostClick}
               onEditPostButtonClick={onEditPostButtonClick}
