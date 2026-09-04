@@ -1,4 +1,5 @@
 .gallery {
+  width: 100%;
   max-height: fit-content;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

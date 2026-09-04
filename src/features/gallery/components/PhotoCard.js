@@ -29,8 +29,10 @@ function PhotoCard({ photo, loggedIn, onPhotoClick, onDeleteBtnClick }) {
           src={imageSrc}
           alt={photo.hashtags}
           loading="lazy"
-          onError={(e) => {
-            if (e.currentTarget.src !== errorImage) {
+          onError={() => {
+            if (imageSrc !== photo.link && photo.link) {
+              setImageSrc(photo.link);
+            } else {
               setImageSrc(errorImage);
             }
           }}
