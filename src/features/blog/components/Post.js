@@ -21,11 +21,12 @@ function Post({
   const { ref: textRef, isOverflowing: isTextOverflowing } = useOverflow(
     post.text,
   );
-  const shouldShowPhoto = post.photoLink && !isPhotoBroken;
+  const previewSrc = post.thumbnail || post.photoLink;
+  const shouldShowPhoto = previewSrc && !isPhotoBroken;
 
   useEffect(() => {
     setIsPhotoBroken(false);
-  }, [post.photoLink]);
+  }, [previewSrc]);
 
   function handlePostClick() {
     onPostClick(post);
@@ -53,7 +54,7 @@ function Post({
           {shouldShowPhoto ? (
             <img
               className={`post__preview post__preview_location_${location}`}
-              src={post.photoLink}
+              src={previewSrc}
               alt={`Illustration for post "${post.title}"`}
               loading="lazy"
               onError={() => setIsPhotoBroken(true)}

@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import errorImage from "../../../app/assets/image-error.svg";
 
 function PhotoCard({ photo, loggedIn, onPhotoClick, onDeleteBtnClick }) {
-  const [imageSrc, setImageSrc] = useState(photo.link);
+  const [imageSrc, setImageSrc] = useState(photo.thumbnail || photo.link);
 
   useEffect(() => {
-    setImageSrc(photo.link);
-  }, [photo.link]);
+    setImageSrc(photo.thumbnail || photo.link);
+  }, [photo.thumbnail, photo.link]);
 
   function handlePhotoClick() {
     onPhotoClick(photo);
