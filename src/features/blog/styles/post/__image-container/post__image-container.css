@@ -1,0 +1,22 @@
+.post__image-container {
+  position: relative;
+  width: 100%;
+}
+
+.post__image-container_state_loading {
+  min-height: 240px;
+}
+
+.post__image-container_state_loading .post__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+@media (max-width: 650px) {
+  .post__image-container_state_loading {
+    min-height: 180px;
+  }
+}

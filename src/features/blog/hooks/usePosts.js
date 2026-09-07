@@ -41,6 +41,7 @@ export default function usePosts({
   const [postToEdit, setPostToEdit] = useState({});
   const [postToDelete, setPostToDelete] = useState({});
   const [postVersion, setPostVersion] = useState(0);
+  const [isPostsLoading, setIsPostsLoading] = useState(true);
 
   const postsToRender = useMemo(
     () => allPosts.slice(0, currentPostsNumber),
@@ -84,6 +85,8 @@ export default function usePosts({
       const hasThemeFilter = theme && theme !== "All";
       const hasFilters = hasSearch || hasThemeFilter;
 
+      setIsPostsLoading(true);
+
       return api
         .getPosts(page, POSTS_PAGE_SIZE, {
           search: normalizedSearch,
@@ -114,7 +117,8 @@ export default function usePosts({
 
           return response;
         })
-        .catch(console.error);
+        .catch(console.error)
+        .finally(() => setIsPostsLoading(false));
     },
     [],
   );
@@ -313,5 +317,6 @@ export default function usePosts({
     handlePostDelete,
     postToDelete,
     postVersion,
+    isPostsLoading,
   };
 }

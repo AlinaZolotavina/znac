@@ -5,6 +5,7 @@ import Search from "./Search";
 import MainPageHashtags from "./MainPageHashtags";
 import Gallery from "./Gallery";
 import More from "./More";
+import ContentLoader from "../../../app/components/ContentLoader";
 
 const Main = forwardRef(function Main(
   {
@@ -28,6 +29,7 @@ const Main = forwardRef(function Main(
     email,
     onLogout,
     isSendingReq,
+    isPhotosLoading,
     isSearching,
   },
   ref,
@@ -61,15 +63,21 @@ const Main = forwardRef(function Main(
         photoHashtags={photoHashtags}
         onClick={onHashtagClick}
       />
-      <Gallery
-        loggedIn={loggedIn}
-        photos={photos}
-        onDeleteBtnClick={onDeleteBtnClick}
-        onPhotoClick={onPhotoClick}
-        photosQuantity={photosQuantity}
-        isSearching={isSearching}
-      />
-      {hasMorePhotos && <More onShowMore={onShowMore} />}
+      {isPhotosLoading && photos.length === 0 ? (
+        <ContentLoader label="Loading photos" tone="gallery" />
+      ) : (
+        <>
+          <Gallery
+            loggedIn={loggedIn}
+            photos={photos}
+            onDeleteBtnClick={onDeleteBtnClick}
+            onPhotoClick={onPhotoClick}
+            photosQuantity={photosQuantity}
+            isSearching={isSearching}
+          />
+          {hasMorePhotos && <More onShowMore={onShowMore} />}
+        </>
+      )}
     </main>
   );
 });

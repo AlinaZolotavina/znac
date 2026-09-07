@@ -58,6 +58,7 @@ function GalleryRoot({
     photosToRender,
     currentPhotosNumber,
     hasMorePhotos,
+    isPhotosLoading,
 
     // actions
     handlePhotoOpen,
@@ -192,6 +193,7 @@ function GalleryRoot({
                 areHashtagsEditing={false}
                 onEditHashtags={handleEditHashtags}
                 isSendingReq={isLoading}
+                isPhotosLoading={isPhotosLoading}
                 hashtagsNumber={10}
               />
               <Footer ref={footerRef} />

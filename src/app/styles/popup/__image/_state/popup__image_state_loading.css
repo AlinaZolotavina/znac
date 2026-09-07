@@ -1,0 +1,8 @@
+.popup__image {
+  opacity: 1;
+  transition: opacity 0.18s ease;
+}
+
+.popup__image_state_loading {
+  opacity: 0;
+}

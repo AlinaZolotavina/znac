@@ -4,6 +4,7 @@ import api from "../../../shared/utils/api";
 import BlogHeader from "./BlogHeader";
 import CurrentPost from "./CurrentPost";
 import { useCallback } from "react";
+import ContentLoader from "../../../app/components/ContentLoader";
 
 function CurrentPostPage({
   activePage,
@@ -25,10 +26,13 @@ function CurrentPostPage({
   const { id } = useParams();
 
   const [post, setPost] = useState(null);
+  const [isPostLoading, setIsPostLoading] = useState(true);
 
   const loadPost = useCallback(
-    () =>
-      api
+    () => {
+      setIsPostLoading(true);
+
+      return api
         .getPost(id)
         .then(setPost)
         .catch((err) => {
@@ -36,7 +40,9 @@ function CurrentPostPage({
             status: "error",
             message: err.message,
           });
-        }),
+        })
+        .finally(() => setIsPostLoading(false));
+    },
     [id, openModal],
   );
 
@@ -59,7 +65,12 @@ function CurrentPostPage({
         onContactClick={onContactClick}
       />
       <main>
-        {post && (
+        {isPostLoading ? (
+          <ContentLoader
+            label="Loading post"
+            className="content-loader_location_single-post"
+          />
+        ) : post ? (
           <CurrentPost
             post={post}
             location="single-post"
@@ -68,7 +79,7 @@ function CurrentPostPage({
             onDeletePostButtonClick={onDeletePostButtonClick}
             loggedIn={loggedIn}
           />
-        )}
+        ) : null}
       </main>
     </div>
   );

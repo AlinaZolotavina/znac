@@ -178,6 +178,7 @@ function BlogRoot({
     handleProjectDelete,
     handleDeleteProjectModalOpen,
     projectToDelete,
+    isProjectsLoading,
   } = useProjects({
     screenWidth,
     isAlinaRoute,
@@ -208,6 +209,7 @@ function BlogRoot({
     handlePostDelete,
     postToDelete,
     postVersion,
+    isPostsLoading,
   } = usePosts({
     screenWidth,
     isAlinaRoute,
@@ -282,6 +284,8 @@ function BlogRoot({
               projectsToRender={projectsToRender}
               totalProjects={totalProjects}
               projectsQuantity={previewProjectsQuantity}
+              isPostsLoading={isPostsLoading}
+              isProjectsLoading={isProjectsLoading}
               onBlogMenuClick={handleBlogMenuClick}
               onContactClick={handleBlogContactClick}
               onNewPostClick={handleNewPostPopupOpen}
@@ -321,6 +325,7 @@ function BlogRoot({
               postsQuantity={currentPostsNumber}
               onShowMorePosts={showMorePosts}
               isLoading={isLoading}
+              isPostsLoading={isPostsLoading}
               query={query}
               querySetter={setQuery}
               onPostHashtagClick={handlePostHashtagClick}
@@ -368,6 +373,7 @@ function BlogRoot({
               onEditProjectButtonClick={handleEditProjectPopupOpen}
               onDeleteProjectButtonClick={handleDeleteProjectModalOpen}
               onProjectHashtagClick={handleProjectHashtagClick}
+              isProjectsLoading={isProjectsLoading}
             />
           }
         />

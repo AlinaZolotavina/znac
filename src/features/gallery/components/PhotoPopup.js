@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import errorImage from "../../../app/assets/image-error.svg";
 
 import EditButton from "../../../app/components/EditButton";
@@ -27,13 +27,13 @@ function PhotoPopup({
   isLeftFlipDisabled,
   isRightFlipDisabled,
 }) {
-  const [imageSrc, setImageSrc] = useState(photo?.link);
-  const [hasError, setHasError] = useState(false);
+  const [loadedPhotoId, setLoadedPhotoId] = useState(null);
+  const [failedPhotoId, setFailedPhotoId] = useState(null);
 
-  useEffect(() => {
-    setImageSrc(photo?.link);
-    setHasError(false);
-  }, [photo?.link]);
+  const hasError = failedPhotoId === photo?._id;
+  const isImageLoading =
+    Boolean(photo?._id) && !hasError && loadedPhotoId !== photo._id;
+  const imageSrc = hasError ? errorImage : photo?.link;
 
   const hashtags = Array.isArray(photoHashtags)
     ? photoHashtags.flatMap((tag) => tag.split(/\s+/))
@@ -72,6 +72,7 @@ function PhotoPopup({
         role="dialog"
         aria-modal="true"
         aria-label="Photo preview"
+        aria-busy={isImageLoading}
         tabIndex={-1}
       >
         <div className="popup__photo-container">
@@ -86,13 +87,19 @@ function PhotoPopup({
 
           <div className="popup__photo">
             <img
-              className={hasError ? "popup__image-error" : "popup__image"}
+              key={photo?._id}
+              className={[
+                hasError ? "popup__image-error" : "popup__image",
+                isImageLoading ? "popup__image_state_loading" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
               src={imageSrc}
               alt={photo?.hashtags}
+              onLoad={() => setLoadedPhotoId(photo?._id)}
               onError={(e) => {
                 e.currentTarget.onerror = null;
-                setHasError(true);
-                setImageSrc(errorImage);
+                setFailedPhotoId(photo?._id);
               }}
             />
 
@@ -140,6 +147,13 @@ function PhotoPopup({
           </div>
         </div>
       </div>
+      {isImageLoading && (
+        <div
+          className="popup__loader"
+          role="status"
+          aria-label="Loading photo"
+        />
+      )}
     </div>
   );
 }

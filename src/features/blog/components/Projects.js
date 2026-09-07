@@ -3,6 +3,7 @@ import AuxiliaryButtons from "./AuxiliaryButtons";
 import ProjectsContainer from "./ProjectsContainer";
 import ContentNotFound from "./ContentNotFound";
 import ProjectDetailsPopup from "./ProjectDetailsPopup";
+import ContentLoader from "../../../app/components/ContentLoader";
 
 function Projects({
   loggedIn,
@@ -14,6 +15,7 @@ function Projects({
   onAddProjectClick,
   onEditProjectButtonClick,
   onDeleteProjectButtonClick,
+  isLoading = false,
 }) {
   const [selectedProject, setSelectedProject] = useState(null);
 
@@ -39,7 +41,9 @@ function Projects({
           />
         )}
       </div>
-      {projects.length !== 0 ? (
+      {isLoading && projects.length === 0 ? (
+        <ContentLoader label="Loading projects" />
+      ) : projects.length !== 0 ? (
         <ProjectsContainer
           loggedIn={loggedIn}
           projects={projects}

@@ -35,6 +35,7 @@ export default function useProjects({
   const [projectsPages, setProjectsPages] = useState(1);
   const [projectToEdit, setProjectToEdit] = useState({});
   const [projectToDelete, setProjectToDelete] = useState({});
+  const [isProjectsLoading, setIsProjectsLoading] = useState(true);
 
   const projectsToRender = useMemo(
     () => allProjects.slice(0, currentProjectsNumber),
@@ -78,6 +79,8 @@ export default function useProjects({
     ({ page = 1, append = false, hashtag = "" } = {}) => {
       const normalizedHashtag = hashtag === "All" ? "" : hashtag.trim();
       const hasFilter = Boolean(normalizedHashtag);
+      setIsProjectsLoading(true);
+
       return api
         .getProjects(page, 12, {
           hashtag: normalizedHashtag,
@@ -114,7 +117,8 @@ export default function useProjects({
           });
 
           throw err;
-        });
+        })
+        .finally(() => setIsProjectsLoading(false));
     },
     [getProjectsLayout, openModal],
   );
@@ -300,5 +304,6 @@ export default function useProjects({
     handleProjectDelete,
     handleDeleteProjectModalOpen,
     projectToDelete,
+    isProjectsLoading,
   };
 }

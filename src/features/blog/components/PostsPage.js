@@ -7,6 +7,7 @@ import Posts from "./Posts";
 import BlogFooter from "./BlogFooter";
 import ShowMoreButton from "./ShowMoreButton.js";
 import ContentNotFound from "./ContentNotFound.js";
+import ContentLoader from "../../../app/components/ContentLoader";
 
 function PostsPage({
   loggedIn,
@@ -24,6 +25,7 @@ function PostsPage({
   postsQuantity,
   onShowMorePosts,
   isLoading,
+  isPostsLoading,
   query,
   querySetter,
   onPostHashtagClick,
@@ -69,7 +71,9 @@ function PostsPage({
           activeHashtag={activeHashtag}
           query={query}
         />
-        {postsToRender.length !== 0 ? (
+        {isPostsLoading && postsToRender.length === 0 ? (
+          <ContentLoader label="Loading posts" />
+        ) : postsToRender.length !== 0 ? (
           <>
             <Posts
               posts={postsToRender}

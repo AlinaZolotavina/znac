@@ -6,6 +6,7 @@
 
 /* page */
 @import url(./app/styles/page/page.css);
+@import url(./app/styles/content-loader/content-loader.css);
 
 /* ZNAC STYLES*/
 /* header */
@@ -82,9 +83,11 @@
 @import url(./app/styles/popup/__submit-btn/_disabled/popup__submit-btn_diabled.css);
 @import url(./app/styles/popup/__photo-container/popup__photo-container.css);
 @import url(./app/styles/popup/__image/popup__image.css);
+@import url(./app/styles/popup/__image/_state/popup__image_state_loading.css);
 @import url(./app/styles/popup/__image-error/popup__image-error.css);
 @import url(./app/styles/popup/__right-flip/popup__right-flip.css);
 @import url(./app/styles/popup/__left-flip/popup__left-flip.css);
+@import url(./app/styles/popup/__loader/popup__loader.css);
 @import url(./app/styles/popup/__caption/popup__caption.css);
 @import url(./app/styles/popup/__hashtags/popup__hashtags.css);
 @import url(./features/gallery/styles/views/views.css);
@@ -312,7 +315,10 @@
 @import url(./features/blog/styles/post/__theme/_location/post__theme_location_posts.css);
 @import url(./features/blog/styles/post/__theme/_location/post__theme_location_single-post.css);
 @import url(./features/blog/styles/post/__preview/post__preview.css);
+@import url(./features/blog/styles/post/__preview-container/post__preview-container.css);
+@import url(./features/blog/styles/post/__preview/_state/post__preview_state_loading.css);
 @import url(./features/blog/styles/post/__image/post__image.css);
+@import url(./features/blog/styles/post/__image-container/post__image-container.css);
 @import url(./features/blog/styles/post/__image/_orientation/post__image_orientation_portrait.css);
 @import url(./features/blog/styles/post/__image-placeholder/post__image-placeholder.css);
 @import url(./features/blog/styles/post/__hashtags/post__hashtags.css);

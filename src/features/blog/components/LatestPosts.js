@@ -1,6 +1,7 @@
 import AuxiliaryButtons from "./AuxiliaryButtons";
 import Post from "./Post";
 import ContentNotFound from "./ContentNotFound";
+import ContentLoader from "../../../app/components/ContentLoader";
 
 function LatestPosts({
   loggedIn,
@@ -12,6 +13,7 @@ function LatestPosts({
   onDeletePostButtonClick,
   onAddPostClick,
   onViewAllClick,
+  isLoading,
 }) {
   return (
     <div className="background_color_blue">
@@ -28,7 +30,9 @@ function LatestPosts({
             />
           )}
         </div>
-        {posts.length !== 0 ? (
+        {isLoading && posts.length === 0 ? (
+          <ContentLoader label="Loading latest posts" />
+        ) : posts.length !== 0 ? (
           <ul className="latest-posts__container">
             {posts.slice(0, postsQuantity).map((post) => (
               <Post

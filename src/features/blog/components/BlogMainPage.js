@@ -29,6 +29,8 @@ function BlogMainPage({
   onDeletePostButtonClick,
   onEditProjectButtonClick,
   onDeleteProjectButtonClick,
+  isPostsLoading,
+  isProjectsLoading,
 }) {
   return (
     <div className="blog">
@@ -56,6 +58,7 @@ function BlogMainPage({
           onDeletePostButtonClick={onDeletePostButtonClick}
           onAddPostClick={onNewPostClick}
           onViewAllClick={onViewAllPostsClick}
+          isLoading={isPostsLoading}
         />
         <Projects
           loggedIn={loggedIn}
@@ -67,6 +70,7 @@ function BlogMainPage({
           onAddProjectClick={onNewProjectClick}
           onEditProjectButtonClick={onEditProjectButtonClick}
           onDeleteProjectButtonClick={onDeleteProjectButtonClick}
+          isLoading={isProjectsLoading}
         />
       </main>
       <BlogFooter />

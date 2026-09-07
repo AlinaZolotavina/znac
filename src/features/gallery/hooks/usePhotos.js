@@ -41,6 +41,7 @@ export default function usePhotos({
   const [currentPhotosNumber, setCurrentPhotosNumber] = useState(0);
   const [photosToAdd, setPhotosToAdd] = useState(0);
   const [visibleLoadedPhotosCount, setVisibleLoadedPhotosCount] = useState(0);
+  const [isPhotosLoading, setIsPhotosLoading] = useState(true);
   const resizeTimeoutRef = useRef(null);
 
   const photosToRender = useMemo(
@@ -183,6 +184,8 @@ export default function usePhotos({
         ? api.findPhoto(normalizedHashtag, page, 20)
         : api.getPhotos(page, 20);
 
+      setIsPhotosLoading(true);
+
       return request
         .then((response) => {
           const { data, page: responsePage, pages } = response;
@@ -215,7 +218,8 @@ export default function usePhotos({
           });
 
           throw err;
-        });
+        })
+        .finally(() => setIsPhotosLoading(false));
     },
     [getPhotosLayout, openModal],
   );
@@ -341,8 +345,9 @@ export default function usePhotos({
     const nextPhoto = allPhotos[nextIndex];
     if (!nextPhoto) return;
 
-    increaseViewsNumber(nextPhoto._id);
+    setSelectedPhoto(nextPhoto);
     setAreHashtagsEditing(false);
+    increaseViewsNumber(nextPhoto._id);
   }
 
   function handleAddPhotoFromPc(photoData, hashtags, views) {
@@ -413,7 +418,9 @@ export default function usePhotos({
         setAllPhotos((state) =>
           state.map((p) => (p._id === photoId ? newPhoto : p)),
         );
-        setSelectedPhoto(newPhoto);
+        setSelectedPhoto((currentPhoto) =>
+          currentPhoto?._id === photoId ? newPhoto : currentPhoto,
+        );
       })
       .catch((err) => console.log(err));
   }
@@ -454,6 +461,7 @@ export default function usePhotos({
     photosToRender,
     currentPhotosNumber,
     hasMorePhotos,
+    isPhotosLoading,
 
     // actions
     handlePhotoOpen,

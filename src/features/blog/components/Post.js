@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import getDate from "../utils/getDate";
 import useOverflow from "../hooks/useOverflow";
 import BlogActionButtons from "./BlogActionButtons";
+import ContentLoader from "../../../app/components/ContentLoader";
+import isValidUrl from "../../../shared/utils/isValidUrl";
 
 function Post({
   post,
@@ -17,16 +19,26 @@ function Post({
     illustration: "illustrations",
   };
   const postIcon = iconAliases[post.icon] || post.icon;
+  const primaryImageSrc = isValidUrl(post.thumbnail)
+    ? post.thumbnail
+    : isValidUrl(post.photoLink)
+      ? post.photoLink
+      : null;
+  const [isUsingFallback, setIsUsingFallback] = useState(false);
   const [isPhotoBroken, setIsPhotoBroken] = useState(false);
+  const [loadedImageSrc, setLoadedImageSrc] = useState(null);
   const { ref: textRef, isOverflowing: isTextOverflowing } = useOverflow(
     post.text,
   );
-  const [imageSrc, setImageSrc] = useState(post.thumbnail || post.photoLink);
-  const shouldShowPhoto = imageSrc && !isPhotoBroken;
+  const imageSrc = isUsingFallback ? post.photoLink : primaryImageSrc;
+  const shouldShowPhoto = Boolean(imageSrc) && !isPhotoBroken;
+  const isImageLoading = shouldShowPhoto && loadedImageSrc !== imageSrc;
 
   useEffect(() => {
+    setIsUsingFallback(false);
     setIsPhotoBroken(false);
-  }, [imageSrc]);
+    setLoadedImageSrc(null);
+  }, [post._id, post.thumbnail, post.photoLink]);
 
   function handlePostClick() {
     onPostClick(post);
@@ -52,19 +64,34 @@ function Post({
           aria-label={`Open post ${post.title}`}
         >
           {shouldShowPhoto ? (
-            <img
-              className={`post__preview post__preview_location_${location}`}
-              src={imageSrc}
-              alt={`Illustration for post "${post.title}"`}
-              loading="lazy"
-              onError={() => {
-                if (imageSrc !== post.photoLink && post.photoLink) {
-                  setImageSrc(post.photoLink);
-                } else {
-                  setIsPhotoBroken(true);
-                }
-              }}
-            />
+            <div
+              className="post__preview-container"
+              aria-busy={isImageLoading}
+            >
+              {isImageLoading && (
+                <ContentLoader
+                  label="Loading post image"
+                  className="content-loader_location_post-preview"
+                  announce={false}
+                />
+              )}
+              <img
+                className={`post__preview post__preview_location_${location} ${
+                  isImageLoading ? "post__preview_state_loading" : ""
+                }`}
+                src={imageSrc}
+                alt={`Illustration for post "${post.title}"`}
+                loading="lazy"
+                onLoad={() => setLoadedImageSrc(imageSrc)}
+                onError={() => {
+                  if (imageSrc !== post.photoLink && isValidUrl(post.photoLink)) {
+                    setIsUsingFallback(true);
+                  } else {
+                    setIsPhotoBroken(true);
+                  }
+                }}
+              />
+            </div>
           ) : (
             <div
               className={`post__icon post__icon_location_${location} post__icon_type_${postIcon}`}

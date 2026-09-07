@@ -1,0 +1,39 @@
+.content-loader {
+  display: grid;
+  min-height: 160px;
+  place-items: center;
+}
+
+.content-loader__spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(131, 95, 201, 0.3);
+  border-top-color: #835fc9;
+  border-radius: 50%;
+  animation: content-loader-spin 0.8s linear infinite;
+}
+
+.content-loader_tone_gallery .content-loader__spinner {
+  border-color: rgba(124, 198, 251, 0.3);
+  border-top-color: #7cc6fb;
+}
+
+.content-loader_location_single-post {
+  width: 100%;
+  min-height: 60vh;
+}
+
+.content-loader_location_post-preview,
+.content-loader_location_single-post-image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  min-height: 0;
+  pointer-events: none;
+}
+
+@keyframes content-loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

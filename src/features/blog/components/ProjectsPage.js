@@ -7,6 +7,7 @@ import ProjectDetailsPopup from "./ProjectDetailsPopup.js";
 import BlogFooter from "./BlogFooter";
 import ShowMoreButton from "./ShowMoreButton.js";
 import ContentNotFound from "./ContentNotFound.js";
+import ContentLoader from "../../../app/components/ContentLoader";
 
 function ProjectsPage({
   loggedIn,
@@ -28,6 +29,7 @@ function ProjectsPage({
   onPostsClick,
   onProjectsClick,
   onAboutClick,
+  isProjectsLoading,
 }) {
   const [selectedProject, setSelectedProject] = useState(null);
 
@@ -79,7 +81,9 @@ function ProjectsPage({
           activeHashtag={activeProjectHashtag}
           onHashtagClick={onProjectHashtagClick}
         />
-        {projectsToRender.length !== 0 ? (
+        {isProjectsLoading && projectsToRender.length === 0 ? (
+          <ContentLoader label="Loading projects" />
+        ) : projectsToRender.length !== 0 ? (
           <>
             <ProjectsContainer
               loggedIn={loggedIn}
