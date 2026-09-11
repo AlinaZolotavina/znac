@@ -88,7 +88,7 @@ describe("gallery search", () => {
 
     rerender({
       ...props,
-      location: { pathname: "/addphoto" },
+      location: { pathname: "/gallery/addphoto" },
     });
 
     await waitFor(() => expect(result.current.photosToRender).toHaveLength(6));

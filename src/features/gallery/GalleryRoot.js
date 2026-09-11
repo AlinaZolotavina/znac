@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "../../features/gallery/components/Home";
 import Main from "../../features/gallery/components/Main";
 import Footer from "../../features/gallery/components/Footer";
@@ -11,13 +11,11 @@ import PhotoPopup from "../../features/gallery/components/PhotoPopup";
 import DeletePhotoModal from "../../features/gallery/components/DeletePhotoModal";
 
 import usePhotos from "./hooks/usePhotos";
-
 import scrollToRef from "./utils/scrollToRef";
 
 function GalleryRoot({
   loggedIn,
   isAuthInitialized,
-  currentUser,
   handleSignout,
   isLoading,
   openModal,
@@ -27,10 +25,8 @@ function GalleryRoot({
   setScreenWidth,
   closeModal,
   onMenuClick,
-  onMenuClose,
 }) {
   const location = useLocation();
-  const navigate = useNavigate();
   const homeRef = useRef(null);
   const mainRef = useRef(null);
   const footerRef = useRef(null);
@@ -89,27 +85,6 @@ function GalleryRoot({
     setIsDeletePhotoModalOpen,
   });
 
-  function handleHomeClick() {
-    navigate("/");
-
-    requestAnimationFrame(() => {
-      scrollToRef(homeRef);
-    });
-  }
-
-  function handleGalleryClick() {
-    scrollToRef(mainRef);
-  }
-
-  function handleBlogClick() {
-    window.scrollTo(0, 0);
-    onMenuClose();
-  }
-
-  function handleContactClick() {
-    scrollToRef(footerRef);
-  }
-
   const handleKeyPress = useCallback(
     (e) => {
       const { keyCode } = e;
@@ -147,6 +122,22 @@ function GalleryRoot({
     };
   }, [handleKeyPress]);
 
+  const handleGallerySubsectionClick = useCallback((itemId, event) => {
+    const sectionRefs = {
+      explore: homeRef,
+      photos: mainRef,
+      contact: footerRef,
+    };
+    const sectionRef = sectionRefs[itemId];
+
+    if (!sectionRef) {
+      return;
+    }
+
+    event.preventDefault();
+    scrollToRef(sectionRef);
+  }, []);
+
   return (
     <>
       <Routes>
@@ -157,17 +148,10 @@ function GalleryRoot({
               <Home
                 loggedIn={loggedIn}
                 ref={homeRef}
-                onHomeClick={handleHomeClick}
-                onGalleryClick={handleGalleryClick}
-                onBlogClick={handleBlogClick}
-                onContactClick={handleContactClick}
-                onProfileClick={() => navigate("/profile")}
-                onAddPhotoClick={() => navigate("/addphoto")}
                 onMenuClick={onMenuClick}
-                onSignout={handleSignout}
-                isSendingReq={isLoading}
-                email={currentUser.email}
                 onLogout={handleSignout}
+                onScrollHintClick={() => scrollToRef(mainRef)}
+                onSubsectionClick={handleGallerySubsectionClick}
               />
               <Main
                 photos={photosToRender}
@@ -175,10 +159,6 @@ function GalleryRoot({
                 ref={mainRef}
                 onPhotoClick={handlePhotoOpen}
                 onDeleteBtnClick={handleDeletePhotoModalOpen}
-                onHomeClick={handleHomeClick}
-                onBlogClick={handleBlogClick}
-                onGalleryClick={handleGalleryClick}
-                onContactClick={handleContactClick}
                 onHashtagClick={handlePhotoHashtagClick}
                 hashtag={hashtag}
                 photoHashtags={lastHashtags || []}
@@ -188,13 +168,14 @@ function GalleryRoot({
                 photosQuantity={currentPhotosNumber}
                 hasMorePhotos={hasMorePhotos}
                 onShowMore={showMorePhotos}
-                email={currentUser.email}
-                onLogout={handleSignout}
                 areHashtagsEditing={false}
                 onEditHashtags={handleEditHashtags}
                 isSendingReq={isLoading}
                 isPhotosLoading={isPhotosLoading}
                 hashtagsNumber={10}
+                onMenuClick={onMenuClick}
+                onLogout={handleSignout}
+                onSubsectionClick={handleGallerySubsectionClick}
               />
               <Footer ref={footerRef} />
             </>
@@ -210,16 +191,10 @@ function GalleryRoot({
             >
               <AddPhoto
                 loggedIn={loggedIn}
-                onHomeClick={handleHomeClick}
-                onBlogClick={handleBlogClick}
-                onGalleryClick={handleGalleryClick}
-                onContactClick={handleContactClick}
                 onMenuClick={onMenuClick}
-                onSignout={handleSignout}
                 isSendingReq={isLoading}
                 onAddPhotoViaLink={handleAddPhotoViaLink}
                 onUploadPhotoToServer={handleAddPhotoFromPc}
-                email={currentUser.email}
                 onLogout={handleSignout}
               />
             </ProtectedRoute>

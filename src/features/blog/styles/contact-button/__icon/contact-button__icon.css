@@ -9,14 +9,7 @@
 @media screen and (max-width: 1024px) {
   .contact-button__icon {
     display: block;
-    width: 18px;
-    height: 18px;
-  }
-}
-
-@media screen and (max-width: 900px) {
-  .contact-button__icon {
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
   }
 }

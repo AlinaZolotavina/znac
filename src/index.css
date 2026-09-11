@@ -7,14 +7,18 @@
 /* page */
 @import url(./app/styles/page/page.css);
 @import url(./app/styles/content-loader/content-loader.css);
+@import url(./app/styles/not-found-content/not-found-content.css);
 
 /* ZNAC STYLES*/
 /* header */
 @import url(./app/styles/header/header.css);
-@import url(./app/styles/burger-menu/burger-menu.css);
 
 /* home */
 @import url(./features/gallery/styles/home/home.css);
+@import url(./app/styles/main-page/main-page.css);
+@import url(./app/styles/scroll-hint-mouse/scroll-hint-mouse.css);
+@import url(./app/styles/main-nav/main-nav.css);
+@import url(./app/styles/main-menu/main-menu.css);
 @import url(./features/gallery/styles/promo/promo.css);
 @import url(./features/gallery/styles/promo/__text/promo__text.css);
 @import url(./features/gallery/styles/promo/__title/promo__title.css);
@@ -24,11 +28,6 @@
 @import url(./features/gallery/styles/main/main.css);
 @import url(./features/gallery/styles/main/__navigation/main__navigation.css);
 @import url(./features/gallery/styles/main/__navigation/_fixed/main__navigation_fixed.css);
-
-/* nav */
-@import url(./app/styles/nav/nav.css);
-@import url(./app/styles//nav/__link/nav__link.css);
-@import url(./app/styles/nav/__link/_active/nav__link_active.css);
 
 /* search */
 @import url(./features/gallery/styles/search/search.css);
@@ -165,8 +164,6 @@
 
 /* logout button */
 @import url(./app/styles/logout-btn/logout-btn.css);
-@import url(./app/styles/logout-btn/_position/logout-btn_position_nav.css);
-@import url(./app/styles/logout-btn/_position/logout-btn_position_burger-menu.css);
 
 /* add photo */
 @import url(./features/gallery/styles/add-photo/add-photo.css);
@@ -181,14 +178,6 @@
 @import url(./features/gallery/styles/upload-file/__input/upload-file__input.css);
 @import url(./features/gallery/styles/upload-file/__item/upload-file__item.css);
 @import url(./features/gallery/styles/upload-file/__remove-btn/upload-file__remove-btn.css);
-
-/* menu */
-@import url(./app/styles/menu/menu.css);
-@import url(./app/styles//menu/_visible/menu_visible.css);
-@import url(./app/styles/menu/__link/menu__link.css);
-@import url(./app/styles/menu/__link/_active/menu__link_active.css);
-@import url(./app/styles/menu/__logout-btn/menu__logout-btn.css);
-@import url(./app/styles/menu/__close-btn/menu__close-btn.css);
 
 /* reset-password */
 @import url(./features/auth/styles/forgot-password/forgot-password.css);
@@ -229,19 +218,9 @@
 
 @import url(./features/blog/styles/background/_color/background_color_blue.css);
 @import url(./features/blog/styles/blog-header/blog-header.css);
-@import url(./features/blog/styles/blog-header/__links/blog-header__links.css);
-@import url(./features/blog/styles/blog-header/__link/blog-header__link.css);
-@import url(./features/blog/styles/blog-header/__link/_state/blog-header__link_state_active.css);
-@import url(./features/blog/styles/blog-burger-menu/blog-burger-menu.css);
 @import url(./features/blog/styles/contact-button/contact-button.css);
 @import url(./features/blog/styles/contact-button/__icon/contact-button__icon.css);
 @import url(./features/blog/styles/contact-button/__text/contact-button__text.css);
-@import url(./features/blog/styles/blog-logout-btn/blog-logout-btn.css);
-@import url(./features/blog/styles/blog-menu/blog-menu.css);
-@import url(./features/blog/styles/blog-menu/_visible/blog-menu_visible.css);
-@import url(./features/blog/styles/blog-menu/__link/blog-menu__link.css);
-@import url(./features/blog/styles/blog-menu/__link/_active/blog-menu__link_active.css);
-@import url(./features/blog/styles/blog-menu/__close-btn/blog-menu__close-btn.css);
 @import url(./features/blog/styles/back-button/back-button.css);
 @import url(./features/blog/styles/back-button/__icon/back-button__icon.css);
 @import url(./features/blog/styles/blog-promo/blog-promo.css);

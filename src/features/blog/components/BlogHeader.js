@@ -1,6 +1,6 @@
 import ContactButton from "./ContactButton";
-import LogoutButton from "../../../app/components/LogoutButton";
-import { NavLink } from "react-router-dom";
+import MainNav from "../../../app/components/MainNav";
+import { useLocation } from "react-router-dom";
 
 function BlogHeader({
   loggedIn,
@@ -13,82 +13,39 @@ function BlogHeader({
   onProjectsClick,
   onAboutClick,
 }) {
+  const { pathname } = useLocation();
+
+  function getActiveSubsection() {
+    if (pathname.startsWith("/journal/posts")) return "posts";
+    if (pathname.startsWith("/journal/projects")) return "projects";
+    if (pathname.startsWith("/journal/about")) return "about";
+
+    return "overview";
+  }
+
+  function handleSubsectionClick(id) {
+    const callbacks = {
+      overview: onHomeClick,
+      posts: onPostsClick,
+      projects: onProjectsClick,
+      about: onAboutClick,
+    };
+
+    callbacks[id]?.();
+  }
+
   return (
     <header className="blog-header">
-      <nav className="blog-header__links" aria-label="Blog navigation">
-        <NavLink
-          to="/alina"
-          end
-          onClick={onHomeClick}
-          className={({ isActive }) =>
-            isActive
-              ? "blog-header__link blog-header__link_state_active"
-              : "blog-header__link"
-          }
-        >
-          Home
-        </NavLink>
-
-        <NavLink
-          to="/alina/posts"
-          onClick={onPostsClick}
-          className={({ isActive }) =>
-            isActive
-              ? "blog-header__link blog-header__link_state_active"
-              : "blog-header__link"
-          }
-        >
-          Posts
-        </NavLink>
-
-        <NavLink
-          to="/alina/projects"
-          onClick={onProjectsClick}
-          className={({ isActive }) =>
-            isActive
-              ? "blog-header__link blog-header__link_state_active"
-              : "blog-header__link"
-          }
-        >
-          Projects
-        </NavLink>
-
-        <NavLink
-          to="/"
-          className={({ isActive }) =>
-            isActive
-              ? "blog-header__link blog-header__link_state_active"
-              : "blog-header__link"
-          }
-        >
-          Photos
-        </NavLink>
-
-        <NavLink
-          to="/alina/about"
-          onClick={onAboutClick}
-          className={({ isActive }) =>
-            isActive
-              ? "blog-header__link blog-header__link_state_active"
-              : "blog-header__link"
-          }
-        >
-          About
-        </NavLink>
-      </nav>
-      <button
-        className="blog-burger-menu"
-        onClick={onBlogMenuClick}
-        aria-label="Open blog menu"
+      <MainNav
+        activeSection="blog"
+        activeSubsection={getActiveSubsection()}
+        loggedIn={loggedIn}
+        onLogout={() => onLogout(currentUser?.email)}
+        onMenuClick={onBlogMenuClick}
+        onSubsectionClick={handleSubsectionClick}
+        actionSlot={<ContactButton onClick={onContactClick} />}
+        menuAriaLabel="Open blog menu"
       />
-      <ContactButton onClick={onContactClick} />
-      {loggedIn && (
-        <LogoutButton
-          className="blog-logout-btn blog-logout-btn_location_header"
-          email={currentUser?.email}
-          onLogout={onLogout}
-        />
-      )}
     </header>
   );
 }

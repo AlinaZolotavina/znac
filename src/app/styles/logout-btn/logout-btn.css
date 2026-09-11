@@ -1,33 +1,23 @@
 .logout-btn {
-  width: 90px;
-  margin-left: 40px;
+  box-sizing: border-box;
+  width: 100px;
   height: 30px;
+  padding: 0;
+  border-radius: 5px;
   font-size: 14px;
   font-weight: 400;
-  line-height: 14px;
-  color: #0f1111;
-  transition: opacity 0.2s ease;
+  line-height: 1.2;
   cursor: pointer;
 }
 
-.logout-btn:hover {
-  opacity: 0.7;
+.logout-btn_theme_main {
+  border: 1px solid #fff;
+  color: #0f1111;
+  background-color: #e8e8e8;
 }
 
-@media screen and (max-width: 1280px) {
-  .logout-btn {
-    width: 100px;
-    font-size: 14px;
-    line-height: 14px;
-  }
-}
-
-@media screen and (max-width: 900px) {
-  .logout-btn {
-    width: 80px;
-    height: 25px;
-    font-size: 12px;
-    line-height: 12px;
-    margin-left: 30px;
-  }
+.logout-btn_theme_blog {
+  border: 0;
+  color: #f4ffff;
+  background-color: var(--blog-accent-contrast);
 }

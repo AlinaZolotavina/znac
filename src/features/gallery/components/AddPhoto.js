@@ -1,11 +1,9 @@
 import Header from "../../../app/components/Header";
-import Navigation from "../../../app/components/Navigation";
-import LogoutButton from "../../../app/components/LogoutButton";
+import MainNav from "../../../app/components/MainNav";
 import Form from "../../../app/components/Form";
 import Input from "../../../app/components/Input";
 import Modal from "../../../app/components/Modal";
 import { useEffect, useRef, useState } from "react";
-import BurgerMenuBtn from "../../../app/components/BurgerMenuBtn";
 import UploadFileInfo from "./UploadFileInfo";
 import { useLocation } from "react-router-dom";
 import isValidUrl from "../../../shared/utils/isValidUrl";
@@ -32,15 +30,10 @@ const PHOTO_UPLOAD_TYPES = [
 
 function AddPhoto({
   loggedIn,
-  onHomeClick,
-  onBlogClick,
-  onGalleryClick,
-  onContactClick,
   onMenuClick,
   isSendingReq,
   onAddPhotoViaLink,
   onUploadPhotoToServer,
-  email,
   onLogout,
 }) {
   const [photoLink, setPhotoLink] = useState("");
@@ -346,22 +339,15 @@ function AddPhoto({
   return (
     <>
       <div className="add-photo">
-        <Header className="header admin-header">
-          <Navigation
+        <Header className="header admin-header header_type_main-nav">
+          <MainNav
+            activeSection="photos"
+            activeSubsection="add-photo"
             loggedIn={loggedIn}
-            onHomeClick={() => {}}
-            onGalleryClick={onGalleryClick}
-            onContactClick={onContactClick}
+            onLogout={onLogout}
+            onMenuClick={onMenuClick}
           />
-          {loggedIn && (
-            <LogoutButton
-              className="logout-btn logout-btn_position_nav"
-              email={email}
-              onLogout={onLogout}
-            />
-          )}
         </Header>
-        <BurgerMenuBtn onMenuClick={onMenuClick} />
         <main>
           <Form
             formName="add-photo"

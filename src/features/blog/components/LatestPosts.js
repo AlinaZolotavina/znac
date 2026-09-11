@@ -14,6 +14,7 @@ function LatestPosts({
   onAddPostClick,
   onViewAllClick,
   isLoading,
+  notFoundContent,
 }) {
   return (
     <div className="background_color_blue">
@@ -31,7 +32,7 @@ function LatestPosts({
           )}
         </div>
         {isLoading && posts.length === 0 ? (
-          <ContentLoader label="Loading latest posts" />
+          <ContentLoader label="Loading latest posts" tone="gallery" />
         ) : posts.length !== 0 ? (
           <ul className="latest-posts__container">
             {posts.slice(0, postsQuantity).map((post) => (
@@ -47,13 +48,15 @@ function LatestPosts({
             ))}
           </ul>
         ) : (
-          <ContentNotFound
-            loggedIn={loggedIn}
-            altText="posts not found icon"
-            text="Sorry, there are no posts yet"
-            buttonText="Add post"
-            onClick={onAddPostClick}
-          />
+          notFoundContent || (
+            <ContentNotFound
+              loggedIn={loggedIn}
+              altText="posts not found icon"
+              text="Sorry, there are no posts yet"
+              buttonText="Add post"
+              onClick={onAddPostClick}
+            />
+          )
         )}
       </section>
     </div>

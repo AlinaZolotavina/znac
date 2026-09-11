@@ -1,0 +1,21 @@
+.not-found-content {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  align-content: center;
+  gap: 20px;
+}
+
+.not-found-content__icon {
+  width: 150px;
+  height: 150px;
+  opacity: 0.8;
+}
+
+.not-found-content__text {
+  margin: 0;
+  color: #e8e8e8;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 19px;
+}

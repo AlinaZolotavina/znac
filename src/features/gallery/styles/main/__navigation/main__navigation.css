@@ -1,9 +1,13 @@
 .main__navigation {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    padding: 0 4vw 0 0;
-    height: 70px;
+    justify-content: center;
+    min-height: 70px;
+    padding: 36px 0 15px;
+}
+
+.main__navigation .main-nav {
+    width: min(92vw, 1180px);
 }
 
 @media screen and (max-width: 700px) {

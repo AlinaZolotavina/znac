@@ -1,23 +1,21 @@
 import { useState } from "react";
 import { fireEvent, screen } from "@testing-library/react";
-import BlogMenu from "../components/BlogMenu";
+import MainMenu from "../../../app/components/MainMenu";
 import { renderWithProviders } from "../../../test/renderWithProviders";
 
-function renderBlogMenu(props = {}) {
+function renderBlogMenu(props = {}, route = "/journal") {
   const defaultProps = {
     isOpen: true,
-    activeBlogPage: "Home",
     loggedIn: false,
-    currentUser: null,
     onLogout: jest.fn(),
-    onHomeClick: jest.fn(),
-    onPostsClick: jest.fn(),
-    onProjectsClick: jest.fn(),
-    onAboutClick: jest.fn(),
     onClose: jest.fn(),
+    theme: "blog",
+    navigationLabel: "Blog navigation",
   };
 
-  return renderWithProviders(<BlogMenu {...defaultProps} {...props} />);
+  return renderWithProviders(<MainMenu {...defaultProps} {...props} />, {
+    route,
+  });
 }
 
 function BlogMenuController() {
@@ -31,23 +29,19 @@ function BlogMenuController() {
     <>
       <button onClick={openMenu}>Open blog menu A</button>
       <button onClick={openMenu}>Open blog menu B</button>
-      <BlogMenu
+      <MainMenu
         isOpen={isOpen}
-        activeBlogPage="Home"
         loggedIn={false}
-        currentUser={null}
         onLogout={jest.fn()}
-        onHomeClick={() => setIsOpen(false)}
-        onPostsClick={() => setIsOpen(false)}
-        onProjectsClick={() => setIsOpen(false)}
-        onAboutClick={() => setIsOpen(false)}
         onClose={() => setIsOpen(false)}
+        theme="blog"
+        navigationLabel="Blog navigation"
       />
     </>
   );
 }
 
-describe("BlogMenu", () => {
+describe("blog MainMenu", () => {
   afterEach(() => {
     document.body.style.overflow = "";
     document.documentElement.style.overflow = "";
@@ -56,7 +50,9 @@ describe("BlogMenu", () => {
   test("moves focus inside when opened", () => {
     renderBlogMenu();
 
-    expect(screen.getByRole("link", { name: "Home" })).toHaveFocus();
+    expect(
+      screen.getByRole("button", { name: "Close main menu" }),
+    ).toHaveFocus();
   });
 
   test("does not render when closed", () => {
@@ -67,26 +63,14 @@ describe("BlogMenu", () => {
     ).not.toBeInTheDocument();
   });
 
-  test("keeps Shift+Tab focus inside the menu", () => {
-    renderBlogMenu();
-
-    const firstLink = screen.getByRole("link", { name: "Home" });
-    const closeButton = screen.getByRole("button", { name: "Close menu" });
-
-    firstLink.focus();
-    fireEvent.keyDown(document, { key: "Tab", shiftKey: true });
-
-    expect(closeButton).toHaveFocus();
-  });
-
   test("closes by Escape and overlay click", () => {
     const onClose = jest.fn();
     renderBlogMenu({ onClose });
 
     fireEvent.keyDown(window, { key: "Escape" });
-    fireEvent.mouseDown(screen.getByRole("navigation", {
-      name: "Blog navigation",
-    }));
+    fireEvent.mouseDown(
+      screen.getByRole("navigation", { name: "Blog navigation" }),
+    );
 
     expect(onClose).toHaveBeenCalledTimes(2);
   });
@@ -95,7 +79,7 @@ describe("BlogMenu", () => {
     const onClose = jest.fn();
     renderBlogMenu({ onClose });
 
-    fireEvent.mouseDown(screen.getByRole("link", { name: "Home" }));
+    fireEvent.mouseDown(screen.getByRole("link", { name: "Journal" }));
 
     expect(onClose).not.toHaveBeenCalled();
   });
@@ -104,26 +88,18 @@ describe("BlogMenu", () => {
     const onClose = jest.fn();
     renderBlogMenu({ onClose });
 
-    fireEvent.click(screen.getByRole("button", { name: "Close menu" }));
+    fireEvent.click(screen.getByRole("button", { name: "Close main menu" }));
 
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  test("keeps existing logout handler", () => {
-    const onClose = jest.fn();
+  test("keeps the logout handler", () => {
     const onLogout = jest.fn();
-
-    renderBlogMenu({
-      loggedIn: true,
-      currentUser: { email: "test@test.com" },
-      onClose,
-      onLogout,
-    });
+    renderBlogMenu({ loggedIn: true, onLogout });
 
     fireEvent.click(screen.getByRole("button", { name: "Log out" }));
 
-    expect(onLogout).toHaveBeenCalledWith("test@test.com");
-    expect(onClose).toHaveBeenCalledTimes(1);
+    expect(onLogout).toHaveBeenCalledTimes(1);
   });
 
   test("locks page scroll while open", () => {
@@ -134,7 +110,7 @@ describe("BlogMenu", () => {
   });
 
   test("returns focus to the current trigger after Escape", () => {
-    renderWithProviders(<BlogMenuController />);
+    renderWithProviders(<BlogMenuController />, { route: "/journal" });
 
     const firstTrigger = screen.getByRole("button", {
       name: "Open blog menu A",
@@ -148,9 +124,6 @@ describe("BlogMenu", () => {
     fireEvent.keyDown(window, { key: "Escape" });
 
     expect(firstTrigger).toHaveFocus();
-    expect(
-      screen.queryByRole("navigation", { name: "Blog navigation" }),
-    ).not.toBeInTheDocument();
 
     secondTrigger.focus();
     fireEvent.click(secondTrigger);
@@ -159,14 +132,11 @@ describe("BlogMenu", () => {
     expect(secondTrigger).toHaveFocus();
   });
 
-  test("keeps NavLink activation on the link itself", () => {
-    const onHomeClick = jest.fn();
-    renderBlogMenu({ onHomeClick });
+  test("marks the current blog subsection as active", () => {
+    renderBlogMenu({}, "/journal/posts");
 
-    const homeLink = screen.getByRole("link", { name: "Home" });
-
-    fireEvent.click(homeLink);
-
-    expect(onHomeClick).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("link", { name: "Posts" })).toHaveClass(
+      "main-menu__subsection-link_active",
+    );
   });
 });

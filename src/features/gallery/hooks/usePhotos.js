@@ -308,7 +308,7 @@ export default function usePhotos({
   }, [getRestoredVisibleCount, loadedPhotos, setHashtag]);
 
   useEffect(() => {
-    if (location.pathname !== "/") {
+    if (location.pathname !== "/gallery") {
       handleClearPhotoSearch();
     }
   }, [handleClearPhotoSearch, location.pathname]);

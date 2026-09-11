@@ -121,14 +121,11 @@ function ProfileRoot({
             >
               <Profile
                 loggedIn={loggedIn}
-                onHomeClick={() => navigate("/")}
-                onBlogClick={() => navigate("/alina")}
                 onEditEmailBtnClick={handleEditEmailBtnClick}
                 onEditPasswordBtnClick={handleEditPasswordBtnClick}
                 onMenuClick={onMenuClick}
                 onSignout={handleSignout}
                 isSendingReq={isLoading}
-                email={currentUser.email}
                 onLogout={handleSignout}
               />
             </ProtectedRoute>

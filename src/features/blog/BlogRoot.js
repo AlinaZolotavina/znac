@@ -8,7 +8,7 @@ import AboutPage from "./components/AboutPage.js";
 import CurrentPostPage from "./components/CurrentPostPage.js";
 import NotFound from "../../app/components/NotFound.js";
 
-import BlogMenu from "./components/BlogMenu.js";
+import MainMenu from "../../app/components/MainMenu.jsx";
 import GetInTouchPopup from "./components/GetInTouchPopup.js";
 import NewProjectPopup from "./components/NewProjectPopup.js";
 import NewPostPopup from "./components/NewPostPopup.js";
@@ -38,8 +38,6 @@ function BlogRoot({
   startLoading,
   stopLoading,
   screenWidth,
-  setScreenWidth,
-  modalState,
   setModalState,
 }) {
   const location = useLocation();
@@ -53,7 +51,7 @@ function BlogRoot({
   const [isDeletePostModalOpen, setIsDeletePostModalOpen] = useState(false);
   const [isDeleteProjectModalOpen, setIsDeleteProjectModalOpen] =
     useState(false);
-  const isAlinaRoute = location.pathname.startsWith("/alina");
+  const isAlinaRoute = location.pathname.startsWith("/journal");
   const [projectHashtags, setProjectHashtags] = useState([]);
   const [activePostHashtag, setActivePostHashtag] = useState("All");
   const [activeProjectHashtag, setActiveProjectHashtag] = useState("All");
@@ -83,7 +81,7 @@ function BlogRoot({
 
   useEffect(() => {
     const currentPage = getCurrentActivePage(location.pathname);
-    if (currentPage === "alina") {
+    if (currentPage === "journal") {
       setActiveBlogPage("Home");
     } else {
       setActiveBlogPage(currentPage);
@@ -111,7 +109,7 @@ function BlogRoot({
   }
 
   function moveToHomePage() {
-    navigate("/alina");
+    navigate("/journal");
     closeBlogMenu();
   }
   function moveToPostsPage() {
@@ -126,7 +124,7 @@ function BlogRoot({
   }
 
   function handlePostClick(post) {
-    navigate(`/alina/posts/${post._id}`);
+    navigate(`/journal/posts/${post._id}`);
   }
 
   function moveToPreviousPage() {
@@ -402,17 +400,16 @@ function BlogRoot({
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      <BlogMenu
+      <MainMenu
         isOpen={isBlogMenuOpen}
-        activeBlogPage={activeBlogPage}
         loggedIn={loggedIn}
-        currentUser={currentUser}
-        onLogout={handleSignout}
-        onHomeClick={moveToHomePage}
-        onPostsClick={moveToPostsPage}
-        onProjectsClick={moveToProjectsPage}
-        onAboutClick={moveToAboutPage}
         onClose={closeBlogMenu}
+        onLogout={() => {
+          handleSignout();
+          closeBlogMenu();
+        }}
+        theme="blog"
+        navigationLabel="Blog navigation"
       />
 
       <GetInTouchPopup

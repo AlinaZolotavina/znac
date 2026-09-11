@@ -7,7 +7,7 @@
   font-size: 12px;
   font-weight: 300;
   line-height: 19px;
-  border-radius: 10px;
+  border-radius: 5px;
   background-color: var(--blog-accent-contrast);
   transition: opacity 0.2s ease;
   padding: 0;

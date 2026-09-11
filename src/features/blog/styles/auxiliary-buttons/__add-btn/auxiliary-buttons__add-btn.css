@@ -3,7 +3,7 @@
   height: 40px;
   background-color: var(--blog-accent-contrast);
   border-style: none;
-  border-radius: 10px;
+  border-radius: 5px;
   background-image: url(../../../assets/plus-icon.svg);
   background-position: center;
   background-repeat: no-repeat;

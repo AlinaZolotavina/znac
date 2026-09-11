@@ -1,6 +1,5 @@
 import { forwardRef } from "react";
-import Navigation from "../../../app/components/Navigation";
-import LogoutButton from "../../../app/components/LogoutButton";
+import MainNav from "../../../app/components/MainNav";
 import Search from "./Search";
 import MainPageHashtags from "./MainPageHashtags";
 import Gallery from "./Gallery";
@@ -11,10 +10,6 @@ const Main = forwardRef(function Main(
   {
     photos,
     loggedIn,
-    onHomeClick,
-    onBlogClick,
-    onGalleryClick,
-    onContactClick,
     onPhotoClick,
     onDeleteBtnClick,
     onHashtagClick,
@@ -26,31 +21,26 @@ const Main = forwardRef(function Main(
     photosQuantity,
     hasMorePhotos,
     onShowMore,
-    email,
-    onLogout,
     isSendingReq,
     isPhotosLoading,
     isSearching,
+    onMenuClick,
+    onLogout,
+    onSubsectionClick,
   },
   ref,
 ) {
   return (
     <main className="main section" id="main" ref={ref}>
       <div className="main__navigation main__navigation_fixed">
-        <Navigation
+        <MainNav
+          activeSection="photos"
+          activeSubsection="photos"
           loggedIn={loggedIn}
-          onHomeClick={onHomeClick}
-          onBlogClick={onBlogClick}
-          onGalleryClick={onGalleryClick}
-          onContactClick={onContactClick}
+          onLogout={onLogout}
+          onMenuClick={onMenuClick}
+          onSubsectionClick={onSubsectionClick}
         />
-        {loggedIn && (
-          <LogoutButton
-            className="logout-btn logout-btn_position_nav"
-            email={email}
-            onLogout={onLogout}
-          />
-        )}
       </div>
       <Search
         onSubmit={onSearch}

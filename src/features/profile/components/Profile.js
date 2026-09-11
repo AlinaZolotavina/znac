@@ -2,21 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import Input from "../../../app/components/Input";
 import EditButton from "../../../app/components/EditButton";
 import Header from "../../../app/components/Header";
-import Navigation from "../../../app/components/Navigation";
-import LogoutButton from "../../../app/components/LogoutButton";
-import BurgerMenuBtn from "../../../app/components/BurgerMenuBtn";
+import MainNav from "../../../app/components/MainNav";
 import { CurrentUserContext } from "../../../contexts/CurrentUserContext";
 
 function Profile({
   loggedIn,
-  onHomeClick,
-  onBlogClick,
-  onGalleryClick,
-  onContactClick,
   onEditEmailBtnClick,
   onEditPasswordBtnClick,
   onMenuClick,
-  email,
   onLogout,
 }) {
   const currentUser = useContext(CurrentUserContext);
@@ -30,21 +23,15 @@ function Profile({
 
   return (
     <div className="profile">
-      <Header className="header admin-header">
-        <Navigation
+      <Header className="header admin-header header_type_main-nav">
+        <MainNav
+          activeSection="photos"
+          activeSubsection="profile"
           loggedIn={loggedIn}
-          onHomeClick={onHomeClick}
-          onBlogClick={onBlogClick}
+          onLogout={onLogout}
+          onMenuClick={onMenuClick}
         />
-        {loggedIn && (
-          <LogoutButton
-            className="logout-btn logout-btn_position_nav"
-            email={email}
-            onLogout={onLogout}
-          />
-        )}
       </Header>
-      <BurgerMenuBtn onMenuClick={onMenuClick} />
       <main className="profile__container">
         <h1 className="profile__title">Profile</h1>
         <div className="profile__email">

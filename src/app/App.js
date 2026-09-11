@@ -11,8 +11,9 @@ import PasswordChanged from "../features/auth/components/PasswordChanged";
 import SignIn from "../features/auth/components/SignIn";
 import ForgotPassword from "../features/auth/components/ForgotPassword";
 
-import Menu from "./components/Menu.js";
+import MainMenu from "./components/MainMenu.jsx";
 import Modal from "./components/Modal.js";
+import MainPage from "./components/MainPage.jsx";
 
 import * as auth from "../shared/utils/auth.js";
 import {
@@ -60,11 +61,6 @@ function App() {
   const closeMenu = useCallback(() => {
     setIsMenuOpen(false);
   }, []);
-
-  const menuLinkClick = (linkName) => {
-    navigate(linkName);
-    closeMenu();
-  };
 
   // password reset
   function handleReceiveResetPasswordLink(email) {
@@ -126,12 +122,22 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <Routes>
         <Route
-          path="/*"
+          path="/"
+          element={
+            <MainPage
+              loggedIn={loggedIn}
+              currentUser={currentUser}
+              handleSignout={handleSignout}
+            />
+          }
+        />
+
+        <Route
+          path="/gallery/*"
           element={
             <GalleryRoot
               loggedIn={loggedIn}
               isAuthInitialized={isAuthInitialized}
-              currentUser={currentUser}
               handleSignout={handleSignout}
               isLoading={isLoading}
               openModal={openModal}
@@ -141,7 +147,6 @@ function App() {
               setScreenWidth={setScreenWidth}
               closeModal={closeModal}
               onMenuClick={openMenu}
-              onMenuClose={closeMenu}
             />
           }
         />
@@ -165,7 +170,7 @@ function App() {
         />
 
         <Route
-          path="/alina/*"
+          path="/journal/*"
           element={
             <BlogRoot
               loggedIn={loggedIn}
@@ -176,8 +181,6 @@ function App() {
               startLoading={startLoading}
               stopLoading={stopLoading}
               screenWidth={screenWidth}
-              setScreenWidth={setScreenWidth}
-              modalState={modalState}
               setModalState={setModalState}
             />
           }
@@ -216,15 +219,14 @@ function App() {
         <Route path="/password-changed" element={<PasswordChanged />} />
       </Routes>
 
-      <Menu
+      <MainMenu
         isOpen={isMenuOpen}
         loggedIn={loggedIn}
-        onHomeClick={() => menuLinkClick("/")}
-        onProfileClick={() => menuLinkClick("profile")}
-        onAddPhotoClick={() => menuLinkClick("addphoto")}
-        onBlogClick={() => menuLinkClick("/alina")}
         onClose={closeMenu}
-        onLogout={handleSignout}
+        onLogout={() => {
+          closeMenu();
+          handleSignout();
+        }}
       />
 
       <Modal

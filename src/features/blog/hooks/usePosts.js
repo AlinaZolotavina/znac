@@ -286,7 +286,7 @@ export default function usePosts({
       .then(() => {
         removePost(post._id);
         if (redirectAfterDelete) {
-          navigate("/alina/posts");
+          navigate("/journal/posts");
         }
       })
       .catch((err) => {

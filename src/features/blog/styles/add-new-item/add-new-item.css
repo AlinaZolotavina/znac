@@ -9,6 +9,7 @@
   transition: opacity 0.2s ease;
   cursor: pointer;
   border-style: none;
+  border-radius: 5px;
 }
 
 .add-new-item:hover {
@@ -20,7 +21,6 @@
   height: 42px;
   padding: 0 22px;
   gap: 8px;
-  border-radius: 9px;
   box-shadow: 0 10px 25px rgba(154, 123, 217, 0.2);
 }
 
@@ -29,6 +29,5 @@
   height: 42px;
   padding: 0 22px;
   gap: 8px;
-  border-radius: 9px;
   box-shadow: 0 10px 25px rgba(154, 123, 217, 0.2);
 }
