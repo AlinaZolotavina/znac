@@ -3,7 +3,7 @@ function Promo() {
     <section className="promo">
       <div className="promo__text">
         <h1 className="promo__title">
-          A WORLD глан
+          A WORLD
           <br />
           IN FRAMES
         </h1>
