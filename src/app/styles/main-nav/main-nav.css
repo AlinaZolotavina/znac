@@ -20,6 +20,8 @@
   letter-spacing: 0.3em;
   line-height: 1;
   text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
 .main-nav__primary,
@@ -47,7 +49,8 @@
   font-weight: 300;
   line-height: 17px;
   text-decoration: none;
-  transition: transform 0.2s ease;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
 .main-nav__link {
@@ -59,9 +62,11 @@
   border-bottom-color: #e8e8e8;
 }
 
+.main-nav__brand:hover,
 .main-nav__link:hover,
-.main-nav__secondary-link:hover {
-  transform: scale(1.04);
+.main-nav__secondary-link:hover,
+.main-nav__menu-btn:hover {
+  opacity: 0.7;
 }
 
 .main-nav__logout-placeholder {
@@ -110,6 +115,7 @@
   background: transparent;
   cursor: pointer;
   gap: 4px;
+  transition: opacity 0.2s ease;
 }
 
 .main-nav__menu-btn span {

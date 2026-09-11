@@ -31,6 +31,7 @@ function BlogMainPage({
   onDeleteProjectButtonClick,
   isPostsLoading,
   isProjectsLoading,
+  isMenuOpen,
 }) {
   return (
     <div className="blog">
@@ -45,6 +46,7 @@ function BlogMainPage({
         onProjectsClick={onProjectsClick}
         onAboutClick={onAboutClick}
         onContactClick={onContactClick}
+        isMenuOpen={isMenuOpen}
       />
       <main>
         <BlogPromo />

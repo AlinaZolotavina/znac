@@ -27,6 +27,8 @@ const Main = forwardRef(function Main(
     onMenuClick,
     onLogout,
     onSubsectionClick,
+    isMenuOpen,
+    menuId,
   },
   ref,
 ) {
@@ -40,6 +42,8 @@ const Main = forwardRef(function Main(
           onLogout={onLogout}
           onMenuClick={onMenuClick}
           onSubsectionClick={onSubsectionClick}
+          isMenuOpen={isMenuOpen}
+          menuId={menuId}
         />
       </div>
       <Search

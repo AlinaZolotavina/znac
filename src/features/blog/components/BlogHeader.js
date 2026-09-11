@@ -12,6 +12,7 @@ function BlogHeader({
   onPostsClick,
   onProjectsClick,
   onAboutClick,
+  isMenuOpen,
 }) {
   const { pathname } = useLocation();
 
@@ -45,6 +46,8 @@ function BlogHeader({
         onSubsectionClick={handleSubsectionClick}
         actionSlot={<ContactButton onClick={onContactClick} />}
         menuAriaLabel="Open blog menu"
+        isMenuOpen={isMenuOpen}
+        menuId="blog-main-menu"
       />
     </header>
   );

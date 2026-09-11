@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Home from "../../features/gallery/components/Home";
 import Main from "../../features/gallery/components/Main";
 import Footer from "../../features/gallery/components/Footer";
 import AddPhoto from "../../features/gallery/components/AddPhoto";
 import ProtectedRoute from "../../app/components/ProtectedRoute";
 import NotFound from "../../app/components/NotFound";
+import SkipLink from "../../app/components/SkipLink";
 
 import PhotoPopup from "../../features/gallery/components/PhotoPopup";
 import DeletePhotoModal from "../../features/gallery/components/DeletePhotoModal";
@@ -25,8 +26,10 @@ function GalleryRoot({
   setScreenWidth,
   closeModal,
   onMenuClick,
+  isMenuOpen,
 }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const homeRef = useRef(null);
   const mainRef = useRef(null);
   const footerRef = useRef(null);
@@ -84,6 +87,17 @@ function GalleryRoot({
     setIsPhotoPopupOpen,
     setIsDeletePhotoModalOpen,
   });
+
+  useEffect(() => {
+    const photoToOpen = location.state?.photoToOpen;
+
+    if (!photoToOpen || isPhotoPopupOpen) {
+      return;
+    }
+
+    handlePhotoOpen(photoToOpen);
+    navigate(location.pathname, { replace: true, state: null });
+  }, [handlePhotoOpen, isPhotoPopupOpen, location.pathname, location.state, navigate]);
 
   const handleKeyPress = useCallback(
     (e) => {
@@ -145,6 +159,7 @@ function GalleryRoot({
           index
           element={
             <>
+              <SkipLink targetId="main" />
               <Home
                 loggedIn={loggedIn}
                 ref={homeRef}
@@ -152,6 +167,8 @@ function GalleryRoot({
                 onLogout={handleSignout}
                 onScrollHintClick={() => scrollToRef(mainRef)}
                 onSubsectionClick={handleGallerySubsectionClick}
+                isMenuOpen={isMenuOpen}
+                menuId="app-main-menu"
               />
               <Main
                 photos={photosToRender}
@@ -176,6 +193,8 @@ function GalleryRoot({
                 onMenuClick={onMenuClick}
                 onLogout={handleSignout}
                 onSubsectionClick={handleGallerySubsectionClick}
+                isMenuOpen={isMenuOpen}
+                menuId="app-main-menu"
               />
               <Footer ref={footerRef} />
             </>
@@ -196,6 +215,8 @@ function GalleryRoot({
                 onAddPhotoViaLink={handleAddPhotoViaLink}
                 onUploadPhotoToServer={handleAddPhotoFromPc}
                 onLogout={handleSignout}
+                isMenuOpen={isMenuOpen}
+                menuId="app-main-menu"
               />
             </ProtectedRoute>
           }

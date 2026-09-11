@@ -11,6 +11,8 @@ function Profile({
   onEditPasswordBtnClick,
   onMenuClick,
   onLogout,
+  isMenuOpen,
+  menuId,
 }) {
   const currentUser = useContext(CurrentUserContext);
   useEffect(() => {
@@ -30,6 +32,8 @@ function Profile({
           loggedIn={loggedIn}
           onLogout={onLogout}
           onMenuClick={onMenuClick}
+          isMenuOpen={isMenuOpen}
+          menuId={menuId}
         />
       </Header>
       <main className="profile__container">

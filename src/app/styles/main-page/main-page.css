@@ -121,7 +121,7 @@
   gap: 8px;
   align-items: center;
   font-size: 16px;
-  color: #a3c3db;
+  color: #c5e7bc;
   text-decoration: none;
 }
 
@@ -153,6 +153,7 @@
   border: 0;
   border-radius: 6px;
   background: #242728;
+  transition: box-shadow 0.2s ease;
   cursor: pointer;
 }
 
@@ -161,18 +162,41 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.2s ease;
 }
 
-.main-page__photo-button:hover .main-page__photo-image,
-.main-page__photo-button:focus-visible .main-page__photo-image {
-  transform: scale(1.04);
+.main-page__photo-button:hover,
+.main-page__photo-button:focus-visible {
+  box-shadow: 0 0 14px rgba(232, 232, 232, 0.16);
 }
 
 .main-page__photo-hashtags {
   margin: 10px 0 0;
-  color: #b6b8b8;
+  color: #c5e7bc;
   font-size: 14px;
+}
+
+.main-page__photo {
+  position: relative;
+}
+
+.main-page__photo-delete-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 19px;
+  height: 23px;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  background-image: url("../../assets/delete-btn.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.main-page__photo-delete-btn:hover {
+  opacity: 0.7;
 }
 
 .main-page__posts-section {
@@ -226,20 +250,55 @@
 }
 
 .main-page .post__theme {
-  background: #5986a7;
-  color: #e8e8e8;
+  background: #c5e7bc;
+  color: #0f1111;
 }
 .main-page .post__date,
 .main-page .post__text {
   color: #c6c7c7;
 }
 
+.main-page .post__title {
+  min-height: 52px;
+  color: #c6c7c7;
+}
+
 .main-page .post__read-more {
-  color: #a3c3db;
+  color: #c5e7bc;
 }
 
 .main-page .post__icon {
   filter: grayscale(1);
+}
+
+.main-page .blog-edit-btn {
+  background-image: url("../../assets/blog-edit-btn.svg");
+}
+
+.main-page .blog-delete-btn {
+  background-image: url("../../assets/blog-delete-btn.svg");
+}
+
+.main-page .post__tools .blog-edit-btn,
+.main-page .post__tools .blog-delete-btn {
+  border-color: #f4ffff;
+}
+
+.main-page .auxiliary-buttons__add-btn {
+  position: relative;
+  background-color: #c5e7bc;
+  background-image: none;
+}
+
+.main-page .auxiliary-buttons__add-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: #0f1111;
+  -webkit-mask: url("../../../features/blog/assets/plus-icon.svg") center / 45%
+    no-repeat;
+  mask: url("../../../features/blog/assets/plus-icon.svg") center / 45%
+    no-repeat;
 }
 
 .main-page .auxiliary-buttons__view-all-btn {
@@ -251,7 +310,7 @@
   padding: 0;
   border: 0;
   border-radius: 0;
-  color: #a3c3db;
+  color: #c5e7bc;
   background: transparent;
   font: inherit;
   font-size: 16px;
@@ -359,6 +418,10 @@
     max-width: 320px;
     font-size: 20px;
     line-height: 24px;
+  }
+
+  .main-page .post__title {
+    min-height: 48px;
   }
 }
 

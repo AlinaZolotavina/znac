@@ -16,6 +16,7 @@ function MainMenu({
   onLogout,
   theme = "main",
   navigationLabel = "Main navigation",
+  menuId = "main-menu",
 }) {
   const menuRef = useRef(null);
   const { pathname, hash } = useLocation();
@@ -31,7 +32,9 @@ function MainMenu({
   const logoutTheme = theme === "blog" ? "blog" : "main";
 
   function getLinkClassName(isActive) {
-    return isActive ? "main-menu__link main-menu__link_active" : "main-menu__link";
+    return isActive
+      ? "main-menu__link main-menu__link_active"
+      : "main-menu__link";
   }
 
   function getSubsectionClassName(isActive) {
@@ -75,6 +78,7 @@ function MainMenu({
   return (
     <nav
       className={menuClassName}
+      id={menuId}
       ref={menuRef}
       aria-label={navigationLabel}
       tabIndex={-1}
@@ -96,6 +100,7 @@ function MainMenu({
               className={getLinkClassName(pathname === "/")}
               to="/"
               onClick={onClose}
+              aria-current={pathname === "/" ? "page" : undefined}
             >
               Home
             </Link>
@@ -116,6 +121,9 @@ function MainMenu({
                   )}
                   href="/gallery#home"
                   onClick={onClose}
+                  aria-current={
+                    isGallerySubsectionActive("explore") ? "page" : undefined
+                  }
                 >
                   Explore
                 </a>
@@ -127,6 +135,9 @@ function MainMenu({
                   )}
                   href="/gallery#main"
                   onClick={onClose}
+                  aria-current={
+                    isGallerySubsectionActive("photos") ? "page" : undefined
+                  }
                 >
                   Photos
                 </a>
@@ -138,6 +149,9 @@ function MainMenu({
                   )}
                   href="/gallery#footer"
                   onClick={onClose}
+                  aria-current={
+                    isGallerySubsectionActive("contact") ? "page" : undefined
+                  }
                 >
                   Contact
                 </a>
@@ -150,6 +164,9 @@ function MainMenu({
                     )}
                     to="/profile"
                     onClick={onClose}
+                    aria-current={
+                      isGallerySubsectionActive("profile") ? "page" : undefined
+                    }
                   >
                     Profile
                   </Link>
@@ -163,6 +180,11 @@ function MainMenu({
                     )}
                     to="/gallery/addphoto"
                     onClick={onClose}
+                    aria-current={
+                      isGallerySubsectionActive("add-photo")
+                        ? "page"
+                        : undefined
+                    }
                   >
                     Add photo
                   </Link>

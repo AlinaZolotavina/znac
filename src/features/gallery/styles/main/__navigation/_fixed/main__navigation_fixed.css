@@ -6,3 +6,39 @@
   z-index: 2;
   padding: 0;
 }
+
+.main__navigation_fixed .main-nav {
+  display: grid;
+  grid-template-areas:
+    "brand primary actions"
+    "brand secondary actions";
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  column-gap: 24px;
+}
+
+.main__navigation_fixed .main-nav__primary-row {
+  display: contents;
+}
+
+.main__navigation_fixed .main-nav__brand {
+  grid-area: brand;
+  align-self: center;
+}
+
+.main__navigation_fixed .main-nav__primary {
+  grid-area: primary;
+}
+
+.main__navigation_fixed .main-nav__secondary {
+  grid-area: secondary;
+}
+
+.main__navigation_fixed .main-nav__actions {
+  grid-area: actions;
+  align-self: center;
+}
+
+.main__navigation_fixed .main-nav__menu-btn {
+  grid-area: actions;
+}

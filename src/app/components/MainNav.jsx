@@ -36,6 +36,8 @@ function MainNav({
   onSubsectionClick,
   actionSlot,
   menuAriaLabel = "Open main menu",
+  isMenuOpen = false,
+  menuId = "main-menu",
 }) {
   const items = subnavigation[activeSection] || [];
   const themeClass = activeSection === "blog" ? " main-nav_theme_blog" : "";
@@ -72,13 +74,37 @@ function MainNav({
           ZNAC
         </Link>
         <nav className="main-nav__primary" aria-label="Primary navigation">
-          <Link className={getPrimaryClassName("main")} to="/">
+          <Link
+            className={getPrimaryClassName("main")}
+            to="/"
+            aria-current={
+              activeSection === "main" && items.length === 0
+                ? "page"
+                : undefined
+            }
+          >
             Home
           </Link>
-          <Link className={getPrimaryClassName("photos")} to="/gallery">
+          <Link
+            className={getPrimaryClassName("photos")}
+            to="/gallery"
+            aria-current={
+              activeSection === "photos" && items.length === 0
+                ? "page"
+                : undefined
+            }
+          >
             Gallery
           </Link>
-          <Link className={getPrimaryClassName("blog")} to="/journal">
+          <Link
+            className={getPrimaryClassName("blog")}
+            to="/journal"
+            aria-current={
+              activeSection === "blog" && items.length === 0
+                ? "page"
+                : undefined
+            }
+          >
             Journal
           </Link>
         </nav>
@@ -97,6 +123,8 @@ function MainNav({
           type="button"
           onClick={onMenuClick}
           aria-label={menuAriaLabel}
+          aria-expanded={isMenuOpen}
+          aria-controls={menuId}
         >
           <span />
           <span />
@@ -121,6 +149,9 @@ function MainNav({
                     key={item.id}
                     to={item.to}
                     onClick={(event) => handleSubsectionClick(item, event)}
+                    aria-current={
+                      item.id === currentSubsection ? "page" : undefined
+                    }
                   >
                     {item.label}
                   </Link>
@@ -133,6 +164,9 @@ function MainNav({
                   key={item.id}
                   href={item.href}
                   onClick={(event) => handleSubsectionClick(item, event)}
+                  aria-current={
+                    item.id === currentSubsection ? "page" : undefined
+                  }
                 >
                   {item.label}
                 </a>

@@ -49,3 +49,9 @@
     transform: translate(-50%, 7px);
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-hint-mouse {
+    animation: none;
+  }
+}

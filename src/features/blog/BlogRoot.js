@@ -299,6 +299,7 @@ function BlogRoot({
               onPostsClick={moveToPostsPage}
               onProjectsClick={moveToProjectsPage}
               onAboutClick={moveToAboutPage}
+              isMenuOpen={isBlogMenuOpen}
             />
           }
         />
@@ -328,6 +329,7 @@ function BlogRoot({
               querySetter={setQuery}
               onPostHashtagClick={handlePostHashtagClick}
               activeHashtag={activePostHashtag}
+              isMenuOpen={isBlogMenuOpen}
             />
           }
         />
@@ -347,6 +349,7 @@ function BlogRoot({
               onDeletePostButtonClick={handleDeletePostModalOpen}
               postVersion={postVersion}
               openModal={openModal}
+              isMenuOpen={isBlogMenuOpen}
             />
           }
         />
@@ -372,6 +375,7 @@ function BlogRoot({
               onDeleteProjectButtonClick={handleDeleteProjectModalOpen}
               onProjectHashtagClick={handleProjectHashtagClick}
               isProjectsLoading={isProjectsLoading}
+              isMenuOpen={isBlogMenuOpen}
             />
           }
         />
@@ -393,6 +397,7 @@ function BlogRoot({
               onEditProjectButtonClick={handleEditProjectPopupOpen}
               onDeleteProjectButtonClick={handleDeleteProjectModalOpen}
               projectsNumber={previewProjectsQuantity}
+              isMenuOpen={isBlogMenuOpen}
             />
           }
         />
@@ -410,6 +415,7 @@ function BlogRoot({
         }}
         theme="blog"
         navigationLabel="Blog navigation"
+        menuId="blog-main-menu"
       />
 
       <GetInTouchPopup

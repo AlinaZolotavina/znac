@@ -126,8 +126,11 @@ function App() {
           element={
             <MainPage
               loggedIn={loggedIn}
-              currentUser={currentUser}
               handleSignout={handleSignout}
+              isLoading={isLoading}
+              openModal={openModal}
+              startLoading={startLoading}
+              stopLoading={stopLoading}
             />
           }
         />
@@ -147,6 +150,7 @@ function App() {
               setScreenWidth={setScreenWidth}
               closeModal={closeModal}
               onMenuClick={openMenu}
+              isMenuOpen={isMenuOpen}
             />
           }
         />
@@ -165,6 +169,7 @@ function App() {
               openModal={openModal}
               onMenuClick={openMenu}
               handleSignout={handleSignout}
+              isMenuOpen={isMenuOpen}
             />
           }
         />
@@ -227,6 +232,8 @@ function App() {
           closeMenu();
           handleSignout();
         }}
+        theme="gallery"
+        menuId="app-main-menu"
       />
 
       <Modal

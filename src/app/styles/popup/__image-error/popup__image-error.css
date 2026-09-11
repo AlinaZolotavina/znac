@@ -1,4 +1,8 @@
 .popup__image-error {
+  display: block;
+  max-width: 75vw;
+  max-height: calc(100svh - 180px);
   min-width: 50vw;
+  object-fit: contain;
   background-image: linear-gradient(#1b4c5a, #282d33);
 }

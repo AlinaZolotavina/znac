@@ -22,6 +22,7 @@ function CurrentPostPage({
   onDeletePostButtonClick,
   postVersion,
   openModal,
+  isMenuOpen,
 }) {
   const { id } = useParams();
 
@@ -63,6 +64,7 @@ function CurrentPostPage({
         onProjectsClick={onProjectsClick}
         onAboutClick={onAboutClick}
         onContactClick={onContactClick}
+        isMenuOpen={isMenuOpen}
       />
       <main>
         {isPostLoading ? (

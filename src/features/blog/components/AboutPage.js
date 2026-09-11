@@ -23,6 +23,7 @@ function AboutPage({
   onEditProjectButtonClick,
   onDeleteProjectButtonClick,
   projectsNumber,
+  isMenuOpen,
 }) {
   return (
     <div className="blog">
@@ -36,6 +37,7 @@ function AboutPage({
         onPostsClick={onPostsClick}
         onProjectsClick={onProjectsClick}
         onAboutClick={onAboutClick}
+        isMenuOpen={isMenuOpen}
       />
       <main>
         <AboutHero />

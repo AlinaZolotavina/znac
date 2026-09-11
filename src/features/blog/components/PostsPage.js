@@ -34,6 +34,7 @@ function PostsPage({
   onPostsClick,
   onProjectsClick,
   onAboutClick,
+  isMenuOpen,
 }) {
   useEffect(() => {
     window.scrollTo({
@@ -54,6 +55,7 @@ function PostsPage({
         onPostsClick={onPostsClick}
         onProjectsClick={onProjectsClick}
         onAboutClick={onAboutClick}
+        isMenuOpen={isMenuOpen}
       />
       <main>
         <PostsHero loggedIn={loggedIn} onNewPostClick={onNewPostClick} />

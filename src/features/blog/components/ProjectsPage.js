@@ -30,6 +30,7 @@ function ProjectsPage({
   onProjectsClick,
   onAboutClick,
   isProjectsLoading,
+  isMenuOpen,
 }) {
   const [selectedProject, setSelectedProject] = useState(null);
 
@@ -73,6 +74,7 @@ function ProjectsPage({
         onPostsClick={onPostsClick}
         onProjectsClick={onProjectsClick}
         onAboutClick={onAboutClick}
+        isMenuOpen={isMenuOpen}
       />
       <main>
         <ProjectsHero loggedIn={loggedIn} onNewProjectClick={onNewProjectClick} />

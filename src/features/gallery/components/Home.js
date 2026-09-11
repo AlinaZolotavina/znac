@@ -11,6 +11,8 @@ const Home = forwardRef(function Home(
     onLogout,
     onScrollHintClick,
     onSubsectionClick,
+    isMenuOpen,
+    menuId,
   },
   ref,
 ) {
@@ -24,6 +26,8 @@ const Home = forwardRef(function Home(
           onLogout={onLogout}
           onMenuClick={onMenuClick}
           onSubsectionClick={onSubsectionClick}
+          isMenuOpen={isMenuOpen}
+          menuId={menuId}
         />
       </Header>
       <Promo />

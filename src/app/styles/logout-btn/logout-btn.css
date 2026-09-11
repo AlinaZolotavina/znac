@@ -7,17 +7,18 @@
   font-size: 14px;
   font-weight: 400;
   line-height: 1.2;
+  color: #f4ffff;
+  background-color: #835fc9;
   cursor: pointer;
+  border: 0;
+  transition: opacity 0.2s ease;
+}
+
+.logout-btn:hover {
+  opacity: 0.7;
 }
 
 .logout-btn_theme_main {
-  border: 1px solid #fff;
   color: #0f1111;
-  background-color: #e8e8e8;
-}
-
-.logout-btn_theme_blog {
-  border: 0;
-  color: #f4ffff;
-  background-color: var(--blog-accent-contrast);
+  background-color: #f4ffff;
 }

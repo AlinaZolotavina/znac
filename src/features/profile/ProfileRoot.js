@@ -30,6 +30,7 @@ function ProfileRoot({
   openModal,
   onMenuClick,
   handleSignout,
+  isMenuOpen,
 }) {
   const [isEditEmailModalOpen, setIsEditEmailModalOpen] = useState(false);
   const [isEditPasswordModalOpen, setIsEditPasswordModalOpen] = useState(false);
@@ -127,6 +128,8 @@ function ProfileRoot({
                 onSignout={handleSignout}
                 isSendingReq={isLoading}
                 onLogout={handleSignout}
+                isMenuOpen={isMenuOpen}
+                menuId="app-main-menu"
               />
             </ProtectedRoute>
           }
