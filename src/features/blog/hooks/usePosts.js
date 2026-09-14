@@ -241,8 +241,10 @@ export default function usePosts({
   function handleEditPost(postId, props) {
     startLoading();
 
-    const request = props.photoData[0]?.length
-      ? uploadPostImage(props.photoData[0][0]).then((filename) =>
+    const [newPhotoFile] = props.photoData || [];
+
+    const request = newPhotoFile
+      ? uploadPostImage(newPhotoFile).then((filename) =>
           createPostUpdateRequest(postId, props, {
             newPhotoFilename: filename,
           }),

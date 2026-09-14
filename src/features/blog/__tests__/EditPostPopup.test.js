@@ -68,11 +68,60 @@ describe("edit post", () => {
         title: "Updated post",
         hashtags: ["react"],
         text: "Updated text",
-        photoData: [[]],
+        photoData: [],
       });
     });
 
     await waitFor(() => expect(api.editPost).toHaveBeenCalled());
+    expect(result.current.postsToRender).toContainEqual(updatedPost);
+  });
+
+  test("uploads a new photo before editing a post", async () => {
+    const updatedPost = {
+      ...posts[0],
+      photoFilename: "uploaded-photo.webp",
+      photoLink: "https://znac.org/uploads/posts/uploaded-photo.webp",
+      thumbnail: "https://znac.org/uploads/posts/thumbnails/uploaded-photo-thumb.webp",
+    };
+    const file = new File(["image"], "uploaded-photo.webp", {
+      type: "image/webp",
+    });
+
+    api.uploadPhoto.mockResolvedValue({
+      data: [{ filename: "uploaded-photo.webp" }],
+    });
+    api.editPost.mockResolvedValue(updatedPost);
+
+    const { result } = renderUsePosts();
+
+    await waitFor(() =>
+      expect(result.current.postsToRender).toHaveLength(posts.length),
+    );
+
+    await act(async () => {
+      result.current.handleEditPost("post-1", {
+        theme: "React",
+        icon: "react",
+        title: "Updated post",
+        hashtags: ["react"],
+        text: "Updated text",
+        photoData: [file],
+      });
+    });
+
+    await waitFor(() => expect(api.uploadPhoto).toHaveBeenCalled());
+    await waitFor(() =>
+      expect(api.editPost).toHaveBeenCalledWith(
+        "post-1",
+        expect.objectContaining({
+          newPhotoFilename: "uploaded-photo.webp",
+        }),
+      ),
+    );
+    expect(api.uploadPhoto).toHaveBeenCalledWith(
+      expect.any(FormData),
+      "/posts/image",
+    );
     expect(result.current.postsToRender).toContainEqual(updatedPost);
   });
 });

@@ -92,7 +92,7 @@ function MainMenu({
           aria-label="Close main menu"
         />
         <Link className="main-menu__brand" to="/" onClick={onClose}>
-          ZNAK
+          ZNAC
         </Link>
         <ul className="main-menu__sections">
           <li className="main-menu__section">

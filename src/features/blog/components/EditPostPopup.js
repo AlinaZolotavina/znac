@@ -268,7 +268,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
       addedPhotos.push(webPFile);
       setPhotoNames(names);
     }
-    setPostPhotos(addedPhotos, ...postPhotos);
+    setPostPhotos(addedPhotos);
     setIsUploadingPhoto(false);
     setIsEdited(true);
   }
