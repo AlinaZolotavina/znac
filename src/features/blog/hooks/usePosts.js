@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import api from "../../../shared/utils/api";
 import {
   DEFAULT_ERROR_MSG,
@@ -6,9 +6,7 @@ import {
   POST_EDITED_SUCCESSFULLY_MSG,
 } from "../../../shared/utils/messages";
 import postUploadActions from "../utils/postUploadActions";
-import {
-  MIDDLE_SCREEN_WIDTH,
-} from "../../../shared/utils/constants";
+import { MIDDLE_SCREEN_WIDTH } from "../../../shared/utils/constants";
 import { useNavigate } from "react-router-dom";
 
 const POSTS_PAGE_SIZE = 9;
@@ -42,6 +40,7 @@ export default function usePosts({
   const [postToDelete, setPostToDelete] = useState({});
   const [postVersion, setPostVersion] = useState(0);
   const [isPostsLoading, setIsPostsLoading] = useState(true);
+  const lastPostsQueryRef = useRef(null);
 
   const postsToRender = useMemo(
     () => allPosts.slice(0, currentPostsNumber),
@@ -81,16 +80,23 @@ export default function usePosts({
   const loadPosts = useCallback(
     ({ page = 1, append = false, search = "", theme = "All" } = {}) => {
       const normalizedSearch = search.trim();
+      const normalizedTheme = theme || "All";
       const hasSearch = Boolean(normalizedSearch);
-      const hasThemeFilter = theme && theme !== "All";
+      const hasThemeFilter = normalizedTheme !== "All";
       const hasFilters = hasSearch || hasThemeFilter;
+
+      const queryKey = `${page}|${normalizedSearch}|${normalizedTheme}|${append}`;
+
+      if (lastPostsQueryRef.current?.key === queryKey) {
+        return lastPostsQueryRef.current.promise;
+      }
 
       setIsPostsLoading(true);
 
-      return api
+      const requestPromise = api
         .getPosts(page, POSTS_PAGE_SIZE, {
           search: normalizedSearch,
-          theme,
+          theme: normalizedTheme,
         })
         .then((response) => {
           const { data, page: responsePage, pages } = response;
@@ -117,8 +123,22 @@ export default function usePosts({
 
           return response;
         })
-        .catch(console.error)
-        .finally(() => setIsPostsLoading(false));
+        .catch((err) => {
+          console.error(err);
+        })
+        .finally(() => {
+          if (lastPostsQueryRef.current?.key === queryKey) {
+            lastPostsQueryRef.current = null;
+            setIsPostsLoading(false);
+          }
+        });
+
+      lastPostsQueryRef.current = {
+        key: queryKey,
+        promise: requestPromise,
+      };
+
+      return requestPromise;
     },
     [],
   );

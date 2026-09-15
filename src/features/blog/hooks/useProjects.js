@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import api from "../../../shared/utils/api";
 import {
   DEFAULT_ERROR_MSG,
@@ -7,9 +7,7 @@ import {
   PROJECT_EDITED_SUCCESSFULLY_MSG,
   PROJECT_EDIT_ERROR_MSG,
 } from "../../../shared/utils/messages";
-import {
-  MIDDLE_SCREEN_WIDTH,
-} from "../../../shared/utils/constants";
+import { MIDDLE_SCREEN_WIDTH } from "../../../shared/utils/constants";
 
 const DESKTOP_SCREEN_WIDTH = 1200;
 
@@ -36,6 +34,7 @@ export default function useProjects({
   const [projectToEdit, setProjectToEdit] = useState({});
   const [projectToDelete, setProjectToDelete] = useState({});
   const [isProjectsLoading, setIsProjectsLoading] = useState(true);
+  const lastProjectsQueryRef = useRef(null);
 
   const projectsToRender = useMemo(
     () => allProjects.slice(0, currentProjectsNumber),
@@ -77,11 +76,19 @@ export default function useProjects({
 
   const loadProjects = useCallback(
     ({ page = 1, append = false, hashtag = "" } = {}) => {
-      const normalizedHashtag = hashtag === "All" ? "" : hashtag.trim();
+      const normalizedHashtag =
+        hashtag === "All" ? "" : hashtag.trim().toLowerCase();
+
       const hasFilter = Boolean(normalizedHashtag);
+      const queryKey = `${page}|${normalizedHashtag}|${append}`;
+
+      if (lastProjectsQueryRef.current?.key === queryKey) {
+        return lastProjectsQueryRef.current.promise;
+      }
+
       setIsProjectsLoading(true);
 
-      return api
+      const requestPromise = api
         .getProjects(page, 12, {
           hashtag: normalizedHashtag,
         })
@@ -115,10 +122,21 @@ export default function useProjects({
             status: "error",
             message: err.message || DEFAULT_ERROR_MSG,
           });
-
           throw err;
         })
-        .finally(() => setIsProjectsLoading(false));
+        .finally(() => {
+          if (lastProjectsQueryRef.current?.key === queryKey) {
+            lastProjectsQueryRef.current = null;
+            setIsProjectsLoading(false);
+          }
+        });
+
+      lastProjectsQueryRef.current = {
+        key: queryKey,
+        promise: requestPromise,
+      };
+
+      return requestPromise;
     },
     [getProjectsLayout, openModal],
   );
@@ -184,8 +202,11 @@ export default function useProjects({
   function handleProjectHashtagClick(hashtag) {
     const isAll = hashtag === "All";
     const isSameHashtag = activeProjectHashtag === hashtag;
-
     const nextHashtag = isAll || isSameHashtag ? "" : hashtag;
+
+    if (activeProjectHashtag === nextHashtag && allProjects.length > 0) {
+      return;
+    }
 
     setActiveProjectHashtag(nextHashtag);
 

@@ -43,6 +43,7 @@ export default function usePhotos({
   const [visibleLoadedPhotosCount, setVisibleLoadedPhotosCount] = useState(0);
   const [isPhotosLoading, setIsPhotosLoading] = useState(true);
   const resizeTimeoutRef = useRef(null);
+  const lastPhotosQueryRef = useRef(null);
 
   const photosToRender = useMemo(
     () => allPhotos.slice(0, currentPhotosNumber),
@@ -180,13 +181,19 @@ export default function usePhotos({
       const normalizedHashtag = hashtag.trim().toLowerCase();
       const hasFilter = Boolean(normalizedHashtag);
 
+      const queryKey = `${page}|${normalizedHashtag}|${append}`;
+
+      if (lastPhotosQueryRef.current?.key === queryKey) {
+        return lastPhotosQueryRef.current.promise;
+      }
+
       const request = hasFilter
         ? api.findPhoto(normalizedHashtag, page, 20)
         : api.getPhotos(page, 20);
 
       setIsPhotosLoading(true);
 
-      return request
+      const requestPromise = request
         .then((response) => {
           const { data, page: responsePage, pages } = response;
           setAllPhotos((previousPhotos) =>
@@ -219,7 +226,19 @@ export default function usePhotos({
 
           throw err;
         })
-        .finally(() => setIsPhotosLoading(false));
+        .finally(() => {
+          if (lastPhotosQueryRef.current?.key === queryKey) {
+            lastPhotosQueryRef.current = null;
+            setIsPhotosLoading(false);
+          }
+        });
+
+      lastPhotosQueryRef.current = {
+        key: queryKey,
+        promise: requestPromise,
+      };
+
+      return requestPromise;
     },
     [getPhotosLayout, openModal],
   );
