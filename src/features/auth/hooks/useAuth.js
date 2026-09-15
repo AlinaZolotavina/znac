@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import * as auth from "../../../shared/utils/auth";
 import {
   AUTHORIZATION_FAILED_ERROR_MSG,
@@ -16,19 +16,12 @@ export default function useAuth({ openModal, startLoading, stopLoading }) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isAuthInitialized, setIsAuthInitialized] = useState(false);
 
-  const checkToken = useCallback(() => {
+  useEffect(() => {
     auth
-      .getContent()
+      .getProfile()
       .then((userData) => {
         setLoggedIn(true);
         setCurrentUser(userData);
-
-        if (
-          location.pathname === "/signin" ||
-          location.pathname === "/signup"
-        ) {
-          navigate("/");
-        }
       })
       .catch((err) => {
         if (err.type === "AUTH_ERROR") {
@@ -42,11 +35,13 @@ export default function useAuth({ openModal, startLoading, stopLoading }) {
       .finally(() => {
         setIsAuthInitialized(true);
       });
-  }, [navigate, location.pathname]);
+  }, []);
 
   useEffect(() => {
-    checkToken();
-  }, [checkToken]);
+    if (loggedIn && ["/signin", "/signup"].includes(location.pathname)) {
+      navigate("/");
+    }
+  }, [loggedIn, location.pathname, navigate]);
 
   const handleSignin = async (email, password) => {
     startLoading();

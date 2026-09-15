@@ -31,7 +31,7 @@ export const signout = () => {
   });
 };
 
-export const getContent = () => {
+export const getProfile = () => {
   return request("/profile", {
     method: "GET",
     headers: {

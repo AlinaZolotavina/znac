@@ -32,11 +32,11 @@ function renderUseAuth() {
 describe("auth flow", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    auth.getContent.mockRejectedValue({ type: "AUTH_ERROR" });
+    auth.getProfile.mockRejectedValue({ type: "AUTH_ERROR" });
   });
 
   test("restores session when profile request succeeds", async () => {
-    auth.getContent.mockResolvedValue(user);
+    auth.getProfile.mockResolvedValue(user);
 
     const { result } = renderUseAuth();
 
@@ -82,7 +82,7 @@ describe("auth flow", () => {
   });
 
   test("logs out authenticated user", async () => {
-    auth.getContent.mockResolvedValue(user);
+    auth.getProfile.mockResolvedValue(user);
     auth.signout.mockResolvedValue({});
 
     const { result } = renderUseAuth();
