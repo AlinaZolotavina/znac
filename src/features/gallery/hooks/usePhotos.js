@@ -44,6 +44,18 @@ export default function usePhotos({
   const [isPhotosLoading, setIsPhotosLoading] = useState(true);
   const resizeTimeoutRef = useRef(null);
   const lastPhotosQueryRef = useRef(null);
+  const pendingViewsRef = useRef(new Set());
+  const viewedPhotosRef = useRef(null);
+
+  if (viewedPhotosRef.current === null) {
+    try {
+      viewedPhotosRef.current = new Set(
+        JSON.parse(sessionStorage.getItem("viewedPhotos") || "[]"),
+      );
+    } catch {
+      viewedPhotosRef.current = new Set();
+    }
+  }
 
   const photosToRender = useMemo(
     () => allPhotos.slice(0, currentPhotosNumber),
@@ -431,17 +443,39 @@ export default function usePhotos({
 
   // increase views (when open photo popup, when flip photo by buttons' click)
   function increaseViewsNumber(photoId) {
+    if (
+      viewedPhotosRef.current.has(photoId) ||
+      pendingViewsRef.current.has(photoId)
+    ) {
+      return;
+    }
+
+    pendingViewsRef.current.add(photoId);
+
     api
       .increaseViews(photoId)
       .then((newPhoto) => {
+        viewedPhotosRef.current.add(photoId);
+
+        sessionStorage.setItem(
+          "viewedPhotos",
+          JSON.stringify([...viewedPhotosRef.current]),
+        );
+
         setAllPhotos((state) =>
           state.map((p) => (p._id === photoId ? newPhoto : p)),
         );
+
         setSelectedPhoto((currentPhoto) =>
           currentPhoto?._id === photoId ? newPhoto : currentPhoto,
         );
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        pendingViewsRef.current.delete(photoId);
+      });
   }
 
   function handleEditHashtagsBtnClick() {
