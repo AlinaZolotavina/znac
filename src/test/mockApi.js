@@ -2,8 +2,6 @@ export const mockApi = {
   getHashtags: jest.fn(),
   getPhotos: jest.fn(),
   findPhoto: jest.fn(),
-  addHashtag: jest.fn(),
-  updateHashtag: jest.fn(),
   deletePhoto: jest.fn(),
   increaseViews: jest.fn(),
   editHashtags: jest.fn(),

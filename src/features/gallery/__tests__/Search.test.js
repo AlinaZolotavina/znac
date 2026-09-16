@@ -20,7 +20,6 @@ function renderUsePhotos(overrides = {}) {
     setScreenWidth: jest.fn(),
     hashtag: "",
     setHashtag: jest.fn(),
-    lastHashtags: hashtags,
     setLastHashtags: jest.fn(),
     location: { pathname: "/" },
     setIsPhotoPopupOpen: jest.fn(),
@@ -46,16 +45,21 @@ describe("gallery search", () => {
       page: 1,
       pages: 1,
     });
-    api.addHashtag.mockResolvedValue({
-      _id: "tag-2",
-      name: "portrait",
-      __v: 0,
-      createdAt: "2026-01-01",
-    });
   });
 
   test("searches photos by hashtag and clears search from cached list", async () => {
-    const { result } = renderUsePhotos();
+    const updatedHashtags = [
+      {
+        _id: "tag-2",
+        name: "portrait",
+      },
+      ...hashtags,
+    ];
+    api.getHashtags
+      .mockResolvedValueOnce({ data: hashtags })
+      .mockResolvedValueOnce({ data: updatedHashtags });
+
+    const { props, result } = renderUsePhotos();
 
     await waitFor(() => expect(result.current.photosToRender).toHaveLength(6));
 
@@ -66,6 +70,9 @@ describe("gallery search", () => {
     await waitFor(() =>
       expect(api.findPhoto).toHaveBeenCalledWith("portrait", 1, 20),
     );
+    await waitFor(() => expect(api.getHashtags).toHaveBeenCalledTimes(2));
+    expect(api.getHashtags).toHaveBeenLastCalledWith(1, 10);
+    expect(props.setLastHashtags).toHaveBeenLastCalledWith(updatedHashtags);
     expect(result.current.photosToRender).toEqual([photos[2]]);
 
     act(() => {

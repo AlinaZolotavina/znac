@@ -28,7 +28,6 @@ export default function usePhotos({
   setScreenWidth,
   hashtag,
   setHashtag,
-  lastHashtags,
   setLastHashtags,
   location,
   setIsPhotoPopupOpen,
@@ -268,10 +267,6 @@ export default function usePhotos({
     setIsPhotoPopupOpen(true);
   };
 
-  function checkUniqueness(hashtag, hashtags) {
-    return !hashtags.some((item) => item.name === hashtag);
-  }
-
   function handlePhotoSearch(nextValue) {
     const normalizedHashtag = nextValue.trim().toLowerCase();
 
@@ -294,36 +289,11 @@ export default function usePhotos({
       hashtag: normalizedHashtag,
     })
       .then((response) => {
-        if (response.data.length === 0) {
-          return;
-        }
-        const isHashtagUniq = checkUniqueness(normalizedHashtag, lastHashtags);
-
-        if (isHashtagUniq) {
-          return api.addHashtag(normalizedHashtag).then((data) => {
-            setLastHashtags((prev) => [
-              {
-                name: data.name,
-                _id: data._id,
-                __v: data.__v,
-                createdAt: data.createdAt,
-              },
-              ...prev,
-            ]);
-          });
+        if (response.data.length > 0) {
+          return loadHashtags();
         }
 
-        return api.updateHashtag(normalizedHashtag).then((data) => {
-          setLastHashtags((prev) => [
-            {
-              name: data.name,
-              _id: data._id,
-              __v: data.__v,
-              createdAt: data.createdAt,
-            },
-            ...prev.filter((h) => h.name.toLowerCase() !== normalizedHashtag),
-          ]);
-        });
+        return undefined;
       })
       .catch(console.error);
   }

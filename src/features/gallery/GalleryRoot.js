@@ -81,7 +81,6 @@ function GalleryRoot({
     setScreenWidth,
     hashtag,
     setHashtag,
-    lastHashtags,
     setLastHashtags,
     location,
     setIsPhotoPopupOpen,
@@ -97,7 +96,13 @@ function GalleryRoot({
 
     handlePhotoOpen(photoToOpen);
     navigate(location.pathname, { replace: true, state: null });
-  }, [handlePhotoOpen, isPhotoPopupOpen, location.pathname, location.state, navigate]);
+  }, [
+    handlePhotoOpen,
+    isPhotoPopupOpen,
+    location.pathname,
+    location.state,
+    navigate,
+  ]);
 
   const handleKeyPress = useCallback(
     (e) => {

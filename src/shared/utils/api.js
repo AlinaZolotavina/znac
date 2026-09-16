@@ -94,30 +94,6 @@ class Api {
     });
   };
 
-  addHashtag = (hashtag) => {
-    return this._request("/hashtags", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        newHashtag: hashtag,
-      }),
-    });
-  };
-
-  updateHashtag = (hashtag) => {
-    return this._request("/hashtags", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        hashtagName: hashtag,
-      }),
-    });
-  };
-
   getUserData() {
     return this._request("/profile", {
       method: "GET",

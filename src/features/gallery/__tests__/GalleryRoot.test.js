@@ -20,7 +20,6 @@ function renderUsePhotos(overrides = {}) {
     setScreenWidth: jest.fn(),
     hashtag: "",
     setHashtag: jest.fn(),
-    lastHashtags: hashtags,
     setLastHashtags: jest.fn(),
     location: { pathname: "/" },
     setIsPhotoPopupOpen: jest.fn(),
