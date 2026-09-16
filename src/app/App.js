@@ -1,6 +1,8 @@
 import { useState, useCallback } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./queryClient";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 
 import GalleryRoot from "../features/gallery/GalleryRoot";
@@ -119,131 +121,135 @@ function App() {
   });
 
   return (
-    <CurrentUserContext.Provider value={currentUser}>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <MainPage
-              loggedIn={loggedIn}
-              handleSignout={handleSignout}
-              isLoading={isLoading}
-              openModal={openModal}
-              startLoading={startLoading}
-              stopLoading={stopLoading}
-            />
-          }
+    <QueryClientProvider client={queryClient}>
+      <CurrentUserContext.Provider value={currentUser}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <MainPage
+                loggedIn={loggedIn}
+                handleSignout={handleSignout}
+                isLoading={isLoading}
+                openModal={openModal}
+                startLoading={startLoading}
+                stopLoading={stopLoading}
+              />
+            }
+          />
+
+          <Route
+            path="/gallery/*"
+            element={
+              <GalleryRoot
+                loggedIn={loggedIn}
+                isAuthInitialized={isAuthInitialized}
+                handleSignout={handleSignout}
+                isLoading={isLoading}
+                openModal={openModal}
+                startLoading={startLoading}
+                stopLoading={stopLoading}
+                screenWidth={screenWidth}
+                setScreenWidth={setScreenWidth}
+                closeModal={closeModal}
+                onMenuClick={openMenu}
+                isMenuOpen={isMenuOpen}
+              />
+            }
+          />
+
+          <Route
+            path="/profile/*"
+            element={
+              <ProfileRoot
+                loggedIn={loggedIn}
+                isAuthInitialized={isAuthInitialized}
+                currentUser={currentUser}
+                setCurrentUser={setCurrentUser}
+                isLoading={isLoading}
+                startLoading={startLoading}
+                stopLoading={stopLoading}
+                openModal={openModal}
+                onMenuClick={openMenu}
+                handleSignout={handleSignout}
+                isMenuOpen={isMenuOpen}
+              />
+            }
+          />
+
+          <Route
+            path="/journal/*"
+            element={
+              <BlogRoot
+                loggedIn={loggedIn}
+                currentUser={currentUser}
+                handleSignout={handleSignout}
+                isLoading={isLoading}
+                openModal={openModal}
+                startLoading={startLoading}
+                stopLoading={stopLoading}
+                screenWidth={screenWidth}
+                setModalState={setModalState}
+              />
+            }
+          />
+
+          <Route
+            path="/signin"
+            element={
+              <SignIn onSignin={handleSignin} isSendingReq={isLoading} />
+            }
+          />
+
+          {/* New users registration is disabled*/}
+          {/* <Route path="/signup" element={
+            <SignUp onSignup={handleSignup} isSendingReq={isLoading} />
+          } /> */}
+
+          <Route
+            path="/signin/recovery"
+            element={
+              <ForgotPassword
+                onReceiveEmail={handleReceiveResetPasswordLink}
+                isSendingReq={isLoading}
+              />
+            }
+          />
+
+          <Route
+            path="/reset-password/:resetPasswordLink"
+            element={
+              <ResetPassword
+                onResetPassword={handleResetPassword}
+                isSendingReq={isLoading}
+              />
+            }
+          />
+
+          <Route path="/password-changed" element={<PasswordChanged />} />
+        </Routes>
+
+        <MainMenu
+          isOpen={isMenuOpen}
+          loggedIn={loggedIn}
+          onClose={closeMenu}
+          onLogout={() => {
+            closeMenu();
+            handleSignout();
+          }}
+          theme="gallery"
+          menuId="app-main-menu"
         />
 
-        <Route
-          path="/gallery/*"
-          element={
-            <GalleryRoot
-              loggedIn={loggedIn}
-              isAuthInitialized={isAuthInitialized}
-              handleSignout={handleSignout}
-              isLoading={isLoading}
-              openModal={openModal}
-              startLoading={startLoading}
-              stopLoading={stopLoading}
-              screenWidth={screenWidth}
-              setScreenWidth={setScreenWidth}
-              closeModal={closeModal}
-              onMenuClick={openMenu}
-              isMenuOpen={isMenuOpen}
-            />
-          }
+        <Modal
+          isOpen={modalState.isOpen}
+          status={modalState.status}
+          type={modalState.type}
+          onClose={closeModal}
+          message={modalState.message}
         />
-
-        <Route
-          path="/profile/*"
-          element={
-            <ProfileRoot
-              loggedIn={loggedIn}
-              isAuthInitialized={isAuthInitialized}
-              currentUser={currentUser}
-              setCurrentUser={setCurrentUser}
-              isLoading={isLoading}
-              startLoading={startLoading}
-              stopLoading={stopLoading}
-              openModal={openModal}
-              onMenuClick={openMenu}
-              handleSignout={handleSignout}
-              isMenuOpen={isMenuOpen}
-            />
-          }
-        />
-
-        <Route
-          path="/journal/*"
-          element={
-            <BlogRoot
-              loggedIn={loggedIn}
-              currentUser={currentUser}
-              handleSignout={handleSignout}
-              isLoading={isLoading}
-              openModal={openModal}
-              startLoading={startLoading}
-              stopLoading={stopLoading}
-              screenWidth={screenWidth}
-              setModalState={setModalState}
-            />
-          }
-        />
-
-        <Route
-          path="/signin"
-          element={<SignIn onSignin={handleSignin} isSendingReq={isLoading} />}
-        />
-
-        {/* New users registration is disabled*/}
-        {/* <Route path="/signup" element={
-          <SignUp onSignup={handleSignup} isSendingReq={isLoading} />
-        } /> */}
-
-        <Route
-          path="/signin/recovery"
-          element={
-            <ForgotPassword
-              onReceiveEmail={handleReceiveResetPasswordLink}
-              isSendingReq={isLoading}
-            />
-          }
-        />
-
-        <Route
-          path="/reset-password/:resetPasswordLink"
-          element={
-            <ResetPassword
-              onResetPassword={handleResetPassword}
-              isSendingReq={isLoading}
-            />
-          }
-        />
-
-        <Route path="/password-changed" element={<PasswordChanged />} />
-      </Routes>
-
-      <MainMenu
-        isOpen={isMenuOpen}
-        loggedIn={loggedIn}
-        onClose={closeMenu}
-        onLogout={() => {
-          closeMenu();
-          handleSignout();
-        }}
-        theme="gallery"
-        menuId="app-main-menu"
-      />
-
-      <Modal
-        isOpen={modalState.isOpen}
-        status={modalState.status}
-        type={modalState.type}
-        onClose={closeModal}
-        message={modalState.message}
-      />
-    </CurrentUserContext.Provider>
+      </CurrentUserContext.Provider>
+    </QueryClientProvider>
   );
 }
 

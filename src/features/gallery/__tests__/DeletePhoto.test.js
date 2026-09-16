@@ -1,7 +1,8 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import usePhotos from "../hooks/usePhotos";
 import { mockApi } from "../../../test/mockApi";
-import { hashtags, photos } from "../../../test/fixtures/photo";
+import { photos } from "../../../test/fixtures/photo";
 
 jest.mock("../../../shared/utils/api", () => ({
   __esModule: true,
@@ -10,7 +11,18 @@ jest.mock("../../../shared/utils/api", () => ({
 
 const api = mockApi;
 
+function createTestQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+}
+
 function renderUsePhotos() {
+  const queryClient = createTestQueryClient();
   const props = {
     openModal: jest.fn(),
     startLoading: jest.fn(),
@@ -20,16 +32,20 @@ function renderUsePhotos() {
     setScreenWidth: jest.fn(),
     hashtag: "",
     setHashtag: jest.fn(),
-    setLastHashtags: jest.fn(),
     location: { pathname: "/" },
     setIsPhotoPopupOpen: jest.fn(),
     setIsDeletePhotoModalOpen: jest.fn(),
   };
 
+  const wrapper = ({ children }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+
   return {
     props,
     ...renderHook((hookProps) => usePhotos(hookProps), {
       initialProps: props,
+      wrapper,
     }),
   };
 }
@@ -37,7 +53,6 @@ function renderUsePhotos() {
 describe("delete photo", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    api.getHashtags.mockResolvedValue({ data: hashtags });
     api.getPhotos.mockResolvedValue({ data: photos, page: 1, pages: 1 });
     api.deletePhoto.mockResolvedValue({});
   });

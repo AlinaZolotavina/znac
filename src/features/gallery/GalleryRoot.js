@@ -12,6 +12,8 @@ import PhotoPopup from "../../features/gallery/components/PhotoPopup";
 import DeletePhotoModal from "../../features/gallery/components/DeletePhotoModal";
 
 import usePhotos from "./hooks/usePhotos";
+import { useHashtags } from "./queries/hashtagQueries";
+
 import scrollToRef from "./utils/scrollToRef";
 
 function GalleryRoot({
@@ -30,13 +32,16 @@ function GalleryRoot({
 }) {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const { data: hashtagsResponse } = useHashtags();
+  const lastHashtags = hashtagsResponse?.data ?? [];
+
   const homeRef = useRef(null);
   const mainRef = useRef(null);
   const footerRef = useRef(null);
   const [isPhotoPopupOpen, setIsPhotoPopupOpen] = useState(false);
   const [isDeletePhotoModalOpen, setIsDeletePhotoModalOpen] = useState(false);
   const [hashtag, setHashtag] = useState(""); // search input
-  const [lastHashtags, setLastHashtags] = useState([]);
 
   const closeGalleryPopups = useCallback(() => {
     setIsPhotoPopupOpen(false);
@@ -81,7 +86,6 @@ function GalleryRoot({
     setScreenWidth,
     hashtag,
     setHashtag,
-    setLastHashtags,
     location,
     setIsPhotoPopupOpen,
     setIsDeletePhotoModalOpen,
