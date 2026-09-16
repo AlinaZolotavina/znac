@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import api from "../../../shared/utils/api";
+import { hashtagKeys } from "../queries/hashtagQueries";
 import {
   DEFAULT_ERROR_MSG,
   DELETE_PHOTO_ERROR_MSG,
@@ -28,11 +30,12 @@ export default function usePhotos({
   setScreenWidth,
   hashtag,
   setHashtag,
-  setLastHashtags,
   location,
   setIsPhotoPopupOpen,
   setIsDeletePhotoModalOpen,
 }) {
+  const queryClient = useQueryClient();
+
   const [allPhotos, setAllPhotos] = useState([]);
   const [loadedPhotos, setLoadedPhotos] = useState([]);
   const [photosPage, setPhotosPage] = useState(1);
@@ -43,6 +46,7 @@ export default function usePhotos({
   const [isPhotosLoading, setIsPhotosLoading] = useState(true);
   const resizeTimeoutRef = useRef(null);
   const lastPhotosQueryRef = useRef(null);
+  const latestSearchRequestRef = useRef(0);
   const pendingViewsRef = useRef(new Set());
   const viewedPhotosRef = useRef(null);
 
@@ -70,19 +74,6 @@ export default function usePhotos({
     addPhotosToGallery,
     openModal,
   });
-
-  const loadHashtags = useCallback(() => {
-    return api
-      .getHashtags(1, 10)
-      .then((response) => {
-        setLastHashtags(response.data);
-      })
-      .catch(console.error);
-  }, [setLastHashtags]);
-
-  useEffect(() => {
-    loadHashtags();
-  }, [loadHashtags]);
 
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const hashtagsOfSelectedPhoto = selectedPhoto?.hashtags || [];
@@ -188,13 +179,22 @@ export default function usePhotos({
   }, [getPhotosLayout, loadedPhotos.length, visibleLoadedPhotosCount]);
 
   const loadPhotos = useCallback(
-    ({ page = 1, append = false, hashtag = "" } = {}) => {
+    ({
+      page = 1,
+      append = false,
+      hashtag = "",
+      searchRequestId = null,
+    } = {}) => {
       const normalizedHashtag = hashtag.trim().toLowerCase();
       const hasFilter = Boolean(normalizedHashtag);
 
       const queryKey = `${page}|${normalizedHashtag}|${append}`;
 
       if (lastPhotosQueryRef.current?.key === queryKey) {
+        if (searchRequestId !== null) {
+          lastPhotosQueryRef.current.searchRequestId = searchRequestId;
+        }
+
         return lastPhotosQueryRef.current.promise;
       }
 
@@ -206,6 +206,18 @@ export default function usePhotos({
 
       const requestPromise = request
         .then((response) => {
+          const activeSearchRequestId =
+            lastPhotosQueryRef.current?.key === queryKey
+              ? lastPhotosQueryRef.current.searchRequestId
+              : searchRequestId;
+          const isStaleSearch =
+            activeSearchRequestId !== null &&
+            activeSearchRequestId !== latestSearchRequestRef.current;
+
+          if (isStaleSearch) {
+            return response;
+          }
+
           const { data, page: responsePage, pages } = response;
           setAllPhotos((previousPhotos) =>
             append ? [...previousPhotos, ...data] : data,
@@ -247,6 +259,7 @@ export default function usePhotos({
       lastPhotosQueryRef.current = {
         key: queryKey,
         promise: requestPromise,
+        searchRequestId,
       };
 
       return requestPromise;
@@ -270,9 +283,10 @@ export default function usePhotos({
   function handlePhotoSearch(nextValue) {
     const normalizedHashtag = nextValue.trim().toLowerCase();
 
-    setHashtag(nextValue);
-
     if (!normalizedHashtag) {
+      latestSearchRequestRef.current += 1;
+      setHashtag(nextValue);
+
       const restoredVisibleCount = getRestoredVisibleCount();
 
       setAllPhotos(loadedPhotos);
@@ -283,22 +297,57 @@ export default function usePhotos({
       return;
     }
 
+    const searchRequestId = latestSearchRequestRef.current + 1;
+    latestSearchRequestRef.current = searchRequestId;
+    setHashtag(nextValue);
+
     loadPhotos({
       page: 1,
       append: false,
       hashtag: normalizedHashtag,
+      searchRequestId,
     })
       .then((response) => {
-        if (response.data.length > 0) {
-          return loadHashtags();
+        if (searchRequestId !== latestSearchRequestRef.current) {
+          return;
         }
 
-        return undefined;
+        if (response.data.length === 0) {
+          return;
+        }
+
+        queryClient.setQueryData(hashtagKeys.all, (currentData) => {
+          if (!currentData) {
+            return currentData;
+          }
+
+          const currentHashtags = currentData.data ?? [];
+
+          const existingHashtag = currentHashtags.find(
+            (item) => item.name.toLowerCase() === normalizedHashtag,
+          );
+
+          const updatedHashtag = existingHashtag ?? {
+            name: normalizedHashtag,
+          };
+
+          return {
+            ...currentData,
+            data: [
+              updatedHashtag,
+              ...currentHashtags.filter(
+                (item) => item.name.toLowerCase() !== normalizedHashtag,
+              ),
+            ].slice(0, currentData.limit ?? 10),
+          };
+        });
       })
       .catch(console.error);
   }
 
   const handleClearPhotoSearch = useCallback(() => {
+    latestSearchRequestRef.current += 1;
+
     const restoredVisibleCount = getRestoredVisibleCount();
 
     setHashtag("");

@@ -10,7 +10,7 @@ function Hashtags({
             {photoHashtags
                     .slice(0, hashtagsNumber)
                     .map(photoHashtag => (
-                    <Hashtag key={photoHashtag._id || photoHashtag} hashtag={photoHashtag.name || photoHashtag} onClick={onClick} />
+                    <Hashtag key={photoHashtag._id || photoHashtag.name || photoHashtag} hashtag={photoHashtag.name || photoHashtag} onClick={onClick} />
                 ))}
         </>
     );
