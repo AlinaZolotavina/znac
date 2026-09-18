@@ -3,21 +3,21 @@ import CV from "./CV";
 function CVs() {
   function downloadEnglishCV() {
     window.open(
-      "https://drive.google.com/uc?id=1SLXRyFphK55S_LhoLQ1WOS2XIewMpkB-&export=download",
+      "https://drive.google.com/uc?id=1SmrEQZna7aXwhAEstin6K50kvS207xJT&export=download",
       "_blank",
     );
   }
 
   function downloadGermanCV() {
     window.open(
-      "https://drive.google.com/uc?id=1rmyyPEx9k3mJqcAUzyu9ZYov9ssyufCZ&export=download",
+      "https://drive.google.com/uc?id=14mxeBWftSW8PZESXdrls6G4hq-xWeJkW&export=download",
       "_blank",
     );
   }
 
   function downloadRussianCV() {
     window.open(
-      "https://drive.google.com/uc?id=1-o5qJEB6CTYC0ijDhi__t5VaP5SSpbF_&export=download",
+      "https://drive.google.com/uc?id=1HthVfkCUE3jgD1bIQkvGDax2WtqZxMrA&export=download",
       "_blank",
     );
   }
