@@ -4,6 +4,10 @@
     }
 }
 
+.add-photo__form .form__submit-btn {
+    margin-top: 12px;
+}
+
 @media screen and (max-width: 400px) {
     .add-photo__form  {
         width: 300px;

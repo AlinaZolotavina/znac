@@ -249,6 +249,12 @@
   box-shadow: 0 0 14px rgba(232, 232, 232, 0.16);
 }
 
+.main-page .post__preview-container,
+.main-page .post__preview {
+  border: 0;
+  background: transparent;
+}
+
 .main-page .post__theme {
   background: #c5e7bc;
   color: #0f1111;

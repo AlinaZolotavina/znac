@@ -2,6 +2,7 @@ import { useRef } from "react";
 import successIcon from "../assets/success-icon.svg";
 import EmailSentIcon from "../assets/email-sent-icon.svg";
 import failureIcon from "../assets/failure-icon.svg";
+import warningIcon from "../assets/warning-icon.svg";
 import useCloseOnEsc from "../../shared/hooks/useCloseOnEsc";
 import useOverlayClickClose from "../../shared/hooks/useOverlayClickClose";
 import useInitialFocus from "../../shared/hooks/useInitialFocus";
@@ -23,7 +24,12 @@ function Modal({ isOpen, status, type, message, onClose }) {
   if (!isOpen) return null;
 
   const isError = status === "error";
-  const announcementTitle = isError ? "Error message" : "Status message";
+  const isWarning = status === "warning";
+  const announcementTitle = isError
+    ? "Error message"
+    : isWarning
+      ? "Warning message"
+      : "Status message";
   const announcementRole = isError ? "alert" : "status";
 
   const icons = {
@@ -33,6 +39,9 @@ function Modal({ isOpen, status, type, message, onClose }) {
     },
     error: {
       default: failureIcon,
+    },
+    warning: {
+      default: warningIcon,
     },
   };
 

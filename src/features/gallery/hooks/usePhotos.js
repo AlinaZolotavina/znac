@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import api from "../../../shared/utils/api";
 import { hashtagKeys } from "../queries/hashtagQueries";
+import { getPhotosQueryOptions } from "../queries/photoQueries";
 import {
   DEFAULT_ERROR_MSG,
   DELETE_PHOTO_ERROR_MSG,
@@ -200,7 +201,7 @@ export default function usePhotos({
 
       const request = hasFilter
         ? api.findPhoto(normalizedHashtag, page, 20)
-        : api.getPhotos(page, 20);
+        : queryClient.fetchQuery(getPhotosQueryOptions(page, 20));
 
       setIsPhotosLoading(true);
 
@@ -264,7 +265,7 @@ export default function usePhotos({
 
       return requestPromise;
     },
-    [getPhotosLayout, openModal],
+    [getPhotosLayout, openModal, queryClient],
   );
 
   useEffect(() => {
@@ -400,11 +401,17 @@ export default function usePhotos({
     increaseViewsNumber(nextPhoto._id);
   }
 
-  function handleAddPhotoFromPc(photoData, hashtags, views) {
+  function handleAddPhotoFromPc(
+    photoData,
+    hashtags,
+    views,
+    onPhotoStatusChange,
+  ) {
     return handlePhotoUpload({
       photoData,
       hashtags,
       views,
+      onPhotoStatusChange,
     });
   }
 

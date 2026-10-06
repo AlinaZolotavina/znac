@@ -40,7 +40,7 @@ describe("upload photo form", () => {
         new File(["file"], `photo-${index}.jpg`, { type: "image/jpeg" }),
     );
 
-    fireEvent.change(screen.getByLabelText(/select photo/i), {
+    fireEvent.change(screen.getByLabelText(/select/i), {
       target: { files },
     });
 
@@ -64,10 +64,10 @@ describe("upload photo form", () => {
     );
 
     await waitFor(() =>
-      expect(screen.getByRole("button", { name: "Add photo" })).toBeEnabled(),
+      expect(screen.getByRole("button", { name: "Add" })).toBeEnabled(),
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Add photo" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add" }));
 
     await waitFor(() =>
       expect(props.onAddPhotoViaLink).toHaveBeenCalledWith({
@@ -82,6 +82,9 @@ describe("upload photo form", () => {
   test("disables submit while request is sending", () => {
     renderAddPhoto({ isSendingReq: true });
 
-    expect(screen.getByRole("button", { name: "Add photo" })).toBeDisabled();
+    const submitButton = screen.getByRole("button", { name: "Add" });
+
+    expect(submitButton).toBeDisabled();
+    expect(submitButton).toHaveClass("form__submit-btn_disabled");
   });
 });

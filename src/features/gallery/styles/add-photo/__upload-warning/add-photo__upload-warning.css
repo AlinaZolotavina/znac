@@ -1,0 +1,44 @@
+.add-photo__upload-warning {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  align-items: center;
+  column-gap: 12px;
+  min-height: 45px;
+  width: 100%;
+  margin: 0 0 8px;
+  color: #d9d9d9;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .2s ease;
+}
+
+.add-photo__upload-warning_visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.add-photo__upload-warning-icon {
+  color: #f5c542;
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+}
+
+.add-photo__upload-warning-text {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+@media screen and (max-width: 400px) {
+  .add-photo__upload-warning {
+    grid-template-columns: 34px 1fr;
+    column-gap: 10px;
+  }
+
+  .add-photo__upload-warning-icon {
+    font-size: 40px;
+  }
+}

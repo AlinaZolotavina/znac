@@ -1,8 +1,8 @@
 import api from "../../../shared/utils/api";
 import {
   DEFAULT_ERROR_MSG,
-  PHOTO_ADDED_SUCCESSFULLY_MSG,
-  PHOTOS_ADDED_SUCCESSFULLY_MSG,
+  PHOTOS_UPLOAD_FAILED_MSG,
+  PHOTOS_UPLOAD_SUCCESS_MSG,
 } from "../../../shared/utils/messages";
 
 export default function photoUploadActions({
@@ -31,36 +31,85 @@ export default function photoUploadActions({
     return api.addPhoto(photoDataToSave);
   }
 
-  function handlePhotoUploadSuccess({ addedPhotos }) {
-    addPhotosToGallery(addedPhotos);
+  function getPhotoFile(photoItem) {
+    return photoItem.file || photoItem;
+  }
+
+  function getPhotoId(photoItem) {
+    return photoItem.id;
+  }
+
+  function showUploadSummary(addedPhotos, failedCount) {
+    if (addedPhotos.length > 0) {
+      addPhotosToGallery(addedPhotos);
+    }
+
+    if (failedCount === 0) {
+      openModal({
+        status: "success",
+        message: PHOTOS_UPLOAD_SUCCESS_MSG(addedPhotos.length),
+      });
+
+      return;
+    }
+
+    if (addedPhotos.length > 0) {
+      return;
+    }
 
     openModal({
-      status: "success",
-      message:
-        addedPhotos.length === 1
-          ? PHOTO_ADDED_SUCCESSFULLY_MSG
-          : PHOTOS_ADDED_SUCCESSFULLY_MSG(addedPhotos.length),
+      status: "error",
+      message: PHOTOS_UPLOAD_FAILED_MSG(failedCount),
     });
   }
 
-  async function handlePhotoUpload({ photoData, hashtags, views }) {
+  async function uploadPhotoItem(photoItem, hashtags, views, onPhotoStatusChange) {
+    const photoId = getPhotoId(photoItem);
+
+    onPhotoStatusChange?.(photoId, "uploading");
+
+    try {
+      const newPhoto = await uploadSinglePhoto(
+        getPhotoFile(photoItem),
+        hashtags,
+        views,
+      );
+
+      onPhotoStatusChange?.(photoId, "success");
+      return newPhoto;
+    } catch (err) {
+      console.error(err);
+      onPhotoStatusChange?.(photoId, "error", err);
+      throw err;
+    }
+  }
+
+  async function handlePhotoUpload({
+    photoData,
+    hashtags,
+    views,
+    onPhotoStatusChange,
+  }) {
     startLoading();
 
     try {
-      const addedPhotos = [];
+      const results = await Promise.allSettled(
+        photoData.map((photoItem) =>
+          uploadPhotoItem(photoItem, hashtags, views, onPhotoStatusChange),
+        ),
+      );
 
-      for (const file of photoData) {
-        const newPhoto = await uploadSinglePhoto(file, hashtags, views);
-        addedPhotos.push(newPhoto);
-      }
+      const addedPhotos = results
+        .filter((result) => result.status === "fulfilled")
+        .map((result) => result.value);
+      const failedCount = results.length - addedPhotos.length;
 
-      handlePhotoUploadSuccess({
+      showUploadSummary(addedPhotos, failedCount);
+
+      return {
         addedPhotos,
-        addPhotosToGallery,
-        openModal,
-      });
-
-      return addedPhotos;
+        failedCount,
+      };
     } catch (err) {
       console.error(err);
 
@@ -68,8 +117,10 @@ export default function photoUploadActions({
         status: "error",
         message: DEFAULT_ERROR_MSG,
       });
-
-      throw err;
+      return {
+        addedPhotos: [],
+        failedCount: photoData.length,
+      };
     } finally {
       stopLoading();
     }

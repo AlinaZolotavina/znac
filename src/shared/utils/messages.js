@@ -40,6 +40,10 @@ export const DELETE_PHOTO_ERROR_MSG =
 export const PHOTO_ADDED_SUCCESSFULLY_MSG = "Photo was added successfully";
 export const PHOTOS_ADDED_SUCCESSFULLY_MSG = (count) =>
   `${count} photos were added successfully`;
+export const PHOTOS_UPLOAD_SUCCESS_MSG = (count) =>
+  `Successfully uploaded photos: ${count}`;
+export const PHOTOS_UPLOAD_FAILED_MSG = (failedCount) =>
+  `No photos were uploaded.\nFailed photos: ${failedCount}`;
 export const EDIT_HASHTAGS_ERROR_MSG =
   "Failed to edit hashtags. Please wait and try again later.";
 

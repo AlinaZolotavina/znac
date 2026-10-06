@@ -9,7 +9,13 @@ import { useLocation } from "react-router-dom";
 import isValidUrl from "../../../shared/utils/isValidUrl";
 
 const MAX_FILES_COUNT = 10;
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+const MAX_FILE_SIZE = 30 * 1024 * 1024; // 30 MB
+const PHOTO_UPLOAD_STATUS = {
+  ready: "ready",
+  uploading: "uploading",
+  success: "success",
+  error: "error",
+};
 const PHOTO_UPLOAD_TYPES = [
   {
     value: "pc",
@@ -40,38 +46,54 @@ function AddPhoto({
 }) {
   const [photoLink, setPhotoLink] = useState("");
   const [photoLinkError, setPhotoLinkError] = useState("");
-  const [photoFiles, setPhotoFiles] = useState([]);
-  const [fileInfo, setFileInfo] = useState("Photo not selected");
+  const [photoItems, setPhotoItems] = useState([]);
   const [hashtags, setHashtags] = useState("");
   const [hashtagsError, setHashtagsError] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
+  const [hasPartialUploadWarning, setHasPartialUploadWarning] = useState(false);
   const [pcDownloadCheck, setPcDownloadCheck] = useState(true);
   const [linkDownloadCheck, setLinkDownloadCheck] = useState(false);
   const [googleDownloadCheck, setGoogleDownloadCheck] = useState(false);
   const [googlePhotoId, setGooglePhotoId] = useState("");
   const location = useLocation();
   const views = 0;
-  const [fileNames, setFileNames] = useState([]);
   const [isUploadingPhotos, setIsUploadingPhotos] = useState(false);
   const uploadTypeRefs = useRef([]);
+  const photoItemsRef = useRef([]);
+  const photoItemIdRef = useRef(0);
   const [modalData, setModalData] = useState({
     isOpen: false,
     status: "",
     message: "",
   });
-  const uploadStatusMessage = isUploadingPhotos ? "Uploading" : "";
+  const uploadStatusMessage = isUploadingPhotos
+    ? "Processing selected photos"
+    : "";
+  const isUploadControlsDisabled = isSendingReq || isUploadingPhotos;
+  const uploadablePhotoItems = photoItems.filter(
+    (item) => item.status !== PHOTO_UPLOAD_STATUS.success,
+  );
+  const submitButtonText = hasPartialUploadWarning
+    ? "Try to add again"
+    : "Add";
 
   useEffect(() => {
     clearInputs();
   }, [location.pathname]);
 
   useEffect(() => {
-    if (photoFiles.length === 0) {
-      setFileInfo("Photo not selected");
-    } else {
-      setFileInfo("");
-    }
-  }, [photoFiles]);
+    photoItemsRef.current = photoItems;
+  }, [photoItems]);
+
+  useEffect(() => {
+    return () => {
+      photoItemsRef.current.forEach((item) => {
+        if (item.previewUrl) {
+          URL.revokeObjectURL(item.previewUrl);
+        }
+      });
+    };
+  }, []);
 
   const openModal = ({ status, message, type }) => {
     setModalData({
@@ -99,9 +121,16 @@ function AddPhoto({
     setLinkDownloadCheck(false);
     setGoogleDownloadCheck(false);
     setPcDownloadCheck(true);
-    setFileNames([]);
-    setFileInfo("Photo not selected");
-    setPhotoFiles([]);
+    setHasPartialUploadWarning(false);
+    setPhotoItems((items) => {
+      items.forEach((item) => {
+        if (item.previewUrl) {
+          URL.revokeObjectURL(item.previewUrl);
+        }
+      });
+
+      return [];
+    });
     setIsUploadingPhotos(false);
   }
 
@@ -140,13 +169,19 @@ function AddPhoto({
   useEffect(() => {
     if (
       (photoLink && hashtags && !photoLinkError && !hashtagsError) ||
-      (photoFiles.length !== 0 && hashtags && !hashtagsError)
+      (uploadablePhotoItems.length !== 0 && hashtags && !hashtagsError)
     ) {
       setIsFormValid(true);
     } else {
       setIsFormValid(false);
     }
-  }, [photoLink, photoLinkError, hashtags, hashtagsError, photoFiles]);
+  }, [
+    photoLink,
+    photoLinkError,
+    hashtags,
+    hashtagsError,
+    uploadablePhotoItems.length,
+  ]);
 
   function handlePcDownloadClick() {
     setPcDownloadCheck(true);
@@ -202,7 +237,9 @@ function AddPhoto({
       return;
     }
 
-    const currentFilesCount = photoFiles.length;
+    setHasPartialUploadWarning(false);
+
+    const currentFilesCount = photoItems.length;
 
     if (currentFilesCount + selectedFiles.length > MAX_FILES_COUNT) {
       openModal({
@@ -218,7 +255,7 @@ function AddPhoto({
       if (file.size > MAX_FILE_SIZE) {
         openModal({
           status: "error",
-          message: `${file.name} exceeds the 10 MB limit`,
+          message: `${file.name} exceeds the 30 MB limit`,
         });
 
         e.target.value = "";
@@ -228,26 +265,39 @@ function AddPhoto({
 
     try {
       setIsUploadingPhotos(true);
-      const convertedFiles = await Promise.all(
+      let failedFilesCount = 0;
+
+      await Promise.all(
         selectedFiles.map(async (file) => {
           const fileName = file.name.replace(/\.[^.]+$/, "");
 
-          return {
-            file: await convert(file, fileName),
-            name: `${fileName}.webp`,
-          };
+          try {
+            const convertedFile = await convert(file, fileName);
+            const convertedPhoto = {
+              id: `photo-${photoItemIdRef.current++}`,
+              file: convertedFile,
+              name: `${fileName}.webp`,
+              previewUrl: URL.createObjectURL(convertedFile),
+              status: PHOTO_UPLOAD_STATUS.ready,
+            };
+
+            setPhotoItems((prevItems) => [...prevItems, convertedPhoto]);
+          } catch (err) {
+            failedFilesCount += 1;
+            console.error(err);
+          }
         }),
       );
 
-      setPhotoFiles((prevFiles) => [
-        ...prevFiles,
-        ...convertedFiles.map((item) => item.file),
-      ]);
-
-      setFileNames((prevNames) => [
-        ...prevNames,
-        ...convertedFiles.map((item) => item.name),
-      ]);
+      if (failedFilesCount > 0) {
+        openModal({
+          status: "error",
+          message:
+            failedFilesCount === 1
+              ? "Failed to process 1 selected file"
+              : `Failed to process ${failedFilesCount} selected files`,
+        });
+      }
     } catch (err) {
       console.error(err);
 
@@ -303,9 +353,30 @@ function AddPhoto({
     });
   };
 
-  function handleRemoveSelectedPhoto(index) {
-    setPhotoFiles((prev) => prev.filter((_, i) => i !== index));
-    setFileNames((prev) => prev.filter((_, i) => i !== index));
+  function handleRemoveSelectedPhoto(photoId) {
+    setPhotoItems((items) => {
+      const photoToRemove = items.find((item) => item.id === photoId);
+
+      if (photoToRemove?.previewUrl) {
+        URL.revokeObjectURL(photoToRemove.previewUrl);
+      }
+
+      return items.filter((item) => item.id !== photoId);
+    });
+  }
+
+  function handlePhotoUploadStatusChange(photoId, status, err) {
+    setPhotoItems((items) =>
+      items.map((item) =>
+        item.id === photoId
+          ? {
+              ...item,
+              status,
+              error: err?.message || "",
+            }
+          : item,
+      ),
+    );
   }
 
   async function handleSubmit(e) {
@@ -329,9 +400,25 @@ function AddPhoto({
 
         clearInputs();
       } else if (pcDownloadCheck) {
-        await onUploadPhotoToServer(photoFiles, hashtags, views);
+        setHasPartialUploadWarning(false);
 
-        clearInputs();
+        const uploadResult = await onUploadPhotoToServer(
+          uploadablePhotoItems.map(({ id, file }) => ({ id, file })),
+          hashtags,
+          views,
+          handlePhotoUploadStatusChange,
+        );
+
+        setHasPartialUploadWarning(
+          uploadResult?.addedPhotos?.length > 0 && uploadResult?.failedCount > 0,
+        );
+
+        if (
+          uploadResult?.addedPhotos?.length > 0 &&
+          uploadResult?.failedCount === 0
+        ) {
+          clearInputs();
+        }
       }
     } catch (err) {
       console.error(err);
@@ -360,9 +447,9 @@ function AddPhoto({
             title="Add new photo"
             titleTag="h1"
             buttonClassname="form__submit-btn"
-            buttonText="Add photo"
+            buttonText={submitButtonText}
             isFormValid={isFormValid}
-            isSendingReq={isSendingReq}
+            isSendingReq={isUploadControlsDisabled}
             onSubmit={handleSubmit}
           >
           <div
@@ -389,6 +476,7 @@ function AddPhoto({
                   className={`radio-btn ${isActive ? "radio-btn_state_active" : "radio-btn_state_inactive"}`}
                   onClick={() => activateUploadType(type.value)}
                   onKeyDown={(e) => handleUploadTypeKeyDown(e, index)}
+                  disabled={isUploadControlsDisabled}
                 >
                   <span className={type.labelClassName} aria-hidden="true" />
                   <span className="radio-btn__tooltip">{type.tooltip}</span>
@@ -411,26 +499,41 @@ function AddPhoto({
                     multiple
                     accept=".jpg,.jpeg,.png,.webp"
                     onChange={handleUploadFromPc}
+                    disabled={isUploadControlsDisabled}
                   />
-                  <span className="upload-file__btn">
+                  <span
+                    className={`upload-file__btn ${
+                      isUploadControlsDisabled ? "upload-file__btn_disabled" : ""
+                    }`}
+                  >
                     <div className="upload-file__icon" />
-                    Select photo
+                    Select
                   </span>
                 </label>
-                <ul className="upload-file__info">
-                  {isUploadingPhotos ? (
-                    <li className="upload-file__status">
-                      Uploading
-                      <span className="upload-file__dots" />
+                {isUploadingPhotos && photoItems.length === 0 && (
+                  <div
+                    className="upload-file__processing"
+                    aria-hidden="true"
+                  >
+                    <span className="upload-file__processing-spinner" />
+                  </div>
+                )}
+                <ul
+                  className={`upload-file__info ${
+                    photoItems.length === 0 ? "upload-file__info_empty" : ""
+                  }`}
+                >
+                  {photoItems.length === 0 && !isUploadingPhotos ? (
+                    <li className="upload-file__info_empty">
+                      Photo not selected
                     </li>
-                  ) : photoFiles.length === 0 ? (
-                    <li className="upload-file__info_empty">{fileInfo}</li>
                   ) : (
-                    fileNames.map((name, index) => (
+                    photoItems.map((photo) => (
                       <UploadFileInfo
-                        key={`${name}-${index}`}
-                        fileName={name}
-                        onRemove={() => handleRemoveSelectedPhoto(index)}
+                        key={photo.id}
+                        photo={photo}
+                        onRemove={() => handleRemoveSelectedPhoto(photo.id)}
+                        isDisabled={isUploadControlsDisabled}
                       />
                     ))
                   )}
@@ -460,6 +563,18 @@ function AddPhoto({
             isSendingReq={isSendingReq}
             error={hashtagsError}
           />
+          <div
+            className={`add-photo__upload-warning ${
+              hasPartialUploadWarning ? "add-photo__upload-warning_visible" : ""
+            }`}
+            role={hasPartialUploadWarning ? "status" : undefined}
+            aria-hidden={hasPartialUploadWarning ? undefined : "true"}
+          >
+            <span className="add-photo__upload-warning-icon">!</span>
+            <p className="add-photo__upload-warning-text">
+              Not all photos were uploaded. Please try again.
+            </p>
+          </div>
           </Form>
         </main>
       </div>
