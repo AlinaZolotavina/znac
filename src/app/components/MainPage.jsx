@@ -43,6 +43,7 @@ function MainPage({
   openModal,
   startLoading,
   stopLoading,
+  onContactClick,
 }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -233,6 +234,7 @@ function MainPage({
             onMenuClick={() => setIsMainMenuOpen(true)}
             isMenuOpen={isMainMenuOpen}
             menuId="main-page-menu"
+            onContactClick={onContactClick}
           />
         </header>
 

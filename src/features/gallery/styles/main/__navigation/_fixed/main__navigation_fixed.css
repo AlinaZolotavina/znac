@@ -42,3 +42,32 @@
 .main__navigation_fixed .main-nav__menu-btn {
   grid-area: actions;
 }
+
+@media screen and (max-width: 900px) {
+  .main__navigation_fixed .main-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+  }
+
+  .main__navigation_fixed .main-nav__primary-row {
+    display: grid;
+  }
+
+  .main__navigation_fixed .main-nav__brand,
+  .main__navigation_fixed .main-nav__primary,
+  .main__navigation_fixed .main-nav__secondary,
+  .main__navigation_fixed .main-nav__actions,
+  .main__navigation_fixed .main-nav__menu-btn {
+    grid-area: auto;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .main__navigation_fixed {
+    opacity: 1;
+    visibility: visible;
+    height: auto;
+  }
+}

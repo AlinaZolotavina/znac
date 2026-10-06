@@ -1,0 +1,13 @@
+.contact-button__icon {
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
+  mask-image: url("../../../assets/contact-icon.svg");
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-image: url("../../../assets/contact-icon.svg");
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+}

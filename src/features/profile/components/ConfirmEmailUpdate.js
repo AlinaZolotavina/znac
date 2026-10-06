@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import AuthHeader from "../../../app/components/AuthHeader";
 import updateEmailIcon from "../assets/update-email-icon.svg";
 
-function ConfirmEmailUpdate({ onUpdateEmail }) {
+function ConfirmEmailUpdate({ onUpdateEmail, onContactClick }) {
   const email = localStorage.getItem("email");
   let { updateEmailLink } = useParams();
   function handleEmailUpdate() {
@@ -10,6 +11,7 @@ function ConfirmEmailUpdate({ onUpdateEmail }) {
   }
   return (
     <main className="confirm-email-update">
+      <AuthHeader onContactClick={onContactClick} />
       <div className="confirm-email-update__container">
         <img
           className="confirm-email-update__icon"

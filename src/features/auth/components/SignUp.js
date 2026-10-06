@@ -1,12 +1,13 @@
 import Form from "../../../app/components/Form";
 import Input from "../../../app/components/Input";
+import AuthHeader from "../../../app/components/AuthHeader";
 import ToggleVisibilityBtn from "../../../app/components/ToggleVisibilityBtn";
 
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 
-function SignUp({ onSignup, isSendingReq }) {
+function SignUp({ onSignup, isSendingReq, onContactClick }) {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -53,6 +54,7 @@ function SignUp({ onSignup, isSendingReq }) {
 
   return (
     <section className="sign-up">
+      <AuthHeader onContactClick={onContactClick} />
       <div className="sign-up__container">
         <Form
           formName="signup"

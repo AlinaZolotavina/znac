@@ -5,37 +5,29 @@ function normalizeId(value) {
     .replace(/(^-|-$)/g, "");
 }
 
-function Input({
+function TextArea({
   labelClassname,
-  inputLabel,
   inputId,
   placeholder,
   classname,
-  inputType,
-  inputValue,
+  value,
   onChange,
   isSendingReq,
   error,
   inputName,
   maxLength,
 }) {
-  const fieldId =
-    inputId ||
-    normalizeId(inputName) ||
-    normalizeId(inputLabel) ||
-    normalizeId(placeholder);
+  const fieldId = inputId || normalizeId(inputName) || normalizeId(placeholder);
   const errorId = fieldId ? `${fieldId}-error` : undefined;
   const hasError = Boolean(error);
 
   return (
-    <label className={`${labelClassname || ""} input`}>
-      {inputLabel}
-      <input
+    <label className={labelClassname || ""}>
+      <textarea
         id={fieldId}
         className={classname}
         placeholder={placeholder}
-        type={inputType}
-        value={inputValue}
+        value={value}
         onChange={onChange}
         required
         disabled={isSendingReq}
@@ -51,4 +43,4 @@ function Input({
   );
 }
 
-export default Input;
+export default TextArea;

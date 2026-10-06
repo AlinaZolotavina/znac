@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useEffect } from "react";
 import Form from "../../../app/components/Form";
 import Input from "../../../app/components/Input";
+import AuthHeader from "../../../app/components/AuthHeader";
 import forgotPasswordIcon from "../assets/forgot-password-icon.svg";
 
-function ForgotPassword({ onReceiveEmail, isSendingReq }) {
+function ForgotPassword({ onReceiveEmail, isSendingReq, onContactClick }) {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   function handleEmailChange(e) {
@@ -37,6 +38,7 @@ function ForgotPassword({ onReceiveEmail, isSendingReq }) {
 
   return (
     <main className="forgot-password">
+      <AuthHeader onContactClick={onContactClick} />
       <div className="forgot-password__container">
         <img
           className="forgot-password__image"

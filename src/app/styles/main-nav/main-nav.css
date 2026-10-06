@@ -80,7 +80,7 @@
 }
 
 .main-nav__actions_has-action-slot {
-  gap: 24px;
+  gap: 15px;
 }
 
 .main-nav_theme_blog {
@@ -103,7 +103,7 @@
 .main-nav__auth-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
 }
 
 .main-nav__menu-btn {
@@ -172,19 +172,6 @@
   .main-nav__secondary-link {
     font-size: 14px;
     line-height: 17px;
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  .main-nav_theme_blog .logout-btn {
-    width: 30px;
-    height: 30px;
-    font-size: 0;
-    line-height: 0;
-    background-image: url("../../../features/blog/assets/logout-icon.svg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 16px 16px;
   }
 }
 

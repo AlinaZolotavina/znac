@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
+import AuthHeader from "../../../app/components/AuthHeader";
 import passwordChangedIcon from "../assets/password-changed-icon.svg";
 
-function PasswordChanged() {
+function PasswordChanged({ onContactClick }) {
   return (
     <main className="password-changed">
+      <AuthHeader onContactClick={onContactClick} />
       <div className="password-changed__container">
         <img
           className="password-changed__image"

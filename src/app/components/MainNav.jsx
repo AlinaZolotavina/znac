@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import ContactButton from "./ContactButton";
 import LogoutBtn from "./LogoutBtn";
 import ProfileButton from "./ProfileButton";
 
@@ -35,6 +36,7 @@ function MainNav({
   onMenuClick,
   onSubsectionClick,
   actionSlot,
+  onContactClick,
   menuAriaLabel = "Open main menu",
   isMenuOpen = false,
   menuId = "main-menu",
@@ -42,12 +44,18 @@ function MainNav({
   const items = subnavigation[activeSection] || [];
   const themeClass = activeSection === "blog" ? " main-nav_theme_blog" : "";
   const logoutTheme = activeSection === "blog" ? "blog" : "main";
+  const contactTheme = activeSection === "blog" ? "blog" : "main";
   const currentSubsection =
     activeSubsection || (activeSection === "photos" ? "photos" : "overview");
-  const actionSlotClassName = actionSlot
+  const contactAction =
+    actionSlot ||
+    (onContactClick ? (
+      <ContactButton onClick={onContactClick} theme={contactTheme} />
+    ) : null);
+  const actionSlotClassName = contactAction
     ? "main-nav__actions main-nav__actions_has-action-slot"
     : "main-nav__actions main-nav__actions_without-action-slot";
-  const primaryRowClassName = actionSlot
+  const primaryRowClassName = contactAction
     ? "main-nav__primary-row main-nav__primary-row_has-action-slot"
     : "main-nav__primary-row main-nav__primary-row_without-action-slot";
 
@@ -109,7 +117,7 @@ function MainNav({
           </Link>
         </nav>
         <div className={actionSlotClassName}>
-          {actionSlot}
+          {contactAction}
           {loggedIn && (
             <div className="main-nav__auth-actions">
               <ProfileButton

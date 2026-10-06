@@ -5,6 +5,10 @@
   flex-direction: column;
 }
 
+.get-in-touch__form .form__container {
+  width: 100%;
+}
+
 @media (max-width: 1280px) {
   .get-in-touch__form {
     width: calc(70% - 30px);

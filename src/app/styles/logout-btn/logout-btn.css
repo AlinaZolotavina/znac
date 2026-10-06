@@ -1,17 +1,31 @@
 .logout-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   box-sizing: border-box;
-  width: 100px;
+  width: 30px;
   height: 30px;
   padding: 0;
   border-radius: 5px;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.2;
   color: #f4ffff;
   background-color: #835fc9;
   cursor: pointer;
   border: 0;
   transition: opacity 0.2s ease;
+}
+
+.logout-btn__icon {
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
+  mask-image: url("../../assets/logout-icon.svg");
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-image: url("../../assets/logout-icon.svg");
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
 }
 
 .logout-btn:hover {

@@ -29,6 +29,7 @@ function GalleryRoot({
   closeModal,
   onMenuClick,
   isMenuOpen,
+  onContactClick,
 }) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -178,6 +179,7 @@ function GalleryRoot({
                 onSubsectionClick={handleGallerySubsectionClick}
                 isMenuOpen={isMenuOpen}
                 menuId="app-main-menu"
+                onContactClick={onContactClick}
               />
               <Main
                 photos={photosToRender}
@@ -204,6 +206,7 @@ function GalleryRoot({
                 onSubsectionClick={handleGallerySubsectionClick}
                 isMenuOpen={isMenuOpen}
                 menuId="app-main-menu"
+                onContactClick={onContactClick}
               />
               <Footer ref={footerRef} />
             </>
@@ -226,6 +229,7 @@ function GalleryRoot({
                 onLogout={handleSignout}
                 isMenuOpen={isMenuOpen}
                 menuId="app-main-menu"
+                onContactClick={onContactClick}
               />
             </ProtectedRoute>
           }

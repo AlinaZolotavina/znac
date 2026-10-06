@@ -13,6 +13,7 @@ function Profile({
   onLogout,
   isMenuOpen,
   menuId,
+  onContactClick,
 }) {
   const currentUser = useContext(CurrentUserContext);
   useEffect(() => {
@@ -32,6 +33,7 @@ function Profile({
           onMenuClick={onMenuClick}
           isMenuOpen={isMenuOpen}
           menuId={menuId}
+          onContactClick={onContactClick}
         />
       </Header>
       <main className="profile__container">

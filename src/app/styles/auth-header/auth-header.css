@@ -1,0 +1,6 @@
+.auth-header {
+  position: absolute;
+  top: 30px;
+  right: 4vw;
+  z-index: 1;
+}

@@ -1,4 +1,3 @@
-import ContactButton from "./ContactButton";
 import MainNav from "../../../app/components/MainNav";
 import { useLocation } from "react-router-dom";
 
@@ -44,7 +43,7 @@ function BlogHeader({
         onLogout={() => onLogout(currentUser?.email)}
         onMenuClick={onBlogMenuClick}
         onSubsectionClick={handleSubsectionClick}
-        actionSlot={<ContactButton onClick={onContactClick} />}
+        onContactClick={onContactClick}
         menuAriaLabel="Open blog menu"
         isMenuOpen={isMenuOpen}
         menuId="blog-main-menu"

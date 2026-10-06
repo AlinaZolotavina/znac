@@ -29,6 +29,7 @@ const Main = forwardRef(function Main(
     onSubsectionClick,
     isMenuOpen,
     menuId,
+    onContactClick,
   },
   ref,
 ) {
@@ -44,6 +45,7 @@ const Main = forwardRef(function Main(
           onSubsectionClick={onSubsectionClick}
           isMenuOpen={isMenuOpen}
           menuId={menuId}
+          onContactClick={onContactClick}
         />
       </div>
       <Search

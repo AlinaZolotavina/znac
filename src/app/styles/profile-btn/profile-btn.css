@@ -5,11 +5,24 @@
   box-sizing: border-box;
   border-radius: 5px;
   background-color: #835fc9;
-  background-image: url("../../../features/profile/assets/profile-icon.svg");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 16px 16px;
+  color: #f4ffff;
   transition: opacity 0.2s ease;
+}
+
+.profile-btn::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  margin: auto;
+  background-color: currentColor;
+  mask-image: url("../../../features/profile/assets/profile-icon.svg");
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-image: url("../../../features/profile/assets/profile-icon.svg");
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
 }
 
 .profile-btn:hover {
@@ -18,4 +31,5 @@
 
 .profile-btn_theme_main {
   background-color: #f4ffff;
+  color: #0f1111;
 }

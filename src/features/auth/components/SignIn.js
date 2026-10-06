@@ -1,12 +1,13 @@
 import Form from "../../../app/components/Form";
 import Input from "../../../app/components/Input";
+import AuthHeader from "../../../app/components/AuthHeader";
 import ToggleVisibilityBtn from "./ToggleVisibilityBtn";
 
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 
-function SignIn({ onSignin, isSendingReq }) {
+function SignIn({ onSignin, isSendingReq, onContactClick }) {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -53,6 +54,7 @@ function SignIn({ onSignin, isSendingReq }) {
 
   return (
     <main className="sign-in">
+      <AuthHeader onContactClick={onContactClick} />
       <div className="sign-in__container">
         <Form
           formName="signin"
