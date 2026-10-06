@@ -2,6 +2,7 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import usePhotos from "../hooks/usePhotos";
 import { hashtagKeys } from "../queries/hashtagQueries";
+import { photoKeys } from "../queries/photoQueries";
 import { mockApi } from "../../../test/mockApi";
 import { hashtags, photos } from "../../../test/fixtures/photo";
 
@@ -17,6 +18,7 @@ function createTestQueryClient() {
     defaultOptions: {
       queries: {
         retry: false,
+        staleTime: 5 * 60 * 1000,
       },
     },
   });
@@ -50,10 +52,14 @@ function createDeferred() {
 
 function renderUsePhotos(overrides = {}, options = {}) {
   const queryClient = createTestQueryClient();
-  const { cachedHashtags } = options;
+  const { cachedHashtags, cachedPhotos } = options;
 
   if (cachedHashtags !== undefined) {
     queryClient.setQueryData(hashtagKeys.all, cachedHashtags);
+  }
+
+  if (cachedPhotos !== undefined) {
+    queryClient.setQueryData(photoKeys.list({ page: 1, limit: 20 }), cachedPhotos);
   }
 
   const props = {
@@ -126,6 +132,27 @@ describe("gallery search", () => {
         ...hashtags,
       ],
     });
+  });
+
+  test("uses cached initial gallery photos while cache is fresh", async () => {
+    const cachedPhotos = {
+      data: photos,
+      page: 1,
+      limit: 20,
+      total: photos.length,
+      pages: 1,
+    };
+    const { result } = renderUsePhotos(
+      {},
+      {
+        cachedPhotos,
+      },
+    );
+
+    await waitFor(() => expect(result.current.photosToRender).toHaveLength(6));
+
+    expect(api.getPhotos).not.toHaveBeenCalled();
+    expect(result.current.hasMorePhotos).toBe(true);
   });
 
   test("does not update hashtag cache when search has no results", async () => {

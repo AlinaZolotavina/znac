@@ -27,6 +27,12 @@
   opacity: 0.7;
 }
 
+.upload-file__btn_disabled,
+.upload-file__btn_disabled:hover {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 @media (max-width: 768px) {
   .upload-file__btn {
     width: inherit;

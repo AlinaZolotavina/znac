@@ -13,6 +13,8 @@ function Form({
   children,
 }) {
   const Title = titleTag;
+  const isSubmitDisabled = !isFormValid || isSendingReq;
+
   return (
     <section className={formClassname}>
       <Title className={titleClassname} id={titleId}>
@@ -21,9 +23,9 @@ function Form({
       <form name={formName} className="form__container" onSubmit={onSubmit}>
         {children}
         <button
-          className={`${buttonClassname} ${!isFormValid ? `${buttonClassname}_disabled` : ""}`}
+          className={`${buttonClassname} ${isSubmitDisabled ? `${buttonClassname}_disabled` : ""}`}
           type="submit"
-          disabled={!isFormValid || isSendingReq}
+          disabled={isSubmitDisabled}
         >
           {buttonText}
         </button>

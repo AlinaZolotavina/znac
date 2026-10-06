@@ -170,6 +170,7 @@
 @import url(./features/gallery/styles/add-photo/add-photo.css);
 @import url(./features/gallery/styles/add-photo/__form/add-photo__form.css);
 @import url(./features/gallery/styles/add-photo/__upload-section/add-photo__upload-section.css);
+@import url(./features/gallery/styles/add-photo/__upload-warning/add-photo__upload-warning.css);
 @import url(./features/gallery/styles/upload-file/upload-file.css);
 @import url(./features/gallery/styles/upload-file/__btn/upload-file__btn.css);
 @import url(./features/gallery/styles/upload-file/__icon/upload-file__icon.css);
@@ -178,6 +179,7 @@
 @import url(./features/gallery/styles/upload-file/__info/_empty/upload-file__info_empty.css);
 @import url(./features/gallery/styles/upload-file/__input/upload-file__input.css);
 @import url(./features/gallery/styles/upload-file/__item/upload-file__item.css);
+@import url(./features/gallery/styles/upload-file/__processing/upload-file__processing.css);
 @import url(./features/gallery/styles/upload-file/__remove-btn/upload-file__remove-btn.css);
 
 /* reset-password */

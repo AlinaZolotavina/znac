@@ -3,10 +3,19 @@
     font-weight: 400;
     line-height: 16px;
     color: #D9D9D9;
-    margin: 10px 0 15px;
+    margin: 10px 0 8px;
     width: inherit;
     list-style: none;
     padding: 0;
     opacity: 1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
     transition: opacity .5s ease-in;
+}
+
+@media (max-width: 500px) {
+    .upload-file__info {
+        gap: 8px;
+    }
 }

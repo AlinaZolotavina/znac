@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 import api from "../../shared/utils/api";
+import { getPhotosQueryOptions } from "../../features/gallery/queries/photoQueries";
 import LatestPosts from "../../features/blog/components/LatestPosts";
 import DeletePostModal from "../../features/blog/components/DeletePostModal";
 import EditPostPopup from "../../features/blog/components/EditPostPopup";
@@ -43,6 +45,7 @@ function MainPage({
   stopLoading,
 }) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [photos, setPhotos] = useState([]);
   const [isPhotosLoading, setIsPhotosLoading] = useState(true);
   const [hasPhotosError, setHasPhotosError] = useState(false);
@@ -94,8 +97,8 @@ function MainPage({
   useEffect(() => {
     let isMounted = true;
 
-    api
-      .getPhotos(1, 4)
+    queryClient
+      .fetchQuery(getPhotosQueryOptions(1, 4))
       .then(({ data }) => {
         if (isMounted) {
           setPhotos(data);
@@ -116,7 +119,7 @@ function MainPage({
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [queryClient]);
 
   function handlePostClick(post) {
     navigate(`/journal/posts/${post._id}`);

@@ -1,0 +1,18 @@
+.upload-file__processing {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 38px;
+  margin: 10px 0 0;
+}
+
+.upload-file__processing-spinner {
+  display: block;
+  width: 28px;
+  height: 28px;
+  box-sizing: border-box;
+  border: 3px solid rgba(255, 255, 255, .28);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: upload-file-spin .8s linear infinite;
+}
