@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import LogoutBtn from "./LogoutBtn";
+import ProfileButton from "./ProfileButton";
 
 export const gallerySubnavigation = [
   { id: "explore", label: "Explore", href: "/gallery#home" },
   { id: "photos", label: "Photos", href: "/gallery#main" },
   { id: "contact", label: "Contact", href: "/gallery#footer" },
-  { id: "profile", label: "Profile", to: "/profile", private: true },
   {
     id: "add-photo",
     label: "Add photo",
@@ -111,11 +111,17 @@ function MainNav({
         <div className={actionSlotClassName}>
           {actionSlot}
           {loggedIn && (
-            <LogoutBtn
-              className="main-nav__logout"
-              onLogout={onLogout}
-              theme={logoutTheme}
-            />
+            <div className="main-nav__auth-actions">
+              <ProfileButton
+                className="main-nav__profile"
+                theme={logoutTheme}
+              />
+              <LogoutBtn
+                className="main-nav__logout"
+                onLogout={onLogout}
+                theme={logoutTheme}
+              />
+            </div>
           )}
         </div>
         <button

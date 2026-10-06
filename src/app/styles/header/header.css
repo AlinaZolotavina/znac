@@ -10,7 +10,8 @@
 }
 
 .header_type_main-nav {
-  width: min(80vw, 1180px);
+  width: min(100%, 1180px);
+  box-sizing: border-box;
   margin: 0 auto;
   left: 0;
   justify-content: center;
@@ -19,5 +20,5 @@
 }
 
 .header_type_main-nav .main-nav {
-  width: min(92vw, 1180px);
+  width: 100%;
 }

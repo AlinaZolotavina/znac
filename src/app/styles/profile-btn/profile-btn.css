@@ -1,0 +1,21 @@
+.profile-btn {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  background-color: #835fc9;
+  background-image: url("../../../features/profile/assets/profile-icon.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  transition: opacity 0.2s ease;
+}
+
+.profile-btn:hover {
+  opacity: 0.7;
+}
+
+.profile-btn_theme_main {
+  background-color: #f4ffff;
+}

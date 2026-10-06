@@ -44,7 +44,7 @@ function MainMenu({
   }
 
   function isGallerySectionActive() {
-    return pathname.startsWith("/gallery") || pathname.startsWith("/profile");
+    return pathname.startsWith("/gallery");
   }
 
   function isGallerySubsectionActive(id) {
@@ -58,10 +58,6 @@ function MainMenu({
 
     if (id === "contact") {
       return pathname === "/gallery" && hash === "#footer";
-    }
-
-    if (id === "profile") {
-      return pathname.startsWith("/profile");
     }
 
     return pathname.startsWith("/gallery/addphoto");
@@ -160,22 +156,6 @@ function MainMenu({
                 <li>
                   <Link
                     className={getSubsectionClassName(
-                      isGallerySubsectionActive("profile"),
-                    )}
-                    to="/profile"
-                    onClick={onClose}
-                    aria-current={
-                      isGallerySubsectionActive("profile") ? "page" : undefined
-                    }
-                  >
-                    Profile
-                  </Link>
-                </li>
-              )}
-              {loggedIn && (
-                <li>
-                  <Link
-                    className={getSubsectionClassName(
                       isGallerySubsectionActive("add-photo"),
                     )}
                     to="/gallery/addphoto"
@@ -240,13 +220,29 @@ function MainMenu({
               </li>
             </ul>
           </li>
+          {loggedIn && (
+            <li className="main-menu__section">
+              <Link
+                className={getLinkClassName(pathname.startsWith("/profile"))}
+                to="/profile"
+                onClick={onClose}
+                aria-current={
+                  pathname.startsWith("/profile") ? "page" : undefined
+                }
+              >
+                Profile &amp; Settings
+              </Link>
+            </li>
+          )}
         </ul>
         {loggedIn && (
-          <LogoutBtn
-            className="main-menu__logout"
-            onLogout={onLogout}
-            theme={logoutTheme}
-          />
+          <div className="main-menu__auth-actions">
+            <LogoutBtn
+              className="main-menu__logout"
+              onLogout={onLogout}
+              theme={logoutTheme}
+            />
+          </div>
         )}
       </div>
     </nav>

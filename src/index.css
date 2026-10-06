@@ -165,6 +165,7 @@
 
 /* logout button */
 @import url(./app/styles/logout-btn/logout-btn.css);
+@import url(./app/styles/profile-btn/profile-btn.css);
 
 /* add photo */
 @import url(./features/gallery/styles/add-photo/add-photo.css);

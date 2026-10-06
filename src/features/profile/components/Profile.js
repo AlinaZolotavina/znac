@@ -27,8 +27,6 @@ function Profile({
     <div className="profile">
       <Header className="header admin-header header_type_main-nav">
         <MainNav
-          activeSection="photos"
-          activeSubsection="profile"
           loggedIn={loggedIn}
           onLogout={onLogout}
           onMenuClick={onMenuClick}
@@ -37,7 +35,7 @@ function Profile({
         />
       </Header>
       <main className="profile__container">
-        <h1 className="profile__title">Profile</h1>
+        <h1 className="profile__title">Profile & Settings</h1>
         <div className="profile__email">
           <Input
             inputLabel="E-mail"
