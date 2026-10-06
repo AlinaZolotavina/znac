@@ -3,9 +3,19 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Form from "../../../app/components/Form";
 import Input from "../../../app/components/Input";
+import AuthNavigation from "../../../app/components/AuthNavigation";
 import newPasswordIcon from "../assets/new-password-icon.svg";
 
-function ResetPassword({ onResetPassword, isSendingReq }) {
+function ResetPassword({
+  loggedIn,
+  onLogout,
+  onMenuClick,
+  isMenuOpen,
+  menuId,
+  onResetPassword,
+  isSendingReq,
+  onContactClick,
+}) {
   let { resetPasswordLink } = useParams();
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordError, setNewPasswordError] = useState("");
@@ -50,6 +60,14 @@ function ResetPassword({ onResetPassword, isSendingReq }) {
 
   return (
     <main className="forgot-password">
+      <AuthNavigation
+        loggedIn={loggedIn}
+        onLogout={onLogout}
+        onMenuClick={onMenuClick}
+        isMenuOpen={isMenuOpen}
+        menuId={menuId}
+        onContactClick={onContactClick}
+      />
       <div className="forgot-password__container">
         <img
           className="forgot-password__image"

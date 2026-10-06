@@ -1,17 +1,23 @@
-import Social from "./Social";
-import BlogForm from "./BlogForm";
-import BlogInput from "./BlogInput";
-import BlogTextArea from "./BlogTextArea";
+import Social from "../../features/blog/components/Social";
+import Form from "./Form";
+import Input from "./Input";
+import TextArea from "./TextArea";
 import { useState, useEffect, useRef } from "react";
-import BlogCloseButton from "./BlogCloseButton";
-import useInitialFocus from "../../../shared/hooks/useInitialFocus";
-import useFocusTrap from "../../../shared/hooks/useFocusTrap";
-import useReturnFocus from "../../../shared/hooks/useReturnFocus";
-import useCloseOnEsc from "../../../shared/hooks/useCloseOnEsc";
-import useLockBodyScroll from "../../../shared/hooks/useLockBodyScroll";
-import useOverlayClickClose from "../../../shared/hooks/useOverlayClickClose";
+import CloseButton from "./CloseButton";
+import useInitialFocus from "../../shared/hooks/useInitialFocus";
+import useFocusTrap from "../../shared/hooks/useFocusTrap";
+import useReturnFocus from "../../shared/hooks/useReturnFocus";
+import useCloseOnEsc from "../../shared/hooks/useCloseOnEsc";
+import useLockBodyScroll from "../../shared/hooks/useLockBodyScroll";
+import useOverlayClickClose from "../../shared/hooks/useOverlayClickClose";
 
-function GetInTouchPopup({ isOpen, isSendingReq, onClose, onSubmit }) {
+function GetInTouchPopup({
+  isOpen,
+  isSendingReq,
+  onClose,
+  onSubmit,
+  theme = "main",
+}) {
   const [visitorName, setVisitorName] = useState("");
   const [visitorNameError, setVisitorNameError] = useState("");
   function handleVisitorNameChange(e) {
@@ -108,6 +114,11 @@ function GetInTouchPopup({ isOpen, isSendingReq, onClose, onSubmit }) {
   }
 
   const popupRef = useRef(null);
+  const isBlogTheme = theme === "blog";
+  const dialogClassName = `get-in-touch get-in-touch_theme_${theme}`;
+  const closeButtonClassName = isBlogTheme
+    ? "blog-close-btn"
+    : "close-btn popup__close-btn";
 
   useReturnFocus(isOpen);
   useInitialFocus(isOpen, popupRef);
@@ -126,13 +137,13 @@ function GetInTouchPopup({ isOpen, isSendingReq, onClose, onSubmit }) {
     >
       <div
         ref={popupRef}
-        className="get-in-touch"
+        className={dialogClassName}
         role="dialog"
         aria-modal="true"
         aria-labelledby="get-in-touch-title"
         tabIndex={-1}
       >
-        <BlogForm
+        <Form
           formName="get-in-touch"
           formClassname="get-in-touch__form"
           titleClassname="get-in-touch__title"
@@ -144,7 +155,8 @@ function GetInTouchPopup({ isOpen, isSendingReq, onClose, onSubmit }) {
           isSendingReq={isSendingReq}
           onSubmit={handleSubmit}
         >
-          <BlogInput
+          <Input
+            labelClassname="blog-input"
             placeholder="Name"
             classname="blog-input__field blog-input__field_type_visitor-name"
             inputType="text"
@@ -155,7 +167,8 @@ function GetInTouchPopup({ isOpen, isSendingReq, onClose, onSubmit }) {
             inputName="get-in-touch name"
             maxLength={80}
           />
-          <BlogInput
+          <Input
+            labelClassname="blog-input"
             placeholder="Email"
             classname="blog-input__field blog-input___fieldtype_visitor-email"
             inputType="text"
@@ -166,8 +179,10 @@ function GetInTouchPopup({ isOpen, isSendingReq, onClose, onSubmit }) {
             inputName="get-in-touch email"
             maxLength={254}
           />
-          <BlogTextArea
+          <TextArea
+            labelClassname="blog-input"
             placeholder="Your message"
+            classname="blog-input__field blog-input__field_type_text-area"
             value={textarea}
             onChange={handleTextareaChange}
             isSendingReq={isSendingReq}
@@ -175,13 +190,13 @@ function GetInTouchPopup({ isOpen, isSendingReq, onClose, onSubmit }) {
             inputName="get-in-touch text"
             maxLength="3000"
           />
-        </BlogForm>
+        </Form>
         <div className="get-in-touch__icons">
           <div className="get-in-touch__icon" />
-          <Social classname="get-in-touch" />
+          {isBlogTheme && <Social classname="get-in-touch" />}
         </div>
-        <BlogCloseButton
-          classname="blog-close-btn"
+        <CloseButton
+          classname={closeButtonClassName}
           onClick={handleClose}
           ariaLabel="Close dialog"
         />

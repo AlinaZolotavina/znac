@@ -13,6 +13,7 @@ function Profile({
   onLogout,
   isMenuOpen,
   menuId,
+  onContactClick,
 }) {
   const currentUser = useContext(CurrentUserContext);
   useEffect(() => {
@@ -27,17 +28,16 @@ function Profile({
     <div className="profile">
       <Header className="header admin-header header_type_main-nav">
         <MainNav
-          activeSection="photos"
-          activeSubsection="profile"
           loggedIn={loggedIn}
           onLogout={onLogout}
           onMenuClick={onMenuClick}
           isMenuOpen={isMenuOpen}
           menuId={menuId}
+          onContactClick={onContactClick}
         />
       </Header>
       <main className="profile__container">
-        <h1 className="profile__title">Profile</h1>
+        <h1 className="profile__title">Profile & Settings</h1>
         <div className="profile__email">
           <Input
             inputLabel="E-mail"

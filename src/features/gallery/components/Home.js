@@ -13,6 +13,7 @@ const Home = forwardRef(function Home(
     onSubsectionClick,
     isMenuOpen,
     menuId,
+    onContactClick,
   },
   ref,
 ) {
@@ -28,6 +29,7 @@ const Home = forwardRef(function Home(
           onSubsectionClick={onSubsectionClick}
           isMenuOpen={isMenuOpen}
           menuId={menuId}
+          onContactClick={onContactClick}
         />
       </Header>
       <Promo />

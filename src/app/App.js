@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./queryClient";
@@ -16,20 +16,31 @@ import ForgotPassword from "../features/auth/components/ForgotPassword";
 import MainMenu from "./components/MainMenu.jsx";
 import Modal from "./components/Modal.js";
 import MainPage from "./components/MainPage.jsx";
+import GetInTouchPopup from "./components/GetInTouchPopup.js";
 
 import * as auth from "../shared/utils/auth.js";
 import {
+  CONTACT_MESSAGE_ERROR_MSG,
+  CONTACT_MESSAGE_SENT_MSG,
   DEFAULT_ERROR_MSG,
   RESET_PASSWORD_EMAIL_SENT_MSG,
 } from "../shared/utils/messages.js";
+import api from "../shared/utils/api.js";
 
 import useAuth from "../features/auth/hooks/useAuth.js";
 import useRequestState from "../shared/hooks/useRequestStatus.js";
 
 function App() {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { isLoading, startLoading, stopLoading } = useRequestState();
+  const {
+    isLoading: isContactSending,
+    startLoading: startContactSending,
+    stopLoading: stopContactSending,
+  } = useRequestState();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isGetInTouchPopupOpen, setIsGetInTouchPopupOpen] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [modalState, setModalState] = useState({
     isOpen: false,
@@ -64,13 +75,50 @@ function App() {
     setIsMenuOpen(false);
   }, []);
 
+  const openGetInTouchPopup = useCallback(() => {
+    setIsGetInTouchPopupOpen(true);
+  }, []);
+
+  const closeGetInTouchPopup = useCallback(() => {
+    setIsGetInTouchPopupOpen(false);
+  }, []);
+
+  const handleSendContactMessage = useCallback(
+    ({ name, email, message }) => {
+      startContactSending();
+
+      return api
+        .sendContactMessage({ name, email, message })
+        .then(() => {
+          openModal({
+            status: "success",
+            message: CONTACT_MESSAGE_SENT_MSG,
+          });
+
+          return true;
+        })
+        .catch((err) => {
+          openModal({
+            status: "error",
+            message: err.message || CONTACT_MESSAGE_ERROR_MSG,
+          });
+
+          return false;
+        })
+        .finally(() => {
+          stopContactSending();
+        });
+    },
+    [openModal, startContactSending, stopContactSending],
+  );
+
   // password reset
   function handleReceiveResetPasswordLink(email) {
     startLoading();
     auth
       .forgotPassword(email)
       .then(() => {
-        // тут надо открыть свой модал или удалить его, если используется универсальный
+        // С‚СѓС‚ РЅР°РґРѕ РѕС‚РєСЂС‹С‚СЊ СЃРІРѕР№ РјРѕРґР°Р» РёР»Рё СѓРґР°Р»РёС‚СЊ РµРіРѕ, РµСЃР»Рё РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СѓРЅРёРІРµСЂСЃР°Р»СЊРЅС‹Р№
         openModal({
           status: "success",
           type: "email",
@@ -119,6 +167,7 @@ function App() {
     startLoading,
     stopLoading,
   });
+  const getInTouchTheme = pathname.startsWith("/journal") ? "blog" : "main";
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -134,6 +183,7 @@ function App() {
                 openModal={openModal}
                 startLoading={startLoading}
                 stopLoading={stopLoading}
+                onContactClick={openGetInTouchPopup}
               />
             }
           />
@@ -154,6 +204,7 @@ function App() {
                 closeModal={closeModal}
                 onMenuClick={openMenu}
                 isMenuOpen={isMenuOpen}
+                onContactClick={openGetInTouchPopup}
               />
             }
           />
@@ -173,6 +224,7 @@ function App() {
                 onMenuClick={openMenu}
                 handleSignout={handleSignout}
                 isMenuOpen={isMenuOpen}
+                onContactClick={openGetInTouchPopup}
               />
             }
           />
@@ -189,7 +241,7 @@ function App() {
                 startLoading={startLoading}
                 stopLoading={stopLoading}
                 screenWidth={screenWidth}
-                setModalState={setModalState}
+                onContactClick={openGetInTouchPopup}
               />
             }
           />
@@ -197,21 +249,45 @@ function App() {
           <Route
             path="/signin"
             element={
-              <SignIn onSignin={handleSignin} isSendingReq={isLoading} />
+              <SignIn
+                loggedIn={loggedIn}
+                onLogout={handleSignout}
+                onMenuClick={openMenu}
+                isMenuOpen={isMenuOpen}
+                menuId="app-main-menu"
+                onSignin={handleSignin}
+                isSendingReq={isLoading}
+                onContactClick={openGetInTouchPopup}
+              />
             }
           />
 
           {/* New users registration is disabled*/}
           {/* <Route path="/signup" element={
-            <SignUp onSignup={handleSignup} isSendingReq={isLoading} />
+            <SignUp
+              loggedIn={loggedIn}
+              onLogout={handleSignout}
+              onMenuClick={openMenu}
+              isMenuOpen={isMenuOpen}
+              menuId="app-main-menu"
+              onSignup={handleSignup}
+              isSendingReq={isLoading}
+              onContactClick={openGetInTouchPopup}
+            />
           } /> */}
 
           <Route
             path="/signin/recovery"
             element={
               <ForgotPassword
+                loggedIn={loggedIn}
+                onLogout={handleSignout}
+                onMenuClick={openMenu}
+                isMenuOpen={isMenuOpen}
+                menuId="app-main-menu"
                 onReceiveEmail={handleReceiveResetPasswordLink}
                 isSendingReq={isLoading}
+                onContactClick={openGetInTouchPopup}
               />
             }
           />
@@ -220,13 +296,31 @@ function App() {
             path="/reset-password/:resetPasswordLink"
             element={
               <ResetPassword
+                loggedIn={loggedIn}
+                onLogout={handleSignout}
+                onMenuClick={openMenu}
+                isMenuOpen={isMenuOpen}
+                menuId="app-main-menu"
                 onResetPassword={handleResetPassword}
                 isSendingReq={isLoading}
+                onContactClick={openGetInTouchPopup}
               />
             }
           />
 
-          <Route path="/password-changed" element={<PasswordChanged />} />
+          <Route
+            path="/password-changed"
+            element={
+              <PasswordChanged
+                loggedIn={loggedIn}
+                onLogout={handleSignout}
+                onMenuClick={openMenu}
+                isMenuOpen={isMenuOpen}
+                menuId="app-main-menu"
+                onContactClick={openGetInTouchPopup}
+              />
+            }
+          />
         </Routes>
 
         <MainMenu
@@ -237,7 +331,7 @@ function App() {
             closeMenu();
             handleSignout();
           }}
-          theme="gallery"
+          theme="main"
           menuId="app-main-menu"
         />
 
@@ -247,6 +341,14 @@ function App() {
           type={modalState.type}
           onClose={closeModal}
           message={modalState.message}
+        />
+
+        <GetInTouchPopup
+          isOpen={isGetInTouchPopupOpen}
+          isSendingReq={isContactSending}
+          onClose={closeGetInTouchPopup}
+          onSubmit={handleSendContactMessage}
+          theme={getInTouchTheme}
         />
       </CurrentUserContext.Provider>
     </QueryClientProvider>

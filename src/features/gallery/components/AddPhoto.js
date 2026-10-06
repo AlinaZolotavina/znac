@@ -43,6 +43,7 @@ function AddPhoto({
   onLogout,
   isMenuOpen,
   menuId,
+  onContactClick,
 }) {
   const [photoLink, setPhotoLink] = useState("");
   const [photoLinkError, setPhotoLinkError] = useState("");
@@ -437,6 +438,7 @@ function AddPhoto({
             onMenuClick={onMenuClick}
             isMenuOpen={isMenuOpen}
             menuId={menuId}
+            onContactClick={onContactClick}
           />
         </Header>
         <main>

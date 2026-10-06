@@ -6,6 +6,11 @@
   margin: 0 0 30px;
 }
 
+.popup_type_delete-photo .popup__title,
+.popup_type_delete-post .popup__title {
+  color: #0f1111;
+}
+
 @media (max-width: 500px) {
   .popup__title {
     font-size: 16px;

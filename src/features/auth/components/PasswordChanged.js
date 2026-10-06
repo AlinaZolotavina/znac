@@ -1,9 +1,25 @@
 import { Link } from "react-router-dom";
+import AuthNavigation from "../../../app/components/AuthNavigation";
 import passwordChangedIcon from "../assets/password-changed-icon.svg";
 
-function PasswordChanged() {
+function PasswordChanged({
+  loggedIn,
+  onLogout,
+  onMenuClick,
+  isMenuOpen,
+  menuId,
+  onContactClick,
+}) {
   return (
     <main className="password-changed">
+      <AuthNavigation
+        loggedIn={loggedIn}
+        onLogout={onLogout}
+        onMenuClick={onMenuClick}
+        isMenuOpen={isMenuOpen}
+        menuId={menuId}
+        onContactClick={onContactClick}
+      />
       <div className="password-changed__container">
         <img
           className="password-changed__image"

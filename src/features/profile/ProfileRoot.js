@@ -31,6 +31,7 @@ function ProfileRoot({
   onMenuClick,
   handleSignout,
   isMenuOpen,
+  onContactClick,
 }) {
   const [isEditEmailModalOpen, setIsEditEmailModalOpen] = useState(false);
   const [isEditPasswordModalOpen, setIsEditPasswordModalOpen] = useState(false);
@@ -130,6 +131,7 @@ function ProfileRoot({
                 onLogout={handleSignout}
                 isMenuOpen={isMenuOpen}
                 menuId="app-main-menu"
+                onContactClick={onContactClick}
               />
             </ProtectedRoute>
           }
@@ -144,7 +146,12 @@ function ProfileRoot({
             >
               <ConfirmEmailUpdate
                 loggedIn={loggedIn}
+                onLogout={handleSignout}
+                onMenuClick={onMenuClick}
+                isMenuOpen={isMenuOpen}
+                menuId="app-main-menu"
                 onUpdateEmail={handleUpdateEmail}
+                onContactClick={onContactClick}
               />
             </ProtectedRoute>
           }

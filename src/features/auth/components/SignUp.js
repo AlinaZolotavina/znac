@@ -1,12 +1,22 @@
 import Form from "../../../app/components/Form";
 import Input from "../../../app/components/Input";
+import AuthNavigation from "../../../app/components/AuthNavigation";
 import ToggleVisibilityBtn from "../../../app/components/ToggleVisibilityBtn";
 
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 
-function SignUp({ onSignup, isSendingReq }) {
+function SignUp({
+  loggedIn,
+  onLogout,
+  onMenuClick,
+  isMenuOpen,
+  menuId,
+  onSignup,
+  isSendingReq,
+  onContactClick,
+}) {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -53,6 +63,14 @@ function SignUp({ onSignup, isSendingReq }) {
 
   return (
     <section className="sign-up">
+      <AuthNavigation
+        loggedIn={loggedIn}
+        onLogout={onLogout}
+        onMenuClick={onMenuClick}
+        isMenuOpen={isMenuOpen}
+        menuId={menuId}
+        onContactClick={onContactClick}
+      />
       <div className="sign-up__container">
         <Form
           formName="signup"

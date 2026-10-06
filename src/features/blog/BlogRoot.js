@@ -9,7 +9,6 @@ import CurrentPostPage from "./components/CurrentPostPage.js";
 import NotFound from "../../app/components/NotFound.js";
 
 import MainMenu from "../../app/components/MainMenu.jsx";
-import GetInTouchPopup from "./components/GetInTouchPopup.js";
 import NewProjectPopup from "./components/NewProjectPopup.js";
 import NewPostPopup from "./components/NewPostPopup.js";
 import EditPostPopup from "./components/EditPostPopup.js";
@@ -18,14 +17,9 @@ import DeletePostModal from "./components/DeletePostModal.js";
 import DeleteProjectModal from "./components/DeleteProjectModal.js";
 
 import api from "../../shared/utils/api.js";
-import {
-  CONTACT_MESSAGE_ERROR_MSG,
-  CONTACT_MESSAGE_SENT_MSG,
-} from "../../shared/utils/messages.js";
 
 import useProjects from "./hooks/useProjects.js";
 import usePosts from "./hooks/usePosts.js";
-import useRequestState from "../../shared/hooks/useRequestStatus.js";
 
 import getCurrentActivePage from "./utils/getCurrentActivePage.js";
 
@@ -38,12 +32,11 @@ function BlogRoot({
   startLoading,
   stopLoading,
   screenWidth,
-  setModalState,
+  onContactClick,
 }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [isBlogMenuOpen, setIsBlogMenuOpen] = useState(false);
-  const [isGetInTouchPopupOpen, setIsGetInTouchPopupOpen] = useState(false);
   const [isPostPopupOpen, setIsPostPopupOpen] = useState(false);
   const [isEditPostPopupOpen, setIsEditPostPopupOpen] = useState(false);
   const [isEditProjectPopupOpen, setIsEditProjectPopupOpen] = useState(false);
@@ -95,14 +88,6 @@ function BlogRoot({
   function handleNewProjectPopupOpen() {
     setIsNewProjectPopupOpen(true);
   }
-
-  function handleBlogContactClick() {
-    setIsGetInTouchPopupOpen(true);
-  }
-
-  const closeGetInTouchPopup = useCallback(() => {
-    setIsGetInTouchPopupOpen(false);
-  }, []);
 
   function handleBlogMenuClick() {
     setIsBlogMenuOpen(!isBlogMenuOpen);
@@ -225,12 +210,6 @@ function BlogRoot({
     redirectAfterDelete,
   });
 
-  const {
-    isLoading: isContactSending,
-    startLoading: startContactSending,
-    stopLoading: stopContactSending,
-  } = useRequestState();
-
   const previewProjectsQuantity = screenWidth > 1200 ? 3 : 2;
 
   useEffect(() => {
@@ -238,35 +217,6 @@ function BlogRoot({
     calculateProjectsCount();
   }, [calculatePostsCount, calculateProjectsCount]);
 
-  const handleSendContactMessage = ({ name, email, message }) => {
-    startContactSending();
-
-    return api
-      .sendContactMessage({ name, email, message })
-      .then(() => {
-        setModalState({
-          isOpen: true,
-          status: "success",
-          type: "default",
-          message: CONTACT_MESSAGE_SENT_MSG,
-        });
-
-        return true;
-      })
-      .catch((err) => {
-        setModalState({
-          isOpen: true,
-          status: "error",
-          type: "default",
-          message: err.message || CONTACT_MESSAGE_ERROR_MSG,
-        });
-
-        return false;
-      })
-      .finally(() => {
-        stopContactSending();
-      });
-  };
   return (
     <>
       <Routes>
@@ -285,7 +235,7 @@ function BlogRoot({
               isPostsLoading={isPostsLoading}
               isProjectsLoading={isProjectsLoading}
               onBlogMenuClick={handleBlogMenuClick}
-              onContactClick={handleBlogContactClick}
+              onContactClick={onContactClick}
               onNewPostClick={handleNewPostPopupOpen}
               onNewProjectClick={handleNewProjectPopupOpen}
               onViewAllPostsClick={viewAllPostsClick}
@@ -317,7 +267,7 @@ function BlogRoot({
               onEditPostButtonClick={handleEditPostPopupOpen}
               onDeletePostButtonClick={handleDeletePostModalOpen}
               onBlogMenuClick={handleBlogMenuClick}
-              onContactClick={handleBlogContactClick}
+              onContactClick={onContactClick}
               onPostsSearch={handlePostsSearch}
               onPostClick={handlePostClick}
               hasMorePosts={hasMorePosts}
@@ -343,7 +293,7 @@ function BlogRoot({
               currentUser={currentUser}
               onLogout={handleSignout}
               onBlogMenuClick={handleBlogMenuClick}
-              onContactClick={handleBlogContactClick}
+              onContactClick={onContactClick}
               onBackButtonClick={moveToPreviousPage}
               onEditPostButtonClick={handleEditPostPopupOpen}
               onDeletePostButtonClick={handleDeletePostModalOpen}
@@ -368,7 +318,7 @@ function BlogRoot({
               hasMoreProjects={hasMoreProjects}
               onNewProjectClick={handleNewProjectPopupOpen}
               onBlogMenuClick={handleBlogMenuClick}
-              onContactClick={handleBlogContactClick}
+              onContactClick={onContactClick}
               projectsQuantity={currentProjectsNumber}
               onShowMoreProjects={showMoreProjects}
               onEditProjectButtonClick={handleEditProjectPopupOpen}
@@ -391,7 +341,7 @@ function BlogRoot({
               projectsToRender={projectsToRender}
               totalProjects={totalProjects}
               onBlogMenuClick={handleBlogMenuClick}
-              onContactClick={handleBlogContactClick}
+              onContactClick={onContactClick}
               onAddProjectClick={handleNewProjectPopupOpen}
               onViewAllProjectsClick={viewAllProjectsClick}
               onEditProjectButtonClick={handleEditProjectPopupOpen}
@@ -416,13 +366,6 @@ function BlogRoot({
         theme="blog"
         navigationLabel="Blog navigation"
         menuId="blog-main-menu"
-      />
-
-      <GetInTouchPopup
-        isOpen={isGetInTouchPopupOpen}
-        isSendingReq={isContactSending}
-        onClose={closeGetInTouchPopup}
-        onSubmit={handleSendContactMessage}
       />
 
       <NewProjectPopup

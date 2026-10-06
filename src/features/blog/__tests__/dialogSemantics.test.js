@@ -9,7 +9,7 @@ import NewProjectPopup from "../components/NewProjectPopup";
 import EditProjectPopup from "../components/EditProjectPopup";
 import DeleteProjectModal from "../components/DeleteProjectModal";
 import ProjectDetailsPopup from "../components/ProjectDetailsPopup";
-import GetInTouchPopup from "../components/GetInTouchPopup";
+import GetInTouchPopup from "../../../app/components/GetInTouchPopup";
 
 function expectLabelledDialog(name) {
   const dialog = screen.getByRole("dialog", { name });

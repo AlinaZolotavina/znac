@@ -5,6 +5,7 @@
   display: flex;
   align-items: stretch;
   justify-content: flex-end;
+  overflow: hidden;
   background: rgba(3, 6, 12, 0.78);
 }
 
@@ -15,6 +16,7 @@
   padding: 44px clamp(28px, 7vw, 56px);
   box-sizing: border-box;
   overflow-y: auto;
+  overflow-x: hidden;
   background: #0b1018;
   color: #e8e8e8;
 }
@@ -82,10 +84,13 @@
 
 .main-menu__link {
   display: inline-flex;
+  max-width: 100%;
   padding: 4px 8px;
+  box-sizing: border-box;
   color: #e8e8e8;
   font-size: 24px;
   font-weight: 500;
+  overflow-wrap: anywhere;
   text-decoration: none;
   cursor: pointer;
   transition: opacity 0.2s ease;
@@ -97,17 +102,17 @@
 }
 
 .main-menu__link_active {
-  background-color: #f4ffff;
+  background-color: rgba(244, 255, 255, 0.6);
   color: #0f1111;
   border-radius: 2px;
 }
 
 .main-menu_theme_main .main-menu__link_active {
-  background-color: #c5e7bc;
+  background-color: rgba(197, 231, 188, 0.6);
 }
 
 .main-menu_theme_blog .main-menu__link_active {
-  background-color: #b8a1e5;
+  background-color: rgba(184, 161, 229, 0.6);
 }
 
 .main-menu__subsections {
@@ -143,8 +148,27 @@
   opacity: 0.7;
 }
 
-.main-menu__logout {
+.main-menu__auth-actions {
+  display: flex;
+  align-items: center;
+  gap: 40px;
   margin-top: 50px;
+}
+
+.logout-btn.main-menu__logout {
+  margin-top: 0;
+  width: max-content;
+  min-width: max-content;
+  gap: 8px;
+  padding: 0 10px;
+  white-space: nowrap;
+}
+
+.logout-btn.main-menu__logout::after {
+  content: "Log out";
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
 }
 
 @media screen and (min-width: 901px) {
@@ -171,9 +195,7 @@
     padding-left: 0;
   }
 
-  .main-menu__logout {
-    display: block;
-    margin-right: auto;
-    margin-left: auto;
+  .main-menu__auth-actions {
+    justify-content: center;
   }
 }

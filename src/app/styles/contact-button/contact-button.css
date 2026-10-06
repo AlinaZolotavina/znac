@@ -1,0 +1,25 @@
+.contact-button {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background-color: #f4ffff;
+  color: #0f1111;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.contact-button:hover {
+  opacity: 0.7;
+}
+
+.contact-button_theme_blog {
+  background-color: var(--blog-accent-contrast);
+  color: #f4ffff;
+}

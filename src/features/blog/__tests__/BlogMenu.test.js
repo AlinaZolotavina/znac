@@ -102,6 +102,20 @@ describe("blog MainMenu", () => {
     expect(onLogout).toHaveBeenCalledTimes(1);
   });
 
+  test("shows profile section only for logged in users", () => {
+    renderBlogMenu();
+
+    expect(
+      screen.queryByRole("link", { name: "Profile & Settings" }),
+    ).not.toBeInTheDocument();
+
+    renderBlogMenu({ loggedIn: true });
+
+    expect(
+      screen.getByRole("link", { name: "Profile & Settings" }),
+    ).toBeInTheDocument();
+  });
+
   test("locks page scroll while open", () => {
     renderBlogMenu();
 
@@ -138,5 +152,16 @@ describe("blog MainMenu", () => {
     expect(screen.getByRole("link", { name: "Posts" })).toHaveClass(
       "main-menu__subsection-link_active",
     );
+  });
+
+  test("marks profile section as active on the profile page", () => {
+    renderBlogMenu({ loggedIn: true }, "/profile");
+
+    const profileLink = screen.getByRole("link", {
+      name: "Profile & Settings",
+    });
+
+    expect(profileLink).toHaveClass("main-menu__link_active");
+    expect(profileLink).toHaveAttribute("aria-current", "page");
   });
 });

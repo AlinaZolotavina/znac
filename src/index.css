@@ -20,6 +20,8 @@
 @import url(./app/styles/scroll-hint-mouse/scroll-hint-mouse.css);
 @import url(./app/styles/main-nav/main-nav.css);
 @import url(./app/styles/main-menu/main-menu.css);
+@import url(./app/styles/contact-button/contact-button.css);
+@import url(./app/styles/contact-button/__icon/contact-button__icon.css);
 @import url(./features/gallery/styles/promo/promo.css);
 @import url(./features/gallery/styles/promo/__text/promo__text.css);
 @import url(./features/gallery/styles/promo/__title/promo__title.css);
@@ -165,6 +167,7 @@
 
 /* logout button */
 @import url(./app/styles/logout-btn/logout-btn.css);
+@import url(./app/styles/profile-btn/profile-btn.css);
 
 /* add photo */
 @import url(./features/gallery/styles/add-photo/add-photo.css);
@@ -221,9 +224,6 @@
 
 @import url(./features/blog/styles/background/_color/background_color_blue.css);
 @import url(./features/blog/styles/blog-header/blog-header.css);
-@import url(./features/blog/styles/contact-button/contact-button.css);
-@import url(./features/blog/styles/contact-button/__icon/contact-button__icon.css);
-@import url(./features/blog/styles/contact-button/__text/contact-button__text.css);
 @import url(./features/blog/styles/back-button/back-button.css);
 @import url(./features/blog/styles/back-button/__icon/back-button__icon.css);
 @import url(./features/blog/styles/blog-promo/blog-promo.css);
