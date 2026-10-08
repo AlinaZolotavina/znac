@@ -18,6 +18,7 @@ function Input({
   error,
   inputName,
   maxLength,
+  hideError = false,
 }) {
   const fieldId =
     inputId ||
@@ -44,9 +45,11 @@ function Input({
         aria-invalid={hasError ? "true" : undefined}
         aria-describedby={hasError ? errorId : undefined}
       />
-      <span className="input__error" id={errorId}>
-        {error}
-      </span>
+      {!hideError && (
+        <span className="input__error" id={errorId}>
+          {error}
+        </span>
+      )}
     </label>
   );
 }

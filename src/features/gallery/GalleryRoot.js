@@ -13,6 +13,8 @@ import DeletePhotoModal from "../../features/gallery/components/DeletePhotoModal
 
 import usePhotos from "./hooks/usePhotos";
 import { useHashtags } from "./queries/hashtagQueries";
+import { useSiteSettingsQuery } from "../../shared/queries/siteSettingsQueries";
+import galleryHeroFallback from "./assets/gallery-hero.webp";
 
 import scrollToRef from "./utils/scrollToRef";
 
@@ -35,7 +37,10 @@ function GalleryRoot({
   const navigate = useNavigate();
 
   const { data: hashtagsResponse } = useHashtags();
+  const { data: siteSettings } = useSiteSettingsQuery();
   const lastHashtags = hashtagsResponse?.data ?? [];
+  const galleryHeroUrl =
+    siteSettings?.heroes.gallery?.url || galleryHeroFallback;
 
   const homeRef = useRef(null);
   const mainRef = useRef(null);
@@ -180,6 +185,7 @@ function GalleryRoot({
                 isMenuOpen={isMenuOpen}
                 menuId="app-main-menu"
                 onContactClick={onContactClick}
+                heroUrl={galleryHeroUrl}
               />
               <Main
                 photos={photosToRender}

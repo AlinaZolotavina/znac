@@ -17,7 +17,8 @@ import ScrollHintMouse from "./ScrollHintMouse";
 import SkipLink from "./SkipLink";
 import NotFoundContent from "./NotFoundContent";
 import isValidUrl from "../../shared/utils/isValidUrl";
-import homeBackground from "../assets/main-hero.webp";
+import { useSiteSettingsQuery } from "../../shared/queries/siteSettingsQueries";
+import mainHeroFallback from "../assets/main-hero.webp";
 import errorImage from "../assets/image-error.svg";
 import {
   DELETE_PHOTO_ERROR_MSG,
@@ -62,6 +63,9 @@ function MainPage({
   const [query, setQuery] = useState("");
   const [activePostHashtag, setActivePostHashtag] = useState("All");
   const [redirectAfterDelete, setRedirectAfterDelete] = useState(false);
+  const { data: siteSettings } = useSiteSettingsQuery();
+  const heroUrl = siteSettings?.heroes.main?.url || mainHeroFallback;
+  const accentColor = siteSettings?.colors?.accent?.value || "#c5e7bc";
 
   const closePostPopups = useCallback(() => {
     setIsEditPostPopupOpen(false);
@@ -220,11 +224,16 @@ function MainPage({
   }
 
   return (
-    <div className="main-page">
+    <div
+      className="main-page"
+      style={{
+        "--main-accent-color": accentColor,
+      }}
+    >
       <SkipLink targetId="main-content" />
       <section
         className="main-page__hero"
-        style={{ backgroundImage: `url(${homeBackground})` }}
+        style={{ backgroundImage: `url(${heroUrl})` }}
       >
         <header className="main-page__header">
           <MainNav

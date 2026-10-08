@@ -11,12 +11,14 @@ import BlogRoot from "../features/blog/BlogRoot";
 import ResetPassword from "../features/auth/components/ResetPassword";
 import PasswordChanged from "../features/auth/components/PasswordChanged";
 import SignIn from "../features/auth/components/SignIn";
+import SignupRoute from "../features/auth/components/SignupRoute";
 import ForgotPassword from "../features/auth/components/ForgotPassword";
 
 import MainMenu from "./components/MainMenu.jsx";
 import Modal from "./components/Modal.js";
 import MainPage from "./components/MainPage.jsx";
 import GetInTouchPopup from "./components/GetInTouchPopup.js";
+import NotFound from "./components/NotFound.js";
 
 import * as auth from "../shared/utils/auth.js";
 import {
@@ -118,7 +120,6 @@ function App() {
     auth
       .forgotPassword(email)
       .then(() => {
-        // С‚СѓС‚ РЅР°РґРѕ РѕС‚РєСЂС‹С‚СЊ СЃРІРѕР№ РјРѕРґР°Р» РёР»Рё СѓРґР°Р»РёС‚СЊ РµРіРѕ, РµСЃР»Рё РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СѓРЅРёРІРµСЂСЃР°Р»СЊРЅС‹Р№
         openModal({
           status: "success",
           type: "email",
@@ -160,6 +161,7 @@ function App() {
     loggedIn,
     isAuthInitialized,
     handleSignin,
+    handleSignup,
     handleSignout,
     setCurrentUser,
   } = useAuth({
@@ -262,19 +264,21 @@ function App() {
             }
           />
 
-          {/* New users registration is disabled*/}
-          {/* <Route path="/signup" element={
-            <SignUp
-              loggedIn={loggedIn}
-              onLogout={handleSignout}
-              onMenuClick={openMenu}
-              isMenuOpen={isMenuOpen}
-              menuId="app-main-menu"
-              onSignup={handleSignup}
-              isSendingReq={isLoading}
-              onContactClick={openGetInTouchPopup}
-            />
-          } /> */}
+          <Route
+            path="/signup"
+            element={
+              <SignupRoute
+                loggedIn={loggedIn}
+                onLogout={handleSignout}
+                onMenuClick={openMenu}
+                isMenuOpen={isMenuOpen}
+                menuId="app-main-menu"
+                onSignup={handleSignup}
+                isSendingReq={isLoading}
+                onContactClick={openGetInTouchPopup}
+              />
+            }
+          />
 
           <Route
             path="/signin/recovery"
@@ -321,6 +325,8 @@ function App() {
               />
             }
           />
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
 
         <MainMenu

@@ -285,6 +285,43 @@ class Api {
     });
   }
 
+  getSiteSettings() {
+    return this._request("/settings", {
+      method: "GET",
+    });
+  }
+
+  updateHeroImage(slot, formData) {
+    return this._request(`/settings/heroes/${slot}`, {
+      method: "PATCH",
+      body: formData,
+    });
+  }
+
+  updateSignupEnabled(enabled) {
+    return this._request("/settings/auth/signup", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        enabled,
+      }),
+    });
+  }
+
+  updateAccentColor(color) {
+    return this._request("/settings/colors/accent", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        color,
+      }),
+    });
+  }
+
   sendContactMessage({ name, email, message }) {
     return this._request("/contact", {
       method: "POST",

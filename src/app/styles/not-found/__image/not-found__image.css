@@ -1,18 +1,18 @@
 .not-found__image {
-    width: 350px;
-    margin: 0 0 50px;
+    width: 220px;
+    margin: 0 0 36px;
 }
 
 @media screen and (max-width: 700px) {
     .not-found__image {
-        width: 200px;
-        margin: 0 0 30px;
+        width: 160px;
+        margin: 0 0 28px;
     }
 }
 
 @media screen and (max-width: 400px) {
     .not-found__image {
-        width: 120px;
+        width: 110px;
         margin: 0 0 20px;
     }
 }

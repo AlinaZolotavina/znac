@@ -1,7 +1,7 @@
 import Form from "../../../app/components/Form";
 import Input from "../../../app/components/Input";
 import AuthNavigation from "../../../app/components/AuthNavigation";
-import ToggleVisibilityBtn from "../../../app/components/ToggleVisibilityBtn";
+import ToggleVisibilityBtn from "./ToggleVisibilityBtn";
 
 import { Link } from "react-router-dom";
 import { useState } from "react";

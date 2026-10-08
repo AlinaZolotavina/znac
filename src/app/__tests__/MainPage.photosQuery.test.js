@@ -68,6 +68,19 @@ describe("main page photos query", () => {
       total: photos.length,
       pages: 2,
     });
+    api.getSiteSettings.mockResolvedValue({
+      heroes: {
+        main: {
+          url: "https://api.test/uploads/heroes/main-hero.jpg",
+          filename: "main-hero.jpg",
+          updatedAt: "2026-10-07T00:00:00.000Z",
+        },
+        gallery: null,
+      },
+      auth: {
+        signupEnabled: false,
+      },
+    });
   });
 
   test("uses the shared photos query cache for latest photos", async () => {
@@ -82,5 +95,15 @@ describe("main page photos query", () => {
 
     expect(await screen.findByText("#tag-1")).toBeInTheDocument();
     expect(api.getPhotos).toHaveBeenCalledTimes(1);
+  });
+
+  test("uses site settings main hero image", async () => {
+    renderMainPage();
+
+    await waitFor(() =>
+      expect(
+        document.querySelector(".main-page__hero").style.backgroundImage,
+      ).toContain("https://api.test/uploads/heroes/main-hero.jpg"),
+    );
   });
 });

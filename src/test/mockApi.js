@@ -17,5 +17,9 @@ export const mockApi = {
   editProject: jest.fn(),
   deleteProject: jest.fn(),
   getProjectHashtags: jest.fn(),
+  getSiteSettings: jest.fn(),
+  updateHeroImage: jest.fn(),
+  updateSignupEnabled: jest.fn(),
+  updateAccentColor: jest.fn(),
   sendContactMessage: jest.fn(),
 };

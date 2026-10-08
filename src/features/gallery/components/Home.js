@@ -14,11 +14,19 @@ const Home = forwardRef(function Home(
     isMenuOpen,
     menuId,
     onContactClick,
+    heroUrl,
   },
   ref,
 ) {
   return (
-    <section ref={ref} className="home section" id="home">
+    <section
+      ref={ref}
+      className="home section"
+      id="home"
+      style={{
+        backgroundImage: `url(${heroUrl})`,
+      }}
+    >
       <Header className="header header_type_main-nav">
         <MainNav
           activeSection="photos"
