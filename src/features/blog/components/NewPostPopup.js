@@ -29,6 +29,9 @@ function getVisibleCount(width, containerWidth) {
   return 6;
 }
 
+const POST_TITLE_MAX_LENGTH = 70;
+const POST_TEXT_MAX_LENGTH = 6000;
+
 function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
   const [themeCheckValue, setThemeCheckValue] = useState("");
   const [themeError, setThemeError] = useState("");
@@ -177,11 +180,15 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
   const [title, setTitle] = useState("");
   const [titleError, setTitleError] = useState("");
   function handleTitleChange(e) {
-    const regex = /^[\p{L}0-9 _()\-:!?]*$/u;
+    const regex = /^[\p{L}0-9 _()\-:!?^&#]*$/u;
     if (e.target.value.length === 0) {
       setTitleError("Title is required");
+    } else if (e.target.value.length > POST_TITLE_MAX_LENGTH) {
+      setTitleError(
+        `Title must be ${POST_TITLE_MAX_LENGTH} characters or fewer`,
+      );
     } else if (!regex.test(e.target.value)) {
-      setTitleError("Only letters, numbers, spaces and _()-:!? are allowed");
+      setTitleError("Only letters, numbers, spaces and _()-:!?^&# are allowed");
     } else {
       setTitleError("");
     }
@@ -284,6 +291,10 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
   function handleTextareaChange(e) {
     if (e.target.value.length === 0) {
       setTextareaError("Please enter your message");
+    } else if (e.target.value.length > POST_TEXT_MAX_LENGTH) {
+      setTextareaError(
+        `Text must be ${POST_TEXT_MAX_LENGTH} characters or fewer`,
+      );
     } else {
       setTextareaError("");
     }
