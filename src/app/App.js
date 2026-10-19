@@ -142,12 +142,14 @@ function App() {
     resetPasswordLink,
   ) {
     startLoading();
-    auth
+    return auth
       .resetPassword(newPassword, confirmPassword, resetPasswordLink)
       .then(() => {
+        clearSession();
         navigate("/password-changed");
       })
       .catch((err) => {
+        if (err.code === "RESET_LINK_INVALID") throw err;
         openModal({
           status: "error",
           message: err.message || DEFAULT_ERROR_MSG,
@@ -164,6 +166,7 @@ function App() {
     handleSignup,
     handleSignout,
     setCurrentUser,
+    clearSession,
   } = useAuth({
     openModal,
     startLoading,

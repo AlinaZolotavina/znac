@@ -45,4 +45,23 @@ describe("createRequest", () => {
       type,
     });
   });
+
+  test("preserves reset link error codes for the recovery UI", async () => {
+    fetch.mockResolvedValue({
+      ok: false,
+      status: 401,
+      json: jest
+        .fn()
+        .mockResolvedValue({
+          code: "RESET_LINK_INVALID",
+          message: "Link expired",
+        }),
+    });
+    await expect(
+      createRequest("https://api.test")("/reset-password/used"),
+    ).rejects.toMatchObject({
+      status: 401,
+      code: "RESET_LINK_INVALID",
+    });
+  });
 });

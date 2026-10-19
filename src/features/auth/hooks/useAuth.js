@@ -15,6 +15,10 @@ export default function useAuth({ openModal, startLoading, stopLoading }) {
   const [currentUser, setCurrentUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
   const [isAuthInitialized, setIsAuthInitialized] = useState(false);
+  const clearSession = () => {
+    setLoggedIn(false);
+    setCurrentUser({});
+  };
 
   useEffect(() => {
     auth
@@ -111,5 +115,6 @@ export default function useAuth({ openModal, startLoading, stopLoading }) {
     handleSignup,
     handleSignout,
     setCurrentUser,
+    clearSession,
   };
 }

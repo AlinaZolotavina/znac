@@ -66,3 +66,11 @@ export const resetPassword = (
     body: JSON.stringify({ newPassword, confirmPassword }),
   });
 };
+
+export const validateResetPasswordLink = (resetPasswordLink, signal) => {
+  return request(`/reset-password/${encodeURIComponent(resetPasswordLink)}`, {
+    method: "GET",
+    cache: "no-store",
+    signal,
+  });
+};
