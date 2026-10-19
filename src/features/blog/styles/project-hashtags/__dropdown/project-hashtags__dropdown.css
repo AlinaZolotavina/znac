@@ -16,7 +16,10 @@
 
 @media (max-width: 650px) {
   .project-hashtags__dropdown {
-    right: auto;
-    left: 0;
+    right: 0;
+    left: auto;
+    min-width: min(180px, 100%);
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }

@@ -7,6 +7,7 @@ import BlogUploadFileInfo from "./BlogUploadFileInfo.js";
 import BlogTextArea from "./BlogTextArea.js";
 import iconButtons from "../utils/iconButtons.js";
 import hashtagsToInputValue from "../utils/hashtagsToInputValue.js";
+import isValidUrl from "../../../shared/utils/isValidUrl";
 import useInitialFocus from "../../../shared/hooks/useInitialFocus.js";
 import useFocusTrap from "../../../shared/hooks/useFocusTrap.js";
 import useReturnFocus from "../../../shared/hooks/useReturnFocus.js";
@@ -16,8 +17,8 @@ import useOverlayClickClose from "../../../shared/hooks/useOverlayClickClose.js"
 
 function getVisibleCount(width, containerWidth) {
   if (containerWidth) {
-    const iconWidth = width <= 1280 ? 75 : 85;
-    const gap = 10;
+    const iconWidth = 64;
+    const gap = 8;
 
     return Math.min(
       Math.max(Math.floor((containerWidth + gap) / (iconWidth + gap)), 1),
@@ -76,6 +77,11 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
       setTitle(post.title);
       setHashtags(hashtagsToInputValue(post.hashtags));
       setTextarea(post.text);
+      setExternalLink(post.externalLink || "");
+      setExternalLinkButtonText(post.externalLinkButtonText || "");
+      setExternalLinkError("");
+      setExternalLinkButtonTextError("");
+      setIsEdited(false);
       setIsPhotoDeleted(false);
     }
   }, [post, isOpen]);
@@ -343,7 +349,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
   const [textareaError, setTextareaError] = useState("");
   function handleTextareaChange(e) {
     if (e.target.value.length === 0) {
-      setTextareaError("Please enter your message");
+      setTextareaError("Please enter post text");
     } else if (e.target.value.length > POST_TEXT_MAX_LENGTH) {
       setTextareaError(
         `Text must be ${POST_TEXT_MAX_LENGTH} characters or fewer`,
@@ -352,6 +358,32 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
       setTextareaError("");
     }
     setTextarea(e.target.value);
+    setIsEdited(true);
+  }
+
+  const [externalLink, setExternalLink] = useState("");
+  const [externalLinkError, setExternalLinkError] = useState("");
+  const [externalLinkButtonText, setExternalLinkButtonText] = useState("");
+  const [externalLinkButtonTextError, setExternalLinkButtonTextError] = useState("");
+
+  function handleExternalLinkChange(e) {
+    const value = e.target.value.trim();
+    setExternalLink(e.target.value);
+    setExternalLinkError(
+      value && (!/^https?:\/\//i.test(value) || !isValidUrl(value))
+        ? "Please enter a valid URL"
+        : "",
+    );
+    setIsEdited(true);
+  }
+
+  function handleExternalLinkButtonTextChange(e) {
+    setExternalLinkButtonText(e.target.value);
+    setExternalLinkButtonTextError(
+      e.target.value.trim().length > 40
+        ? "Button text must be 40 characters or fewer"
+        : "",
+    );
     setIsEdited(true);
   }
 
@@ -368,6 +400,8 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
       !titleError &&
       !hashtagsError &&
       !textareaError &&
+      !externalLinkError &&
+      !externalLinkButtonTextError &&
       isEdited
     ) {
       setIsFormValid(true);
@@ -385,11 +419,14 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
     titleError,
     hashtagsError,
     textareaError,
+    externalLinkError,
+    externalLinkButtonTextError,
     isEdited,
   ]);
 
   function handleSubmit(e) {
     e.preventDefault();
+    if (!isFormValid || isSendingReq) return;
     onEditPost(post._id, {
       theme: themeCheckValue,
       icon: iconCheckValue,
@@ -398,6 +435,10 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
       removePhoto: isPhotoDeleted,
       hashtags: hashtags,
       text: textarea,
+      externalLink: externalLink.trim(),
+      externalLinkButtonText: externalLink.trim()
+        ? externalLinkButtonText.trim()
+        : "",
     });
     clearInputs();
   }
@@ -435,6 +476,10 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
     setHashtagsError("");
     setTextarea("");
     setTextareaError("");
+    setExternalLink("");
+    setExternalLinkError("");
+    setExternalLinkButtonText("");
+    setExternalLinkButtonTextError("");
     setIsFormValid(false);
     setIsEdited(false);
   }
@@ -443,7 +488,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
 
   return (
     <div
-      className="popup popup_type_get-in-touch popup_is-opened"
+      className="popup popup_type_get-in-touch popup_type_post popup_is-opened"
       onMouseDown={handleOverlayClickClose}
     >
       <div
@@ -579,6 +624,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
           <div className="new-post__form-section">
             <BlogInput
               placeholder="Title"
+              label="Title"
               classname="blog-input__field blog-input__field_type_project-title"
               inputType="text"
               inputValue={title}
@@ -588,6 +634,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
             />
             {hasPhoto ? (
               <div className="new-post__upload-container">
+                <span className="blog-input__label new-post__upload-label">Photo (optional)</span>
                 <div className="visually-hidden" role="status">
                   {uploadStatusMessage}
                 </div>
@@ -617,6 +664,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
               </div>
             ) : (
               <div className="new-post__upload-container">
+                <span className="blog-input__label new-post__upload-label">Photo (optional)</span>
                 <div className="visually-hidden" role="status">
                   {uploadStatusMessage}
                 </div>
@@ -656,6 +704,7 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
 
           <BlogInput
             placeholder="Hashtags separated by spaces"
+            label="Hashtags"
             classname="blog-input__field blog-input__field_type_hashtag"
             inputType="text"
             inputValue={hashtags}
@@ -666,11 +715,40 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
 
           <BlogTextArea
             placeholder="Text"
+            label="Text"
             value={textarea}
             onChange={handleTextareaChange}
             isSendingReq={isSendingReq}
             error={textareaError}
           />
+          <div className="new-post__external-link">
+            <BlogInput
+              inputId="edit-post-external-link"
+              placeholder="Link to resource"
+              label="Link to resource (optional)"
+              classname="blog-input__field"
+              inputType="url"
+              inputValue={externalLink}
+              onChange={handleExternalLinkChange}
+              isSendingReq={isSendingReq}
+              error={externalLinkError}
+              inputName="externalLink"
+              required={false}
+            />
+            <BlogInput
+              inputId="edit-post-external-link-button-text"
+              placeholder="Button text"
+              label="Button text (optional)"
+              classname="blog-input__field"
+              inputType="text"
+              inputValue={externalLinkButtonText}
+              onChange={handleExternalLinkButtonTextChange}
+              isSendingReq={isSendingReq}
+              error={externalLinkButtonTextError}
+              inputName="externalLinkButtonText"
+              required={false}
+            />
+          </div>
         </BlogForm>
         <BlogCloseButton
           classname="blog-close-btn blog-close-btn_location_new-post-popup"

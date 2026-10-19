@@ -32,6 +32,8 @@ export default function postUploadActions({
       title: props.title,
       hashtags: props.hashtags,
       text: props.text,
+      externalLink: props.externalLink,
+      externalLinkButtonText: props.externalLinkButtonText,
       ...photoData,
     };
 

@@ -1,0 +1,32 @@
+.post__external-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  max-width: 100%;
+  margin-top: 14px;
+  padding: 7px 16px;
+  border: 1px solid var(--blog-accent-contrast);
+  border-radius: 5px;
+  color: #fff;
+  background-color: var(--blog-accent-contrast);
+  font-size: 13px;
+  line-height: 18px;
+  text-align: center;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: opacity 0.2s ease;
+}
+
+.post__external-link:hover {
+  opacity: 0.7;
+}
+
+.post__external-link:focus-visible {
+  outline: 2px solid var(--blog-accent-contrast);
+  outline-offset: 3px;
+}
+
+.post_location_single-post > .post__external-link {
+  margin: 10px 0 20px;
+}

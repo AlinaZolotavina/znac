@@ -16,6 +16,8 @@ function BlogInput({
   error,
   inputName,
   maxLength,
+  required = true,
+  label,
 }) {
   const fieldId = inputId || normalizeId(inputName) || normalizeId(placeholder);
   const errorId = fieldId ? `${fieldId}-error` : undefined;
@@ -23,14 +25,16 @@ function BlogInput({
 
   return (
     <label className="blog-input">
+      {label && <span className="blog-input__label">{label}</span>}
       <input
         id={fieldId}
         className={classname}
         placeholder={placeholder}
+        aria-label={label || placeholder}
         type={inputType}
         value={inputValue}
         onChange={onChange}
-        required
+        required={required}
         disabled={isSendingReq}
         name={inputName}
         maxLength={maxLength}

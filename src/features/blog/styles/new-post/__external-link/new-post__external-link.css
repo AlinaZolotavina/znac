@@ -1,0 +1,22 @@
+.new-post__external-link {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0 10px;
+  min-width: 0;
+  width: 100%;
+}
+
+.new-post .new-post__external-link .blog-input__error {
+  height: 26px;
+}
+
+@media (max-width: 499px) {
+  .new-post__external-link {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .new-post .new-post__external-link .blog-input__error {
+    height: 13px;
+  }
+}

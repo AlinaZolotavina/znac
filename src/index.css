@@ -259,6 +259,7 @@
 @import url(./features/blog/styles/latest-posts/__menu/latest-posts__menu.css);
 @import url(./features/blog/styles/latest-posts/__container/latest-posts__container.css);
 @import url(./features/blog/styles/post/post.css);
+@import url(./features/blog/styles/post/__external-link/post__external-link.css);
 @import url(./features/blog/styles/post/_location/post_location_main-page.css);
 @import url(./features/blog/styles/post/_location/post_location_posts.css);
 @import url(./features/blog/styles/post/_location/post_location_single-post.css);
@@ -434,6 +435,7 @@
 @import url(./features/blog/styles/new-project/__submit-btn/new-project__submit-btn.css);
 @import url(./features/blog/styles/new-project/__submit-btn/_disabled/new-project__submit-btn_disabled.css);
 @import url(./features/blog/styles/new-post/new-post.css);
+@import url(./features/blog/styles/new-post/__external-link/new-post__external-link.css);
 @import url(./features/blog/styles/new-post/__title/new-post__title.css);
 @import url(./features/blog/styles/new-post/__form/new-post__form.css);
 @import url(./features/blog/styles/new-post/__radio-buttons-container/new-post__radio-buttons-container.css);

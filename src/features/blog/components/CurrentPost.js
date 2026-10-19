@@ -7,6 +7,7 @@ import fixShortWords from "../utils/fixShortWords";
 import isValidUrl from "../../../shared/utils/isValidUrl";
 import BlogActionButtons from "./BlogActionButtons";
 import ContentLoader from "../../../app/components/ContentLoader";
+import PostExternalLink from "./PostExternalLink";
 
 function CurrentPost({
   post,
@@ -68,6 +69,8 @@ function CurrentPost({
         <div
           className={`post__image-container ${
             isImageLoading ? "post__image-container_state_loading" : ""
+          } ${
+            isImageBroken ? "post__image-container_state_error" : ""
           }`}
           aria-busy={isImageLoading}
         >
@@ -99,6 +102,7 @@ function CurrentPost({
           {value}
         </p>
       ))}
+      <PostExternalLink post={post} />
       <div className="post__date-and-tools post__date-and-tools_location_single-post">
         <p className="post__date post__date_location_single-post">{postDate}</p>
         {loggedIn && (
