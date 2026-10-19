@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { validateResetPasswordLink } from "../../../shared/utils/auth";
 import Form from "../../../app/components/Form";
 import Input from "../../../app/components/Input";
 import AuthNavigation from "../../../app/components/AuthNavigation";
@@ -17,6 +18,31 @@ function ResetPassword({
   onContactClick,
 }) {
   let { resetPasswordLink } = useParams();
+  const [linkState, setLinkState] = useState("checking");
+  const [retry, setRetry] = useState(0);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let expiryTimer;
+    setLinkState("checking");
+    validateResetPasswordLink(resetPasswordLink, controller.signal)
+      .then(({ expiresAt }) => {
+        if (controller.signal.aborted) return;
+        setLinkState("valid");
+        expiryTimer = setTimeout(
+          () => setLinkState("invalid"),
+          Math.max(0, new Date(expiresAt).getTime() - Date.now()),
+        );
+      })
+      .catch((err) => {
+        if (controller.signal.aborted) return;
+        setLinkState(err.code === "RESET_LINK_INVALID" ? "invalid" : "error");
+      });
+    return () => {
+      controller.abort();
+      clearTimeout(expiryTimer);
+    };
+  }, [resetPasswordLink, retry]);
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordError, setNewPasswordError] = useState("");
   function handlePasswordChange(e) {
@@ -53,9 +79,17 @@ function ResetPassword({
     }
   }, [newPassword, newPasswordError, confirmPassword, confirmPasswordError]);
 
-  function handleReceiveEmail(e) {
+  async function handleReceiveEmail(e) {
     e.preventDefault();
-    onResetPassword(newPassword, confirmPassword, resetPasswordLink);
+    try {
+      await onResetPassword(newPassword, confirmPassword, resetPasswordLink);
+    } catch (err) {
+      if (err.code === "RESET_LINK_INVALID") {
+        setLinkState("invalid");
+        setNewPassword("");
+        setconfirmPassword("");
+      }
+    }
   }
 
   return (
@@ -74,42 +108,65 @@ function ResetPassword({
           src={`${newPasswordIcon}`}
           alt="icon"
         />
-        <Form
-          formName="forgot-password"
-          formClassname="form"
-          titleClassname="form__title forgot-password__title"
-          title="Create new password"
-          titleTag="h1"
-          buttonClassname="form__submit-btn"
-          buttonText="Reset password"
-          isFormValid={isFormValid}
-          isSendingReq={isSendingReq}
-          onSubmit={handleReceiveEmail}
-        >
-          <p className="form__subtitle">
-            New password must be different from previously used one
-          </p>
-          <Input
-            inputLabel="New password"
-            placeholder="Enter new password"
-            classname="input__field"
-            inputType="password"
-            inputValue={newPassword}
-            onChange={handlePasswordChange}
+        {linkState === "valid" ? (
+          <Form
+            formName="forgot-password"
+            formClassname="form"
+            titleClassname="form__title forgot-password__title"
+            title="Create new password"
+            titleTag="h1"
+            buttonClassname="form__submit-btn"
+            buttonText="Reset password"
+            isFormValid={isFormValid}
             isSendingReq={isSendingReq}
-            error={newPasswordError}
-          />
-          <Input
-            inputLabel="Confirm password"
-            placeholder="Enter new password again"
-            classname="input__field"
-            inputType="password"
-            inputValue={confirmPassword}
-            onChange={handleConfirmPasswordChange}
-            isSendingReq={isSendingReq}
-            error={confirmPasswordError}
-          />
-        </Form>
+            onSubmit={handleReceiveEmail}
+          >
+            <p className="form__subtitle">
+              New password must be different from previously used one
+            </p>
+            <Input
+              inputLabel="New password"
+              placeholder="Enter new password"
+              classname="input__field"
+              inputType="password"
+              inputValue={newPassword}
+              onChange={handlePasswordChange}
+              isSendingReq={isSendingReq}
+              error={newPasswordError}
+            />
+            <Input
+              inputLabel="Confirm password"
+              placeholder="Enter new password again"
+              classname="input__field"
+              inputType="password"
+              inputValue={confirmPassword}
+              onChange={handleConfirmPasswordChange}
+              isSendingReq={isSendingReq}
+              error={confirmPasswordError}
+            />
+          </Form>
+        ) : (
+          <section className="form" aria-live="polite">
+            <h1 className="form__title forgot-password__title">
+              {linkState === "checking" && "Checking reset link…"}
+              {linkState === "invalid" && "Link expired or already used"}
+              {linkState === "error" && "Unable to check reset link"}
+            </h1>
+            {linkState === "invalid" && (
+              <Link className="form__submit-btn" to="/signin/recovery">
+                Request a new link
+              </Link>
+            )}
+            {linkState === "error" && (
+              <button
+                className="form__submit-btn"
+                onClick={() => setRetry((value) => value + 1)}
+              >
+                Try again
+              </button>
+            )}
+          </section>
+        )}
       </div>
     </main>
   );

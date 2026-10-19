@@ -21,6 +21,7 @@ export const createRequest = (baseUrl) => {
       const error = new Error(data?.message || `HTTP ${res.status}`);
 
       error.status = res.status;
+      error.code = data?.code;
 
       switch (res.status) {
         case 401:
