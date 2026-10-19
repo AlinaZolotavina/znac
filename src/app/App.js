@@ -165,7 +165,6 @@ function App() {
     handleSignin,
     handleSignup,
     handleSignout,
-    setCurrentUser,
     clearSession,
   } = useAuth({
     openModal,
@@ -220,8 +219,7 @@ function App() {
               <ProfileRoot
                 loggedIn={loggedIn}
                 isAuthInitialized={isAuthInitialized}
-                currentUser={currentUser}
-                setCurrentUser={setCurrentUser}
+                clearSession={clearSession}
                 isLoading={isLoading}
                 startLoading={startLoading}
                 stopLoading={stopLoading}

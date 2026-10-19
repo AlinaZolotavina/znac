@@ -104,7 +104,7 @@ class Api {
     });
   }
 
-  requestEmailUpdate(newEmail, oldEmail) {
+  requestEmailUpdate(newEmail, currentPassword) {
     return this._request("/profile/update-email", {
       method: "PUT",
       headers: {
@@ -112,18 +112,26 @@ class Api {
       },
       body: JSON.stringify({
         newEmail: newEmail,
+        currentPassword,
       }),
     });
   }
 
-  updateEmail(updateEmailLink, newEmail) {
-    return this._request(`/profile/update-email/${updateEmailLink}`, {
+  validateEmailChangeLink(token, signal) {
+    return this._request(`/profile/update-email/${encodeURIComponent(token)}`, {
+      method: "GET",
+      cache: "no-store",
+      signal,
+    });
+  }
+
+  updateEmail(token) {
+    return this._request(`/profile/update-email/${encodeURIComponent(token)}`, {
       method: "PATCH",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ newEmail }),
     });
   }
 

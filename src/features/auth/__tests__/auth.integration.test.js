@@ -3,6 +3,7 @@ import useAuth from "../hooks/useAuth";
 import * as auth from "../../../shared/utils/auth";
 import { createRouterWrapper } from "../../../test/mockRouter";
 import { user } from "../../../test/fixtures/user";
+import { useLocation } from "react-router-dom";
 
 jest.mock("../../../shared/utils/auth");
 
@@ -96,5 +97,36 @@ describe("auth flow", () => {
     expect(auth.signout).toHaveBeenCalled();
     expect(result.current.loggedIn).toBe(false);
     expect(result.current.currentUser).toEqual({});
+  });
+
+  test("returns to the email confirmation link after signing in in a fresh browser", async () => {
+    auth.signin.mockResolvedValue({ user });
+    const { result } = renderHook(
+      () => ({
+        auth: useAuth({
+          openModal: jest.fn(),
+          startLoading: jest.fn(),
+          stopLoading: jest.fn(),
+        }),
+        location: useLocation(),
+      }),
+      {
+        wrapper: createRouterWrapper([
+          {
+            pathname: "/signin",
+            state: { from: "/profile/update-email/test-token" },
+          },
+        ]),
+      },
+    );
+    await waitFor(() =>
+      expect(result.current.auth.isAuthInitialized).toBe(true),
+    );
+    await act(async () => {
+      await result.current.auth.handleSignin("admin@test.com", "12345678");
+    });
+    expect(result.current.location.pathname).toBe(
+      "/profile/update-email/test-token",
+    );
   });
 });
