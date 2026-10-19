@@ -14,17 +14,20 @@ function BlogTextArea({
   error,
   inputName,
   maxLength,
+  label,
 }) {
   const fieldId = inputId || normalizeId(inputName) || normalizeId(placeholder);
   const errorId = fieldId ? `${fieldId}-error` : undefined;
   const hasError = Boolean(error);
 
   return (
-    <label className="blog-input">
+    <label className="blog-input blog-input_type_text-area">
+      {label && <span className="blog-input__label">{label}</span>}
       <textarea
         id={fieldId}
         className="blog-input__field blog-input__field_type_text-area"
         placeholder={placeholder}
+        aria-label={label}
         value={value}
         onChange={onChange}
         required

@@ -6,6 +6,7 @@ import NewPostRadioButton from "./NewPostRadioButton.js";
 import BlogUploadFileInfo from "./BlogUploadFileInfo.js";
 import BlogTextArea from "./BlogTextArea.js";
 import iconButtons from "../utils/iconButtons.js";
+import isValidUrl from "../../../shared/utils/isValidUrl";
 import useInitialFocus from "../../../shared/hooks/useInitialFocus.js";
 import useFocusTrap from "../../../shared/hooks/useFocusTrap.js";
 import useReturnFocus from "../../../shared/hooks/useReturnFocus.js";
@@ -15,8 +16,8 @@ import useOverlayClickClose from "../../../shared/hooks/useOverlayClickClose.js"
 
 function getVisibleCount(width, containerWidth) {
   if (containerWidth) {
-    const iconWidth = width <= 1280 ? 75 : 85;
-    const gap = 10;
+    const iconWidth = 64;
+    const gap = 8;
 
     return Math.min(
       Math.max(Math.floor((containerWidth + gap) / (iconWidth + gap)), 1),
@@ -107,7 +108,8 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
       const nextSlideStart = slideStart - 1;
 
       if (shouldKeepIconFocus) {
-        iconFocusAfterSlideRef.current = iconButtons[nextSlideStart].buttonValue;
+        iconFocusAfterSlideRef.current =
+          iconButtons[nextSlideStart].buttonValue;
       }
 
       setSlideStart(nextSlideStart);
@@ -130,7 +132,8 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
           iconButtons.length - 1,
         );
 
-        iconFocusAfterSlideRef.current = iconButtons[nextFocusIndex].buttonValue;
+        iconFocusAfterSlideRef.current =
+          iconButtons[nextFocusIndex].buttonValue;
       }
 
       setSlideStart(nextSlideStart);
@@ -290,7 +293,7 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
   const [textareaError, setTextareaError] = useState("");
   function handleTextareaChange(e) {
     if (e.target.value.length === 0) {
-      setTextareaError("Please enter your message");
+      setTextareaError("Please enter post text");
     } else if (e.target.value.length > POST_TEXT_MAX_LENGTH) {
       setTextareaError(
         `Text must be ${POST_TEXT_MAX_LENGTH} characters or fewer`,
@@ -300,6 +303,31 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
     }
 
     setTextarea(e.target.value);
+  }
+
+  const [externalLink, setExternalLink] = useState("");
+  const [externalLinkError, setExternalLinkError] = useState("");
+  const [externalLinkButtonText, setExternalLinkButtonText] = useState("");
+  const [externalLinkButtonTextError, setExternalLinkButtonTextError] =
+    useState("");
+
+  function handleExternalLinkChange(e) {
+    const value = e.target.value.trim();
+    setExternalLink(e.target.value);
+    setExternalLinkError(
+      value && (!/^https?:\/\//i.test(value) || !isValidUrl(value))
+        ? "Please enter a valid URL"
+        : "",
+    );
+  }
+
+  function handleExternalLinkButtonTextChange(e) {
+    setExternalLinkButtonText(e.target.value);
+    setExternalLinkButtonTextError(
+      e.target.value.trim().length > 40
+        ? "Button text must be 40 characters or fewer"
+        : "",
+    );
   }
 
   const [isFormValid, setIsFormValid] = useState(false);
@@ -314,7 +342,9 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
       textarea &&
       !titleError &&
       !hashtagsError &&
-      !textareaError
+      !textareaError &&
+      !externalLinkError &&
+      !externalLinkButtonTextError
     ) {
       setIsFormValid(true);
     } else {
@@ -331,10 +361,13 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
     titleError,
     hashtagsError,
     textareaError,
+    externalLinkError,
+    externalLinkButtonTextError,
   ]);
 
   function handleSubmit(e) {
     e.preventDefault();
+    if (!isFormValid || isSendingReq) return;
 
     onAddPost({
       theme: themeCheckValue,
@@ -343,6 +376,12 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
       photoData: postPhotos,
       hashtags,
       text: textarea,
+      ...(externalLink.trim() && {
+        externalLink: externalLink.trim(),
+        ...(externalLinkButtonText.trim() && {
+          externalLinkButtonText: externalLinkButtonText.trim(),
+        }),
+      }),
       setUploadError,
     });
   }
@@ -379,6 +418,10 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
     setHashtagsError("");
     setTextarea("");
     setTextareaError("");
+    setExternalLink("");
+    setExternalLinkError("");
+    setExternalLinkButtonText("");
+    setExternalLinkButtonTextError("");
     setIsFormValid(false);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -396,7 +439,7 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
 
   return (
     <div
-      className="popup popup_type_get-in-touch popup_is-opened"
+      className="popup popup_type_get-in-touch popup_type_post popup_is-opened"
       onMouseDown={handleOverlayClickClose}
     >
       <div
@@ -532,6 +575,7 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
           <div className="new-post__form-section">
             <BlogInput
               placeholder="Title"
+              label="Title"
               classname="blog-input__field blog-input__field_type_post-title"
               inputType="text"
               inputValue={title}
@@ -541,6 +585,9 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
               inputName="post title"
             />
             <div className="new-post__upload-container">
+              <span className="blog-input__label new-post__upload-label">
+                Photo (optional)
+              </span>
               <div className="visually-hidden" role="status">
                 {uploadStatusMessage}
               </div>
@@ -595,6 +642,7 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
 
           <BlogInput
             placeholder="Hashtags separated by spaces"
+            label="Hashtags"
             classname="blog-input__field blog-input__field_type_hashtag"
             inputType="text"
             inputValue={hashtags}
@@ -606,12 +654,41 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
 
           <BlogTextArea
             placeholder="Text"
+            label="Text"
             value={textarea}
             onChange={handleTextareaChange}
             isSendingReq={isSendingReq}
             error={textareaError}
             inputName="post text"
           />
+          <div className="new-post__external-link">
+            <BlogInput
+              inputId="new-post-external-link"
+              placeholder="Link to resource"
+              label="Link to resource (optional)"
+              classname="blog-input__field"
+              inputType="url"
+              inputValue={externalLink}
+              onChange={handleExternalLinkChange}
+              isSendingReq={isSendingReq}
+              error={externalLinkError}
+              inputName="externalLink"
+              required={false}
+            />
+            <BlogInput
+              inputId="new-post-external-link-button-text"
+              placeholder="Button text"
+              label="Button text (optional)"
+              classname="blog-input__field"
+              inputType="text"
+              inputValue={externalLinkButtonText}
+              onChange={handleExternalLinkButtonTextChange}
+              isSendingReq={isSendingReq}
+              error={externalLinkButtonTextError}
+              inputName="externalLinkButtonText"
+              required={false}
+            />
+          </div>
         </BlogForm>
         <BlogCloseButton
           classname="blog-close-btn blog-close-btn_location_new-post-popup"

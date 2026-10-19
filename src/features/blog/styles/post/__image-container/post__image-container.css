@@ -7,6 +7,11 @@
   min-height: 240px;
 }
 
+.post__image-container_state_error {
+  width: min(280px, 100%);
+  margin: 0 auto;
+}
+
 .post__image-container_state_loading .post__image {
   position: absolute;
   inset: 0;

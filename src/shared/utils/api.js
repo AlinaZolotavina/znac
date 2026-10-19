@@ -173,6 +173,13 @@ class Api {
       hashtags: data.hashtags,
       text: data.text,
 
+      ...(data.externalLink && {
+        externalLink: data.externalLink,
+        ...(data.externalLinkButtonText && {
+          externalLinkButtonText: data.externalLinkButtonText,
+        }),
+      }),
+
       ...(data.photoLink && {
         photoLink: data.photoLink,
       }),
@@ -199,6 +206,8 @@ class Api {
       newTitle: data.title,
       newHashtags: data.hashtags,
       newText: data.text,
+      newExternalLink: data.externalLink,
+      newExternalLinkButtonText: data.externalLinkButtonText,
       ...(data.newPhotoFilename && {
         newPhotoFilename: data.newPhotoFilename,
       }),

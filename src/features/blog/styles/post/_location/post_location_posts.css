@@ -1,5 +1,25 @@
 .post_location_posts {
   border: 1px solid rgba(154, 123, 217, 0.22);
+  min-width: 0;
+}
+
+.post_location_posts article {
+  min-width: 0;
+}
+
+.post_location_posts .post__meta {
+  flex-wrap: wrap;
+  row-gap: 4px;
+}
+
+.post_location_posts .post__theme {
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+}
+
+.post_location_posts .post__title {
+  overflow-wrap: anywhere;
 }
 
 .post_location_posts:hover {

@@ -1,18 +1,11 @@
 .post__text_location_main-page {
   font-size: 15px;
-  line-height: 22px;
-}
-
-@media (max-width: 1280px) {
-  .post__text_location_main-page {
-    font-size: 15px;
-    line-height: 22px;
-  }
+  line-height: 20px;
 }
 
 @media screen and (max-width: 960px) {
   .post__text_location_main-page {
     font-size: 14px;
-    line-height: 20px;
+    line-height: 17px;
   }
 }

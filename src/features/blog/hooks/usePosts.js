@@ -6,11 +6,10 @@ import {
   POST_EDITED_SUCCESSFULLY_MSG,
 } from "../../../shared/utils/messages";
 import postUploadActions from "../utils/postUploadActions";
-import { MIDDLE_SCREEN_WIDTH } from "../../../shared/utils/constants";
 import { useNavigate } from "react-router-dom";
 
-const POSTS_PAGE_SIZE = 9;
-const DESKTOP_SCREEN_WIDTH = 1200;
+const POSTS_PAGE_SIZE = 12;
+const TABLET_SCREEN_WIDTH = 600;
 
 export default function usePosts({
   screenWidth,
@@ -29,11 +28,14 @@ export default function usePosts({
   redirectAfterDelete,
 }) {
   const navigate = useNavigate();
+  const initialPostsNumber = screenWidth >= TABLET_SCREEN_WIDTH ? 12 : 6;
+  const postsToAdd = screenWidth >= TABLET_SCREEN_WIDTH ? 4 : 2;
+  const initialPostsNumberRef = useRef(initialPostsNumber);
+  initialPostsNumberRef.current = initialPostsNumber;
   const [allPosts, setAllPosts] = useState([]);
   const [loadedPosts, setLoadedPosts] = useState([]);
-  const [currentPostsNumber, setCurrentPostsNumber] = useState(6);
+  const [currentPostsNumber, setCurrentPostsNumber] = useState(initialPostsNumber);
 
-  const [postsToAdd, setPostsToAdd] = useState(0);
   const [postsPage, setPostsPage] = useState(1);
   const [postsPages, setPostsPages] = useState(1);
   const [postToEdit, setPostToEdit] = useState({});
@@ -41,6 +43,7 @@ export default function usePosts({
   const [postVersion, setPostVersion] = useState(0);
   const [isPostsLoading, setIsPostsLoading] = useState(true);
   const lastPostsQueryRef = useRef(null);
+  const loadedPostsPaginationRef = useRef({ page: 1, pages: 1 });
 
   const postsToRender = useMemo(
     () => allPosts.slice(0, currentPostsNumber),
@@ -59,23 +62,8 @@ export default function usePosts({
   });
 
   const calculatePostsCount = useCallback(() => {
-    let initialPostsNumber;
-    let nextPostsToAdd;
-
-    if (screenWidth >= DESKTOP_SCREEN_WIDTH) {
-      initialPostsNumber = 9;
-      nextPostsToAdd = 3;
-    } else if (screenWidth >= MIDDLE_SCREEN_WIDTH) {
-      initialPostsNumber = 6;
-      nextPostsToAdd = 2;
-    } else {
-      initialPostsNumber = 2;
-      nextPostsToAdd = 2;
-    }
-
-    setPostsToAdd(nextPostsToAdd);
     setCurrentPostsNumber((current) => Math.max(current, initialPostsNumber));
-  }, [screenWidth]);
+  }, [initialPostsNumber]);
 
   const loadPosts = useCallback(
     ({ page = 1, append = false, search = "", theme = "All" } = {}) => {
@@ -111,6 +99,7 @@ export default function usePosts({
             setLoadedPosts((previousPosts) =>
               append ? [...previousPosts, ...data] : data,
             );
+            loadedPostsPaginationRef.current = { page: responsePage, pages };
           }
 
           setPostsPage(responsePage);
@@ -118,7 +107,7 @@ export default function usePosts({
 
           // For a new set of results (search / theme), use an adaptive initial quantity
           if (!append) {
-            setCurrentPostsNumber((current) => Math.max(current, 3));
+            setCurrentPostsNumber(initialPostsNumberRef.current);
           }
 
           return response;
@@ -164,6 +153,8 @@ export default function usePosts({
   }
 
   function showMorePosts() {
+    if (isPostsLoading) return;
+
     const nextVisibleCount = currentPostsNumber + postsToAdd;
 
     if (nextVisibleCount <= allPosts.length) {
@@ -176,14 +167,16 @@ export default function usePosts({
       return;
     }
 
-    loadPosts({
+    return loadPosts({
       page: postsPage + 1,
       append: true,
       search: query,
       theme: activePostHashtag,
-    }).then(() => {
-      setCurrentPostsNumber((current) =>
-        Math.min(current + postsToAdd, allPosts.length),
+    }).then((response) => {
+      if (!response) return;
+
+      setCurrentPostsNumber(
+        Math.min(nextVisibleCount, allPosts.length + response.data.length),
       );
     });
   }
@@ -206,9 +199,9 @@ export default function usePosts({
     if (!normalizedQuery && !hasThemeFilter) {
       if (loadedPosts.length > 0) {
         setAllPosts(loadedPosts);
-        setPostsPage(1);
-        setPostsPages(Math.ceil(loadedPosts.length / POSTS_PAGE_SIZE));
-        setCurrentPostsNumber(loadedPosts.length);
+        setPostsPage(loadedPostsPaginationRef.current.page);
+        setPostsPages(loadedPostsPaginationRef.current.pages);
+        setCurrentPostsNumber(initialPostsNumberRef.current);
       } else {
         loadPosts({
           page: 1,
@@ -239,6 +232,8 @@ export default function usePosts({
       title: props.title,
       hashtags: props.hashtags,
       text: props.text,
+      externalLink: props.externalLink,
+      externalLinkButtonText: props.externalLinkButtonText,
       ...photoData,
     };
 
