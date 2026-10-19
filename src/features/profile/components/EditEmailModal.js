@@ -19,13 +19,14 @@ function EditEmailModal({
   const currentUser = useContext(CurrentUserContext);
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
   function handleEmailChange(e) {
-    const emailRegex =
-      /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/i;
-    const isEmailValid = emailRegex.test(e.target.value);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const normalized = e.target.value.trim().toLowerCase();
+    const isEmailValid = emailRegex.test(normalized);
     if (!isEmailValid) {
       setEmailError("Please enter a valid e-mail");
-    } else if (e.target.value === currentUser.email) {
+    } else if (normalized === currentUser.email?.toLowerCase()) {
       setEmailError("This email is currently in use");
     } else {
       setEmailError("");
@@ -34,21 +35,33 @@ function EditEmailModal({
   }
   function handleSubmit(e) {
     e.preventDefault();
-    onRequestEmailChange({ email: email });
+    onRequestEmailChange({
+      email: email.trim().toLowerCase(),
+      currentPassword,
+    });
   }
 
   const [isFormValid, setIsFormValid] = useState(false);
   useEffect(() => {
-    if (email && !emailError) {
+    if (email && !emailError && currentPassword.length >= 8) {
       setIsFormValid(true);
     } else {
       setIsFormValid(false);
     }
-  }, [email, emailError]);
+  }, [email, emailError, currentPassword]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setEmail("");
+      setEmailError("");
+      setCurrentPassword("");
+    }
+  }, [isOpen]);
 
   function handleClose() {
     setEmail("");
     setEmailError("");
+    setCurrentPassword("");
     onClose();
   }
 
@@ -66,7 +79,7 @@ function EditEmailModal({
 
   return (
     <div
-      className="popup popup_type_photo popup_is-opened"
+      className="popup popup_type_photo popup_type_email-change popup_is-opened"
       onMouseDown={handleOverlayClickClose}
     >
       <div
@@ -90,15 +103,27 @@ function EditEmailModal({
           onSubmit={handleSubmit}
         >
           <Input
-            inputLabel=""
+            inputLabel="New e-mail"
             placeholder="Enter new e-mail"
             classname="popup__input-field"
-            inputType="text"
+            inputType="email"
             inputValue={email}
             onChange={handleEmailChange}
             isSendingReq={isSendingReq}
             error={emailError}
             inputName="new email"
+            autoComplete="email"
+          />
+          <Input
+            inputLabel="Current password"
+            placeholder="Enter current password"
+            classname="popup__input-field"
+            inputType="password"
+            inputValue={currentPassword}
+            onChange={(event) => setCurrentPassword(event.target.value)}
+            isSendingReq={isSendingReq}
+            inputName="current-password"
+            autoComplete="current-password"
           />
         </Form>
         <CloseButton

@@ -18,6 +18,7 @@ function Input({
   error,
   inputName,
   maxLength,
+  autoComplete,
   hideError = false,
 }) {
   const fieldId =
@@ -42,6 +43,7 @@ function Input({
         disabled={isSendingReq}
         name={inputName}
         maxLength={maxLength}
+        autoComplete={autoComplete}
         aria-invalid={hasError ? "true" : undefined}
         aria-describedby={hasError ? errorId : undefined}
       />

@@ -53,7 +53,15 @@ export default function useAuth({ openModal, startLoading, stopLoading }) {
       const data = await auth.signin(email, password);
       setLoggedIn(true);
       setCurrentUser(data.user);
-      navigate("/");
+      const destination = location.state?.from;
+      navigate(
+        typeof destination === "string" &&
+          destination.startsWith("/") &&
+          !destination.startsWith("//")
+          ? destination
+          : "/",
+        { replace: true },
+      );
     } catch (err) {
       openModal({
         status: "error",

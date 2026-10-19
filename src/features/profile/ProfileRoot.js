@@ -12,7 +12,6 @@ import EditPasswordModal from "./components/EditPasswordModal";
 import api from "../../shared/utils/api";
 import {
   EMAIL_UPDATED_SUCCESSFULLY_MSG,
-  EMAIL_UPDATE_ERROR_MSG,
   EMAIL_UPDATE_REQUEST_ERROR_MSG,
   PASSWORD_UPDATED_SUCCESSFULLY_MSG,
   PASSWORD_UPDATE_ERROR_MSG,
@@ -22,8 +21,7 @@ import {
 function ProfileRoot({
   loggedIn,
   isAuthInitialized,
-  currentUser,
-  setCurrentUser,
+  clearSession,
   isLoading,
   startLoading,
   stopLoading,
@@ -46,12 +44,12 @@ function ProfileRoot({
     setIsEditEmailModalOpen(!isEditEmailModalOpen);
   }
 
-  function handleEmailChangeRequest(newEmail) {
+  function handleEmailChangeRequest({ email, currentPassword }) {
     startLoading();
-    localStorage.setItem("email", JSON.stringify(newEmail));
     api
-      .requestEmailUpdate(newEmail.email, currentUser.email)
+      .requestEmailUpdate(email, currentPassword)
       .then(() => {
+        closeProfilePopups();
         openModal({
           status: "success",
           message: UPDATE_EMAIL_EMAIL_SENT_MSG,
@@ -66,24 +64,18 @@ function ProfileRoot({
       .finally(() => stopLoading());
   }
 
-  function handleUpdateEmail(updateEmailLink, newEmail) {
-    api
-      .updateEmail(updateEmailLink, newEmail)
-      .then((data) => {
-        closeProfilePopups();
-        setCurrentUser(data.user);
-        navigate("/profile");
-        openModal({
-          status: "success",
-          message: EMAIL_UPDATED_SUCCESSFULLY_MSG,
-        });
-      })
-      .catch((err) => {
-        openModal({
-          status: "error",
-          message: err.message || EMAIL_UPDATE_ERROR_MSG,
-        });
+  async function handleUpdateEmail(token) {
+    const result = await api.updateEmail(token);
+    if (result.completed) {
+      closeProfilePopups();
+      clearSession();
+      navigate("/signin", { replace: true });
+      openModal({
+        status: "success",
+        message: EMAIL_UPDATED_SUCCESSFULLY_MSG,
       });
+    }
+    return result;
   }
 
   function handleEditPasswordBtnClick() {
@@ -138,7 +130,7 @@ function ProfileRoot({
         />
 
         <Route
-          path="update-email/:updateEmailLink"
+          path="update-email/:token"
           element={
             <ProtectedRoute
               loggedIn={loggedIn}
