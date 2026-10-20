@@ -63,6 +63,8 @@ function GalleryRoot({
     areHashtagsEditing,
     isLeftFlipDisabled,
     isRightFlipDisabled,
+    isNextPhotoLoading,
+    cancelPendingPhotoFlip,
 
     // gallery
     photosToRender,
@@ -249,7 +251,10 @@ function GalleryRoot({
         photo={selectedPhoto}
         photoHashtags={hashtagsOfSelectedPhoto || []}
         views={viewsOfSelectedPhoto}
-        onClose={closeGalleryPopups}
+        onClose={() => {
+          cancelPendingPhotoFlip();
+          closeGalleryPopups();
+        }}
         onHashtagClick={handlePhotoHashtagClick}
         areHashtagsEditing={areHashtagsEditing}
         onEditHashtags={handleEditHashtags}
@@ -258,6 +263,7 @@ function GalleryRoot({
         onPhotoFlip={handlePhotoFlip}
         isLeftFlipDisabled={isLeftFlipDisabled}
         isRightFlipDisabled={isRightFlipDisabled}
+        isNextPhotoLoading={isNextPhotoLoading}
       />
 
       <DeletePhotoModal

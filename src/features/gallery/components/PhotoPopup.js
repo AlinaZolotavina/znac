@@ -26,6 +26,7 @@ function PhotoPopup({
   onPhotoFlip,
   isLeftFlipDisabled,
   isRightFlipDisabled,
+  isNextPhotoLoading = false,
 }) {
   const [loadedPhotoId, setLoadedPhotoId] = useState(null);
   const [failedPhotoId, setFailedPhotoId] = useState(null);
@@ -72,9 +73,15 @@ function PhotoPopup({
         role="dialog"
         aria-modal="true"
         aria-label="Photo preview"
-        aria-busy={isImageLoading}
+        aria-busy={isImageLoading || isNextPhotoLoading}
         tabIndex={-1}
       >
+        <CloseButton
+          classname="close-btn popup__close-btn"
+          onClick={onClose}
+          ariaLabel="Close dialog"
+        />
+
         <div className="popup__photo-container">
           <button
             className={`popup__left-flip flip-btn ${
@@ -102,12 +109,6 @@ function PhotoPopup({
                 setFailedPhotoId(photo?._id);
               }}
             />
-
-            <CloseButton
-              classname="close-btn popup__close-btn"
-              onClick={onClose}
-              ariaLabel="Close dialog"
-            />
           </div>
 
           <button
@@ -115,7 +116,7 @@ function PhotoPopup({
               isRightFlipDisabled && "flip-btn_hidden"
             }`}
             onClick={handleRightFlip}
-            disabled={isRightFlipDisabled}
+            disabled={isRightFlipDisabled || isNextPhotoLoading}
             aria-label="Next photo"
           />
 
@@ -147,7 +148,7 @@ function PhotoPopup({
           </div>
         </div>
       </div>
-      {isImageLoading && (
+      {(isImageLoading || isNextPhotoLoading) && (
         <div
           className="popup__loader"
           role="status"

@@ -2,16 +2,22 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 60vw;
+  width: 750px;
   margin: 120px auto 100px;
   position: relative;
   min-height: auto;
   cursor: default;
 }
 
+@media (max-width: 1200px) {
+  .post_location_single-post {
+    width: 60vw;
+  }
+}
+
 @media (max-width: 900px) {
   .post_location_single-post {
-    width: 85vw;
+    width: 80vw;
     margin: 45px auto 80px;
   }
 }

@@ -5,3 +5,13 @@
   margin: 0;
   align-items: flex-start;
 }
+
+.popup_type_photo .popup__caption {
+  transition: opacity 0.18s ease;
+}
+
+.popup_type_photo .popup__wrapper[aria-busy="true"] .popup__caption,
+.popup_type_photo .popup__wrapper[aria-busy="true"] .flip-btn {
+  visibility: hidden;
+  opacity: 0;
+}

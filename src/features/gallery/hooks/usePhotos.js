@@ -2,9 +2,8 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import api from "../../../shared/utils/api";
 import { hashtagKeys } from "../queries/hashtagQueries";
-import { getPhotosQueryOptions } from "../queries/photoQueries";
+import usePhotoPagination from "./usePhotoPagination";
 import {
-  DEFAULT_ERROR_MSG,
   DELETE_PHOTO_ERROR_MSG,
   EDIT_HASHTAGS_ERROR_MSG,
   SUCCESSFUL_PHOTO_DELETE_MSG,
@@ -29,7 +28,6 @@ export default function usePhotos({
   closeAllPopups,
   screenWidth,
   setScreenWidth,
-  hashtag,
   setHashtag,
   location,
   setIsPhotoPopupOpen,
@@ -37,19 +35,15 @@ export default function usePhotos({
 }) {
   const queryClient = useQueryClient();
 
-  const [allPhotos, setAllPhotos] = useState([]);
-  const [loadedPhotos, setLoadedPhotos] = useState([]);
-  const [photosPage, setPhotosPage] = useState(1);
-  const [photosPages, setPhotosPages] = useState(1);
-  const [currentPhotosNumber, setCurrentPhotosNumber] = useState(0);
-  const [photosToAdd, setPhotosToAdd] = useState(0);
-  const [visibleLoadedPhotosCount, setVisibleLoadedPhotosCount] = useState(0);
-  const [isPhotosLoading, setIsPhotosLoading] = useState(true);
   const resizeTimeoutRef = useRef(null);
-  const lastPhotosQueryRef = useRef(null);
   const latestSearchRequestRef = useRef(0);
   const pendingViewsRef = useRef(new Set());
   const viewedPhotosRef = useRef(null);
+  const flipRequestRef = useRef(0);
+  const selectedPhotoRef = useRef(null);
+  const cancelPendingPhotoFlip = useCallback(() => {
+    flipRequestRef.current += 1;
+  }, []);
 
   if (viewedPhotosRef.current === null) {
     try {
@@ -61,22 +55,8 @@ export default function usePhotos({
     }
   }
 
-  const photosToRender = useMemo(
-    () => allPhotos.slice(0, currentPhotosNumber),
-    [allPhotos, currentPhotosNumber],
-  );
-
-  const hasMorePhotos =
-    currentPhotosNumber < allPhotos.length || photosPage < photosPages;
-
-  const { handlePhotoUpload } = photoUploadActions({
-    startLoading,
-    stopLoading,
-    addPhotosToGallery,
-    openModal,
-  });
-
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  selectedPhotoRef.current = selectedPhoto;
   const hashtagsOfSelectedPhoto = selectedPhoto?.hashtags || [];
   const viewsOfSelectedPhoto = selectedPhoto?.views || 0;
   const [areHashtagsEditing, setAreHashtagsEditing] = useState(false);
@@ -102,16 +82,26 @@ export default function usePhotos({
     };
   }, [screenWidth]);
 
-  const calculatePhotosCount = useCallback(() => {
-    const { initialPhotosNumber, photosToAdd: nextPhotosToAdd } =
-      getPhotosLayout();
-    setPhotosToAdd(nextPhotosToAdd);
-    setCurrentPhotosNumber((current) => Math.max(current, initialPhotosNumber));
-  }, [getPhotosLayout]);
-
-  useEffect(() => {
-    calculatePhotosCount();
-  }, [calculatePhotosCount]);
+  const { initialPhotosNumber, photosToAdd } = getPhotosLayout();
+  const pagination = usePhotoPagination({
+    initialVisibleCount: initialPhotosNumber,
+    photosToAdd,
+    openModal,
+  });
+  const { collection, restoreGallery, contextVersionRef } = pagination;
+  const allPhotos = collection.data;
+  const currentPhotosNumber = collection.visibleCount;
+  const { hasMorePhotos, isPhotosLoading, showMorePhotos } = pagination;
+  const photosToRender = useMemo(
+    () => allPhotos.slice(0, currentPhotosNumber),
+    [allPhotos, currentPhotosNumber],
+  );
+  const { handlePhotoUpload } = photoUploadActions({
+    startLoading,
+    stopLoading,
+    addPhotosToGallery,
+    openModal,
+  });
 
   const updateDimensions = useCallback(() => {
     if (resizeTimeoutRef.current) {
@@ -132,151 +122,8 @@ export default function usePhotos({
     };
   }, [updateDimensions]);
 
-  function showMorePhotos() {
-    const nextVisibleCount = currentPhotosNumber + photosToAdd;
-    const isFiltered = Boolean(hashtag.trim());
-
-    if (nextVisibleCount <= allPhotos.length) {
-      setCurrentPhotosNumber(nextVisibleCount);
-      if (!isFiltered) {
-        setVisibleLoadedPhotosCount(nextVisibleCount);
-      }
-      return;
-    }
-
-    if (photosPage >= photosPages) {
-      setCurrentPhotosNumber(allPhotos.length);
-      if (!isFiltered) {
-        setVisibleLoadedPhotosCount(allPhotos.length);
-      }
-      return;
-    }
-
-    loadPhotos({
-      page: photosPage + 1,
-      append: true,
-      hashtag,
-    })
-      .then((response) => {
-        const nextCount = Math.min(
-          nextVisibleCount,
-          allPhotos.length + response.data.length,
-        );
-        setCurrentPhotosNumber(nextCount);
-        if (!isFiltered) {
-          setVisibleLoadedPhotosCount(nextCount);
-        }
-      })
-      .catch(console.error);
-  }
-
-  const getRestoredVisibleCount = useCallback(() => {
-    const { initialPhotosNumber } = getPhotosLayout();
-
-    return Math.min(
-      visibleLoadedPhotosCount || initialPhotosNumber,
-      loadedPhotos.length,
-    );
-  }, [getPhotosLayout, loadedPhotos.length, visibleLoadedPhotosCount]);
-
-  const loadPhotos = useCallback(
-    ({
-      page = 1,
-      append = false,
-      hashtag = "",
-      searchRequestId = null,
-    } = {}) => {
-      const normalizedHashtag = hashtag.trim().toLowerCase();
-      const hasFilter = Boolean(normalizedHashtag);
-
-      const queryKey = `${page}|${normalizedHashtag}|${append}`;
-
-      if (lastPhotosQueryRef.current?.key === queryKey) {
-        if (searchRequestId !== null) {
-          lastPhotosQueryRef.current.searchRequestId = searchRequestId;
-        }
-
-        return lastPhotosQueryRef.current.promise;
-      }
-
-      const request = hasFilter
-        ? api.findPhoto(normalizedHashtag, page, 20)
-        : queryClient.fetchQuery(getPhotosQueryOptions(page, 20));
-
-      setIsPhotosLoading(true);
-
-      const requestPromise = request
-        .then((response) => {
-          const activeSearchRequestId =
-            lastPhotosQueryRef.current?.key === queryKey
-              ? lastPhotosQueryRef.current.searchRequestId
-              : searchRequestId;
-          const isStaleSearch =
-            activeSearchRequestId !== null &&
-            activeSearchRequestId !== latestSearchRequestRef.current;
-
-          if (isStaleSearch) {
-            return response;
-          }
-
-          const { data, page: responsePage, pages } = response;
-          setAllPhotos((previousPhotos) =>
-            append ? [...previousPhotos, ...data] : data,
-          );
-          if (!hasFilter) {
-            setLoadedPhotos((previousPhotos) =>
-              append ? [...previousPhotos, ...data] : data,
-            );
-          }
-          setPhotosPage(responsePage);
-          setPhotosPages(pages);
-
-          if (!append) {
-            const { initialPhotosNumber } = getPhotosLayout();
-            const visibleCount = Math.min(initialPhotosNumber, data.length);
-            setCurrentPhotosNumber(visibleCount);
-            if (!hasFilter) {
-              setVisibleLoadedPhotosCount(visibleCount);
-            }
-          }
-
-          return response;
-        })
-        .catch((err) => {
-          openModal({
-            status: "error",
-            message: err.message || DEFAULT_ERROR_MSG,
-          });
-
-          throw err;
-        })
-        .finally(() => {
-          if (lastPhotosQueryRef.current?.key === queryKey) {
-            lastPhotosQueryRef.current = null;
-            setIsPhotosLoading(false);
-          }
-        });
-
-      lastPhotosQueryRef.current = {
-        key: queryKey,
-        promise: requestPromise,
-        searchRequestId,
-      };
-
-      return requestPromise;
-    },
-    [getPhotosLayout, openModal, queryClient],
-  );
-
-  useEffect(() => {
-    loadPhotos({
-      page: 1,
-      append: false,
-      hashtag: "",
-    });
-  }, [loadPhotos]);
-
   const handlePhotoOpen = (photo) => {
+    cancelPendingPhotoFlip();
     handlePhotoClick(photo);
     setIsPhotoPopupOpen(true);
   };
@@ -285,35 +132,23 @@ export default function usePhotos({
     const normalizedHashtag = nextValue.trim().toLowerCase();
 
     if (!normalizedHashtag) {
-      latestSearchRequestRef.current += 1;
-      setHashtag(nextValue);
-
-      const restoredVisibleCount = getRestoredVisibleCount();
-
-      setAllPhotos(loadedPhotos);
-      setPhotosPage(1);
-      setPhotosPages(Math.max(1, Math.ceil(loadedPhotos.length / 20)));
-      setCurrentPhotosNumber(restoredVisibleCount);
-
+      handleClearPhotoSearch();
       return;
     }
 
     const searchRequestId = latestSearchRequestRef.current + 1;
     latestSearchRequestRef.current = searchRequestId;
+    cancelPendingPhotoFlip();
     setHashtag(nextValue);
 
-    loadPhotos({
-      page: 1,
-      append: false,
-      hashtag: normalizedHashtag,
-      searchRequestId,
-    })
+    return pagination
+      .loadFirstPage(normalizedHashtag)
       .then((response) => {
         if (searchRequestId !== latestSearchRequestRef.current) {
           return;
         }
 
-        if (response.data.length === 0) {
+        if (!response || response.data.length === 0) {
           return;
         }
 
@@ -348,15 +183,10 @@ export default function usePhotos({
 
   const handleClearPhotoSearch = useCallback(() => {
     latestSearchRequestRef.current += 1;
-
-    const restoredVisibleCount = getRestoredVisibleCount();
-
+    cancelPendingPhotoFlip();
     setHashtag("");
-    setAllPhotos(loadedPhotos);
-    setPhotosPage(1);
-    setPhotosPages(Math.max(1, Math.ceil(loadedPhotos.length / 20)));
-    setCurrentPhotosNumber(restoredVisibleCount);
-  }, [getRestoredVisibleCount, loadedPhotos, setHashtag]);
+    restoreGallery();
+  }, [cancelPendingPhotoFlip, restoreGallery, setHashtag]);
 
   useEffect(() => {
     if (location.pathname !== "/gallery") {
@@ -370,6 +200,7 @@ export default function usePhotos({
   }
 
   function handlePhotoClick(photo) {
+    selectedPhotoRef.current = photo;
     setSelectedPhoto(photo);
     increaseViewsNumber(photo._id);
   }
@@ -381,24 +212,45 @@ export default function usePhotos({
   const isLeftFlipDisabled = currentIndex <= 0;
 
   const isRightFlipDisabled =
-    currentIndex === -1 || currentIndex >= allPhotos.length - 1;
+    currentIndex === -1 ||
+    (currentIndex >= allPhotos.length - 1 && !pagination.hasUnloadedPhotos);
+
+  function selectPhoto(photo) {
+    selectedPhotoRef.current = photo;
+    setSelectedPhoto(photo);
+    setAreHashtagsEditing(false);
+    increaseViewsNumber(photo._id);
+  }
 
   function handlePhotoFlip(direction) {
-    const currentIndex = allPhotos.findIndex(
-      (p) => p._id === selectedPhoto?._id,
-    );
+    if (direction === "right" && collection.loadingNext) return;
+    const photoId = selectedPhotoRef.current?._id;
+    const index = allPhotos.findIndex((photo) => photo._id === photoId);
+    if (index === -1) return;
+    const requestId = ++flipRequestRef.current;
+    const version = contextVersionRef.current;
+    const nextPhoto = allPhotos[index + (direction === "right" ? 1 : -1)];
+    if (nextPhoto) {
+      selectPhoto(nextPhoto);
+      return;
+    }
+    if (direction !== "right" || !pagination.hasUnloadedPhotos) return;
 
-    if (currentIndex === -1) return;
-
-    const nextIndex =
-      direction === "right" ? currentIndex + 1 : currentIndex - 1;
-
-    const nextPhoto = allPhotos[nextIndex];
-    if (!nextPhoto) return;
-
-    setSelectedPhoto(nextPhoto);
-    setAreHashtagsEditing(false);
-    increaseViewsNumber(nextPhoto._id);
+    return pagination.loadNextPage().then((nextCollection) => {
+      if (
+        !nextCollection ||
+        requestId !== flipRequestRef.current ||
+        version !== contextVersionRef.current ||
+        selectedPhotoRef.current?._id !== photoId
+      )
+        return;
+      const updatedIndex = nextCollection.data.findIndex(
+        (photo) => photo._id === photoId,
+      );
+      if (updatedIndex !== -1 && nextCollection.data[updatedIndex + 1]) {
+        selectPhoto(nextCollection.data[updatedIndex + 1]);
+      }
+    });
   }
 
   function handleAddPhotoFromPc(
@@ -424,8 +276,7 @@ export default function usePhotos({
           status: "success",
           message: "Photo was added successfully",
         });
-        setAllPhotos((prev) => [newPhoto, ...prev]);
-        setLoadedPhotos((prev) => [newPhoto, ...prev]);
+        pagination.addPhotos([newPhoto]);
       })
       .catch((err) => {
         openModal({
@@ -437,8 +288,7 @@ export default function usePhotos({
   }
 
   function addPhotosToGallery(newPhotos) {
-    setAllPhotos((prev) => [...newPhotos, ...prev]);
-    setLoadedPhotos((prev) => [...newPhotos, ...prev]);
+    pagination.addPhotos(newPhotos);
   }
 
   const handleDeletePhotoModalOpen = (photo) => {
@@ -450,8 +300,7 @@ export default function usePhotos({
     api
       .deletePhoto(photo._id)
       .then(() => {
-        setAllPhotos((state) => state.filter((p) => p._id !== photo._id));
-        setLoadedPhotos((state) => state.filter((p) => p._id !== photo._id));
+        pagination.removePhoto(photo._id);
 
         openModal({
           status: "success",
@@ -488,9 +337,7 @@ export default function usePhotos({
           JSON.stringify([...viewedPhotosRef.current]),
         );
 
-        setAllPhotos((state) =>
-          state.map((p) => (p._id === photoId ? newPhoto : p)),
-        );
+        pagination.updatePhoto(newPhoto);
 
         setSelectedPhoto((currentPhoto) =>
           currentPhoto?._id === photoId ? newPhoto : currentPhoto,
@@ -512,9 +359,7 @@ export default function usePhotos({
     api
       .editHashtags(photoId, hashtags)
       .then((newPhoto) => {
-        setAllPhotos((state) =>
-          state.map((p) => (p._id === photoId ? newPhoto : p)),
-        );
+        pagination.updatePhoto(newPhoto);
         setSelectedPhoto(newPhoto);
       })
       .then(() => {
@@ -535,6 +380,8 @@ export default function usePhotos({
     areHashtagsEditing,
     isLeftFlipDisabled,
     isRightFlipDisabled,
+    isNextPhotoLoading: collection.loadingNext,
+    cancelPendingPhotoFlip,
 
     // gallery
     photosToRender,
