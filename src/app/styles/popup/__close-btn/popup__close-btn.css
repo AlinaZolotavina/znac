@@ -3,9 +3,21 @@
   top: -36px;
 }
 
+.popup_type_photo .popup__close-btn {
+  position: fixed;
+  right: 24px;
+  top: 24px;
+  z-index: 2;
+}
+
 @media screen and (max-width: 600px) {
   .popup__close-btn {
     right: -26px;
     top: -26px;
+  }
+
+  .popup_type_photo .popup__close-btn {
+    right: 16px;
+    top: 16px;
   }
 }

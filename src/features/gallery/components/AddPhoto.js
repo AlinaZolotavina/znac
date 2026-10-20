@@ -52,6 +52,7 @@ function AddPhoto({
   const [hashtagsError, setHashtagsError] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
   const [hasPartialUploadWarning, setHasPartialUploadWarning] = useState(false);
+  const [hasUploadError, setHasUploadError] = useState(false);
   const [pcDownloadCheck, setPcDownloadCheck] = useState(true);
   const [linkDownloadCheck, setLinkDownloadCheck] = useState(false);
   const [googleDownloadCheck, setGoogleDownloadCheck] = useState(false);
@@ -74,7 +75,7 @@ function AddPhoto({
   const uploadablePhotoItems = photoItems.filter(
     (item) => item.status !== PHOTO_UPLOAD_STATUS.success,
   );
-  const submitButtonText = hasPartialUploadWarning
+  const submitButtonText = hasUploadError
     ? "Try to add again"
     : "Add";
 
@@ -123,6 +124,7 @@ function AddPhoto({
     setGoogleDownloadCheck(false);
     setPcDownloadCheck(true);
     setHasPartialUploadWarning(false);
+    setHasUploadError(false);
     setPhotoItems((items) => {
       items.forEach((item) => {
         if (item.previewUrl) {
@@ -239,6 +241,7 @@ function AddPhoto({
     }
 
     setHasPartialUploadWarning(false);
+    setHasUploadError(false);
 
     const currentFilesCount = photoItems.length;
 
@@ -402,6 +405,12 @@ function AddPhoto({
         clearInputs();
       } else if (pcDownloadCheck) {
         setHasPartialUploadWarning(false);
+        photoItems.forEach((item) => {
+          if (item.status === PHOTO_UPLOAD_STATUS.success && item.previewUrl) {
+            URL.revokeObjectURL(item.previewUrl);
+          }
+        });
+        setPhotoItems(uploadablePhotoItems);
 
         const uploadResult = await onUploadPhotoToServer(
           uploadablePhotoItems.map(({ id, file }) => ({ id, file })),
@@ -413,6 +422,7 @@ function AddPhoto({
         setHasPartialUploadWarning(
           uploadResult?.addedPhotos?.length > 0 && uploadResult?.failedCount > 0,
         );
+        setHasUploadError(uploadResult?.failedCount > 0);
 
         if (
           uploadResult?.addedPhotos?.length > 0 &&
