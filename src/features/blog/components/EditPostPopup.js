@@ -305,7 +305,9 @@ function EditPostPopup({ isOpen, onClose, isSendingReq, post, onEditPost }) {
               const webPData = reader.result;
               const webPBlob = new Blob([webPData], { type: "image/webp" });
 
-              const webPFile = new File([webPBlob], `${fileName}.webp`);
+              const webPFile = new File([webPBlob], `${fileName}.webp`, {
+                type: "image/webp",
+              });
               resolve(webPFile);
             };
             reader.onerror = reject;

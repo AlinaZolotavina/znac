@@ -258,7 +258,9 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
               const webPData = reader.result;
               const webPBlob = new Blob([webPData], { type: "image/webp" });
 
-              const webPFile = new File([webPBlob], `${fileName}.webp`);
+              const webPFile = new File([webPBlob], `${fileName}.webp`, {
+                type: "image/webp",
+              });
               resolve(webPFile);
             };
             reader.onerror = reject;
