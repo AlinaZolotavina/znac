@@ -23,11 +23,11 @@ export const RESET_PASSWORD_EMAIL_SENT_MSG =
 
 // email
 export const UPDATE_EMAIL_EMAIL_SENT_MSG =
-  "E-mail has been sent, please follow the instructions.";
+  "Confirmation links have been sent to your current and new email addresses. Confirm both within 20 minutes to complete the change.";
 export const EMAIL_UPDATE_REQUEST_ERROR_MSG =
   "Error! E-mail change request failed";
 export const EMAIL_UPDATED_SUCCESSFULLY_MSG =
-  "E-mail has been successfully updated";
+  "Your email has been updated. Sign in with your new email address.";
 export const EMAIL_UPDATE_ERROR_MSG = "Error! E-mail has not been updated";
 export const PASSWORD_UPDATED_SUCCESSFULLY_MSG =
   "E-mail has been successfully updated";

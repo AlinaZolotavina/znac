@@ -15,6 +15,10 @@ export default function useAuth({ openModal, startLoading, stopLoading }) {
   const [currentUser, setCurrentUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
   const [isAuthInitialized, setIsAuthInitialized] = useState(false);
+  const clearSession = () => {
+    setLoggedIn(false);
+    setCurrentUser({});
+  };
 
   useEffect(() => {
     auth
@@ -49,7 +53,15 @@ export default function useAuth({ openModal, startLoading, stopLoading }) {
       const data = await auth.signin(email, password);
       setLoggedIn(true);
       setCurrentUser(data.user);
-      navigate("/");
+      const destination = location.state?.from;
+      navigate(
+        typeof destination === "string" &&
+          destination.startsWith("/") &&
+          !destination.startsWith("//")
+          ? destination
+          : "/",
+        { replace: true },
+      );
     } catch (err) {
       openModal({
         status: "error",
@@ -111,5 +123,6 @@ export default function useAuth({ openModal, startLoading, stopLoading }) {
     handleSignup,
     handleSignout,
     setCurrentUser,
+    clearSession,
   };
 }
