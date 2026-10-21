@@ -68,7 +68,7 @@ describe("blog posts search", () => {
   test("combines search and theme filter", async () => {
     const { result } = renderUsePosts({
       query: "hooks",
-      activePostHashtag: "React",
+      activePostHashtag: "Development",
     });
 
     await waitFor(() =>
@@ -82,12 +82,12 @@ describe("blog posts search", () => {
     await waitFor(() =>
       expect(api.getPosts).toHaveBeenLastCalledWith(1, 12, {
         search: "state",
-        theme: "React",
+        theme: "Development",
       }),
     );
   });
 
-  test("filters posts by theme", async () => {
+  test.each(["Development", "Design"])("filters posts by %s", async (theme) => {
     const { result, props } = renderUsePosts();
 
     await waitFor(() =>
@@ -95,14 +95,14 @@ describe("blog posts search", () => {
     );
 
     act(() => {
-      result.current.handlePostHashtagClick("Design");
+      result.current.handlePostHashtagClick(theme);
     });
 
-    expect(props.setActivePostHashtag).toHaveBeenCalledWith("Design");
+    expect(props.setActivePostHashtag).toHaveBeenCalledWith(theme);
     await waitFor(() =>
       expect(api.getPosts).toHaveBeenLastCalledWith(1, 12, {
         search: "",
-        theme: "Design",
+        theme,
       }),
     );
   });

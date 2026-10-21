@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter } from "react-router-dom";
-import { render, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import GalleryRoot from "../GalleryRoot";
 import { mockApi } from "../../../test/mockApi";
 
@@ -93,10 +93,10 @@ describe("gallery hero", () => {
   });
 
 test("uses site settings gallery hero image", async () => {
-    const { container } = renderGalleryRoot();
+    renderGalleryRoot();
 
     await waitFor(() =>
-      expect(container.querySelector(".home").style.backgroundImage).toContain(
+      expect(screen.getByTestId("gallery-hero").style.backgroundImage).toContain(
         "https://api.test/uploads/heroes/gallery-hero.jpg",
       ),
     );

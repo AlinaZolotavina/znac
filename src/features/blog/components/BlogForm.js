@@ -20,6 +20,7 @@ function BlogForm({
       </Title>
       <form
         name={formName}
+        aria-labelledby={titleId}
         className="blog-form"
         onSubmit={onSubmit}
         noValidate

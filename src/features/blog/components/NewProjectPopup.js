@@ -141,6 +141,7 @@ function NewProjectPopup({ isOpen, onClose, onAddProject, isSendingReq }) {
   return (
     <div
       className="popup popup_type_get-in-touch popup_is-opened"
+      data-testid="new-project-overlay"
       onMouseDown={handleOverlayClickClose}
     >
       <div

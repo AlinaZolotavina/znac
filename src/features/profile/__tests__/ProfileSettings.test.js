@@ -105,7 +105,7 @@ describe("Profile settings", () => {
   });
 
   test("shows admin settings sections", async () => {
-    const { container } = renderProfile({
+    renderProfile({
       email: "admin@test.com",
       role: "admin",
     });
@@ -125,7 +125,7 @@ describe("Profile settings", () => {
     ).toBeInTheDocument();
 
     await waitFor(() =>
-      expect(container.querySelector(".profile__hero-image")).toHaveAttribute(
+      expect(screen.getByRole("img", { name: "Main page hero preview" })).toHaveAttribute(
         "src",
         "https://api.test/uploads/heroes/main.jpg",
       ),
@@ -164,7 +164,7 @@ describe("Profile settings", () => {
 
     URL.createObjectURL.mockReturnValue("blob:main-preview");
     mockApi.updateHeroImage.mockReturnValue(upload.promise);
-    const { container } = renderProfile({
+    renderProfile({
       email: "admin@test.com",
       role: "admin",
     });
@@ -177,7 +177,7 @@ describe("Profile settings", () => {
       },
     });
 
-    expect(container.querySelector(".profile__hero-image")).toHaveAttribute(
+    expect(screen.getByRole("img", { name: "Main page hero preview" })).toHaveAttribute(
       "src",
       "blob:main-preview",
     );
@@ -189,7 +189,7 @@ describe("Profile settings", () => {
     });
 
     await waitFor(() =>
-      expect(container.querySelector(".profile__hero-image")).toHaveAttribute(
+      expect(screen.getByRole("img", { name: "Main page hero preview" })).toHaveAttribute(
         "src",
         "https://api.test/uploads/heroes/new-main.jpg",
       ),
@@ -244,13 +244,13 @@ describe("Profile settings", () => {
   test("reverts hero preview to previous image on upload error", async () => {
     URL.createObjectURL.mockReturnValue("blob:error-preview");
     mockApi.updateHeroImage.mockRejectedValue(new Error("Upload failed"));
-    const { container } = renderProfile({
+    renderProfile({
       email: "admin@test.com",
       role: "admin",
     });
 
     await waitFor(() =>
-      expect(container.querySelector(".profile__hero-image")).toHaveAttribute(
+      expect(screen.getByRole("img", { name: "Main page hero preview" })).toHaveAttribute(
         "src",
         "https://api.test/uploads/heroes/main.jpg",
       ),
@@ -262,13 +262,13 @@ describe("Profile settings", () => {
       },
     });
 
-    expect(container.querySelector(".profile__hero-image")).toHaveAttribute(
+    expect(screen.getByRole("img", { name: "Main page hero preview" })).toHaveAttribute(
       "src",
       "blob:error-preview",
     );
 
     expect(await screen.findByText("Upload failed")).toBeInTheDocument();
-    expect(container.querySelector(".profile__hero-image")).toHaveAttribute(
+    expect(screen.getByRole("img", { name: "Main page hero preview" })).toHaveAttribute(
       "src",
       "https://api.test/uploads/heroes/main.jpg",
     );

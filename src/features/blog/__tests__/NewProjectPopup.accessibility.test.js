@@ -48,7 +48,6 @@ describe("NewProjectPopup accessibility", () => {
       screen.getByRole("dialog", { name: "New project" }),
     ).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Title")).toHaveFocus();
-    expect(document.activeElement).toBe(screen.getByPlaceholderText("Title"));
   });
 
   test("does not render when closed", () => {
@@ -103,9 +102,7 @@ describe("NewProjectPopup accessibility", () => {
 
     trigger.focus();
     fireEvent.click(trigger);
-    fireEvent.mouseDown(
-      screen.getByRole("dialog", { name: "New project" }).parentElement,
-    );
+    fireEvent.mouseDown(screen.getByTestId("new-project-overlay"));
     expect(trigger).toHaveFocus();
   });
 

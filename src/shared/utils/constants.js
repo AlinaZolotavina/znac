@@ -2,6 +2,9 @@
 export const LARGE_SCREEN_WIDTH = 1240;
 export const MIDDLE_SCREEN_WIDTH = 768;
 
+// post categories
+export const POST_THEMES = ["Development", "Design", "Travel", "Daily life"];
+
 // photos constants
 export const LARGE_SCREEN_PHOTOS_NUMBER = 12;
 export const MIDDLE_SCREEN_PHOTOS_NUMBER = 9;

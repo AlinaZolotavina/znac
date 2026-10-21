@@ -1,10 +1,9 @@
-import { fireEvent, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import Input from "../components/Input";
-import { renderWithProviders } from "../../test/renderWithProviders";
 
 describe("Input accessibility", () => {
   test("connects field error to input", () => {
-    renderWithProviders(
+    render(
       <Input
         inputLabel="E-mail"
         placeholder="Enter e-mail"
@@ -27,7 +26,24 @@ describe("Input accessibility", () => {
   });
 
   test("does not leave broken aria-describedby when valid", () => {
-    renderWithProviders(
+    const { rerender } = render(
+      <Input
+        inputLabel="E-mail"
+        placeholder="Enter e-mail"
+        classname="input__field"
+        inputType="text"
+        inputValue="test@example.com"
+        onChange={jest.fn()}
+        isSendingReq={false}
+        error="Please enter a valid e-mail"
+        inputName="email"
+      />,
+    );
+
+    const input = screen.getByRole("textbox");
+    const error = screen.getByText("Please enter a valid e-mail");
+
+    rerender(
       <Input
         inputLabel="E-mail"
         placeholder="Enter e-mail"
@@ -41,17 +57,17 @@ describe("Input accessibility", () => {
       />,
     );
 
-    const input = screen.getByRole("textbox");
-
     expect(input).not.toHaveAttribute("aria-invalid");
     expect(input).not.toHaveAttribute("aria-describedby");
-    expect(document.getElementById("email-error")).toBeEmptyDOMElement();
+    expect(input).not.toHaveAccessibleDescription();
+    expect(error).toBeInTheDocument();
+    expect(error).toBeEmptyDOMElement();
   });
 
   test("keeps input change behavior", () => {
     const handleChange = jest.fn();
 
-    renderWithProviders(
+    render(
       <Input
         inputLabel="Name"
         placeholder="Enter name"

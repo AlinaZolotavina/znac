@@ -67,6 +67,7 @@ function CurrentPost({
       </ul>
       {shouldShowImage && (
         <div
+          data-testid="post-image-container"
           className={`post__image-container ${
             isImageLoading ? "post__image-container_state_loading" : ""
           } ${

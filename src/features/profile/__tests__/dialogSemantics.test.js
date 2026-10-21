@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import { CurrentUserContext } from "../../../contexts/CurrentUserContext";
 import { renderWithProviders } from "../../../test/renderWithProviders";
 import EditEmailModal from "../components/EditEmailModal";
@@ -14,14 +14,13 @@ function renderWithUser(ui) {
 
 function expectLabelledDialog(name) {
   const dialog = screen.getByRole("dialog", { name });
-  const labelledBy = dialog.getAttribute("aria-labelledby");
-  const heading = document.getElementById(labelledBy);
+  const heading = within(dialog).getByRole("heading", { name, level: 2 });
 
   expect(dialog).toHaveAttribute("aria-modal", "true");
-  expect(labelledBy).toBeTruthy();
+  expect(dialog).toHaveAttribute("aria-labelledby", heading.id);
   expect(heading).toBeInTheDocument();
   expect(heading).toHaveTextContent(name);
-  expect(heading.tagName).toBe("H2");
+  expect(heading).toBeVisible();
 }
 
 test("EditEmailModal is labelled by its visible heading", () => {

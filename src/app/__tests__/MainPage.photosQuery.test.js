@@ -102,7 +102,7 @@ describe("main page photos query", () => {
 
     await waitFor(() =>
       expect(
-        document.querySelector(".main-page__hero").style.backgroundImage,
+        screen.getByTestId("main-page-hero").style.backgroundImage,
       ).toContain("https://api.test/uploads/heroes/main-hero.jpg"),
     );
   });

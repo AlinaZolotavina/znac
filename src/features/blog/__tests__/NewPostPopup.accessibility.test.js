@@ -47,12 +47,9 @@ describe("NewPostPopup accessibility", () => {
     expect(
       screen.getByRole("dialog", { name: "New post" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("radio", { name: "Web development" })).toHaveFocus();
-    expect(document.activeElement).toBe(
-      screen.getByRole("radio", { name: "Web development" }),
-    );
+    expect(screen.getByRole("radio", { name: "Development" })).toHaveFocus();
     expect(
-      screen.getByRole("radio", { name: "Web development" }),
+      screen.getByRole("radio", { name: "Development" }),
     ).not.toBeChecked();
   });
 
@@ -81,7 +78,7 @@ describe("NewPostPopup accessibility", () => {
 
     const dialog = screen.getByRole("dialog", { name: "New post" });
     const firstThemeRadio = screen.getByRole("radio", {
-      name: "Web development",
+      name: "Development",
     });
     const firstIconRadio = screen.getByRole("radio", { name: /css icon/i });
     const focusableElements = getFocusableElements(dialog);
@@ -106,7 +103,7 @@ describe("NewPostPopup accessibility", () => {
     fireEvent.click(trigger);
 
     const firstThemeRadio = screen.getByRole("radio", {
-      name: "Web development",
+      name: "Development",
     });
 
     expect(firstThemeRadio).not.toBeChecked();
@@ -143,10 +140,10 @@ describe("NewPostPopup accessibility", () => {
     fireEvent.click(trigger);
 
     const firstThemeRadio = screen.getByRole("radio", {
-      name: "Web development",
+      name: "Development",
     });
     const secondThemeRadio = screen.getByRole("radio", {
-      name: "Web design",
+      name: "Design",
     });
     const arrowDownEvent = createEvent.keyDown(firstThemeRadio, {
       key: "ArrowDown",
@@ -169,7 +166,7 @@ describe("NewPostPopup accessibility", () => {
     trigger.focus();
     fireEvent.click(trigger);
 
-    const firstControl = screen.getByRole("radio", { name: "Web development" });
+    const firstControl = screen.getByRole("radio", { name: "Development" });
     const closeButton = screen.getByRole("button", { name: "Close dialog" });
 
     closeButton.focus();
@@ -255,14 +252,21 @@ describe("NewPostPopup accessibility", () => {
     expect(firstIcon).toHaveFocus();
     expect(screen.queryByRole("radio", { name: /cat icon/i })).toBeNull();
 
-    let focusedIcon = firstIcon;
     for (let i = 0; i < iconButtons.length - 1; i += 1) {
+      const focusedIcon = screen.getByRole("radio", {
+        name: `${iconButtons[i].buttonValue} icon`,
+      });
+      expect(focusedIcon).toHaveFocus();
       const arrowRightEvent = createEvent.keyDown(focusedIcon, {
         key: "ArrowRight",
       });
 
       fireEvent(focusedIcon, arrowRightEvent);
-      focusedIcon = document.activeElement;
+      expect(
+        screen.getByRole("radio", {
+          name: `${iconButtons[i + 1].buttonValue} icon`,
+        }),
+      ).toHaveFocus();
     }
 
     const lastIcon = screen.getByRole("radio", { name: /cat icon/i });
@@ -299,9 +303,7 @@ describe("NewPostPopup accessibility", () => {
 
     trigger.focus();
     fireEvent.click(trigger);
-    fireEvent.mouseDown(
-      screen.getByRole("dialog", { name: "New post" }).parentElement,
-    );
+    fireEvent.mouseDown(screen.getByTestId("new-post-overlay"));
     expect(trigger).toHaveFocus();
   });
 
@@ -316,7 +318,7 @@ describe("NewPostPopup accessibility", () => {
     trigger.focus();
     fireEvent.click(trigger);
 
-    expect(screen.getByRole("radio", { name: "Web development" })).toHaveFocus();
+    expect(screen.getByRole("radio", { name: "Development" })).toHaveFocus();
 
     rerender(<NewPostPopupController removeTriggerOnOpen />);
 

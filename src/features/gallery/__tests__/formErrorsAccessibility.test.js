@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { fireEvent, screen } from "@testing-library/react";
 import Search from "../components/Search";
 import EditingHashtags from "../components/EditingHashtags";
@@ -30,21 +31,34 @@ describe("gallery form errors accessibility", () => {
   });
 
   test("does not expose empty search error", () => {
-    renderWithProviders(
-      <Search
-        onSubmit={jest.fn()}
-        onClearSearch={jest.fn()}
-        isLoading={false}
-        hashtag=""
-        hashtagSetter={jest.fn()}
-      />,
-    );
+    function SearchController() {
+      const [hashtag, setHashtag] = useState("");
+      return (
+        <Search
+          onSubmit={jest.fn()}
+          onClearSearch={jest.fn()}
+          isLoading={false}
+          hashtag={hashtag}
+          hashtagSetter={setHashtag}
+        />
+      );
+    }
+
+    renderWithProviders(<SearchController />);
 
     const input = screen.getByRole("textbox");
 
+    fireEvent.change(input, { target: { value: "bad-tag!" } });
+    const error = screen.getByText(
+      "Only letters, numbers and underscores are allowed",
+    );
+    fireEvent.change(input, { target: { value: "" } });
+
     expect(input).not.toHaveAttribute("aria-invalid");
     expect(input).not.toHaveAttribute("aria-describedby");
-    expect(document.getElementById("gallery-search-error")).toBeEmptyDOMElement();
+    expect(input).not.toHaveAccessibleDescription();
+    expect(error).toBeInTheDocument();
+    expect(error).toBeEmptyDOMElement();
   });
 
   test("connects edit hashtags validation error to input", () => {

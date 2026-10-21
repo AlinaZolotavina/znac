@@ -1,11 +1,10 @@
-import { screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import BlogInput from "../components/BlogInput";
 import BlogTextArea from "../components/BlogTextArea";
-import { renderWithProviders } from "../../../test/renderWithProviders";
 
 describe("blog form errors accessibility", () => {
   test("connects BlogInput error to input without removing reserved error node", () => {
-    renderWithProviders(
+    render(
       <BlogInput
         placeholder="Title"
         classname="blog-input__field"
@@ -28,7 +27,23 @@ describe("blog form errors accessibility", () => {
   });
 
   test("keeps BlogInput error node but does not expose empty error", () => {
-    renderWithProviders(
+    const { rerender } = render(
+      <BlogInput
+        placeholder="Title"
+        classname="blog-input__field"
+        inputType="text"
+        inputValue="Post title"
+        onChange={jest.fn()}
+        isSendingReq={false}
+        error="Title is required"
+        inputName="post title"
+      />,
+    );
+
+    const input = screen.getByRole("textbox");
+    const error = screen.getByText("Title is required");
+
+    rerender(
       <BlogInput
         placeholder="Title"
         classname="blog-input__field"
@@ -41,15 +56,15 @@ describe("blog form errors accessibility", () => {
       />,
     );
 
-    const input = screen.getByRole("textbox");
-
     expect(input).not.toHaveAttribute("aria-invalid");
     expect(input).not.toHaveAttribute("aria-describedby");
-    expect(document.getElementById("post-title-error")).toBeEmptyDOMElement();
+    expect(input).not.toHaveAccessibleDescription();
+    expect(error).toBeInTheDocument();
+    expect(error).toBeEmptyDOMElement();
   });
 
   test("connects BlogTextArea error to textarea", () => {
-    renderWithProviders(
+    render(
       <BlogTextArea
         placeholder="Text"
         value=""

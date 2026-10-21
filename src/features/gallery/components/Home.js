@@ -22,6 +22,7 @@ const Home = forwardRef(function Home(
     <section
       ref={ref}
       className="home section"
+      data-testid="gallery-hero"
       id="home"
       style={{
         backgroundImage: `url(${heroUrl})`,

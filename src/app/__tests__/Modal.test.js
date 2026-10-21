@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { fireEvent, screen } from "@testing-library/react";
+import { fireEvent, screen, within } from "@testing-library/react";
 import Modal from "../components/Modal";
 import { renderWithProviders } from "../../test/renderWithProviders";
 
@@ -21,7 +21,7 @@ function ModalController() {
 
 describe("Modal", () => {
   test("does not render when closed", () => {
-    const { container } = renderWithProviders(
+    renderWithProviders(
       <Modal
         isOpen={false}
         status="success"
@@ -30,7 +30,8 @@ describe("Modal", () => {
       />,
     );
 
-    expect(container).toBeEmptyDOMElement();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.queryByText("Saved")).not.toBeInTheDocument();
   });
 
   test("renders message and closes by close button", () => {
@@ -65,13 +66,15 @@ describe("Modal", () => {
     const dialog = screen.getByRole("dialog", {
       name: "Status message",
     });
-    const labelledBy = dialog.getAttribute("aria-labelledby");
-    const heading = document.getElementById(labelledBy);
+    const heading = within(dialog).getByRole("heading", {
+      name: "Status message",
+      level: 2,
+    });
 
     expect(dialog).toHaveAttribute("aria-modal", "true");
+    expect(dialog).toHaveAttribute("aria-labelledby", heading.id);
     expect(heading).toBeInTheDocument();
     expect(heading).toHaveTextContent("Status message");
-    expect(heading.tagName).toBe("H2");
   });
 
   test("announces success messages with status semantics", () => {
@@ -146,7 +149,7 @@ describe("Modal", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Open modal" }));
 
-    const overlay = screen.getByRole("dialog").parentElement;
+    const overlay = screen.getByTestId("modal-overlay");
     fireEvent.mouseDown(overlay);
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();

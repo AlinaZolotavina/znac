@@ -5,7 +5,7 @@ import Post from "../components/Post";
 const post = {
   _id: "post-1",
   createdAt: "2026-08-12T10:00:00.000Z",
-  theme: "Web development",
+  theme: "Development",
   icon: "typescript",
   title: "Native semantics post",
   text: "Post text",

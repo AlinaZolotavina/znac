@@ -1,44 +1,18 @@
 import PostHashtag from "./PostHashtag";
+import { POST_THEMES } from "../../../shared/utils/constants";
 
 function Hashtags({ onClick, activeHashtag, query }) {
   return (
     <section className="post-hashtags">
-      <PostHashtag
-        hashtag="All"
-        activeHashtag={activeHashtag}
-        query={query}
-        onClick={onClick}
-      />
-      <PostHashtag
-        hashtag="Web development"
-        activeHashtag={activeHashtag}
-        query={query}
-        onClick={onClick}
-      />
-      <PostHashtag
-        hashtag="Web design"
-        activeHashtag={activeHashtag}
-        query={query}
-        onClick={onClick}
-      />
-      <PostHashtag
-        hashtag="Travel"
-        activeHashtag={activeHashtag}
-        query={query}
-        onClick={onClick}
-      />
-      <PostHashtag
-        hashtag="Books"
-        activeHashtag={activeHashtag}
-        query={query}
-        onClick={onClick}
-      />
-      <PostHashtag
-        hashtag="Daily life"
-        activeHashtag={activeHashtag}
-        query={query}
-        onClick={onClick}
-      />
+      {["All", ...POST_THEMES].map((theme) => (
+        <PostHashtag
+          key={theme}
+          hashtag={theme}
+          activeHashtag={activeHashtag}
+          query={query}
+          onClick={onClick}
+        />
+      ))}
     </section>
   );
 }

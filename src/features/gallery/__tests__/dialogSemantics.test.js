@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import { renderWithProviders } from "../../../test/renderWithProviders";
 import { photos } from "../../../test/fixtures/photo";
 import DeletePhotoModal from "../components/DeletePhotoModal";
@@ -17,13 +17,16 @@ test("DeletePhotoModal is labelled by its visible heading", () => {
   const dialog = screen.getByRole("dialog", {
     name: "Are you sure you want to delete the photo?",
   });
-  const labelledBy = dialog.getAttribute("aria-labelledby");
-  const heading = document.getElementById(labelledBy);
+  const heading = within(dialog).getByRole("heading", {
+    name: "Are you sure you want to delete the photo?",
+    level: 2,
+  });
 
   expect(dialog).toHaveAttribute("aria-modal", "true");
+  expect(dialog).toHaveAttribute("aria-labelledby", heading.id);
   expect(heading).toBeInTheDocument();
   expect(heading).toHaveTextContent("Are you sure you want to delete the photo?");
-  expect(heading.tagName).toBe("H2");
+  expect(heading).toBeVisible();
 });
 
 test("PhotoPopup has dialog semantics with aria-label because it has no visible heading", () => {

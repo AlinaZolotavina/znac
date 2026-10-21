@@ -233,6 +233,7 @@ function MainPage({
       <SkipLink targetId="main-content" />
       <section
         className="main-page__hero"
+        data-testid="main-page-hero"
         style={{ backgroundImage: `url(${heroUrl})` }}
       >
         <header className="main-page__header">
