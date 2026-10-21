@@ -63,7 +63,7 @@ describe("edit post", () => {
 
     await act(async () => {
       result.current.handleEditPost("post-1", {
-        theme: "React",
+        theme: "Development",
         icon: "react",
         title: "Updated post",
         hashtags: ["react"],
@@ -100,7 +100,7 @@ describe("edit post", () => {
 
     await act(async () => {
       result.current.handleEditPost("post-1", {
-        theme: "React",
+        theme: "Development",
         icon: "react",
         title: "Updated post",
         hashtags: ["react"],

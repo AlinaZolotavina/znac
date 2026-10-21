@@ -6,6 +6,7 @@ import NewPostRadioButton from "./NewPostRadioButton.js";
 import BlogUploadFileInfo from "./BlogUploadFileInfo.js";
 import BlogTextArea from "./BlogTextArea.js";
 import iconButtons from "../utils/iconButtons.js";
+import { POST_THEMES } from "../../../shared/utils/constants";
 import isValidUrl from "../../../shared/utils/isValidUrl";
 import useInitialFocus from "../../../shared/hooks/useInitialFocus.js";
 import useFocusTrap from "../../../shared/hooks/useFocusTrap.js";
@@ -442,6 +443,7 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
   return (
     <div
       className="popup popup_type_get-in-touch popup_type_post popup_is-opened"
+      data-testid="new-post-overlay"
       onMouseDown={handleOverlayClickClose}
     >
       <div
@@ -475,51 +477,18 @@ function NewPostPopup({ isOpen, onClose, isSendingReq, onAddPost }) {
               aria-invalid={themeError ? "true" : undefined}
               aria-describedby={themeError ? "new-post-theme-error" : undefined}
             >
-              <NewPostRadioButton
-                classname="new-post__radio-btn_type_theme"
-                radioBtnValue="Web development"
-                radioBtnName="theme"
-                idPrefix="new-post"
-                checkValue={themeCheckValue}
-                onClick={handleThemeClick}
-                labelText="Web development"
-              />
-              <NewPostRadioButton
-                classname="new-post__radio-btn_type_theme"
-                radioBtnValue="Web design"
-                radioBtnName="theme"
-                idPrefix="new-post"
-                checkValue={themeCheckValue}
-                onClick={handleThemeClick}
-                labelText="Web design"
-              />
-              <NewPostRadioButton
-                classname="new-post__radio-btn_type_theme"
-                radioBtnValue="Travel"
-                radioBtnName="theme"
-                idPrefix="new-post"
-                checkValue={themeCheckValue}
-                onClick={handleThemeClick}
-                labelText="Travel"
-              />
-              <NewPostRadioButton
-                classname="new-post__radio-btn_type_theme"
-                radioBtnValue="Books"
-                radioBtnName="theme"
-                idPrefix="new-post"
-                checkValue={themeCheckValue}
-                onClick={handleThemeClick}
-                labelText="Books"
-              />
-              <NewPostRadioButton
-                classname="new-post__radio-btn_type_theme"
-                radioBtnValue="Daily life"
-                radioBtnName="theme"
-                idPrefix="new-post"
-                checkValue={themeCheckValue}
-                onClick={handleThemeClick}
-                labelText="Daily life"
-              />
+              {POST_THEMES.map((theme) => (
+                <NewPostRadioButton
+                  key={theme}
+                  classname="new-post__radio-btn_type_theme"
+                  radioBtnValue={theme}
+                  radioBtnName="theme"
+                  idPrefix="new-post"
+                  checkValue={themeCheckValue}
+                  onClick={handleThemeClick}
+                  labelText={theme}
+                />
+              ))}
             </div>
             <span className="new-post__input-error" id="new-post-theme-error">
               {themeError}

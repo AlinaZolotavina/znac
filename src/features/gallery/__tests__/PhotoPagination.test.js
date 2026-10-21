@@ -308,9 +308,13 @@ test("request failure allows retry instead of marking the end", async () => {
   expect(result.current.selectedPhoto._id).toBe("photo-21");
 });
 
-test.each(["left", "close", "search"])(
+test.each([
+  ["left", 6],
+  ["close", 6],
+  ["search", 1],
+])(
   "pending right flip cannot override %s navigation",
-  async (action) => {
+  async (action, expectedPhotoCount) => {
     const next = deferred();
     api.getPhotos.mockImplementation((page) =>
       page === 2 ? next.promise : Promise.resolve(response(serverPhotos, page)),
@@ -336,8 +340,7 @@ test.each(["left", "close", "search"])(
       await pending;
     });
     expect(result.current.selectedPhoto._id).toBe(selectedId);
-    if (action === "search")
-      expect(result.current.photosToRender).toHaveLength(1);
+    expect(result.current.photosToRender).toHaveLength(expectedPhotoCount);
   },
 );
 

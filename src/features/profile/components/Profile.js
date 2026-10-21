@@ -125,7 +125,11 @@ function HeroImageCard({ title, slot, imageUrl }) {
     <article className="profile__hero-card">
       <h3 className="profile__hero-card-title">{title}</h3>
       <div className="profile__hero-preview">
-        <img className="profile__hero-image" src={heroImageUrl} alt="" />
+        <img
+          className="profile__hero-image"
+          src={heroImageUrl}
+          alt={`${title} preview`}
+        />
       </div>
       <input
         ref={inputRef}

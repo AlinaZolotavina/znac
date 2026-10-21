@@ -41,7 +41,7 @@ describe("NewPostRadioButton native semantics", () => {
     );
 
     const radio = screen.getByRole("radio", { name: /css icon/i });
-    const label = document.querySelector(`label[for="${radio.id}"]`);
+    const label = screen.getByTestId("new-post-icon-css-label");
 
     fireEvent.click(label);
 

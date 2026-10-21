@@ -50,6 +50,7 @@ function Modal({ isOpen, status, type, message, onClose }) {
   return (
     <div
       className="popup popup_is-opened"
+      data-testid="modal-overlay"
       onMouseDown={handleOverlayClickClose}
     >
       <div

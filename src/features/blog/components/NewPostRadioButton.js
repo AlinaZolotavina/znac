@@ -92,7 +92,11 @@ function NewPostRadioButton({
         onKeyDown={handleKeyDown}
         aria-label={!labelText ? `${radioBtnValue} icon` : undefined}
       />
-      <label htmlFor={inputId} onClick={handleLabelClick}>
+      <label
+        htmlFor={inputId}
+        onClick={handleLabelClick}
+        data-testid={!labelText ? `${inputId}-label` : undefined}
+      >
         {labelText}
       </label>
     </div>
