@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import api from "../../../shared/utils/api";
 import BlogHeader from "./BlogHeader";
 import CurrentPost from "./CurrentPost";
-import { useCallback } from "react";
 import ContentLoader from "../../../app/components/ContentLoader";
+import Seo, { getPostDescription } from "../../../app/components/Seo";
 
 function CurrentPostPage({
   activePage,
@@ -26,33 +26,58 @@ function CurrentPostPage({
 }) {
   const { id } = useParams();
 
-  const [post, setPost] = useState(null);
-  const [isPostLoading, setIsPostLoading] = useState(true);
-
-  const loadPost = useCallback(
-    () => {
-      setIsPostLoading(true);
-
-      return api
-        .getPost(id)
-        .then(setPost)
-        .catch((err) => {
-          openModal({
-            status: "error",
-            message: err.message,
-          });
-        })
-        .finally(() => setIsPostLoading(false));
-    },
-    [id, openModal],
-  );
+  const [request, setRequest] = useState(null);
+  const currentRequest =
+    request?.id === id && request?.version === postVersion ? request : null;
+  const post = currentRequest?.post;
+  const isPostLoading = !currentRequest || currentRequest.loading;
+  const isIndexable = Boolean(post?.title?.trim() && post?.text?.trim());
+  const unavailableTitle =
+    currentRequest?.error?.status === 404
+      ? "Post not found — ZNAC"
+      : "Post unavailable — ZNAC";
 
   useEffect(() => {
-    loadPost();
-  }, [loadPost, postVersion]);
+    let active = true;
+    setRequest({ id, version: postVersion, loading: true });
+
+    api
+      .getPost(id)
+      .then((loadedPost) => {
+        if (active) {
+          setRequest({ id, version: postVersion, post: loadedPost, loading: false });
+        }
+      })
+      .catch((error) => {
+        if (!active) return;
+        setRequest({ id, version: postVersion, error, loading: false });
+        openModal({ status: "error", message: error.message });
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [id, openModal, postVersion]);
 
   return (
     <div className="blog">
+      <Seo
+        title={
+          post ? `${post.title} — ZNAC`
+            : isPostLoading ? "Loading post — ZNAC" : unavailableTitle
+        }
+        description={
+          post ? getPostDescription(post.text)
+            : isPostLoading ? "Loading a journal post from ZNAC."
+              : "The requested journal post is unavailable."
+        }
+        canonicalPath={
+          isIndexable ? `/journal/posts/${encodeURIComponent(id)}` : undefined
+        }
+        image={post?.photoLink}
+        type={post ? "article" : "website"}
+        indexable={isIndexable}
+      />
       <BlogHeader
         loggedIn={loggedIn}
         currentUser={currentUser}

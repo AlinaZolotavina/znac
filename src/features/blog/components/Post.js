@@ -40,7 +40,13 @@ function Post({
     setLoadedImageSrc(null);
   }, [post._id, post.thumbnail, post.photoLink]);
 
-  function handlePostClick() {
+  function handlePostClick(event) {
+    if (
+      event.defaultPrevented || event.button !== 0 || event.metaKey ||
+      event.ctrlKey || event.shiftKey || event.altKey || !onPostClick
+    ) return;
+
+    event.preventDefault();
     onPostClick(post);
   }
 
@@ -57,9 +63,9 @@ function Post({
   return (
     <li className={`post post_location_${location}`}>
       <article>
-        <button
+        <a
           className="post__open-btn"
-          type="button"
+          href={`/journal/posts/${encodeURIComponent(post._id)}`}
           onClick={handlePostClick}
           aria-label={`Open post ${post.title}`}
         >
@@ -118,7 +124,7 @@ function Post({
               <span className="post__read-more">Read more →</span>
             )}
           </div>
-        </button>
+        </a>
         {loggedIn && (
           <div className="post__tools">
             <BlogActionButtons

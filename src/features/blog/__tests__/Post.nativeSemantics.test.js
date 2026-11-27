@@ -13,7 +13,7 @@ const post = {
 };
 
 describe("Post native semantics", () => {
-  test("opens post through a native button instead of an interactive list item", () => {
+  test("opens post through a crawlable link with client navigation", () => {
     const handlePostClick = jest.fn();
 
     renderWithProviders(
@@ -30,20 +30,21 @@ describe("Post native semantics", () => {
     );
 
     const listItem = screen.getByRole("listitem");
-    const openButton = screen.getByRole("button", {
+    const openLink = screen.getByRole("link", {
       name: "Open post Native semantics post",
     });
 
     expect(listItem).not.toHaveAttribute("role", "button");
     expect(listItem).not.toHaveAttribute("tabindex");
-    expect(openButton.tagName).toBe("BUTTON");
+    expect(openLink.tagName).toBe("A");
+    expect(openLink).toHaveAttribute("href", "/journal/posts/post-1");
 
-    fireEvent.click(openButton);
+    fireEvent.click(openLink);
 
     expect(handlePostClick).toHaveBeenCalledWith(post);
   });
 
-  test("keeps edit and delete actions separate from the post open button", () => {
+  test("keeps edit and delete actions separate from the post link", () => {
     const handlePostClick = jest.fn();
     const handleEditPostButtonClick = jest.fn();
     const handleDeletePostButtonClick = jest.fn();

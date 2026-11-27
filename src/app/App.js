@@ -19,6 +19,7 @@ import Modal from "./components/Modal.js";
 import MainPage from "./components/MainPage.jsx";
 import GetInTouchPopup from "./components/GetInTouchPopup.js";
 import NotFound from "./components/NotFound.js";
+import RouteSeo from "./components/RouteSeo.js";
 
 import * as auth from "../shared/utils/auth.js";
 import {
@@ -176,6 +177,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <CurrentUserContext.Provider value={currentUser}>
+        <RouteSeo pathname={pathname} />
         <Routes>
           <Route
             path="/"

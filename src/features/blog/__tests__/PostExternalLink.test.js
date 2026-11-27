@@ -135,10 +135,10 @@ describe.each(["main-page", "posts"])("Post card in %s", (location) => {
       <Post post={linkedPost} location={location} onPostClick={onPostClick} />,
     );
 
-    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+    expect(screen.getByRole("link")).toHaveAttribute("href", "/journal/posts/post-1");
     expect(screen.queryByText("Read article")).not.toBeInTheDocument();
     fireEvent.click(
-      screen.getByRole("button", { name: "Open post An article" }),
+      screen.getByRole("link", { name: "Open post An article" }),
     );
     expect(onPostClick).toHaveBeenCalledWith(linkedPost);
   });
